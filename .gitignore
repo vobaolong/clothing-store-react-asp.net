@@ -1,0 +1,31 @@
+# Common ignores for clothing-store frontend + backend
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/coverage/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+frontend/*.local
+
+# .NET / backend
+backend/**/bin/
+backend/**/obj/
+backend/**/out/
+backend/**/TestResults/
+
+# IDE/editor
+.vscode/
+.idea/
+.vs/
+.cursor/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

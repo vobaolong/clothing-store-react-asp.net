@@ -1,0 +1,15 @@
+import { AdminNavKey } from '@/enums'
+import { ADMIN_NAV_LABELS } from '@/types/constants'
+
+export const ADMIN_PAGE_HEADER_TITLE: Record<AdminNavKey, string> = {
+  [AdminNavKey.DASHBOARD]: ADMIN_NAV_LABELS.DASHBOARD,
+  [AdminNavKey.PRODUCTS]: ADMIN_NAV_LABELS.PRODUCTS,
+  [AdminNavKey.CATEGORIES]: ADMIN_NAV_LABELS.CATEGORIES,
+  [AdminNavKey.ORDERS]: ADMIN_NAV_LABELS.ORDERS,
+  [AdminNavKey.REVIEWS]: ADMIN_NAV_LABELS.REVIEWS,
+  [AdminNavKey.CUSTOMERS]: ADMIN_NAV_LABELS.CUSTOMERS,
+  [AdminNavKey.COUPONS]: ADMIN_NAV_LABELS.COUPONS,
+  [AdminNavKey.BANNERS]: ADMIN_NAV_LABELS.BANNERS
+}
+
+export const ADMIN_PAGE_BRAND_TITLE = 'Admin Wearly'

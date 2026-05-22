@@ -1,0 +1,45 @@
+import type { HomepageBanner } from '@/types'
+import { FALLBACK_IMG } from '@/utils/error-handler'
+import { Carousel } from 'antd'
+import { Link } from 'react-router-dom'
+
+const HomeHeroBanner = ({ banners }: { banners: HomepageBanner[] }) => (
+  <section className='relative left-1/2 w-screen -translate-x-1/2'>
+    <Carousel
+      autoplay
+      autoplaySpeed={4000}
+      arrows
+      draggable
+      slidesToShow={1}
+      slidesToScroll={1}
+      dots={banners.length > 1}
+      infinite={banners.length > 1}
+      className='home-hero-carousel'
+    >
+      {banners.map((banner) => (
+        <div key={banner.id}>
+          <Link
+            to={banner.ctaLink || '/products'}
+            className='block overflow-hidden relative group'
+          >
+            <div
+              className='relative w-full aspect-14/5
+						 overflow-hidden'
+            >
+              <img
+                src={banner.imageUrl}
+                alt='Hero banner'
+                className='w-full h-full object-cover'
+                onError={(event) => {
+                  event.currentTarget.src = FALLBACK_IMG
+                }}
+              />
+            </div>
+          </Link>
+        </div>
+      ))}
+    </Carousel>
+  </section>
+)
+
+export default HomeHeroBanner
