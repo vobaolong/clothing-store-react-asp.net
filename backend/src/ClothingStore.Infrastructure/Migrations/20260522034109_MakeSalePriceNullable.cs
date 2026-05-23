@@ -16,7 +16,8 @@ namespace ClothingStore.Infrastructure.Migrations
                 type: "numeric",
                 nullable: true,
                 oldClrType: typeof(decimal),
-                oldType: "numeric");
+                oldType: "numeric"
+            );
 
             // Backfill: convert SalePrice = 0 to NULL (0 was used to indicate "no sale")
             // Products with an actual sale price of 0đ (free) are preserved manually if needed.
@@ -41,7 +42,8 @@ namespace ClothingStore.Infrastructure.Migrations
                 defaultValue: 0m,
                 oldClrType: typeof(decimal),
                 oldType: "numeric",
-                oldNullable: true);
+                oldNullable: true
+            );
         }
     }
 }

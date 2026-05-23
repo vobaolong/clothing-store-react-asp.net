@@ -76,7 +76,7 @@ export default function LoginPage() {
           >
             <Input.Password prefix={<LockOutlined />} />
           </Form.Item>
-          <div className='mb-4 flex items-center justify-between'>
+          <div className='flex items-center justify-between mb-4'>
             <Form.Item
               name='rememberMe'
               valuePropName='checked'

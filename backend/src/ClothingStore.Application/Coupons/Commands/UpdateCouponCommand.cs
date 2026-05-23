@@ -22,7 +22,8 @@ public class UpdateCouponCommandHandler(IApplicationDbContext context)
 {
     public async Task Handle(UpdateCouponCommand request, CancellationToken ct)
     {
-        var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Id == request.Id, ct)
+        var coupon =
+            await context.Coupons.FirstOrDefaultAsync(c => c.Id == request.Id, ct)
             ?? throw new KeyNotFoundException("Coupon not found.");
 
         if (request.Code != null)

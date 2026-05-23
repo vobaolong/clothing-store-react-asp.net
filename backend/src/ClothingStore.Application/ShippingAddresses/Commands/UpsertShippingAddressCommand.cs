@@ -29,8 +29,10 @@ public class UpsertShippingAddressCommandHandler(IApplicationDbContext context)
     {
         if (request.IsDefault)
         {
-            var existingDefaults = await context.ShippingAddresses
-                .Where(x => x.UserId == request.UserId && x.IsDefault && x.Id != request.Id)
+            var existingDefaults = await context
+                .ShippingAddresses.Where(x =>
+                    x.UserId == request.UserId && x.IsDefault && x.Id != request.Id
+                )
                 .ToListAsync(ct);
             foreach (var item in existingDefaults)
                 item.IsDefault = false;
@@ -39,9 +41,11 @@ public class UpsertShippingAddressCommandHandler(IApplicationDbContext context)
         ShippingAddress address;
         if (request.Id.HasValue)
         {
-            address = await context.ShippingAddresses
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId, ct)
-                ?? throw new KeyNotFoundException("Address not found.");
+            address =
+                await context.ShippingAddresses.FirstOrDefaultAsync(
+                    x => x.Id == request.Id && x.UserId == request.UserId,
+                    ct
+                ) ?? throw new KeyNotFoundException("Address not found.");
         }
         else
         {

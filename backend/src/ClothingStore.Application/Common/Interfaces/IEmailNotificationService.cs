@@ -6,5 +6,6 @@ public interface IEmailNotificationService
         string? email,
         string subject,
         string body,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

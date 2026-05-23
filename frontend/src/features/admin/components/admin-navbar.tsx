@@ -79,7 +79,7 @@ export default function AdminNavbar({ inlineCollapsed }: AdminNavbarProps) {
 			selectedKeys={[selectedKey]}
 			items={navItems}
 			onClick={({ key }) => navigate(`/admin/${String(key)}`)}
-			className='border-0 bg-transparent px-2 pb-4'
+			className='px-2 pb-4 bg-transparent border-0'
 		/>
 	)
 }

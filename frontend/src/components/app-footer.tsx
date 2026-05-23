@@ -121,7 +121,7 @@ export default function AppFooter() {
   return (
     <footer id='footer' className='text-white bg-black/90'>
       <div className='px-4! md:px-8! py-6 mx-auto w-full max-w-7xl md:py-10'>
-        <div className='flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row'>
+        <div className='flex flex-col justify-between pb-12 border-b gap-12 border-stone-800 lg:flex-row'>
           <div className='max-w-xl space-y-6'>
             <h2 className='text-3xl font-bold tracking-tight'>
               Wearly lắng nghe bạn!
@@ -134,7 +134,7 @@ export default function AppFooter() {
             <Button
               type='primary'
               size='large'
-              className='rounded-full border-none bg-white font-semibold text-black'
+              className='font-semibold text-black bg-white border-none rounded-full'
             >
               ĐÓNG GÓP Ý KIẾN &rarr;
             </Button>
@@ -157,12 +157,12 @@ export default function AppFooter() {
           </div>
         </div>
 
-        <div className='flex gap-4 py-12'>
+        <div className='flex py-12 gap-4'>
           {socialIcons.map((Icon) => (
             <a
               key={Icon.displayName ?? Icon.name}
               href='#'
-              className='flex items-center justify-center size-10 transition-colors border rounded-lg border-stone-800 hover:bg-stone-900'
+              className='flex items-center justify-center border rounded-lg size-10 transition-colors border-stone-800 hover:bg-stone-900'
             >
               <span className='text-xl'>
                 <Icon />
@@ -179,7 +179,7 @@ export default function AppFooter() {
                   <h3 className='text-sm font-bold tracking-wider uppercase'>
                     {group.title}
                   </h3>
-                  <ul className='space-y-2 text-sm text-stone-400'>
+                  <ul className='text-sm space-y-2 text-stone-400'>
                     {group.links.map((link) => (
                       <li key={link}>
                         <a href='#'>{link}</a>

@@ -70,7 +70,7 @@ export default function AdminBannersSection() {
   )
   return (
     <div className='space-y-3'>
-      <div className='flex w-full justify-end gap-2'>
+      <div className='flex justify-end w-full gap-2'>
         <AdminQueryRefreshButton query={refreshQuery} />
         <Button type='primary' icon={<PlusOutlined />} onClick={onCreate}>
           Thêm banner
@@ -105,7 +105,7 @@ export default function AdminBannersSection() {
               <img
                 src={value}
                 alt='banner'
-                className='object-cover h-30 w-auto rounded-md'
+                className='object-cover w-auto h-30 rounded-md'
               />
             )
           },

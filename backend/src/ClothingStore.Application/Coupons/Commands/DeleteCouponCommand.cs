@@ -12,7 +12,8 @@ public class DeleteCouponCommandHandler(IApplicationDbContext context)
 {
     public async Task Handle(DeleteCouponCommand request, CancellationToken ct)
     {
-        var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Id == request.Id, ct)
+        var coupon =
+            await context.Coupons.FirstOrDefaultAsync(c => c.Id == request.Id, ct)
             ?? throw new KeyNotFoundException("Coupon not found.");
 
         var hasOrders = await context.Orders.AnyAsync(o => o.CouponId == request.Id, ct);

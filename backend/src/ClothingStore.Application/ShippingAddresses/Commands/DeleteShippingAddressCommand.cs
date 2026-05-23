@@ -11,9 +11,11 @@ public class DeleteShippingAddressCommandHandler(IApplicationDbContext context)
 {
     public async Task Handle(DeleteShippingAddressCommand request, CancellationToken ct)
     {
-        var address = await context.ShippingAddresses
-            .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId, ct)
-            ?? throw new KeyNotFoundException("Address not found.");
+        var address =
+            await context.ShippingAddresses.FirstOrDefaultAsync(
+                x => x.Id == request.Id && x.UserId == request.UserId,
+                ct
+            ) ?? throw new KeyNotFoundException("Address not found.");
 
         address.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync(ct);

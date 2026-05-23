@@ -363,7 +363,7 @@ export default function AdminDashboardSection() {
           <Card
             title={
               <div className='flex items-center justify-between w-full'>
-                <span className='truncate pr-2'>
+                <span className='pr-2 truncate'>
                   {selectedRadarParent
                     ? `Danh mục: ${selectedRadarParent}`
                     : 'Danh mục bán chạy'}

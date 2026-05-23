@@ -105,7 +105,7 @@ export default function ShippingAddressSection({
           </Button>
 
           {addressState.showNewForm && (
-            <div className='pt-5 mt-5 space-y-0 border-t border-slate-100'>
+            <div className='pt-5 mt-5 border-t space-y-0 border-slate-100'>
               {/* ... keep internal new address form markup minimal here by reusing the parent form */}
               <p className='mb-4 text-sm font-medium text-slate-700'>
                 Địa chỉ mới

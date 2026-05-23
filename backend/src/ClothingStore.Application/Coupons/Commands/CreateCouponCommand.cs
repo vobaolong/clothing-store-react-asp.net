@@ -31,7 +31,7 @@ public class CreateCouponCommandHandler(IApplicationDbContext context)
             ExpiresAt = request.ExpiresAt,
             StartsAt = request.StartsAt,
             Status = request.Status,
-            UsedCount = 0
+            UsedCount = 0,
         };
 
         context.Coupons.Add(coupon);

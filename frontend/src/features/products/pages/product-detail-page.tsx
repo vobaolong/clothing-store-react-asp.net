@@ -274,7 +274,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center min-h-80'>
+      <div className='flex items-center justify-center min-h-80'>
         <p className='text-sm uppercase tracking-[0.2em] text-stone-400'>
           Loading…
         </p>
@@ -284,7 +284,7 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className='flex justify-center items-center min-h-80'>
+      <div className='flex items-center justify-center min-h-80'>
         <p className='text-sm uppercase tracking-[0.2em] text-stone-400'>
           Product not found
         </p>
@@ -294,7 +294,7 @@ export default function ProductDetailPage() {
 
   return (
     <section>
-      <nav className='flex flex-wrap gap-2 items-center mb-8 text-xs font-medium text-stone-400'>
+      <nav className='flex flex-wrap items-center mb-8 text-xs font-medium gap-2 text-stone-400'>
         <Link
           to='/'
           className='text-stone-400! hover:text-stone-600 hover:underline!'
@@ -330,7 +330,7 @@ export default function ProductDetailPage() {
 
       <div className='grid gap-12 lg:grid-cols-2'>
         <div className='space-y-4'>
-          <div className='flex gap-3 items-start sm:gap-4'>
+          <div className='flex items-start gap-3 sm:gap-4'>
             {galleryImages.length > 1 ? (
               <div className='flex flex-col w-16 shrink-0 sm:w-20'>
                 <div
@@ -370,13 +370,13 @@ export default function ProductDetailPage() {
                   })}
                 </div>
                 {thumbStripClamped ? (
-                  <div className='flex gap-1 justify-center mt-2'>
+                  <div className='flex justify-center mt-2 gap-1'>
                     <button
                       type='button'
                       aria-label='Ảnh nhỏ phía trên'
                       disabled={ui.thumbScrollEdges.atTop}
                       onClick={() => scrollProductThumbs('up')}
-                      className='flex justify-center items-center size-8 bg-white rounded-md border transition-colors cursor-pointer border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
+                      className='flex items-center justify-center bg-white border cursor-pointer size-8 rounded-md transition-colors border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
                     >
                       <UpOutlined className='text-xs' />
                     </button>
@@ -385,7 +385,7 @@ export default function ProductDetailPage() {
                       aria-label='Ảnh nhỏ phía dưới'
                       disabled={ui.thumbScrollEdges.atBottom}
                       onClick={() => scrollProductThumbs('down')}
-                      className='flex justify-center items-center size-8 bg-white rounded-md border transition-colors cursor-pointer border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
+                      className='flex items-center justify-center bg-white border cursor-pointer size-8 rounded-md transition-colors border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
                     >
                       <DownOutlined className='text-xs' />
                     </button>
@@ -396,7 +396,7 @@ export default function ProductDetailPage() {
 
             <div className='flex-1 min-w-0'>
               <Image.PreviewGroup items={galleryImages.map((src) => ({ src }))}>
-                <div className='overflow-hidden relative w-full bg-white rounded-xl group aspect-square'>
+                <div className='relative w-full overflow-hidden bg-white rounded-xl group aspect-square'>
                   <Image
                     src={currentImage}
                     alt={product.name}
@@ -408,7 +408,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
           {productDetails.length > 0 && (
-            <div className='p-6 bg-white rounded-lg border border-stone-200'>
+            <div className='p-6 bg-white border rounded-lg border-stone-200'>
               <p className='mb-4 text-base font-semibold text-black'>
                 Thông số kỹ thuật
               </p>
@@ -416,7 +416,7 @@ export default function ProductDetailPage() {
                 {productDetails.map(({ label, value }, idx) => (
                   <div
                     key={`${label}-${idx}`}
-                    className='flex gap-4 justify-between items-start py-3'
+                    className='flex items-start justify-between py-3 gap-4'
                   >
                     <dt className='text-xs! uppercase text-stone-600 shrink-0'>
                       {label}
@@ -440,8 +440,8 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        <aside className='space-y-8 w-full lg:sticky lg:top-8 lg:h-fit'>
-          <div className='pb-4 space-y-3 border-b border-stone-200'>
+        <aside className='w-full space-y-8 lg:sticky lg:top-8 lg:h-fit'>
+          <div className='pb-4 border-b space-y-3 border-stone-200'>
             <h1 className='mt-3! text-3xl font-normal leading-snug tracking-tight text-stone-900'>
               {toCapitalize(product.name)}
             </h1>
@@ -454,11 +454,11 @@ export default function ProductDetailPage() {
 
           <div className='space-y-1'>
             {showSaleCountdown && saleEndDate ? (
-              <div className='flex flex-wrap gap-4 justify-between items-center w-full'>
+              <div className='flex flex-wrap items-center justify-between w-full gap-4'>
                 <span className='text-3xl font-semibold tabular-nums text-rose-700'>
                   {formatCurrency(product.salePrice ?? 0)}
                 </span>
-                <div className='flex flex-col flex-1 items-center p-2 bg-red-100 rounded-2xl min-w-40 shrink-0'>
+                <div className='flex flex-col items-center flex-1 p-2 bg-red-100 rounded-2xl min-w-40 shrink-0'>
                   <span className='text-[11px] font-medium uppercase tracking-wide text-stone-500'>
                     Kết thúc sau
                   </span>
@@ -475,12 +475,12 @@ export default function ProductDetailPage() {
                     }}
                   />
                 </div>
-                <span className='text-lg font-medium tabular-nums line-through text-stone-400'>
+                <span className='text-lg font-medium line-through tabular-nums text-stone-400'>
                   {formatCurrency(listPrice)}
                 </span>
               </div>
             ) : (
-              <div className='flex gap-3 items-baseline'>
+              <div className='flex items-baseline gap-3'>
                 <span className='text-3xl font-semibold text-stone-900'>
                   {effectiveDisplayPrice !== listPrice
                     ? formatCurrency(effectiveDisplayPrice)
@@ -493,7 +493,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
             )}
-            <div className='flex gap-3 items-baseline'>
+            <div className='flex items-baseline gap-3'>
               <img
                 src='https://n7media.coolmate.me/uploads/2026/04/15/icon4.png'
                 alt='Freeship'
@@ -547,7 +547,7 @@ export default function ProductDetailPage() {
                     }`}
                   >
                     {isDisabled && (
-                      <span className='flex absolute inset-0 justify-center items-center pointer-events-none'>
+                      <span className='absolute inset-0 flex items-center justify-center pointer-events-none'>
                         <span className='block h-px w-[80%] -rotate-12 bg-white mix-blend-difference' />
                       </span>
                     )}
@@ -558,7 +558,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div className='space-y-3'>
-            <div className='flex justify-between items-center'>
+            <div className='flex items-center justify-between'>
               <p className='text-sm font-semibold text-black m-0!'>
                 Kích thước:{' '}
                 <span className='text-base font-medium tracking-normal normal-case text-stone-700'>
@@ -601,7 +601,7 @@ export default function ProductDetailPage() {
                   >
                     {size}
                     {isDisabled && (
-                      <span className='flex absolute inset-0 justify-center items-center pointer-events-none'>
+                      <span className='absolute inset-0 flex items-center justify-center pointer-events-none'>
                         <span className='block h-px w-[75%] -rotate-12 bg-stone-500' />
                       </span>
                     )}
@@ -675,7 +675,7 @@ export default function ProductDetailPage() {
             </Button>
           </div>
 
-          <div className='grid grid-cols-2 mt-4 rounded-lg bg-stone-200'>
+          <div className='mt-4 rounded-lg grid grid-cols-2 bg-stone-200'>
             {[
               {
                 title: 'https://www.coolmate.me/icons/product/free-ship.svg',
@@ -696,7 +696,7 @@ export default function ProductDetailPage() {
             ].map(({ title, sub }) => (
               <div
                 key={title}
-                className='flex gap-2 items-center p-4 text-start'
+                className='flex items-center p-4 gap-2 text-start'
               >
                 <img src={title} alt={title} className='size-9' />
                 <p className='whitespace-pre-line text-xs text-stone-700 m-0!'>
@@ -708,7 +708,7 @@ export default function ProductDetailPage() {
         </aside>
       </div>
 
-      <div className='mt-8 w-full bg-white'>
+      <div className='w-full mt-8 bg-white'>
         <Tabs
           className='[&_.ant-tabs-nav]:mb-6 [&_.ant-tabs-nav-wrap]:w-full [&_.ant-tabs-nav-list]:flex [&_.ant-tabs-nav-list]:w-full [&_.ant-tabs-tab]:m-0 [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-tab-btn]:w-full [&_.ant-tabs-tab-btn]:text-center [&_.ant-tabs-tab]:py-3 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-ink-bar]:h-0.5'
           defaultActiveKey='description'
@@ -745,7 +745,7 @@ export default function ProductDetailPage() {
 
       {similarProducts.length > 0 ? (
         <div className='mt-12'>
-          <div className='flex flex-wrap gap-4 justify-between items-end mb-6'>
+          <div className='flex flex-wrap items-end justify-between mb-6 gap-4'>
             <h2 className='text-xl font-semibold tracking-tight text-stone-900 md:text-2xl'>
               Sản phẩm tương tự
             </h2>
@@ -783,7 +783,7 @@ export default function ProductDetailPage() {
             size='small'
             rowKey='size'
             bordered
-            className='overflow-hidden rounded-xl border border-slate-200'
+            className='overflow-hidden border rounded-xl border-slate-200'
           />
         ) : (
           <Table
@@ -793,7 +793,7 @@ export default function ProductDetailPage() {
             size='small'
             rowKey='size'
             bordered
-            className='overflow-hidden rounded-xl border border-slate-200'
+            className='overflow-hidden border rounded-xl border-slate-200'
           />
         )}
       </Modal>

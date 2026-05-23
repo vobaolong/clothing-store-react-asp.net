@@ -22,10 +22,16 @@ public class CreateVnPayUrlCommandHandler(
     public async Task<string> Handle(CreateVnPayUrlCommand request, CancellationToken ct)
     {
         var isFromCache = false;
-        var order = await context.Orders.FirstOrDefaultAsync(o => o.Id == request.OrderId && o.UserId == request.UserId, ct);
+        var order = await context.Orders.FirstOrDefaultAsync(
+            o => o.Id == request.OrderId && o.UserId == request.UserId,
+            ct
+        );
         if (order == null)
         {
-            if (memoryCache.TryGetValue($"vnpay_order_{request.OrderId}", out Order? cachedOrder) && cachedOrder != null)
+            if (
+                memoryCache.TryGetValue($"vnpay_order_{request.OrderId}", out Order? cachedOrder)
+                && cachedOrder != null
+            )
             {
                 if (cachedOrder.UserId != request.UserId)
                 {
@@ -45,23 +51,30 @@ public class CreateVnPayUrlCommandHandler(
         var hashSecret = configuration["VNPAY:HashSecret"];
         if (string.IsNullOrWhiteSpace(tmnCode) || string.IsNullOrWhiteSpace(hashSecret))
         {
-            throw new InvalidOperationException("VNPAY service is not configured (missing TmnCode/HashSecret).");
+            throw new InvalidOperationException(
+                "VNPAY service is not configured (missing TmnCode/HashSecret)."
+            );
         }
 
-        var paymentUrlDetail = vnpayClient.CreatePaymentUrl(new VnpayPaymentRequest
-        {
-            Money = Convert.ToDouble(order.TotalAmount),
-            Description = $"Payment for order {order.Id}",
-            BankCode = BankCode.ANY,
-            Language = DisplayLanguage.Vietnamese,
-        });
+        var paymentUrlDetail = vnpayClient.CreatePaymentUrl(
+            new VnpayPaymentRequest
+            {
+                Money = Convert.ToDouble(order.TotalAmount),
+                Description = $"Payment for order {order.Id}",
+                BankCode = BankCode.ANY,
+                Language = DisplayLanguage.Vietnamese,
+            }
+        );
 
         order.PaymentTransactionId = paymentUrlDetail.PaymentId.ToString();
 
         if (isFromCache)
         {
-            memoryCache.Set($"vnpay_order_{order.Id}", order, new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30)));
+            memoryCache.Set(
+                $"vnpay_order_{order.Id}",
+                order,
+                new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+            );
         }
         else
         {

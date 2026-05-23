@@ -11,12 +11,15 @@ public class DeleteCategoryCommandHandler(IApplicationDbContext context)
 {
     public async Task Handle(DeleteCategoryCommand request, CancellationToken ct)
     {
-        var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, ct)
+        var category =
+            await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, ct)
             ?? throw new KeyNotFoundException("Category not found.");
 
         var hasProducts = await context.Products.AnyAsync(x => x.CategoryId == request.Id, ct);
         if (hasProducts)
-            throw new InvalidOperationException("Cannot delete category because it still has products.");
+            throw new InvalidOperationException(
+                "Cannot delete category because it still has products."
+            );
 
         category.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync(ct);

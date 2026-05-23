@@ -18,6 +18,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { NotificationCenter } from '@/components/notification-center'
+import { useHeaderVisibility } from '@/hooks/use-header-visibility'
 
 export type AppHeaderProps = {
   isAdminUser: boolean
@@ -151,7 +152,7 @@ function DesktopNav({
   onSearch: () => void
 }) {
   return (
-    <div className='items-center justify-evenly flex-1 hidden md:flex'>
+    <div className='items-center flex-1 hidden justify-evenly md:flex'>
       <div className='flex items-center gap-5'>
         {NAV_ITEMS.map((item) => {
           const isActive = selectedRootPath === item.key
@@ -217,7 +218,7 @@ function MobileNavDrawer({
         ))}
 
         <div className='pt-4 border-t border-slate-200'>
-          <p className='text-sm font-semibold text-slate-600 mb-3'>Danh mục</p>
+          <p className='mb-3 text-sm font-semibold text-slate-600'>Danh mục</p>
           <div className='flex flex-col gap-2'>
             {categoryGroups.map(({ parent, children }) => (
               <div key={parent.id}>
@@ -228,7 +229,7 @@ function MobileNavDrawer({
                 >
                   {parent.name}
                 </Link>
-                <div className='flex flex-col gap-1 ml-3 mt-1'>
+                <div className='flex flex-col gap-1 mt-1 ml-3'>
                   {children.map((child) => (
                     <Link
                       key={child.id}
@@ -251,7 +252,7 @@ function MobileNavDrawer({
 
 function AnnouncementBar() {
   return (
-    <div className='bg-[#2f2f2f] px-4 py-1 text-center text-xs text-white md:text-sm flex justify-evenly p-2!'>
+    <div className='hidden bg-[#2f2f2f] px-4 py-1 text-center text-xs text-white md:flex md:text-sm justify-evenly p-2!'>
       <span>
         <TruckOutlined className='me-1' /> Miễn phí vận chuyển cho đơn từ
         499.000K
@@ -280,6 +281,7 @@ export default function AppHeader({
   const navigate = useNavigate()
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const visible = useHeaderVisibility({ disabled: isAdminUser })
 
   const categoryGroups = useCategoryGroups(categories)
 
@@ -300,12 +302,10 @@ export default function AppHeader({
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white h-24! transition-transform duration-300 ease-in-out mx-auto ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white transition-transform duration-300 ease-in-out mx-auto ${
         visible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
-      {!isAdminUser && <AnnouncementBar />}
-
       <Header className='bg-white! border-b border-slate-200 px-4! md:px-8!'>
         <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl px-4! md:px-8!'>
           <Link
@@ -376,6 +376,8 @@ export default function AppHeader({
           </div>
         </div>
       </Header>
+
+      {!isAdminUser && <AnnouncementBar />}
     </div>
   )
 }

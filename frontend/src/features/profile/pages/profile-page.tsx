@@ -77,7 +77,7 @@ export default function ProfilePage() {
 					<ProfileSidebar value={section} onChange={handleSectionChange} />
 				</div>
 
-				<div className='min-w-0 flex-1'>
+				<div className='flex-1 min-w-0'>
 					{section === 'profile' && (
 						<div>
 							<h1 className='text-2xl font-semibold text-slate-900'>
@@ -96,7 +96,7 @@ export default function ProfilePage() {
 									</div>
 
 									<div>
-										<label className='mb-1 block text-sm font-medium text-slate-900'>
+										<label className='block mb-1 text-sm font-medium text-slate-900'>
 											Họ và tên
 										</label>
 										{isLoading ? (
@@ -124,7 +124,7 @@ export default function ProfilePage() {
 
 									<div className='space-y-6'>
 										<div>
-											<label className='mb-1 block text-sm font-medium text-slate-900'>
+											<label className='block mb-1 text-sm font-medium text-slate-900'>
 												Email
 											</label>
 											<Input
@@ -136,11 +136,11 @@ export default function ProfilePage() {
 										</div>
 
 										<div>
-											<label className='mb-1 block text-sm font-medium text-slate-900'>
+											<label className='block mb-1 text-sm font-medium text-slate-900'>
 												Mật khẩu
 											</label>
 											<Button
-												className='h-10 rounded-md border-slate-300 px-5 text-slate-900'
+												className='h-10 px-5 rounded-md border-slate-300 text-slate-900'
 												onClick={() => setShowPasswordDialog(true)}
 											>
 												Đổi mật khẩu

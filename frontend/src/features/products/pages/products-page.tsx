@@ -263,8 +263,8 @@ export default function ProductsPage() {
             />
 
             {activeFilters.length > 0 && (
-              <div className='flex flex-wrap gap-3 items-center'>
-                <div className='flex flex-wrap gap-2 items-center'>
+              <div className='flex flex-wrap items-center gap-3'>
+                <div className='flex flex-wrap items-center gap-2'>
                   {activeFilters.map((filter) => (
                     <Tag
                       key={`${filter.key}-${filter.value}`}
@@ -278,7 +278,7 @@ export default function ProductsPage() {
                           removeFilter(filter.key, filter.value)
                         }
                       }}
-                      className='flex items-center px-3 m-0 h-6 text-sm font-medium bg-white rounded-md shadow-sm border-stone-200 text-stone-600'
+                      className='flex items-center h-6 px-3 m-0 text-sm font-medium bg-white rounded-md shadow-sm border-stone-200 text-stone-600'
                     >
                       {filter.label}
                     </Tag>

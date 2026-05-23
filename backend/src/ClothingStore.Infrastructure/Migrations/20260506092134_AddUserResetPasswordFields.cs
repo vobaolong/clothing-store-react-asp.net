@@ -15,25 +15,23 @@ namespace ClothingStore.Infrastructure.Migrations
                 name: "ResetPasswordToken",
                 table: "Users",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "ResetPasswordTokenExpiresAt",
                 table: "Users",
                 type: "timestamp with time zone",
-                nullable: true);
+                nullable: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ResetPasswordToken",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "ResetPasswordToken", table: "Users");
 
-            migrationBuilder.DropColumn(
-                name: "ResetPasswordTokenExpiresAt",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "ResetPasswordTokenExpiresAt", table: "Users");
         }
     }
 }

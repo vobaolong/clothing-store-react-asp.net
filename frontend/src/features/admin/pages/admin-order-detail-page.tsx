@@ -95,7 +95,7 @@ export default function AdminOrderDetailPage() {
   return (
     <div className='space-y-4!'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
-        <div className='flex min-w-0 items-center gap-3'>
+        <div className='flex items-center min-w-0 gap-3'>
           <Link
             to='/admin/orders'
             className='text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 '
@@ -103,7 +103,7 @@ export default function AdminOrderDetailPage() {
             <LeftOutlined />
           </Link>
           <div className='min-w-0'>
-            <div className='truncate font-medium text-2xl'>
+            <div className='text-2xl font-medium truncate'>
               Order: {detail ? detail.id.slice(0, 8).toUpperCase() : '...'}
             </div>
             {detail ? (
@@ -202,9 +202,9 @@ export default function AdminOrderDetailPage() {
                     return (
                       <div
                         key={row.id}
-                        className='flex items-center justify-between gap-4 py-3'
+                        className='flex items-center justify-between py-3 gap-4'
                       >
-                        <div className='flex min-w-0 items-center gap-3'>
+                        <div className='flex items-center min-w-0 gap-3'>
                           <Image
                             alt={row.productName}
                             src={row.imageUrl}
@@ -212,7 +212,7 @@ export default function AdminOrderDetailPage() {
                             loading='lazy'
                           />
                           <div className='min-w-0'>
-                            <div className='truncate font-medium'>
+                            <div className='font-medium truncate'>
                               {toCapitalize(row.productName)}
                             </div>
                             <div className='text-xs text-slate-500'>
@@ -222,7 +222,7 @@ export default function AdminOrderDetailPage() {
                           </div>
                         </div>
 
-                        <div className='flex shrink-0 items-center gap-8'>
+                        <div className='flex items-center shrink-0 gap-8'>
                           <div className='text-sm text-slate-600'>
                             SL:{' '}
                             <span className='font-medium text-slate-800'>
@@ -252,7 +252,7 @@ export default function AdminOrderDetailPage() {
                   <span>Giảm giá</span>
                   <span className='text-emerald-600'>
                     {detail.couponCodeSnapshot && (
-                      <span className='inline-block bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded mr-2'>
+                      <span className='inline-block px-2 py-1 mr-2 text-xs rounded bg-emerald-100 text-emerald-800'>
                         {detail.couponCodeSnapshot}
                       </span>
                     )}

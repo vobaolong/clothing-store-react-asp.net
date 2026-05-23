@@ -15,15 +15,14 @@ namespace ClothingStore.Infrastructure.Migrations
                 table: "OrderItems",
                 type: "text",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ProductSlug",
-                table: "OrderItems");
+            migrationBuilder.DropColumn(name: "ProductSlug", table: "OrderItems");
         }
     }
 }

@@ -34,7 +34,7 @@ export default function ChangePasswordForm() {
   }
 
   return (
-    <div className='mt-8 border-t border-slate-100 pt-8'>
+    <div className='pt-8 mt-8 border-t border-slate-100'>
       <h3 className='mb-6 text-lg font-semibold text-slate-800'>
         Đổi mật khẩu
       </h3>
@@ -101,7 +101,7 @@ export default function ChangePasswordForm() {
             type='primary'
             htmlType='submit'
             loading={isPending}
-            className='h-10 rounded-lg px-8 font-medium'
+            className='h-10 px-8 font-medium rounded-lg'
           >
             Cập nhật mật khẩu
           </Button>

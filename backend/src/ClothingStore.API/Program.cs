@@ -18,14 +18,15 @@ using VNPAY.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // ── JSON & Controllers ──────────────────────────────────────────
-builder.Services.AddControllers()
-		.AddJsonOptions(opts =>
-		{
-			opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-			opts.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-			opts.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-			opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-		});
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        opts.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        opts.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,7 +35,9 @@ builder.Services.AddMemoryCache();
 // ── Application & Infrastructure ─────────────────────────────────
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.Configure<CloudinaryOptions>(builder.Configuration.GetSection(CloudinaryOptions.SectionName));
+builder.Services.Configure<CloudinaryOptions>(
+    builder.Configuration.GetSection(CloudinaryOptions.SectionName)
+);
 
 // ── Application Services ─────────────────────────────────────────
 builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>();
@@ -48,66 +51,74 @@ builder.Services.AddScoped<IUserContext, UserContext>();
 var vnpayConfig = builder.Configuration.GetSection("VNPAY");
 builder.Services.AddVnpayClient(config =>
 {
-	config.TmnCode = vnpayConfig["TmnCode"] ?? string.Empty;
-	config.HashSecret = vnpayConfig["HashSecret"] ?? string.Empty;
-	config.CallbackUrl = vnpayConfig["CallbackUrl"] ?? string.Empty;
-	if (!string.IsNullOrWhiteSpace(vnpayConfig["BaseUrl"]))
-		config.BaseUrl = vnpayConfig["BaseUrl"]!;
-	if (!string.IsNullOrWhiteSpace(vnpayConfig["Version"]))
-		config.Version = vnpayConfig["Version"]!;
-	if (!string.IsNullOrWhiteSpace(vnpayConfig["OrderType"]))
-		config.OrderType = vnpayConfig["OrderType"]!;
+    config.TmnCode = vnpayConfig["TmnCode"] ?? string.Empty;
+    config.HashSecret = vnpayConfig["HashSecret"] ?? string.Empty;
+    config.CallbackUrl = vnpayConfig["CallbackUrl"] ?? string.Empty;
+    if (!string.IsNullOrWhiteSpace(vnpayConfig["BaseUrl"]))
+        config.BaseUrl = vnpayConfig["BaseUrl"]!;
+    if (!string.IsNullOrWhiteSpace(vnpayConfig["Version"]))
+        config.Version = vnpayConfig["Version"]!;
+    if (!string.IsNullOrWhiteSpace(vnpayConfig["OrderType"]))
+        config.OrderType = vnpayConfig["OrderType"]!;
 });
 
 // ── SignalR ──────────────────────────────────────────────────────
 builder.Services.AddSignalR(options =>
 {
-	options.EnableDetailedErrors = builder.Environment.IsDevelopment();
-	options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-	options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+    options.EnableDetailedErrors = builder.Environment.IsDevelopment();
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
 });
 
 // ── JWT Authentication ──────────────────────────────────────────
 var jwtSecret = builder.Configuration["Jwt:Secret"];
 if (string.IsNullOrWhiteSpace(jwtSecret) && !builder.Environment.IsDevelopment())
-	throw new InvalidOperationException("Missing required configuration: Jwt:Secret");
+    throw new InvalidOperationException("Missing required configuration: Jwt:Secret");
 
 var secret = string.IsNullOrWhiteSpace(jwtSecret)
-		? "super-secret-dev-key-change-me-2026"
-		: jwtSecret;
+    ? "super-secret-dev-key-change-me-2026"
+    : jwtSecret;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-		.AddJwtBearer(options =>
-		{
-			options.TokenValidationParameters = new TokenValidationParameters
-			{
-				ValidateIssuer = true,
-				ValidateAudience = true,
-				ValidateIssuerSigningKey = true,
-				ValidIssuer = builder.Configuration["Jwt:Issuer"],
-				ValidAudience = builder.Configuration["Jwt:Audience"],
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-			};
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+        };
 
-			options.Events = new JwtBearerEvents
-			{
-				OnMessageReceived = context =>
-				{
-					var accessToken = context.Request.Query["access_token"];
-					if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
-						context.Token = accessToken;
-					return Task.CompletedTask;
-				}
-			};
-		});
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                if (
+                    !string.IsNullOrEmpty(accessToken)
+                    && context.HttpContext.Request.Path.StartsWithSegments("/hubs")
+                )
+                    context.Token = accessToken;
+                return Task.CompletedTask;
+            },
+        };
+    });
 
 builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
-		options.AddPolicy("frontend", p =>
-				p.WithOrigins("http://localhost:5173")
-				 .AllowAnyHeader()
-				 .AllowAnyMethod()
-				 .AllowCredentials()));
+    options.AddPolicy(
+        "frontend",
+        p =>
+            p.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+    )
+);
 
 var app = builder.Build();
 
@@ -115,24 +126,30 @@ app.UseMiddleware<ApiExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 // ── Database Migration & Seeding ─────────────────────────────────
-var autoMigrate = builder.Configuration.GetValue("Startup:AutoMigrate", app.Environment.IsDevelopment());
-var seedAdmin = builder.Configuration.GetValue("Startup:SeedAdmin", app.Environment.IsDevelopment());
+var autoMigrate = builder.Configuration.GetValue(
+    "Startup:AutoMigrate",
+    app.Environment.IsDevelopment()
+);
+var seedAdmin = builder.Configuration.GetValue(
+    "Startup:SeedAdmin",
+    app.Environment.IsDevelopment()
+);
 
 if (autoMigrate)
 {
-	using var scope = app.Services.CreateScope();
-	var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-	db.Database.Migrate();
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
 
-	if (seedAdmin)
-	{
-		SeedAdminUser(db);
-	}
+    if (seedAdmin)
+    {
+        SeedAdminUser(db);
+    }
 }
 
 // ── Middleware Pipeline ──────────────────────────────────────────
@@ -147,25 +164,29 @@ app.Run();
 // ── Helper Methods ──────────────────────────────────────────────
 static void SeedAdminUser(ApplicationDbContext db)
 {
-	const string adminEmail = "admin@wearly.local";
-	var admin = db.Users.FirstOrDefault(x => x.Email == adminEmail);
+    const string adminEmail = "admin@wearly.local";
+    var admin = db.Users.FirstOrDefault(x => x.Email == adminEmail);
 
-	if (admin is null)
-	{
-		db.Users.Add(new User
-		{
-			FullName = "System Admin",
-			Email = adminEmail,
-			Phone = "0900000000",
-			PasswordHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes("Admin@123"))),
-			IsAdmin = true,
-			IsEmailVerified = true,
-		});
-		db.SaveChanges();
-	}
-	else if (!admin.IsAdmin)
-	{
-		admin.IsAdmin = true;
-		db.SaveChanges();
-	}
+    if (admin is null)
+    {
+        db.Users.Add(
+            new User
+            {
+                FullName = "System Admin",
+                Email = adminEmail,
+                Phone = "0900000000",
+                PasswordHash = Convert.ToHexString(
+                    SHA256.HashData(Encoding.UTF8.GetBytes("Admin@123"))
+                ),
+                IsAdmin = true,
+                IsEmailVerified = true,
+            }
+        );
+        db.SaveChanges();
+    }
+    else if (!admin.IsAdmin)
+    {
+        admin.IsAdmin = true;
+        db.SaveChanges();
+    }
 }

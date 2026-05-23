@@ -12,7 +12,8 @@ public class UnlockUserCommandHandler(
 {
     public async Task Handle(UnlockUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken)
+        var user =
+            await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken)
             ?? throw new InvalidOperationException("Customer not found.");
 
         if (!user.IsLocked)

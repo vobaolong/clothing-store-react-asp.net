@@ -11,9 +11,7 @@ namespace ClothingStore.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "DeletedAt",
-                table: "Orders");
+            migrationBuilder.DropColumn(name: "DeletedAt", table: "Orders");
         }
 
         /// <inheritdoc />
@@ -23,7 +21,8 @@ namespace ClothingStore.Infrastructure.Migrations
                 name: "DeletedAt",
                 table: "Orders",
                 type: "timestamp with time zone",
-                nullable: true);
+                nullable: true
+            );
         }
     }
 }

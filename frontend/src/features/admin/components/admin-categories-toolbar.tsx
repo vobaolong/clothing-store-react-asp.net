@@ -10,6 +10,7 @@ import {
   ADMIN_FILTER_ALL_VALUE
 } from '@/constants/admin-filter.constant'
 import type { UseQueryResult } from '@tanstack/react-query'
+import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 
 export type AdminCategoryFilters = {
   search: string
@@ -21,11 +22,7 @@ export type AdminCategoryFilters = {
 
 type Props = {
   filters: AdminCategoryFilters
-  parentFilterTreeData: Array<{
-    title: string
-    value: string
-    children?: unknown[]
-  }>
+  parentFilterTreeData: ReturnType<typeof buildCategoryTreeSelectData>
   selectedIds: string[]
   hasSelection: boolean
   refreshQuery: UseQueryResult<unknown, Error>
@@ -52,7 +49,7 @@ export default function AdminCategoriesToolbar({
 }: Props) {
   return (
     <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
-      <div className='flex w-full flex-wrap items-center justify-end gap-2 sm:ml-auto sm:w-auto'>
+      <div className='flex flex-wrap items-center justify-end w-full gap-2 sm:ml-auto sm:w-auto'>
         {hasSelection && (
           <AdminCategoriesBulkActions
             selectedIds={selectedIds}

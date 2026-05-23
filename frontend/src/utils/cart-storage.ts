@@ -1,4 +1,11 @@
-import type { CartItem,  } from '@/types'
+import type { CartItem } from '@/types'
+
+function normalizeCartItem(item: CartItem): CartItem {
+  return {
+    ...item,
+    variants: Array.isArray(item.variants) ? item.variants : []
+  }
+}
 
 function compactCartItem(item: CartItem): CartItem {
   return {
@@ -10,7 +17,7 @@ function compactCartItem(item: CartItem): CartItem {
 }
 
 export function saveCartItemsToStorage(items: CartItem[]) {
-  const compact = items.map(compactCartItem)
+  const compact = items.map((item) => compactCartItem(normalizeCartItem(item)))
   try {
     localStorage.setItem('cart_items', JSON.stringify(compact))
   } catch {
@@ -51,7 +58,7 @@ export function loadCartItemsFromStorage(): CartItem[] {
     if (!raw) return []
     const data = JSON.parse(raw) as unknown
     if (!Array.isArray(data)) return []
-    return (data as CartItem[])
+    return (data as CartItem[]).map(normalizeCartItem)
   } catch {
     return []
   }

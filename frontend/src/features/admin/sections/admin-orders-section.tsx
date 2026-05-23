@@ -272,7 +272,7 @@ export default function AdminOrdersSection() {
           activeKey={orderStatusFilter}
           onChange={setOrderStatusFilter}
           items={tabItems}
-          className='order-status-tabs w-full'
+          className='w-full order-status-tabs'
           tabBarStyle={{ marginBottom: 0 }}
         />
         <div className='flex items-center gap-2'>
@@ -350,19 +350,19 @@ export default function AdminOrdersSection() {
         okText='Cập nhật'
         cancelText='Hủy'
       >
-        <div className='space-y-4 py-4'>
+        <div className='py-4 space-y-4'>
           <p>
             Bạn đang chọn cập nhật trạng thái cho{' '}
             <strong>{selectedRowKeys.length}</strong> đơn hàng.
             <br />
-            <span className='text-gray-500 text-sm'>
+            <span className='text-sm text-gray-500'>
               Lưu ý: Hệ thống chỉ cập nhật các đơn hàng có thể chuyển sang trạng
               thái mới. Nếu có lỗi, vui lòng kiểm tra lại trạng thái hiện tại
               của đơn hàng.
             </span>
           </p>
           <div>
-            <label className='mb-2 block font-medium'>Trạng thái mới:</label>
+            <label className='block mb-2 font-medium'>Trạng thái mới:</label>
             <Select
               className='w-full'
               value={bulkUpdateStatus}

@@ -83,7 +83,7 @@ export default function ProductCard({
             loading='lazy'
             src={imageSrc2}
             alt={product.name}
-            className='absolute inset-0 object-cover w-full h-full transition-opacity duration-300 opacity-0 group-hover:opacity-100'
+            className='absolute inset-0 object-cover w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100'
           />
         </div>
       }
@@ -144,7 +144,7 @@ export default function ProductCard({
         </Button>
         <div className='flex items-center justify-between mt-2'>
           {averageRating > 0 ? (
-            <span className='inline-flex items-center gap-1 text-sm text-slate-600'>
+            <span className='inline-flex items-center text-sm gap-1 text-slate-600'>
               <Rate
                 disabled
                 allowHalf

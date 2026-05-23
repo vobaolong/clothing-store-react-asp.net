@@ -14,10 +14,7 @@ public record AdminReviewDto(
     DateTime CreatedAt
 );
 
-public record AdminReviewListResponseDto(
-    IReadOnlyList<AdminReviewDto> Items,
-    int TotalCount
-);
+public record AdminReviewListResponseDto(IReadOnlyList<AdminReviewDto> Items, int TotalCount);
 
 public record ProductReviewDto(
     Guid Id,

@@ -6,18 +6,24 @@ namespace ClothingStore.Application.Categories.Commands;
 
 public record UpdateCategoryCommand(Guid Id, CategoryUpsertDto Dto) : IRequest;
 
-public class UpdateCategoryCommandHandler(IApplicationDbContext context, ICategoryService categoryService)
-    : IRequestHandler<UpdateCategoryCommand>
+public class UpdateCategoryCommandHandler(
+    IApplicationDbContext context,
+    ICategoryService categoryService
+) : IRequestHandler<UpdateCategoryCommand>
 {
     public async Task Handle(UpdateCategoryCommand request, CancellationToken ct)
     {
-        var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, ct)
+        var category =
+            await context.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, ct)
             ?? throw new KeyNotFoundException("Category not found.");
 
         var dto = request.Dto;
         if (dto.ParentId.HasValue)
         {
-            var parentExists = await context.Categories.AnyAsync(c => c.Id == dto.ParentId.Value, ct);
+            var parentExists = await context.Categories.AnyAsync(
+                c => c.Id == dto.ParentId.Value,
+                ct
+            );
             if (!parentExists)
                 throw new InvalidOperationException("Parent category not found.");
             if (dto.ParentId.Value == request.Id)
@@ -25,7 +31,12 @@ public class UpdateCategoryCommandHandler(IApplicationDbContext context, ICatego
         }
 
         category.Name = dto.Name;
-        category.Slug = await categoryService.BuildCategorySlugAsync(dto.Name, dto.ParentId, request.Id, ct);
+        category.Slug = await categoryService.BuildCategorySlugAsync(
+            dto.Name,
+            dto.ParentId,
+            request.Id,
+            ct
+        );
         category.Description = dto.Description?.Trim();
         category.ParentId = dto.ParentId;
         category.Level = dto.Level ?? (byte)(dto.ParentId.HasValue ? 1 : 0);

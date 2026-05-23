@@ -13,9 +13,11 @@ public class MarkNotificationAsReadCommandHandler(IApplicationDbContext context)
     {
         if (request.NotificationId.HasValue)
         {
-            var notification = await context.Notifications
-                .FirstOrDefaultAsync(n => n.Id == request.NotificationId && n.UserId == request.UserId, ct)
-                ?? throw new KeyNotFoundException("Notification not found.");
+            var notification =
+                await context.Notifications.FirstOrDefaultAsync(
+                    n => n.Id == request.NotificationId && n.UserId == request.UserId,
+                    ct
+                ) ?? throw new KeyNotFoundException("Notification not found.");
 
             if (!notification.IsRead)
             {
@@ -27,12 +29,14 @@ public class MarkNotificationAsReadCommandHandler(IApplicationDbContext context)
         else
         {
             // Mark all as read
-            await context.Notifications
-                .Where(n => n.UserId == request.UserId && !n.IsRead)
-                .ExecuteUpdateAsync(n => n
-                    .SetProperty(x => x.IsRead, true)
-                    .SetProperty(x => x.ReadAt, DateTime.UtcNow),
-                    ct);
+            await context
+                .Notifications.Where(n => n.UserId == request.UserId && !n.IsRead)
+                .ExecuteUpdateAsync(
+                    n =>
+                        n.SetProperty(x => x.IsRead, true)
+                            .SetProperty(x => x.ReadAt, DateTime.UtcNow),
+                    ct
+                );
         }
     }
 }

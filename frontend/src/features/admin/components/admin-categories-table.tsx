@@ -11,12 +11,15 @@ import type {
 import { formatDate } from '@/utils/format'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { AdminTableEditDeleteActions } from '@/features/admin/components/admin-table-edit-delete-actions'
+import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 
 type Props = {
   loading: boolean
   data: AdminCategory[]
   rowSelection: TableProps<AdminCategory>['rowSelection']
-  getParentTreeData: (rowId: string) => unknown[]
+  getParentTreeData: (
+    rowId: string
+  ) => ReturnType<typeof buildCategoryTreeSelectData>
   onQuickUpdate: (
     category: AdminCategory,
     update: Partial<
@@ -64,7 +67,7 @@ export default function AdminCategoriesTable({
             <img
               src={value}
               alt='Category'
-              className='h-16 w-16 rounded object-cover'
+              className='object-cover w-16 h-16 rounded'
             />
           ) : (
             <span className='text-xs text-slate-500'>Không có ảnh</span>

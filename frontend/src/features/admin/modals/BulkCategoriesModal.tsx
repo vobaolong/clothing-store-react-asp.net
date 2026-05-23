@@ -51,7 +51,7 @@ function BulkCategoryImageField({
   return (
     <Space.Compact className='w-full!'>
       <Input
-        className='min-w-0 flex-1'
+        className='flex-1 min-w-0'
         value={raw}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder='https://…'
@@ -209,19 +209,19 @@ export default function BulkCategoriesModal({
                 {fields.map((field) => (
                   <div
                     key={field.key}
-                    className='rounded-lg border border-slate-200 bg-slate-50/80 p-3'
+                    className='p-3 border rounded-lg border-slate-200 bg-slate-50/80'
                   >
                     <Space wrap className='w-full' align='start'>
                       <Form.Item
                         name={[field.name, 'name']}
                         label='Name'
-                        className='mb-0 min-w-35 flex-1'
+                        className='flex-1 mb-0 min-w-35'
                       >
                         <Input placeholder='Category name' />
                       </Form.Item>
                       <Form.Item
                         label='Image URL'
-                        className='mb-0 min-w-45 flex-1'
+                        className='flex-1 mb-0 min-w-45'
                       >
                         <Form.Item name={[field.name, 'image']} noStyle>
                           <BulkCategoryImageField onDirty={onDirty} />
@@ -230,7 +230,7 @@ export default function BulkCategoriesModal({
                       <Form.Item
                         name={[field.name, 'description']}
                         label='Description'
-                        className='mb-0 min-w-40 flex-1'
+                        className='flex-1 mb-0 min-w-40'
                       >
                         <Input placeholder='Optional' allowClear />
                       </Form.Item>

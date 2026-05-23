@@ -12,13 +12,16 @@ public class GetMyOrdersQueryHandler(IApplicationDbContext context)
 {
     public async Task<MyOrdersResponseDto> Handle(GetMyOrdersQuery request, CancellationToken ct)
     {
-        var query = context.Orders.AsNoTracking()
+        var query = context
+            .Orders.AsNoTracking()
             .Include(o => o.Items)
             .Where(o => o.UserId == request.UserId);
 
-        if (!string.IsNullOrWhiteSpace(request.Status) &&
-            !string.Equals(request.Status, "All", StringComparison.OrdinalIgnoreCase) &&
-            Enum.TryParse<OrderStatus>(request.Status, true, out var statusFilter))
+        if (
+            !string.IsNullOrWhiteSpace(request.Status)
+            && !string.Equals(request.Status, "All", StringComparison.OrdinalIgnoreCase)
+            && Enum.TryParse<OrderStatus>(request.Status, true, out var statusFilter)
+        )
         {
             query = query.Where(o => o.Status == statusFilter);
         }
@@ -36,12 +39,14 @@ public class GetMyOrdersQueryHandler(IApplicationDbContext context)
                 o.Note,
                 o.DiscountAmount,
                 o.Items.Count,
-                o.Items.Select(i => new OrderItemSummaryDto(i.ProductId, i.Quantity, i.UnitPrice)).ToList(),
+                o.Items.Select(i => new OrderItemSummaryDto(i.ProductId, i.Quantity, i.UnitPrice))
+                    .ToList(),
                 null
             ))
             .ToListAsync(ct);
 
-        var counts = await context.Orders.AsNoTracking()
+        var counts = await context
+            .Orders.AsNoTracking()
             .Where(o => o.UserId == request.UserId)
             .GroupBy(o => o.Status)
             .Select(g => new OrderStatusCountDto(g.Key, g.Count()))

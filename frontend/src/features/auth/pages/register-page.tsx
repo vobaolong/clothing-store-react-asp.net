@@ -38,7 +38,7 @@ function validatePasswordStrength(value: string): string | null {
 function PasswordStrengthChecklist({ password }: { password: string }) {
   if (!password) return null
   return (
-    <ul className='mt-2 space-y-1 text-xs'>
+    <ul className='mt-2 text-xs space-y-1'>
       {PASSWORD_RULES.map((rule) => {
         const passed = rule.test(password)
         return (
@@ -88,7 +88,7 @@ export default function RegisterPage() {
 
   return (
     <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center'>
-      <Card className='w-full rounded-3xl border border-slate-200 shadow-sm'>
+      <Card className='w-full border rounded-3xl border-slate-200 shadow-sm'>
         <div className='mb-6'>
           <Title level={3} className='mb-1!'>
             Tạo tài khoản mới
@@ -203,7 +203,7 @@ export default function RegisterPage() {
           </Button>
         </Form>
 
-        <div className='mt-5 text-center text-sm text-slate-500'>
+        <div className='mt-5 text-sm text-center text-slate-500'>
           Đã có tài khoản?{' '}
           <Link
             to='/login'

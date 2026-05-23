@@ -49,7 +49,7 @@ export default function ResetPasswordPage() {
 
 	return (
 		<div className='flex min-h-[70vh] items-center justify-center px-4 py-12'>
-			<Card className='w-full max-w-md rounded-3xl border-slate-200 shadow-xl'>
+			<Card className='w-full max-w-md shadow-xl rounded-3xl border-slate-200'>
 				<div className='mb-8 text-center'>
 					<Typography.Title level={2} className='mb-2!'>
 						Đặt lại mật khẩu
@@ -109,7 +109,7 @@ export default function ResetPasswordPage() {
 							htmlType='submit'
 							block
 							loading={isPending}
-							className='h-12 rounded-xl font-semibold'
+							className='h-12 font-semibold rounded-xl'
 						>
 							Đặt lại mật khẩu
 						</Button>

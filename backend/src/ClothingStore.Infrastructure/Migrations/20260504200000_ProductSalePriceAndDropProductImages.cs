@@ -18,7 +18,8 @@ public partial class ProductSalePriceAndDropProductImages : Migration
         migrationBuilder.RenameColumn(
             name: "DiscountAmount",
             table: "Products",
-            newName: "SalePrice");
+            newName: "SalePrice"
+        );
     }
 
     /// <inheritdoc />
@@ -27,7 +28,8 @@ public partial class ProductSalePriceAndDropProductImages : Migration
         migrationBuilder.RenameColumn(
             name: "SalePrice",
             table: "Products",
-            newName: "DiscountAmount");
+            newName: "DiscountAmount"
+        );
 
         migrationBuilder.CreateTable(
             name: "ProductImages",
@@ -37,7 +39,10 @@ public partial class ProductSalePriceAndDropProductImages : Migration
                 ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                 Url = table.Column<string>(type: "text", nullable: false),
                 SortOrder = table.Column<int>(type: "integer", nullable: false),
-                CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                CreatedAt = table.Column<DateTime>(
+                    type: "timestamp with time zone",
+                    nullable: false
+                ),
             },
             constraints: table =>
             {
@@ -47,12 +52,15 @@ public partial class ProductSalePriceAndDropProductImages : Migration
                     column: x => x.ProductId,
                     principalTable: "Products",
                     principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+                    onDelete: ReferentialAction.Cascade
+                );
+            }
+        );
 
         migrationBuilder.CreateIndex(
             name: "IX_ProductImages_ProductId",
             table: "ProductImages",
-            column: "ProductId");
+            column: "ProductId"
+        );
     }
 }

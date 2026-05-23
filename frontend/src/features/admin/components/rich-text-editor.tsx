@@ -45,7 +45,7 @@ export default function RichTextEditor({
 
   return (
     <div>
-      <div className='flex flex-wrap gap-2 rounded-t-md border border-slate-200 bg-slate-50 p-2'>
+      <div className='flex flex-wrap p-2 border gap-2 rounded-t-md border-slate-200 bg-slate-50'>
         <Button
           size='small'
           type={editor.isActive('bold') ? 'primary' : 'default'}

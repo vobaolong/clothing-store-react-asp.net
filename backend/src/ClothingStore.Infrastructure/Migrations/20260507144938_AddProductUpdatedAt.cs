@@ -16,15 +16,14 @@ namespace ClothingStore.Infrastructure.Migrations
                 table: "Products",
                 type: "timestamp with time zone",
                 nullable: false,
-                defaultValueSql: "CURRENT_TIMESTAMP");
+                defaultValueSql: "CURRENT_TIMESTAMP"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "UpdatedAt",
-                table: "Products");
+            migrationBuilder.DropColumn(name: "UpdatedAt", table: "Products");
         }
     }
 }

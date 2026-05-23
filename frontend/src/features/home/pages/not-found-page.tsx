@@ -7,7 +7,7 @@ export default function NotFoundPage() {
   const navigate = useNavigate()
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 text-center'>
+    <div className='flex flex-col items-center justify-center min-h-screen px-4 text-center bg-slate-50'>
       {/* Big 404 */}
       <div className='relative mb-6 select-none'>
         <span className='text-[10rem] font-black leading-none text-slate-100 sm:text-[14rem]'>
@@ -21,7 +21,7 @@ export default function NotFoundPage() {
       <h1 className='mb-3 text-2xl font-bold text-slate-800 sm:text-3xl'>
         Trang không tồn tại
       </h1>
-      <p className='mb-8 max-w-md text-base text-slate-500'>
+      <p className='max-w-md mb-8 text-base text-slate-500'>
         Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển đến
         địa chỉ khác.
       </p>

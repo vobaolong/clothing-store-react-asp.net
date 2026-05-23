@@ -264,17 +264,17 @@ export default function AdminProductFormFields({
               />
             </div>
             {hasSpecs && (
-              <div className='space-y-2 rounded-xl border border-slate-200 bg-slate-50/30 p-4'>
+              <div className='p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30'>
                 {DESCRIPTION_SPEC_LABELS.map((label, index) => (
                   <div key={label} className='flex items-start gap-2'>
                     <Form.Item
-                      className='mb-0 hidden'
+                      className='hidden mb-0'
                       name={['descriptionSpecs', index, 'label']}
                       initialValue={label}
                     >
                       <Input />
                     </Form.Item>
-                    <div className='flex h-8 w-36 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700'>
+                    <div className='flex items-center h-8 px-3 text-sm font-medium border rounded-lg w-36 border-slate-200 bg-slate-50 text-slate-700'>
                       {label}
                     </div>
                     <AdminDescriptionSpecField

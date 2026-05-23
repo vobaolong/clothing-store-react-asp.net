@@ -5,15 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Application.Coupons.Queries;
 
-public record ValidateCouponQuery(string Code, decimal OrderTotal) : IRequest<ValidCouponResponseDto>;
+public record ValidateCouponQuery(string Code, decimal OrderTotal)
+    : IRequest<ValidCouponResponseDto>;
 
 public class ValidateCouponQueryHandler(IApplicationDbContext context)
     : IRequestHandler<ValidateCouponQuery, ValidCouponResponseDto>
 {
-    public async Task<ValidCouponResponseDto> Handle(ValidateCouponQuery request, CancellationToken ct)
+    public async Task<ValidCouponResponseDto> Handle(
+        ValidateCouponQuery request,
+        CancellationToken ct
+    )
     {
         var code = request.Code.Trim().ToUpperInvariant();
-        var coupon = await context.Coupons.FirstOrDefaultAsync(c => c.Code == code, ct)
+        var coupon =
+            await context.Coupons.FirstOrDefaultAsync(c => c.Code == code, ct)
             ?? throw new InvalidOperationException("Coupon is invalid.");
 
         if (coupon.Status != CouponStatus.Active)
@@ -36,6 +41,11 @@ public class ValidateCouponQueryHandler(IApplicationDbContext context)
         if (discountAmount > request.OrderTotal)
             throw new InvalidOperationException("Coupon is not applicable.");
 
-        return new ValidCouponResponseDto(coupon.Id, coupon.Code, coupon.DiscountType, discountAmount);
+        return new ValidCouponResponseDto(
+            coupon.Id,
+            coupon.Code,
+            coupon.DiscountType,
+            discountAmount
+        );
     }
 }

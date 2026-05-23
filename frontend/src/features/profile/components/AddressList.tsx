@@ -63,7 +63,7 @@ export default function AddressList() {
 
 	return (
 		<Card>
-			<div className='flex justify-between items-center mb-3'>
+			<div className='flex items-center justify-between mb-3'>
 				<h3 className='text-lg font-medium'>Sổ Địa Chỉ</h3>
 				<Button type='primary' onClick={() => setOpen(true)}>
 					Thêm địa chỉ mới

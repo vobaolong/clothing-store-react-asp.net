@@ -23,7 +23,7 @@ export default function ProfileInfo() {
         <div className='flex-1'>
           {!editing ? (
             <>
-              <div className='flex justify-between items-start'>
+              <div className='flex items-start justify-between'>
                 <h2 className='text-xl font-semibold'>
                   {data?.fullName ?? '-'}
                 </h2>

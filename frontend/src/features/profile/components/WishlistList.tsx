@@ -23,7 +23,7 @@ export default function WishlistList() {
 
   return (
     <Card>
-      <h3 className='text-lg font-medium mb-6 capitalize'>
+      <h3 className='mb-6 text-lg font-medium capitalize'>
         Danh Sách Yêu Thích Của Tôi ({data?.length || 0})
       </h3>
       <div className='grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>

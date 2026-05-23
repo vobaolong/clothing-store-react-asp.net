@@ -8,11 +8,11 @@ namespace ClothingStore.API.Controllers;
 [Route("api/categories")]
 public class CategoriesController(ISender sender) : BaseApiController
 {
-	[HttpGet]
-	[AllowAnonymous]
-	public async Task<IActionResult> GetAll(CancellationToken ct)
-	{
-		var data = await sender.Send(new GetPublicCategoriesQuery(), ct);
-		return Ok(data, "Categories fetched.");
-	}
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var data = await sender.Send(new GetPublicCategoriesQuery(), ct);
+        return Ok(data, "Categories fetched.");
+    }
 }

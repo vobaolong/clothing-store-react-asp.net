@@ -441,7 +441,7 @@ export default function CheckoutPage() {
             }`}
           >
             <div className='flex items-start gap-3'>
-              <div className='flex items-center justify-center size-10 bg-green-100 rounded-full'>
+              <div className='flex items-center justify-center bg-green-100 rounded-full size-10'>
                 <svg
                   className='w-5 h-5 text-green-600'
                   fill='none'
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
                 ✕
               </button>
             </div>
-            <div className='flex items-center justify-end gap-2 mt-4'>
+            <div className='flex items-center justify-end mt-4 gap-2'>
               <Button onClick={() => toast.dismiss(t.id)} className='text-sm'>
                 Đóng
               </Button>
@@ -517,7 +517,7 @@ export default function CheckoutPage() {
       <div className='mb-8'>
         <h1 className='text-3xl font-bold text-slate-900'>Thanh toán</h1>
         <p className='mt-1 text-sm text-slate-500'>
-          <InfoCircleOutlined className='text-slate-500 mr-1' />
+          <InfoCircleOutlined className='mr-1 text-slate-500' />
           Hoàn thành thông tin đặt hàng để tiếp tục.
         </p>
       </div>

@@ -20,52 +20,52 @@ export default function AdminProductPreviewCard({
   previewPrice
 }: AdminProductPreviewCardProps) {
   return (
-    <aside className='relative z-10 isolate min-w-0 lg:sticky lg:top-0 lg:self-start'>
-      <div className='rounded-2xl border border-slate-200 bg-white p-4 shadow-sm'>
+    <aside className='relative z-10 min-w-0 isolate lg:sticky lg:top-0 lg:self-start'>
+      <div className='p-4 bg-white border rounded-2xl border-slate-200 shadow-sm'>
         {discountPercent > 0 ? (
           <Badge.Ribbon
             text={`-${discountPercent}%`}
             color='red'
             placement='end'
           >
-            <div className='overflow-hidden rounded-xl border border-slate-200 bg-slate-100'>
+            <div className='overflow-hidden border rounded-xl border-slate-200 bg-slate-100'>
               {previewImageUrl ? (
                 <img
                   src={previewImageUrl}
                   alt={previewName}
-                  className='h-auto w-full aspect-square object-cover'
+                  className='object-cover w-full h-auto aspect-square'
                 />
               ) : (
-                <div className='flex h-56 items-center justify-center text-sm text-slate-500'>
+                <div className='flex items-center justify-center h-56 text-sm text-slate-500'>
                   Chưa có hình ảnh sản phẩm
                 </div>
               )}
             </div>
           </Badge.Ribbon>
         ) : (
-          <div className='overflow-hidden rounded-xl border border-slate-200 bg-slate-100'>
+          <div className='overflow-hidden border rounded-xl border-slate-200 bg-slate-100'>
             {previewImageUrl ? (
               <img
                 src={previewImageUrl}
                 alt={previewName}
-                className='h-auto w-full aspect-square object-cover'
+                className='object-cover w-full h-auto aspect-square'
               />
             ) : (
-              <div className='flex h-56 items-center justify-center text-sm text-slate-500'>
+              <div className='flex items-center justify-center h-56 text-sm text-slate-500'>
                 Chưa có hình ảnh sản phẩm
               </div>
             )}
           </div>
         )}
         <div className='mt-4 space-y-2'>
-          <p className='text-xs font-medium uppercase tracking-wide text-slate-500'>
+          <p className='text-xs font-medium tracking-wide uppercase text-slate-500'>
             {selectedCategoryName}
           </p>
-          <p className='line-clamp-2 text-lg font-semibold text-slate-900'>
+          <p className='text-lg font-semibold line-clamp-2 text-slate-900'>
             {previewName}
           </p>
         </div>
-        <div className='mt-2 flex flex-wrap gap-2'>
+        <div className='flex flex-wrap mt-2 gap-2'>
           {previewColors.length ? (
             previewColors.map((item) => (
               <div
@@ -78,11 +78,11 @@ export default function AdminProductPreviewCard({
             <span className='text-xs text-slate-500'>Không có màu</span>
           )}
         </div>
-        <div className='mt-4 rounded-lg bg-slate-50 p-3 flex items-center justify-between'>
+        <div className='flex items-center justify-between p-3 mt-4 rounded-lg bg-slate-50'>
           <span className='font-semibold text-slate-900'>
             {previewSalePriceFormatted}
           </span>
-          <span className='font-semibold text-xs text-slate-400 line-through'>
+          <span className='text-xs font-semibold line-through text-slate-400'>
             {previewPrice}
           </span>
         </div>

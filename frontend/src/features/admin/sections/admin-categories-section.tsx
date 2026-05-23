@@ -33,7 +33,7 @@ export default function AdminCategoriesSection() {
     queryFn: getAdminCategories
   })
 
-  const data = categoriesQuery.data ?? []
+  const data = useMemo(() => categoriesQuery.data ?? [], [categoriesQuery.data])
   const [filters, setFilters] = useState<AdminCategoryFilters>(initialFilters)
   const { rowSelection, clearSelection, selectedIds, hasSelection } =
     useTableSelection<AdminCategory>()

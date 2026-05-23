@@ -15,15 +15,14 @@ namespace ClothingStore.Infrastructure.Migrations
                 table: "Users",
                 type: "boolean",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsLocked",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "IsLocked", table: "Users");
         }
     }
 }

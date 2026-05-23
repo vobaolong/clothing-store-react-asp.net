@@ -2,5 +2,5 @@ namespace ClothingStore.Domain.Entities;
 
 public abstract class SoftDeletableEntity : BaseEntity
 {
-	public DateTime? DeletedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }

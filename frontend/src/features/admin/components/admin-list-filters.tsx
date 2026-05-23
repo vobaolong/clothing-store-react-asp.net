@@ -43,7 +43,7 @@ export default function AdminListFilters({
 	searchPlaceholder,
 	searchClassName = 'w-full sm:max-w-sm',
 	selects = [],
-	className = 'flex w-full flex-wrap items-center gap-2',
+	className = 'flex flex-wrap items-center w-full gap-2',
 }: AdminListFiltersProps) {
 	return (
 		<div className={className}>

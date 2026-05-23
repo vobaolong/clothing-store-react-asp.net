@@ -1,16 +1,18 @@
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
+
 namespace ClothingStore.Infrastructure.Security;
 
 public class EmailTemplateBuilder : IEmailTemplateBuilder
 {
-	private readonly string _appName = "Wearly Store";
-	private readonly string _clientBaseUrl = "http://localhost:5173";
-	private readonly string _primaryColor = "#0f172a";
-	private readonly string _buttonColor = "#0ea5e9";
-	private string BuildBaseLayout(string title, string content)
-	{
-		return $@"
+    private readonly string _appName = "Wearly Store";
+    private readonly string _clientBaseUrl = "http://localhost:5173";
+    private readonly string _primaryColor = "#0f172a";
+    private readonly string _buttonColor = "#0ea5e9";
+
+    private string BuildBaseLayout(string title, string content)
+    {
+        return $@"
 <!DOCTYPE html>
 <html lang='vi'>
 <head>
@@ -116,21 +118,29 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
     </div>
 </body>
 </html>";
-	}
-	public string BuildOrderPlacedEmail(Order order, User user)
-	{
-		var itemsHtml = string.Join("", order.Items.Select(item => $@"
+    }
+
+    public string BuildOrderPlacedEmail(Order order, User user)
+    {
+        var itemsHtml = string.Join(
+            "",
+            order.Items.Select(item =>
+                $@"
             <tr>
                 <td>{item.ProductName}<br/><small style='color: #64748b;'>{item.VariantName}</small></td>
                 <td>{item.Quantity}</td>
                 <td>{item.UnitPrice:N0}đ</td>
             </tr>
-        "));
-		var discountHtml = order.DiscountAmount > 0
-				? $@"<tr><td colspan='2' style='text-align:right'><b>Giảm giá:</b></td><td>-{order.DiscountAmount:N0}đ</td></tr>"
-				: "";
-		var orderDate = order.CreatedAt.ToString("dd/MM/yyyy HH:mm");
-		var content = $@"
+        "
+            )
+        );
+        var discountHtml =
+            order.DiscountAmount > 0
+                ? $@"<tr><td colspan='2' style='text-align:right'><b>Giảm giá:</b></td><td>-{order.DiscountAmount:N0}đ</td></tr>"
+                : "";
+        var orderDate = order.CreatedAt.ToString("dd/MM/yyyy HH:mm");
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <p>Cảm ơn bạn đã đặt hàng! Chúng tôi đã nhận được đơn hàng và đang tiến hành xử lý.</p>
             <div style='background-color: #f8fafc; padding: 16px; border-radius: 6px; margin: 24px 0;'>
@@ -165,12 +175,14 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 <a href='{_clientBaseUrl}/orders/{order.Id}' class='btn'>Xem đơn hàng</a>
             </div>
         ";
-		return BuildBaseLayout("Xác nhận đặt hàng", content);
-	}
-	public string BuildOrderDeliveredEmail(Order order, User user)
-	{
-		var deliveredDate = DateTime.UtcNow.ToString("dd/MM/yyyy");
-		var content = $@"
+        return BuildBaseLayout("Xác nhận đặt hàng", content);
+    }
+
+    public string BuildOrderDeliveredEmail(Order order, User user)
+    {
+        var deliveredDate = DateTime.UtcNow.ToString("dd/MM/yyyy");
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <div class='alert success-alert'>
                 <strong>Đơn hàng đã được giao thành công!</strong>
@@ -182,14 +194,16 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 <a href='{_clientBaseUrl}/orders/{order.Id}' class='btn'>Xem chi tiết đơn hàng</a>
             </div>
         ";
-		return BuildBaseLayout("Đơn hàng đã được giao", content);
-	}
-	public string BuildUserLockedEmail(User user, string? reason)
-	{
-		var reasonHtml = !string.IsNullOrWhiteSpace(reason)
-				? $@"<p><strong>Lý do:</strong> {reason}</p>"
-				: $@"<p>Tài khoản của bạn đã bị khóa do vi phạm chính sách hoặc vì lý do bảo mật.</p>";
-		var content = $@"
+        return BuildBaseLayout("Đơn hàng đã được giao", content);
+    }
+
+    public string BuildUserLockedEmail(User user, string? reason)
+    {
+        var reasonHtml = !string.IsNullOrWhiteSpace(reason)
+            ? $@"<p><strong>Lý do:</strong> {reason}</p>"
+            : $@"<p>Tài khoản của bạn đã bị khóa do vi phạm chính sách hoặc vì lý do bảo mật.</p>";
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <div class='alert'>
                 <strong>Tài khoản của bạn đã bị khóa.</strong>
@@ -198,11 +212,13 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
             {reasonHtml}
             <p>Nếu bạn cho rằng đây là nhầm lẫn hoặc cần hỗ trợ thêm, vui lòng phản hồi email này để được hỗ trợ.</p>
         ";
-		return BuildBaseLayout("Thông báo khóa tài khoản", content);
-	}
-	public string BuildUserUnlockedEmail(User user)
-	{
-		var content = $@"
+        return BuildBaseLayout("Thông báo khóa tài khoản", content);
+    }
+
+    public string BuildUserUnlockedEmail(User user)
+    {
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <div class='alert success-alert'>
                 <strong>Tài khoản của bạn đã được mở khóa.</strong>
@@ -212,11 +228,13 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 <a href='{_clientBaseUrl}/login' class='btn'>Đăng nhập ngay</a>
             </div>
         ";
-		return BuildBaseLayout("Thông báo mở khóa tài khoản", content);
-	}
-	public string BuildWelcomeEmail(User user)
-	{
-		var content = $@"
+        return BuildBaseLayout("Thông báo mở khóa tài khoản", content);
+    }
+
+    public string BuildWelcomeEmail(User user)
+    {
+        var content =
+            $@"
             <div class='greeting'>Chào mừng {user.FullName} đến với {_appName}!</div>
             <p>Tài khoản của bạn đã được tạo thành công.</p>
             <p>Khám phá ngay những sản phẩm mới nhất và tận hưởng trải nghiệm mua sắm tuyệt vời cùng chúng tôi.</p>
@@ -224,11 +242,13 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 <a href='{_clientBaseUrl}' class='btn'>Mua sắm ngay</a>
             </div>
         ";
-		return BuildBaseLayout("Chào mừng đến với " + _appName, content);
-	}
-	public string BuildResetPasswordEmail(User user, string resetLink)
-	{
-		var content = $@"
+        return BuildBaseLayout("Chào mừng đến với " + _appName, content);
+    }
+
+    public string BuildResetPasswordEmail(User user, string resetLink)
+    {
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>
             <p>Nếu bạn thực hiện yêu cầu này, vui lòng nhấn nút bên dưới để đặt mật khẩu mới. Liên kết sẽ hết hạn sau 24 giờ.</p>
@@ -239,11 +259,13 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.
             </p>
         ";
-		return BuildBaseLayout("Yêu cầu đặt lại mật khẩu", content);
-	}
-	public string BuildRegisterOtpEmail(User user, string otpCode)
-	{
-		var content = $@"
+        return BuildBaseLayout("Yêu cầu đặt lại mật khẩu", content);
+    }
+
+    public string BuildRegisterOtpEmail(User user, string otpCode)
+    {
+        var content =
+            $@"
             <div class='greeting'>Xin chào {user.FullName},</div>
             <p>Cảm ơn bạn đã đăng ký tài khoản tại {_appName}.</p>
             <p>Để hoàn tất đăng ký và xác thực email, vui lòng sử dụng mã OTP bên dưới:</p>
@@ -256,6 +278,6 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
             <p>Vui lòng không chia sẻ mã này cho bất kỳ ai.</p>
             <p>Nếu bạn không thực hiện đăng ký tài khoản, vui lòng bỏ qua email này.</p>
         ";
-		return BuildBaseLayout("Xác thực email đăng ký", content);
-	}
+        return BuildBaseLayout("Xác thực email đăng ký", content);
+    }
 }

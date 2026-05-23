@@ -11,11 +11,12 @@ public class SetDefaultShippingAddressCommandHandler(IApplicationDbContext conte
 {
     public async Task Handle(SetDefaultShippingAddressCommand request, CancellationToken ct)
     {
-        var addresses = await context.ShippingAddresses
-            .Where(x => x.UserId == request.UserId)
+        var addresses = await context
+            .ShippingAddresses.Where(x => x.UserId == request.UserId)
             .ToListAsync(ct);
 
-        var selected = addresses.FirstOrDefault(x => x.Id == request.Id)
+        var selected =
+            addresses.FirstOrDefault(x => x.Id == request.Id)
             ?? throw new KeyNotFoundException("Address not found.");
 
         foreach (var item in addresses)

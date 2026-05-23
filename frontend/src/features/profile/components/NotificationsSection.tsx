@@ -95,11 +95,11 @@ export default function NotificationsSection() {
 
   return (
     <div>
-      <h1 className='text-2xl font-semibold mb-4'>Thông báo</h1>
+      <h1 className='mb-4 text-2xl font-semibold'>Thông báo</h1>
 
       {groupedOrderNotifications.length > 0 && (
         <div className='mb-6'>
-          <h3 className='text-lg font-medium mb-2'>Đơn hàng</h3>
+          <h3 className='mb-2 text-lg font-medium'>Đơn hàng</h3>
           <div className='space-y-3 max-h-screen! overflow-y-auto'>
             {groupedOrderNotifications.map(
               ({ orderId, items, latest, unreadCount }) => {
@@ -108,7 +108,7 @@ export default function NotificationsSection() {
                 return (
                   <div
                     key={orderId}
-                    className='overflow-hidden rounded-lg border border-slate-200 bg-white'
+                    className='overflow-hidden bg-white border rounded-lg border-slate-200'
                   >
                     <button
                       type='button'
@@ -116,13 +116,13 @@ export default function NotificationsSection() {
                       onClick={() => toggleGroup(orderId)}
                     >
                       <div className='flex items-start justify-between gap-3'>
-                        <div className='flex min-w-0 flex-1 items-start gap-3'>
-                          <div className='flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-slate-100 text-xl'>
+                        <div className='flex items-start flex-1 min-w-0 gap-3'>
+                          <div className='flex items-center justify-center text-xl h-14 w-14 shrink-0 rounded-md bg-slate-100'>
                             {thumbnailUrl ? (
                               <img
                                 src={thumbnailUrl}
                                 alt='Sản phẩm'
-                                className='h-full w-full rounded-md object-cover'
+                                className='object-cover w-full h-full rounded-md'
                               />
                             ) : (
                               getNotificationIcon(latest.type)
@@ -130,7 +130,7 @@ export default function NotificationsSection() {
                           </div>
                           <div className='min-w-0'>
                             <div className='flex flex-wrap items-center gap-2'>
-                              <div className='truncate font-semibold text-slate-900'>
+                              <div className='font-semibold truncate text-slate-900'>
                                 {latest.title}
                               </div>
                               <Tag className='m-0'>{items.length} cập nhật</Tag>
@@ -140,7 +140,7 @@ export default function NotificationsSection() {
                                 </Tag>
                               )}
                             </div>
-                            <div className='mt-1 line-clamp-2 text-sm text-slate-600'>
+                            <div className='mt-1 text-sm line-clamp-2 text-slate-600'>
                               {latest.message}
                             </div>
                             <div className='mt-2 text-xs text-slate-800'>
@@ -148,7 +148,7 @@ export default function NotificationsSection() {
                             </div>
                           </div>
                         </div>
-                        <div className='flex shrink-0 items-center gap-3'>
+                        <div className='flex items-center shrink-0 gap-3'>
                           <div className='text-xs text-slate-400'>
                             {formatDate(latest.createdAt)}
                           </div>
@@ -162,7 +162,7 @@ export default function NotificationsSection() {
                       </div>
                     </button>
                     {isExpanded && (
-                      <div className='border-t border-slate-200 bg-slate-50 px-4 py-4'>
+                      <div className='px-4 py-4 border-t border-slate-200 bg-slate-50'>
                         <div className='space-y-4'>
                           {items.map((item, index) => (
                             <button
@@ -171,9 +171,9 @@ export default function NotificationsSection() {
                               onClick={() => {
                                 if (!item.isRead) markAsRead(item.id)
                               }}
-                              className='relative block w-full rounded-md bg-white px-4 py-3 text-left hover:bg-slate-100 transition-colors'
+                              className='relative block w-full px-4 py-3 text-left bg-white rounded-md hover:bg-slate-100 transition-colors'
                             >
-                              <div className='absolute left-0 top-0 flex h-full w-7 justify-center'>
+                              <div className='absolute top-0 left-0 flex justify-center h-full w-7'>
                                 <span
                                   className={`absolute left-3.25 top-2 h-2.5 w-2.5 rounded-full ${item.isRead ? 'bg-slate-300' : 'bg-blue-500'}`}
                                 />
@@ -186,7 +186,7 @@ export default function NotificationsSection() {
                                   <div className='font-medium text-slate-900'>
                                     {item.title}
                                   </div>
-                                  <div className='shrink-0 text-xs text-slate-400'>
+                                  <div className='text-xs shrink-0 text-slate-400'>
                                     {formatDate(item.createdAt)}
                                   </div>
                                 </div>
@@ -209,7 +209,7 @@ export default function NotificationsSection() {
 
       {otherNotifications.length > 0 && (
         <div>
-          <h3 className='text-lg font-medium mb-2'>Khác</h3>
+          <h3 className='mb-2 text-lg font-medium'>Khác</h3>
           <div className='space-y-3'>
             {otherNotifications.map((it) => (
               <button
@@ -218,7 +218,7 @@ export default function NotificationsSection() {
                 onClick={() => {
                   if (!it.isRead) markAsRead(it.id)
                 }}
-                className='w-full rounded-md border border-slate-200 bg-white p-4 text-left transition-colors hover:bg-slate-50'
+                className='w-full p-4 text-left bg-white border rounded-md border-slate-200 transition-colors hover:bg-slate-50'
               >
                 <div className='flex items-start justify-between gap-3'>
                   <div>
@@ -227,7 +227,7 @@ export default function NotificationsSection() {
                       {it.message}
                     </div>
                   </div>
-                  <div className='shrink-0 text-xs text-slate-400'>
+                  <div className='text-xs shrink-0 text-slate-400'>
                     {formatDate(it.createdAt)}
                   </div>
                 </div>

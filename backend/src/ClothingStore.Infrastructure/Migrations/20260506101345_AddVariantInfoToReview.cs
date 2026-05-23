@@ -14,25 +14,23 @@ namespace ClothingStore.Infrastructure.Migrations
                 name: "VariantColor",
                 table: "Reviews",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "VariantSize",
                 table: "Reviews",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "VariantColor",
-                table: "Reviews");
+            migrationBuilder.DropColumn(name: "VariantColor", table: "Reviews");
 
-            migrationBuilder.DropColumn(
-                name: "VariantSize",
-                table: "Reviews");
+            migrationBuilder.DropColumn(name: "VariantSize", table: "Reviews");
         }
     }
 }

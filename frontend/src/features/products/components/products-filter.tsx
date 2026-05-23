@@ -58,7 +58,7 @@ export default function ProductsFilter({
         <Checkbox.Group
           value={selectedCategories}
           onChange={(values) => onCategoryChange(values as string[])}
-          className='flex w-full flex-col gap-3'
+          className='flex flex-col w-full gap-3'
         >
           {categoryOptions.map((option) => (
             <Checkbox
@@ -127,7 +127,7 @@ export default function ProductsFilter({
                     : [...selectedColors, label]
                   onColorChange(next)
                 }}
-                className='group flex cursor-pointer flex-col items-center gap-1'
+                className='flex flex-col items-center cursor-pointer group gap-1'
               >
                 <div
                   className={`relative h-9 w-9 rounded-full transition-transform group-hover:scale-105 ${
@@ -168,7 +168,7 @@ export default function ProductsFilter({
               (r) =>
                 r.value[0] === priceRange[0] && r.value[1] === priceRange[1]
             ).map((r) => r.label)}
-            className='flex w-full flex-col gap-3'
+            className='flex flex-col w-full gap-3'
           >
             {PRICE_RANGES.map((range) => (
               <Checkbox
@@ -210,7 +210,7 @@ export default function ProductsFilter({
       }}
     >
       <aside className='w-full'>
-        <div className='flex items-center justify-between border-b border-stone-200 py-4'>
+        <div className='flex items-center justify-between py-4 border-b border-stone-200'>
           <h2 className='text-lg font-bold text-black'>Bộ lọc</h2>
           <span className='text-sm font-medium text-stone-400'>
             {totalResults} kết quả

@@ -86,7 +86,7 @@ export default function ReviewForm({
           type='primary'
           htmlType='submit'
           loading={loading}
-          className='rounded-xl h-10 px-6'
+          className='h-10 px-6 rounded-xl'
         >
           {review ? 'Cập nhật' : 'Gửi đánh giá'}
         </Button>

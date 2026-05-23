@@ -15,7 +15,8 @@ public class UpdateMyProfileCommandHandler(IApplicationDbContext context)
         if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(phone))
             throw new ArgumentException("Full name and phone are required.");
 
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken)
+        var user =
+            await context.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken)
             ?? throw new KeyNotFoundException("User not found.");
 
         user.FullName = fullName;

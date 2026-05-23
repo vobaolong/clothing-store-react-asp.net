@@ -13,9 +13,6 @@ public class ValidationException : Exception
     public ValidationException(string field, string message)
         : base(message)
     {
-        Errors = new Dictionary<string, string[]>
-        {
-            [field] = [message]
-        };
+        Errors = new Dictionary<string, string[]> { [field] = [message] };
     }
 }

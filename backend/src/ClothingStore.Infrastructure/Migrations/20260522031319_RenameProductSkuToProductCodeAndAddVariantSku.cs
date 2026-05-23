@@ -10,16 +10,14 @@ namespace ClothingStore.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Sku",
-                table: "Products",
-                newName: "ProductCode");
+            migrationBuilder.RenameColumn(name: "Sku", table: "Products", newName: "ProductCode");
 
             migrationBuilder.AddColumn<string>(
                 name: "Sku",
                 table: "ProductVariants",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.Sql(
                 "UPDATE \"ProductVariants\" SET \"Sku\" = UPPER(TRIM(BOTH '-' FROM REGEXP_REPLACE(COALESCE(\"ProductId\"::text, '') || '-' || COALESCE(\"Color\", '') || '-' || COALESCE(\"Size\", ''), '[^A-Za-z0-9]+', '-', 'g')));"
@@ -32,30 +30,25 @@ namespace ClothingStore.Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "text",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductVariants_Sku",
                 table: "ProductVariants",
                 column: "Sku",
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_ProductVariants_Sku",
-                table: "ProductVariants");
+            migrationBuilder.DropIndex(name: "IX_ProductVariants_Sku", table: "ProductVariants");
 
-            migrationBuilder.DropColumn(
-                name: "Sku",
-                table: "ProductVariants");
+            migrationBuilder.DropColumn(name: "Sku", table: "ProductVariants");
 
-            migrationBuilder.RenameColumn(
-                name: "ProductCode",
-                table: "Products",
-                newName: "Sku");
+            migrationBuilder.RenameColumn(name: "ProductCode", table: "Products", newName: "Sku");
         }
     }
 }

@@ -20,7 +20,9 @@ public class DeleteReviewCommandHandler(IApplicationDbContext context)
             throw new ForbiddenAccessException("You can only delete your own review.");
 
         if (DateTime.UtcNow - review.CreatedAt > TimeSpan.FromHours(24))
-            throw new InvalidOperationException("Reviews can only be deleted within 24 hours of creation.");
+            throw new InvalidOperationException(
+                "Reviews can only be deleted within 24 hours of creation."
+            );
 
         context.Reviews.Remove(review);
         await context.SaveChangesAsync(cancellationToken);

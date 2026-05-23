@@ -128,10 +128,10 @@ export default function ProductReviewsSection({
 
   return (
     <Card className='p-6 mt-8 bg-white border rounded-lg border-stone-200'>
-      <div className='text-xl font-semibold mb-4'>Đánh giá {productName}</div>
+      <div className='mb-4 text-xl font-semibold'>Đánh giá {productName}</div>
       <div className='mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]'>
         <div className='flex flex-col items-start gap-1'>
-          <div className='flex items-end gap-1 leading-none'>
+          <div className='flex items-end leading-none gap-1'>
             <span className='text-5xl font-bold text-slate-900'>
               {averageRating.toFixed(1)}
             </span>
@@ -162,7 +162,7 @@ export default function ProductReviewsSection({
           ) : null}
         </div>
 
-        <div className='space-y-2 border-x border-slate-100 px-4'>
+        <div className='px-4 space-y-2 border-x border-slate-100'>
           {ratingBreakdown.map((row) => (
             <div
               key={row.rating}
@@ -173,7 +173,7 @@ export default function ProductReviewsSection({
               </span>
               <div className='h-2 overflow-hidden rounded-full bg-slate-100'>
                 <div
-                  className='h-full rounded-full bg-red-500'
+                  className='h-full bg-red-500 rounded-full'
                   style={{ width: `${row.percent}%` }}
                 />
               </div>
@@ -211,7 +211,7 @@ export default function ProductReviewsSection({
       </div>
       <Divider />
       {!reviewsQuery.isLoading ? (
-        <div className='flex flex-col gap-3 mb-4 md:flex-row md:items-center'>
+        <div className='flex flex-col mb-4 gap-3 md:flex-row md:items-center'>
           <div className='flex flex-wrap items-center gap-3'>
             <span className='text-sm text-slate-500'>Lọc đánh giá theo:</span>
             <div className='flex flex-wrap gap-3'>

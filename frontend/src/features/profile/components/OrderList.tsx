@@ -160,7 +160,7 @@ export default function OrderList() {
           activeKey={activeStatus}
           onChange={setActiveStatus}
           items={tabItems}
-          className='order-status-tabs w-full'
+          className='w-full order-status-tabs'
           tabBarStyle={{ marginBottom: 0 }}
         />
       </div>

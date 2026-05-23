@@ -40,7 +40,7 @@ export default function ProductDrawer({
           <Image
             src={displaySrc}
             alt={product.name}
-            className='h-40 w-full rounded-xl object-cover'
+            className='object-cover w-full h-40 rounded-xl'
             preview={false}
             onError={handleImgError}
           />
@@ -54,7 +54,7 @@ export default function ProductDrawer({
               <Typography.Title level={5}>
                 Mô tả:{' '}
                 <p
-                  className='text-sm text-slate-600 font-medium'
+                  className='text-sm font-medium text-slate-600'
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               </Typography.Title>

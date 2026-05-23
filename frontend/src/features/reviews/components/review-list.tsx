@@ -43,7 +43,7 @@ export default function ReviewList({
           className='p-4 bg-white border rounded-2xl border-slate-200'
         >
           <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4'>
-            <div className='flex w-full sm:w-44 sm:shrink-0 items-center gap-3'>
+            <div className='flex items-center w-full sm:w-44 sm:shrink-0 gap-3'>
               <Avatar className='bg-slate-200! text-slate-700 font-semibold'>
                 {getInitial(review.userName)}
               </Avatar>
@@ -52,7 +52,7 @@ export default function ReviewList({
               </span>
             </div>
 
-            <div className='min-w-0 flex-1 w-full'>
+            <div className='flex-1 w-full min-w-0'>
               <div className='flex items-start justify-between gap-4'>
                 <div>
                   <Rate
@@ -62,7 +62,7 @@ export default function ReviewList({
                     className='mt-1 text-xs text-amber-500'
                   />
                   {(review.variantSize || review.variantColor) && (
-                    <div className='flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs text-slate-500'>
+                    <div className='flex flex-wrap items-center mt-1 text-xs gap-2 sm:gap-4 text-slate-500'>
                       {review.variantSize && (
                         <span>
                           <span className='text-slate-400'>Kích thước:</span>{' '}
@@ -108,7 +108,7 @@ export default function ReviewList({
               )}
 
               {review.tags && review.tags.length > 0 && (
-                <div className='flex flex-wrap gap-2 mt-4'>
+                <div className='flex flex-wrap mt-4 gap-2'>
                   {review.tags.map((tag) => (
                     <Tag
                       key={tag}
@@ -120,7 +120,7 @@ export default function ReviewList({
                 </div>
               )}
 
-              <div className='mt-3 text-right text-xs text-slate-400'>
+              <div className='mt-3 text-xs text-right text-slate-400'>
                 {formatDate(review.createdAt)}
               </div>
             </div>

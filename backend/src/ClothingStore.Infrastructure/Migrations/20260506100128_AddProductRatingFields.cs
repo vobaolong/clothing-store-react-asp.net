@@ -15,26 +15,24 @@ namespace ClothingStore.Infrastructure.Migrations
                 table: "Products",
                 type: "double precision",
                 nullable: false,
-                defaultValue: 0.0);
+                defaultValue: 0.0
+            );
 
             migrationBuilder.AddColumn<int>(
                 name: "ReviewCount",
                 table: "Products",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "AverageRating",
-                table: "Products");
+            migrationBuilder.DropColumn(name: "AverageRating", table: "Products");
 
-            migrationBuilder.DropColumn(
-                name: "ReviewCount",
-                table: "Products");
+            migrationBuilder.DropColumn(name: "ReviewCount", table: "Products");
         }
     }
 }

@@ -9,9 +9,13 @@ public record GetAdminCategoriesQuery : IRequest<IReadOnlyList<CategoryDto>>;
 public class GetAdminCategoriesQueryHandler(IApplicationDbContext context)
     : IRequestHandler<GetAdminCategoriesQuery, IReadOnlyList<CategoryDto>>
 {
-    public async Task<IReadOnlyList<CategoryDto>> Handle(GetAdminCategoriesQuery request, CancellationToken ct)
+    public async Task<IReadOnlyList<CategoryDto>> Handle(
+        GetAdminCategoriesQuery request,
+        CancellationToken ct
+    )
     {
-        var data = await context.Categories.AsNoTracking()
+        var data = await context
+            .Categories.AsNoTracking()
             .Select(x => new CategoryDto(
                 x.Id,
                 x.Name,

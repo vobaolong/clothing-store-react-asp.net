@@ -14,15 +14,14 @@ namespace ClothingStore.Infrastructure.Migrations
                 name: "VariantGalleryJson",
                 table: "ProductVariants",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "VariantGalleryJson",
-                table: "ProductVariants");
+            migrationBuilder.DropColumn(name: "VariantGalleryJson", table: "ProductVariants");
         }
     }
 }

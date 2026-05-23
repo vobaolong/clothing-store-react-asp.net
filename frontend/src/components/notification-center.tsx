@@ -87,7 +87,7 @@ const NotificationItem = ({
               {formatRelativeTime(notification.createdAt)}
             </span>
           </div>
-          <p className='text-sm text-gray-600 mt-1'>{notification.message}</p>
+          <p className='mt-1 text-sm text-gray-600'>{notification.message}</p>
           {/* {notification.relatedEntityType === 'Order' &&
             notification.relatedEntityId && (
               <span className='inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
@@ -168,13 +168,13 @@ export const NotificationCenter = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Button
         onClick={handleToggle}
-        className='relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg transition-colors'
+        className='relative p-2 text-gray-600 rounded-lg hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
         aria-label='Thông báo'
         aria-expanded={isOpen}
         icon={<BellOutlined />}
       >
         {unreadCount > 0 && (
-          <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium'>
+          <span className='absolute flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full -top-1 -right-1'>
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -182,14 +182,14 @@ export const NotificationCenter = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden'>
+        <div className='absolute right-0 z-50 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg w-80 sm:w-96'>
           {/* Header */}
-          <div className='px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between'>
+          <div className='flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50'>
             <h3 className='text-base font-semibold text-gray-900'>Thông báo</h3>
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead()}
-                className='text-sm text-blue-600 hover:text-blue-800 font-medium'
+                className='text-sm font-medium text-blue-600 hover:text-blue-800'
               >
                 Đánh dấu tất cả đã đọc
               </button>
@@ -218,10 +218,10 @@ export const NotificationCenter = ({
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className='px-4 py-3 border-t border-gray-200 bg-gray-50 text-center'>
+            <div className='px-4 py-3 text-center border-t border-gray-200 bg-gray-50'>
               <button
                 onClick={openNotificationsPage}
-                className='text-sm text-blue-600 hover:text-blue-800 font-medium'
+                className='text-sm font-medium text-blue-600 hover:text-blue-800'
               >
                 Xem tất cả thông báo
               </button>

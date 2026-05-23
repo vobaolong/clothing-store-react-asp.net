@@ -185,13 +185,13 @@ export default function AdminCouponsSection() {
   return (
     <div className='space-y-3'>
       <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
-        <div className='flex w-full flex-wrap justify-end gap-2 sm:ml-auto sm:w-auto'>
+        <div className='flex flex-wrap justify-end w-full gap-2 sm:ml-auto sm:w-auto'>
           <AdminQueryRefreshButton query={refreshQuery} />
           <Button type='primary' icon={<PlusOutlined />} onClick={onCreate}>
             Tạo Voucher
           </Button>
         </div>
-        <div className='flex w-full flex-wrap gap-3 items-center mt-3'>
+        <div className='flex flex-wrap items-center w-full mt-3 gap-3'>
           <Input.Search
             allowClear
             placeholder='Tìm theo mã coupon, số tiền…'

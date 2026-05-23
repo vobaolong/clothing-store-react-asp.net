@@ -5,14 +5,14 @@ namespace ClothingStore.Domain.Enums;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CouponDiscountType
 {
-	Flat,
-	Percent,
+    Flat,
+    Percent,
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CouponStatus
 {
-	Active,
-	Inactive,
-	Archived,
+    Active,
+    Inactive,
+    Archived,
 }

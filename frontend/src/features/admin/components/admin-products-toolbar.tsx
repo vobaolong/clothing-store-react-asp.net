@@ -64,7 +64,7 @@ export default function AdminProductsToolbar({
       />
 
       <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
-        <div className='flex w-full flex-wrap justify-end gap-2 sm:ml-auto sm:w-auto'>
+        <div className='flex flex-wrap justify-end w-full gap-2 sm:ml-auto sm:w-auto'>
           {selectedActions}
           <AdminQueryRefreshButton query={refreshQuery} />
           <Button icon={<UploadOutlined />} onClick={onImportExcel}>

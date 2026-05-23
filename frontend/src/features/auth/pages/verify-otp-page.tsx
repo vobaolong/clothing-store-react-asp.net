@@ -191,8 +191,8 @@ export default function VerifyOtpPage() {
   if (isVerified) {
     return (
       <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4'>
-        <Card className='w-full rounded-3xl border border-slate-200 shadow-sm'>
-          <div className='flex flex-col items-center gap-4 py-6 text-center'>
+        <Card className='w-full border rounded-3xl border-slate-200 shadow-sm'>
+          <div className='flex flex-col items-center py-6 text-center gap-4'>
             <CheckCircleFilled className='text-6xl text-green-500' />
             <Title level={3} className='mb-1!'>
               Xác thực thành công!
@@ -216,9 +216,9 @@ export default function VerifyOtpPage() {
 
   return (
     <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4'>
-      <Card className='w-full rounded-3xl border border-slate-200 shadow-sm'>
+      <Card className='w-full border rounded-3xl border-slate-200 shadow-sm'>
         <div className='mb-6 text-center'>
-          <div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50'>
+          <div className='flex items-center justify-center mx-auto mb-4 rounded-full h-14 w-14 bg-indigo-50'>
             <MailOutlined className='text-2xl text-indigo-600' />
           </div>
           <Title level={3} className='mb-1!'>
@@ -233,7 +233,7 @@ export default function VerifyOtpPage() {
         </div>
 
         {/* OTP Input boxes */}
-        <div className='mb-6 flex justify-center gap-2' onPaste={handlePaste}>
+        <div className='flex justify-center mb-6 gap-2' onPaste={handlePaste}>
           {otp.map((digit, index) => (
             <input
               key={index}
@@ -294,7 +294,7 @@ export default function VerifyOtpPage() {
         </Button>
 
         {/* Resend */}
-        <div className='text-center text-sm text-slate-500'>
+        <div className='text-sm text-center text-slate-500'>
           Không nhận được mã?{' '}
           {resendCooldown > 0 ? (
             <span className='text-slate-400'>
@@ -308,7 +308,7 @@ export default function VerifyOtpPage() {
               type='button'
               disabled={resendMutation.isPending}
               onClick={() => resendMutation.mutate({ email })}
-              className='inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50'
+              className='inline-flex items-center font-medium text-indigo-600 gap-1 hover:text-indigo-500 disabled:opacity-50'
             >
               <ReloadOutlined spin={resendMutation.isPending} />
               Gửi lại mã

@@ -8,15 +8,20 @@ namespace ClothingStore.Application.Categories.Commands;
 
 public record CreateCategoryCommand(CategoryUpsertDto Dto) : IRequest<Guid>;
 
-public class CreateCategoryCommandHandler(IApplicationDbContext context, ICategoryService categoryService)
-    : IRequestHandler<CreateCategoryCommand, Guid>
+public class CreateCategoryCommandHandler(
+    IApplicationDbContext context,
+    ICategoryService categoryService
+) : IRequestHandler<CreateCategoryCommand, Guid>
 {
     public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken ct)
     {
         var dto = request.Dto;
         if (dto.ParentId.HasValue)
         {
-            var parentExists = await context.Categories.AnyAsync(c => c.Id == dto.ParentId.Value, ct);
+            var parentExists = await context.Categories.AnyAsync(
+                c => c.Id == dto.ParentId.Value,
+                ct
+            );
             if (!parentExists)
                 throw new InvalidOperationException("Parent category not found.");
         }

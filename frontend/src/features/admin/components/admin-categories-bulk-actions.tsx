@@ -31,7 +31,7 @@ export default function AdminCategoriesBulkActions({
   }
 
   return (
-    <div className='fixed left-1/2 top-4/5 z-50 -translate-x-1/2 rounded-lg border border-red-800 bg-red-100 p-4 shadow-lg'>
+    <div className='fixed z-50 p-4 bg-red-100 border border-red-800 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
       <div className='flex flex-col items-center gap-4 sm:flex-row'>
         <Tag
           icon={<CheckCircleOutlined />}

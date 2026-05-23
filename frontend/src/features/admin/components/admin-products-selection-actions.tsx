@@ -27,7 +27,7 @@ export default function AdminProductsSelectionActions({
   const selectedCount = selectedIds.length
 
   return (
-    <div className='fixed left-1/2 top-4/5 z-50 -translate-x-1/2 rounded-lg border border-blue-300 bg-white p-4 shadow-lg'>
+    <div className='fixed z-50 p-4 bg-white border border-blue-300 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
       <div className='flex flex-col items-center gap-4 sm:flex-row'>
         <Tag
           icon={<CheckCircleOutlined />}

@@ -230,7 +230,7 @@ export default function AdminCustomersSection() {
         <p className='mb-2 text-sm text-slate-600'>
           Email sẽ được gửi đến khách hàng với nội dung dựa trên lý do đã chọn.
         </p>
-        <label className='mb-1 block text-sm font-medium' htmlFor='lock-reason'>
+        <label className='block mb-1 text-sm font-medium' htmlFor='lock-reason'>
           Lý do khóa tài khoản
         </label>
         <Select

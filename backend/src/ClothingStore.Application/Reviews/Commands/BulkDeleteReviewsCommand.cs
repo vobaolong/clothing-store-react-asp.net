@@ -11,11 +11,10 @@ public class BulkDeleteReviewsCommandHandler(IApplicationDbContext context)
 {
     public async Task<int> Handle(BulkDeleteReviewsCommand request, CancellationToken ct)
     {
-        var reviews = await context.Reviews
-            .Where(r => request.Ids.Contains(r.Id))
-            .ToListAsync(ct);
+        var reviews = await context.Reviews.Where(r => request.Ids.Contains(r.Id)).ToListAsync(ct);
 
-        if (reviews.Count == 0) return 0;
+        if (reviews.Count == 0)
+            return 0;
 
         context.Reviews.RemoveRange(reviews);
         await context.SaveChangesAsync(ct);

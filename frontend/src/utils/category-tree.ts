@@ -7,7 +7,7 @@ export type CategoryLike = {
 
 export function getCategoryAncestorChain<T extends CategoryLike>(
   categories: T[],
-  categoryId: string | undefined | null,
+  categoryId: string | undefined | null
 ): T[] {
   if (!categoryId || categories.length === 0) return []
   const byId = new Map(categories.map((c) => [c.id, c]))
@@ -25,7 +25,7 @@ export function getCategoryAncestorChain<T extends CategoryLike>(
 
 export function categoryPathLabel<T extends CategoryLike>(
   categories: T[],
-  categoryId: string | undefined | null,
+  categoryId: string | undefined | null
 ): string {
   if (!categoryId || categories.length === 0) return ''
   const category = categories.find((category) => category.id === categoryId)
@@ -48,7 +48,7 @@ export type CategoryTreeNode = {
 }
 
 export function buildCategoryTreeSelectData<T extends CategoryLike>(
-  categories: T[],
+  categories: T[]
 ): CategoryTreeNode[] {
   const byParent = new Map<string | null, T[]>()
   for (const category of categories) {
@@ -56,7 +56,8 @@ export function buildCategoryTreeSelectData<T extends CategoryLike>(
     if (!byParent.has(key)) byParent.set(key, [])
     byParent.get(key)!.push(category)
   }
-  const sortFn = (categoryA: T, categoryB: T) => categoryA.name.localeCompare(categoryB.name, 'vi')
+  const sortFn = (categoryA: T, categoryB: T) =>
+    categoryA.name.localeCompare(categoryB.name, 'vi')
 
   const build = (parentId: string | null): CategoryTreeNode[] => {
     const row = (byParent.get(parentId) ?? []).slice().sort(sortFn)
@@ -65,7 +66,7 @@ export function buildCategoryTreeSelectData<T extends CategoryLike>(
       return {
         title: category.name,
         value: category.id,
-        children: kids.length ? kids : undefined,
+        children: kids.length ? kids : undefined
       }
     })
   }
@@ -75,7 +76,7 @@ export function buildCategoryTreeSelectData<T extends CategoryLike>(
 
 export function removeCategorySubtreeFromTree(
   nodes: CategoryTreeNode[],
-  rootIdToRemove: string,
+  rootIdToRemove: string
 ): CategoryTreeNode[] {
   const out: CategoryTreeNode[] = []
   for (const node of nodes) {
@@ -88,7 +89,7 @@ export function removeCategorySubtreeFromTree(
     out.push({
       title: node.title,
       value: node.value,
-      ...(children?.length ? { children } : {}),
+      ...(children?.length ? { children } : {})
     })
   }
   return out
@@ -96,7 +97,7 @@ export function removeCategorySubtreeFromTree(
 
 export function collectDescendantCategoryIds<T extends CategoryLike>(
   rootId: string,
-  categories: T[],
+  categories: T[]
 ): Set<string> {
   const byParent = new Map<string, T[]>()
   for (const category of categories) {
@@ -122,7 +123,7 @@ export function collectDescendantCategoryIds<T extends CategoryLike>(
 
 function resolveCategoryRootsFromParams<T extends CategoryLike>(
   paramValues: string[],
-  categories: T[],
+  categories: T[]
 ): T[] {
   const roots: T[] = []
   const seen = new Set<string>()
@@ -133,9 +134,10 @@ function resolveCategoryRootsFromParams<T extends CategoryLike>(
       (category) =>
         category.id === decoded ||
         category.id === trimmed ||
-        (category.slug != null && (category.slug === decoded || category.slug === trimmed)) ||
+        (category.slug != null &&
+          (category.slug === decoded || category.slug === trimmed)) ||
         category.name === decoded ||
-        category.name === trimmed,
+        category.name === trimmed
     )
     if (cat != null && !seen.has(cat.id)) {
       seen.add(cat.id)
@@ -147,28 +149,28 @@ function resolveCategoryRootsFromParams<T extends CategoryLike>(
 
 export function getExpandedCategoryIdsForProductFilter<T extends CategoryLike>(
   selectedCategoryParams: string[],
-  categories: T[],
+  categories: T[]
 ): Set<string> | null | undefined {
   if (selectedCategoryParams.length === 0) return null
   if (categories.length === 0) return undefined
 
   const roots = resolveCategoryRootsFromParams(
     selectedCategoryParams,
-    categories,
+    categories
   )
   if (roots.length === 0) return new Set<string>()
 
   const merged = new Set<string>()
   for (const root of roots) {
     collectDescendantCategoryIds(root.id, categories).forEach((id) =>
-      merged.add(id),
+      merged.add(id)
     )
   }
   return merged
 }
 
 export function buildCategoryFilterTreeRows<T extends CategoryLike>(
-  categories: T[],
+  categories: T[]
 ): Array<{ label: string; value: string; depth: number }> {
   const byParent = new Map<string | null, T[]>()
   for (const category of categories) {
@@ -177,7 +179,9 @@ export function buildCategoryFilterTreeRows<T extends CategoryLike>(
     byParent.get(key)!.push(category)
   }
   for (const [, row] of byParent) {
-    row.sort((categoryA, categoryB) => categoryA.name.localeCompare(categoryB.name, 'vi'))
+    row.sort((categoryA, categoryB) =>
+      categoryA.name.localeCompare(categoryB.name, 'vi')
+    )
   }
 
   const out: Array<{ label: string; value: string; depth: number }> = []
@@ -187,7 +191,7 @@ export function buildCategoryFilterTreeRows<T extends CategoryLike>(
       out.push({
         label: category.name,
         value: category.slug?.trim() ? category.slug : category.id,
-        depth,
+        depth
       })
       walk(category.id, depth + 1)
     }
@@ -198,7 +202,7 @@ export function buildCategoryFilterTreeRows<T extends CategoryLike>(
 
 export function resolvedCategoryIdsFromQueryParams<T extends CategoryLike>(
   params: string[],
-  categories: T[],
+  categories: T[]
 ): string[] {
   const seen = new Set<string>()
   const out: string[] = []
@@ -224,7 +228,7 @@ export function resolvedCategoryIdsFromQueryParams<T extends CategoryLike>(
 
 export function categoryChipLabelFromQueryParam<T extends CategoryLike>(
   param: string,
-  categories: T[],
+  categories: T[]
 ): string {
   const roots = resolveCategoryRootsFromParams([param], categories)
   return roots.length > 0 ? roots[0].name : param
@@ -235,7 +239,7 @@ export function legacyProductCategoryParamMatch(
   categorySlug: string | undefined,
   categoryLabel: string | undefined,
   categoryName: string | undefined,
-  selectedParams: string[],
+  selectedParams: string[]
 ): boolean {
   if (
     categoryId != null &&
@@ -252,7 +256,10 @@ export function legacyProductCategoryParamMatch(
       const trimmed = params.trim()
       const decoded = decodeURIComponent(trimmed)
       return (
-        primary === decoded || secondary === decoded || primary === trimmed || secondary === trimmed
+        primary === decoded ||
+        secondary === decoded ||
+        primary === trimmed ||
+        secondary === trimmed
       )
     })
   )

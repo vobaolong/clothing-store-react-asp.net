@@ -35,7 +35,7 @@ export default function CouponSection({
   return (
     <Card className='rounded-2xl! border-slate-200! shadow-sm!'>
       <CheckoutSectionTitle step={2} title='Mã giảm giá' />
-      <div className='flex gap-2 mb-4'>
+      <div className='flex mb-4 gap-2'>
         <Controller
           name='couponCode'
           control={control}
@@ -68,7 +68,7 @@ export default function CouponSection({
       </div>
 
       {coupon.appliedCode && (
-        <div className='flex items-center gap-2 p-3 mb-4 text-sm text-green-700 border border-green-200 bg-green-50 rounded-xl'>
+        <div className='flex items-center p-3 mb-4 text-sm text-green-700 border border-green-200 gap-2 bg-green-50 rounded-xl'>
           <svg
             className='w-4 h-4 shrink-0'
             fill='none'

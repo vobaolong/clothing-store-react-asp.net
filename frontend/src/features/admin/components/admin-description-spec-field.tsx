@@ -32,7 +32,7 @@ export default function AdminDescriptionSpecField({
 
   return (
     <Form.Item
-      className='mb-0 flex-1'
+      className='flex-1 mb-0'
       name={['descriptionSpecs', index, 'value']}
     >
       <Select

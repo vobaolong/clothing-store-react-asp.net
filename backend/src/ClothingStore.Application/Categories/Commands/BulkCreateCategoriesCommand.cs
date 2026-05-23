@@ -14,13 +14,23 @@ public record BulkCreateCategoriesCommand(
     bool? IsActive = null
 ) : IRequest<IReadOnlyList<Guid>>;
 
-public class BulkCreateCategoriesCommandHandler(IApplicationDbContext context, ICategoryService categoryService)
-    : IRequestHandler<BulkCreateCategoriesCommand, IReadOnlyList<Guid>>
+public class BulkCreateCategoriesCommandHandler(
+    IApplicationDbContext context,
+    ICategoryService categoryService
+) : IRequestHandler<BulkCreateCategoriesCommand, IReadOnlyList<Guid>>
 {
-    public async Task<IReadOnlyList<Guid>> Handle(BulkCreateCategoriesCommand request, CancellationToken ct)
+    public async Task<IReadOnlyList<Guid>> Handle(
+        BulkCreateCategoriesCommand request,
+        CancellationToken ct
+    )
     {
-        var rows = request.Items
-            .Select(i => new { Name = i.Name.Trim(), Image = i.Image?.Trim(), Description = i.Description?.Trim() })
+        var rows = request
+            .Items.Select(i => new
+            {
+                Name = i.Name.Trim(),
+                Image = i.Image?.Trim(),
+                Description = i.Description?.Trim(),
+            })
             .Where(i => i.Name.Length > 0)
             .ToList();
 
@@ -29,7 +39,10 @@ public class BulkCreateCategoriesCommandHandler(IApplicationDbContext context, I
 
         if (request.ParentId.HasValue)
         {
-            var parentExists = await context.Categories.AnyAsync(c => c.Id == request.ParentId.Value, ct);
+            var parentExists = await context.Categories.AnyAsync(
+                c => c.Id == request.ParentId.Value,
+                ct
+            );
             if (!parentExists)
                 throw new InvalidOperationException("Parent category not found.");
         }
@@ -40,7 +53,12 @@ public class BulkCreateCategoriesCommandHandler(IApplicationDbContext context, I
         {
             foreach (var row in rows)
             {
-                var slug = await categoryService.BuildCategorySlugAsync(row.Name, request.ParentId, null, ct);
+                var slug = await categoryService.BuildCategorySlugAsync(
+                    row.Name,
+                    request.ParentId,
+                    null,
+                    ct
+                );
 
                 var category = new Category
                 {

@@ -1,24 +1,22 @@
+using System.Text.Json;
 using ClothingStore.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace ClothingStore.Application.Notifications.Queries;
 
-public record GetMyNotificationsQuery(
-    Guid UserId,
-    bool? IsRead,
-    int Page,
-    int PageSize
-) : IRequest<NotificationsResponse>;
+public record GetMyNotificationsQuery(Guid UserId, bool? IsRead, int Page, int PageSize)
+    : IRequest<NotificationsResponse>;
 
 public class GetMyNotificationsQueryHandler(IApplicationDbContext context)
     : IRequestHandler<GetMyNotificationsQuery, NotificationsResponse>
 {
-    public async Task<NotificationsResponse> Handle(GetMyNotificationsQuery request, CancellationToken ct)
+    public async Task<NotificationsResponse> Handle(
+        GetMyNotificationsQuery request,
+        CancellationToken ct
+    )
     {
-        var query = context.Notifications
-            .Where(n => n.UserId == request.UserId);
+        var query = context.Notifications.Where(n => n.UserId == request.UserId);
 
         if (request.IsRead.HasValue)
         {
@@ -26,8 +24,8 @@ public class GetMyNotificationsQueryHandler(IApplicationDbContext context)
         }
 
         var totalCount = await query.CountAsync(ct);
-        var unreadCount = await context.Notifications
-            .Where(n => n.UserId == request.UserId && !n.IsRead)
+        var unreadCount = await context
+            .Notifications.Where(n => n.UserId == request.UserId && !n.IsRead)
             .CountAsync(ct);
 
         var notifications = await query
@@ -39,7 +37,9 @@ public class GetMyNotificationsQueryHandler(IApplicationDbContext context)
                 n.Title,
                 n.Message,
                 n.Type.ToString(),
-                n.Data != null ? JsonSerializer.Deserialize<object>(n.Data, (JsonSerializerOptions?)null) : null,
+                n.Data != null
+                    ? JsonSerializer.Deserialize<object>(n.Data, (JsonSerializerOptions?)null)
+                    : null,
                 n.IsRead,
                 n.CreatedAt,
                 n.ReadAt,

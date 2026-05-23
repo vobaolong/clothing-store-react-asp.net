@@ -15,36 +15,33 @@ namespace ClothingStore.Infrastructure.Migrations
                 name: "EmailVerificationOtpExpiresAt",
                 table: "Users",
                 type: "timestamp with time zone",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "EmailVerificationOtpHash",
                 table: "Users",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsEmailVerified",
                 table: "Users",
                 type: "boolean",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "EmailVerificationOtpExpiresAt",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "EmailVerificationOtpExpiresAt", table: "Users");
 
-            migrationBuilder.DropColumn(
-                name: "EmailVerificationOtpHash",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "EmailVerificationOtpHash", table: "Users");
 
-            migrationBuilder.DropColumn(
-                name: "IsEmailVerified",
-                table: "Users");
+            migrationBuilder.DropColumn(name: "IsEmailVerified", table: "Users");
         }
     }
 }

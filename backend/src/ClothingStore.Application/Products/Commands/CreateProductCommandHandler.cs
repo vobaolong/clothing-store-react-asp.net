@@ -15,8 +15,8 @@ public class CreateProductCommandHandler(IApplicationDbContext context)
     )
     {
         var existingVariantSkus = new HashSet<string>(
-            await context.ProductVariants
-                .AsNoTracking()
+            await context
+                .ProductVariants.AsNoTracking()
                 .Select(variant => variant.Sku)
                 .ToListAsync(cancellationToken),
             StringComparer.OrdinalIgnoreCase
@@ -40,7 +40,12 @@ public class CreateProductCommandHandler(IApplicationDbContext context)
         foreach (var variant in request.Variants)
         {
             var (cover, gallery) = VariantGallery.ToStorage(variant.ImageUrl, variant.ImageUrls);
-            var sku = ResolveVariantSku(request.ProductCode, variant.Color, variant.Size, existingVariantSkus);
+            var sku = ResolveVariantSku(
+                request.ProductCode,
+                variant.Color,
+                variant.Size,
+                existingVariantSkus
+            );
             existingVariantSkus.Add(sku);
             await context.ProductVariants.AddAsync(
                 new ProductVariant

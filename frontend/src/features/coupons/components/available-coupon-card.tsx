@@ -68,7 +68,7 @@ export default function AvailableCouponCard({
                   </span>
                 )}
               </p>
-              <p className='line-clamp-3 font-sans text-xs text-slate-900'>
+              <p className='font-sans text-xs line-clamp-3 text-slate-900'>
                 Giảm {formatCouponDiscount(coupon)} tối đa cho đơn từ{' '}
                 {formatCurrency(coupon.minOrderSubtotal)} (không áp dụng Outlet)
               </p>
@@ -110,7 +110,7 @@ export default function AvailableCouponCard({
             </div>
           </div>
 
-          <div className='mt-auto flex flex-col gap-1'>
+          <div className='flex flex-col mt-auto gap-1'>
             <p className='font-sans text-xs text-slate-900'>
               HSD: {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
             </p>

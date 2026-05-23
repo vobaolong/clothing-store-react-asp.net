@@ -10,8 +10,7 @@ import {
 import {
   setNotifications,
   markNotificationAsRead as markAsReadAction,
-  markAllAsRead as markAllAsReadAction,
-  setUnreadCount
+  markAllAsRead as markAllAsReadAction
 } from '@/state/notification-slice'
 import type { RootState } from '@/app/store/store'
 import type {
@@ -50,18 +49,10 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     }
   }, [notificationsData, dispatch])
 
-  const { data: fetchedUnreadCount } = useQuery<number>({
-    queryKey: ['notifications', 'unread-count'],
-    queryFn: getUnreadCount,
-    refetchInterval: 60_000,
-    staleTime: 30_000
-  })
-
-  useEffect(() => {
-    if (fetchedUnreadCount !== undefined) {
-      dispatch(setUnreadCount(fetchedUnreadCount))
-    }
-  }, [fetchedUnreadCount, dispatch])
+  // Note: unread count is available from the notifications response
+  // and other parts of the app can use `useUnreadCount` hook which
+  // polls on an interval. Here we avoid running a second unread-count
+  // query to reduce duplication.
 
   const markAsReadMutation = useMutation({
     mutationFn: markNotificationAsRead,
@@ -78,6 +69,8 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
     }
   })
+  const markAsRead = (id: string) => markAsReadMutation.mutate(id)
+  const markAllAsRead = () => markAllAsReadMutation.mutate()
 
   return {
     notifications: notificationState.notifications,
@@ -91,8 +84,8 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
 
     error: error?.message ?? notificationState.error,
 
-    markAsRead: markAsReadMutation.mutate,
-    markAllAsRead: markAllAsReadMutation.mutate,
+    markAsRead,
+    markAllAsRead,
     refetch
   }
 }

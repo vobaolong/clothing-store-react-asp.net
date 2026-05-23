@@ -4,32 +4,33 @@ using MediatR;
 namespace ClothingStore.Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
-		: IPipelineBehavior<TRequest, TResponse>
-		where TRequest : notnull
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-	public async Task<TResponse> Handle(
-			TRequest request,
-			RequestHandlerDelegate<TResponse> next,
-			CancellationToken cancellationToken)
-	{
-		if (!validators.Any())
-			return await next(cancellationToken);
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!validators.Any())
+            return await next(cancellationToken);
 
-		var context = new ValidationContext<TRequest>(request);
+        var context = new ValidationContext<TRequest>(request);
 
-		var results = await Task.WhenAll(
-				validators.Select(v => v.ValidateAsync(context, cancellationToken))
-		);
+        var results = await Task.WhenAll(
+            validators.Select(v => v.ValidateAsync(context, cancellationToken))
+        );
 
-		var failures = results
-				.SelectMany(r => r.Errors)
-				.Where(f => f is not null)
-				.GroupBy(f => f.PropertyName, f => f.ErrorMessage)
-				.ToDictionary(g => g.Key, g => g.ToArray());
+        var failures = results
+            .SelectMany(r => r.Errors)
+            .Where(f => f is not null)
+            .GroupBy(f => f.PropertyName, f => f.ErrorMessage)
+            .ToDictionary(g => g.Key, g => g.ToArray());
 
-		if (failures.Count > 0)
-			throw new Exceptions.ValidationException(failures);
+        if (failures.Count > 0)
+            throw new Exceptions.ValidationException(failures);
 
-		return await next(cancellationToken);
-	}
+        return await next(cancellationToken);
+    }
 }

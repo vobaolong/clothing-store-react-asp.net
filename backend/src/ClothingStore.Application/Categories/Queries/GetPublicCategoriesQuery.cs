@@ -9,9 +9,13 @@ public record GetPublicCategoriesQuery : IRequest<IReadOnlyList<CategoryDto>>;
 public class GetPublicCategoriesQueryHandler(IApplicationDbContext context)
     : IRequestHandler<GetPublicCategoriesQuery, IReadOnlyList<CategoryDto>>
 {
-    public async Task<IReadOnlyList<CategoryDto>> Handle(GetPublicCategoriesQuery request, CancellationToken ct)
+    public async Task<IReadOnlyList<CategoryDto>> Handle(
+        GetPublicCategoriesQuery request,
+        CancellationToken ct
+    )
     {
-        var data = await context.Categories.AsNoTracking()
+        var data = await context
+            .Categories.AsNoTracking()
             .Where(x => x.IsActive)
             .OrderByDescending(x => x.CreatedAt)
             .Select(x => new CategoryDto(

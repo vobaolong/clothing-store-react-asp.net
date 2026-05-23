@@ -5,12 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Application.Coupons.Queries;
 
-public record GetAdminCouponsQuery(CouponStatus? Status = null) : IRequest<IReadOnlyList<CouponDto>>;
+public record GetAdminCouponsQuery(CouponStatus? Status = null)
+    : IRequest<IReadOnlyList<CouponDto>>;
 
 public class GetAdminCouponsQueryHandler(IApplicationDbContext context)
     : IRequestHandler<GetAdminCouponsQuery, IReadOnlyList<CouponDto>>
 {
-    public async Task<IReadOnlyList<CouponDto>> Handle(GetAdminCouponsQuery request, CancellationToken ct)
+    public async Task<IReadOnlyList<CouponDto>> Handle(
+        GetAdminCouponsQuery request,
+        CancellationToken ct
+    )
     {
         var query = context.Coupons.AsNoTracking();
 

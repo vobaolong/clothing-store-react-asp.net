@@ -303,7 +303,7 @@ export default function OrderDetailPage() {
                   <img
                     src={row.imageUrl}
                     alt='Product'
-                    className='size-16 object-cover rounded'
+                    className='object-cover rounded size-16'
                     onError={(event) => {
                       event.currentTarget.style.display = 'none'
                     }}

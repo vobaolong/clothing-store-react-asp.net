@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Application.Categories.Commands;
 
-public record BulkSetActiveCategoriesCommand(IReadOnlyList<Guid> Ids, bool IsActive) : IRequest<int>;
+public record BulkSetActiveCategoriesCommand(IReadOnlyList<Guid> Ids, bool IsActive)
+    : IRequest<int>;
 
 public class BulkSetActiveCategoriesCommandHandler(IApplicationDbContext context)
     : IRequestHandler<BulkSetActiveCategoriesCommand, int>
@@ -14,8 +15,8 @@ public class BulkSetActiveCategoriesCommandHandler(IApplicationDbContext context
         if (request.Ids.Count == 0)
             return 0;
 
-        var categories = await context.Categories
-            .Where(c => request.Ids.Contains(c.Id))
+        var categories = await context
+            .Categories.Where(c => request.Ids.Contains(c.Id))
             .ToListAsync(ct);
 
         foreach (var category in categories)

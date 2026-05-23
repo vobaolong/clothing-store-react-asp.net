@@ -47,14 +47,14 @@ export default function AdminShell() {
   if (!isAdmin()) return <Navigate to='/' replace />
 
   return (
-    <Layout className='flex h-dvh overflow-hidden bg-white'>
+    <Layout className='flex overflow-hidden bg-white h-dvh'>
       <AdminPageSidebar
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
         brandTitle={ADMIN_PAGE_BRAND_TITLE}
         onLogout={handleLogout}
       />
-      <Layout className='flex min-h-0 min-w-0 flex-1 flex-col'>
+      <Layout className='flex flex-col flex-1 min-w-0 min-h-0'>
         {!isOrderDetailPage ? (
           <Header className='flex! h-auto! shrink-0 items-center! border-b! border-slate-200! bg-white! px-6! py-4! leading-normal!'>
             <Typography.Title level={4} className='m-0! flex-1'>

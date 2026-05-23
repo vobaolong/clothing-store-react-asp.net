@@ -1,11 +1,15 @@
-import { createSlice, createSelector, type PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSlice,
+  createSelector,
+  type PayloadAction
+} from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 import toast from 'react-hot-toast'
 import type { CartState, Product } from '@/types'
 
 const initialState: CartState = {
   items: [],
-  isDrawerOpen: false,
+  isDrawerOpen: false
 }
 
 const cartSlice = createSlice({
@@ -32,13 +36,13 @@ const cartSlice = createSlice({
         selectedSize?: string
         selectedColor?: string
         quantity: number
-      }>,
+      }>
     ) => {
       const { product, quantity } = action.payload
       const selectedVariant =
         action.payload.selectedVariant ??
         product.variants.find(
-          (variant) => variant.id === action.payload.productVariantId,
+          (variant) => variant.id === action.payload.productVariantId
         )
 
       if (!selectedVariant) return
@@ -46,7 +50,7 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(
         (item) =>
           item.id === product.id &&
-          item.selectedVariant.id === selectedVariant.id,
+          item.selectedVariant.id === selectedVariant.id
       )
 
       if (existingItem) {
@@ -60,7 +64,7 @@ const cartSlice = createSlice({
           selectedSize: selectedVariant.size,
           selectedColor: selectedVariant.color,
           isSelected: true,
-          quantity,
+          quantity
         })
         toast.success('Đã thêm vào giỏ hàng')
       }
@@ -74,7 +78,7 @@ const cartSlice = createSlice({
         id?: string
         productVariantId?: string
         quantity: number
-      }>,
+      }>
     ) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
@@ -82,8 +86,7 @@ const cartSlice = createSlice({
       const { quantity } = action.payload
       if (!productId || !variantId) return
       const item = state.items.find(
-        (item) =>
-          item.id === productId && item.selectedVariant.id === variantId,
+        (item) => item.id === productId && item.selectedVariant.id === variantId
       )
       if (item) {
         item.quantity = Math.max(1, quantity)
@@ -96,7 +99,7 @@ const cartSlice = createSlice({
         variantId?: string
         id?: string
         productVariantId?: string
-      }>,
+      }>
     ) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
@@ -104,7 +107,7 @@ const cartSlice = createSlice({
       if (!productId || !variantId) return
       state.items = state.items.filter(
         (item) =>
-          !(item.id === productId && item.selectedVariant.id === variantId),
+          !(item.id === productId && item.selectedVariant.id === variantId)
       )
       toast.success('Đã xóa khỏi giỏ hàng')
     },
@@ -119,12 +122,12 @@ const cartSlice = createSlice({
         id: string
         productVariantId: string
         isSelected: boolean
-      }>,
+      }>
     ) => {
       const item = state.items.find(
         (x) =>
           x.id === action.payload.id &&
-          x.productVariantId === action.payload.productVariantId,
+          x.productVariantId === action.payload.productVariantId
       )
       if (item) item.isSelected = action.payload.isSelected
     },
@@ -136,16 +139,16 @@ const cartSlice = createSlice({
         newProductVariantId: string
         selectedSize: string
         selectedColor: string
-      }>,
+      }>
     ) => {
       const item = state.items.find(
         (x) =>
           x.id === action.payload.id &&
-          x.productVariantId === action.payload.oldProductVariantId,
+          x.productVariantId === action.payload.oldProductVariantId
       )
       if (!item) return
       const targetVariant = item.variants.find(
-        (v) => v.id === action.payload.newProductVariantId,
+        (v) => v.id === action.payload.newProductVariantId
       )
       if (!targetVariant) return
       item.productVariantId = targetVariant.id
@@ -153,7 +156,7 @@ const cartSlice = createSlice({
         id: targetVariant.id,
         size: targetVariant.size,
         color: targetVariant.color,
-        hex: targetVariant.hex,
+        hex: targetVariant.hex
       }
       item.selectedSize = action.payload.selectedSize
       item.selectedColor = action.payload.selectedColor
@@ -163,19 +166,19 @@ const cartSlice = createSlice({
     },
     removePurchasedCartItems: (
       state,
-      action: PayloadAction<Array<{ id: string; productVariantId: string }>>,
+      action: PayloadAction<Array<{ id: string; productVariantId: string }>>
     ) => {
       const purchasedKeys = new Set(
-        action.payload.map((item) => `${item.id}::${item.productVariantId}`),
+        action.payload.map((item) => `${item.id}::${item.productVariantId}`)
       )
       state.items = state.items.filter(
-        (item) => !purchasedKeys.has(`${item.id}::${item.productVariantId}`),
+        (item) => !purchasedKeys.has(`${item.id}::${item.productVariantId}`)
       )
     },
     clearCart: (state) => {
       state.items = []
-    },
-  },
+    }
+  }
 })
 
 export const {
@@ -189,17 +192,18 @@ export const {
   updateCartVariant,
   clearSelectedCartItems,
   removePurchasedCartItems,
-  clearCart,
+  clearCart
 } = cartSlice.actions
 
 export const closeCartDrawer = closeDrawer
 
 export const selectCartItems = (state: RootState) => state.cart.items
-export const selectIsCartDrawerOpen = (state: RootState) => state.cart.isDrawerOpen
+export const selectIsCartDrawerOpen = (state: RootState) =>
+  state.cart.isDrawerOpen
 
 export const selectSelectedCartItems = createSelector(
   selectCartItems,
-  (items) => items.filter((item) => item.isSelected),
+  (items) => items.filter((item) => item.isSelected)
 )
 
 export default cartSlice.reducer

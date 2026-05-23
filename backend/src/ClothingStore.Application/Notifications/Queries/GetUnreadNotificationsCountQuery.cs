@@ -11,8 +11,8 @@ public class GetUnreadNotificationsCountQueryHandler(IApplicationDbContext conte
 {
     public async Task<int> Handle(GetUnreadNotificationsCountQuery request, CancellationToken ct)
     {
-        return await context.Notifications
-            .Where(n => n.UserId == request.UserId && !n.IsRead)
+        return await context
+            .Notifications.Where(n => n.UserId == request.UserId && !n.IsRead)
             .CountAsync(ct);
     }
 }
