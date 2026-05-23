@@ -27,6 +27,8 @@ public static class DependencyInjection
         );
         services.AddScoped<IEmailSender, MailKitEmailSender>();
         services.AddScoped<IEmailTemplateBuilder, EmailTemplateBuilder>();
+        services.AddSingleton<IBackgroundEmailQueue, BackgroundEmailQueue>();
+        services.AddHostedService<BackgroundEmailSenderService>();
         services.AddScoped<IEmailNotificationService, EmailNotificationService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         return services;

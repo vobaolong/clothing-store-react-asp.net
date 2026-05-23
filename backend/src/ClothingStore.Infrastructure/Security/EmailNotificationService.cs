@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 namespace ClothingStore.Infrastructure.Security;
 
 public class EmailNotificationService(
-    IEmailSender emailSender,
+    IBackgroundEmailQueue emailQueue,
     ILogger<EmailNotificationService> logger
 ) : IEmailNotificationService
 {
-    public async Task SendSafeAsync(
+    public Task SendSafeAsync(
         string? email,
         string subject,
         string body,
@@ -21,20 +21,21 @@ public class EmailNotificationService(
             || string.IsNullOrWhiteSpace(body)
         )
         {
-            return;
+            return Task.CompletedTask;
         }
 
         try
         {
-            await emailSender.SendEmailAsync(email, subject, body, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            logger.LogWarning("Email sending was cancelled for {Email}", email);
+            if (!emailQueue.TryQueue(email, subject, body))
+            {
+                logger.LogWarning("Email could not be queued for {Email}", email);
+            }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to send email to {Email}", email);
+            logger.LogError(ex, "Failed to queue email to {Email}", email);
         }
+
+        return Task.CompletedTask;
     }
 }
