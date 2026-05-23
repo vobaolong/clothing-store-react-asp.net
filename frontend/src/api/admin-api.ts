@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { apiClient } from '@/services/api-client'
+import { apiClient } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import type {
   AdminCategory,

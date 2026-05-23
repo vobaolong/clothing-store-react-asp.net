@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useQueryClient } from '@tanstack/react-query'
-import { getSignalRService } from '@/services/signalr-service'
+import { getSignalRService } from '@/utils/signalr-service'
 import { addRealtimeNotification } from '@/state/notification-slice'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import type { RootState } from '@/app/store'

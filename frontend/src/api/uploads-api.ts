@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
-import { apiClient } from '@/services/api-client'
+import { apiClient } from '@/api/api-client'
 import { getApiErrorMessage } from '@/utils/error-handler'
 
 export type UploadedImage = {

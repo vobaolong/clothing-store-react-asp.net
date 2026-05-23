@@ -1,4 +1,4 @@
-import { apiClient } from '@/services/api-client'
+import { apiClient } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import { CouponStatus } from '@/enums'
 import type { Coupon, AvailableCoupon, CouponUpsertPayload } from '@/types'
