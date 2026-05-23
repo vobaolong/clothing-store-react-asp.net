@@ -9,9 +9,11 @@ import {
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   markNotificationAsRead as markAsReadAction,
-  markAllAsRead as markAllAsReadAction
+  markAllAsRead as markAllAsReadAction,
+  selectNotificationError,
+  selectNotificationUnreadCount,
+  selectRealtimeNotifications
 } from '@/state/notification-slice'
-import type { RootState } from '@/app/store/store'
 import type {
   GetNotificationsRequest,
   NotificationsResponse
@@ -20,10 +22,9 @@ import type {
 export const useNotifications = (params: GetNotificationsRequest = {}) => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-
-  const notificationState = useSelector(
-    (state: RootState) => state.notifications
-  )
+  const realtimeNotifications = useSelector(selectRealtimeNotifications)
+  const fallbackUnreadCount = useSelector(selectNotificationUnreadCount)
+  const notificationError = useSelector(selectNotificationError)
 
   const {
     data: notificationsData,
@@ -62,15 +63,15 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
 
   return {
     notifications: notificationsData?.notifications ?? [],
-    realtimeNotifications: notificationState.realtimeNotifications,
-    unreadCount: notificationsData?.unreadCount ?? notificationState.unreadCount,
+    realtimeNotifications,
+    unreadCount: notificationsData?.unreadCount ?? fallbackUnreadCount,
     totalCount: notificationsData?.totalCount ?? 0,
 
     isLoading,
     isMarkingAsRead: markAsReadMutation.isPending,
     isMarkingAllAsRead: markAllAsReadMutation.isPending,
 
-    error: error?.message ?? notificationState.error,
+    error: error?.message ?? notificationError,
 
     markAsRead,
     markAllAsRead,
@@ -79,9 +80,7 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
 }
 
 export const useUnreadCount = () => {
-  const unreadCount = useSelector(
-    (state: RootState) => state.notifications.unreadCount
-  )
+  const unreadCount = useSelector(selectNotificationUnreadCount)
 
   const { data, isLoading, error } = useQuery<number>({
     queryKey: QUERY_KEYS.notificationsUnreadCount,

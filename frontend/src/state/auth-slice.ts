@@ -5,6 +5,7 @@ import {
   removeAuthToken,
   setAuthToken
 } from '@/state/auth-session'
+import type { RootState } from '@/app/store'
 import type { JwtPayload } from '@/types'
 
 interface AuthState {
@@ -43,4 +44,11 @@ const authSlice = createSlice({
 })
 
 export const { setAuth, logout, updateUser } = authSlice.actions
+
+export const selectAuth = (state: RootState) => state.auth
+export const selectAuthToken = (state: RootState) => state.auth.token
+export const selectAuthUser = (state: RootState) => state.auth.user
+export const selectIsAuthenticated = (state: RootState) =>
+  state.auth.isAuthenticated
+
 export default authSlice.reducer

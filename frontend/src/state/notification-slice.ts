@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { RootState } from '@/app/store'
 import type {
   NotificationDto,
   NotificationState,
@@ -111,5 +112,13 @@ export const {
   clearError,
   reset
 } = notificationSlice.actions
+
+export const selectNotificationState = (state: RootState) => state.notifications
+export const selectRealtimeNotifications = (state: RootState) =>
+  state.notifications.realtimeNotifications
+export const selectNotificationUnreadCount = (state: RootState) =>
+  state.notifications.unreadCount
+export const selectNotificationError = (state: RootState) =>
+  state.notifications.error
 
 export default notificationSlice.reducer

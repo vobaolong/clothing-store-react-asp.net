@@ -206,4 +206,8 @@ export const selectSelectedCartItems = createSelector(
   (items) => items.filter((item) => item.isSelected)
 )
 
+export const selectCartItemCount = createSelector(selectCartItems, (items) =>
+  items.reduce((sum, item) => sum + item.quantity, 0)
+)
+
 export default cartSlice.reducer

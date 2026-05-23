@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { notification as antdNotification } from 'antd'
-import { clearRealtimeNotifications } from '@/state/notification-slice'
+import {
+  clearRealtimeNotifications,
+  selectRealtimeNotifications
+} from '@/state/notification-slice'
 import { NotificationType } from '@/types/notification'
 import type { RealtimeNotificationDto } from '@/types/notification'
-import type { RootState } from '@/app/store/store'
 import { isAdmin } from '@/state/auth-session'
 
 const getIcon = (type: RealtimeNotificationDto['type']): string => {
@@ -46,9 +48,7 @@ const getLevel = (type: RealtimeNotificationDto['type']): AntdLevel => {
 
 export const NotificationToastManager = () => {
   const dispatch = useDispatch()
-  const queue = useSelector(
-    (state: RootState) => state.notifications.realtimeNotifications
-  )
+  const queue = useSelector(selectRealtimeNotifications)
 
   useEffect(() => {
     if (isAdmin()) {

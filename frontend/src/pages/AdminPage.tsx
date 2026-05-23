@@ -3,12 +3,12 @@ import AdminPageModals from '@/components/admin/AdminPageModals'
 import AdminPageSections from '@/components/admin/AdminPageSections'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
-import type { RootState } from '@/app/store'
+import { selectAuthUser } from '@/state/auth-slice'
 import { AdminProvider } from '@/context/admin/AdminProvider'
 
 export default function AdminPage() {
   const { section } = useParams<{ section: string }>()
-  const { user } = useSelector((state: RootState) => state.auth)
+  const user = useSelector(selectAuthUser)
   const isAdminUser =
     user?.isAdmin === true ||
     (user as { role?: string })?.role === 'Admin' ||

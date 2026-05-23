@@ -4,7 +4,6 @@ import { Button, Drawer, Empty, Layout, Modal } from 'antd'
 import toast from 'react-hot-toast'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import type { RootState } from '@/app/store'
 
 import Footer from '@/components/AppFooter'
 import AppHeader from '@/components/AppHeader'
@@ -12,6 +11,9 @@ import { getCategories } from '@/api/products-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   closeCartDrawer,
+  selectCartItemCount,
+  selectCartItems,
+  selectIsCartDrawerOpen,
   openDrawer,
   removeFromCart,
   updateQuantity
@@ -20,7 +22,7 @@ import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import CartQuantityControl from '@/components/CartQuantityControl'
-import { logout } from '@/state/auth-slice'
+import { logout, selectAuth } from '@/state/auth-slice'
 
 const { Content } = Layout
 
@@ -28,9 +30,7 @@ export default function AppShell() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const { isAuthenticated, user } = useSelector(
-    (state: RootState) => state.auth
-  )
+  const { isAuthenticated, user } = useSelector(selectAuth)
   const isAdminUser = user?.isAdmin === true
 
   const categoriesQuery = useQuery({
@@ -38,13 +38,9 @@ export default function AppShell() {
     queryFn: getCategories,
     enabled: !isAdminUser
   })
-  const cartItems = useSelector((state: RootState) => state.cart.items)
-  const isCartDrawerOpen = useSelector(
-    (state: RootState) => state.cart.isDrawerOpen
-  )
-  const itemCount = useSelector((state: RootState) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  )
+  const cartItems = useSelector(selectCartItems)
+  const isCartDrawerOpen = useSelector(selectIsCartDrawerOpen)
+  const itemCount = useSelector(selectCartItemCount)
   const cartTotal = cartItems.reduce(
     (sum, item) => sum + getCartLineEffectivePrice(item) * item.quantity,
     0

@@ -2,10 +2,10 @@ import { DeleteOutlined } from '@ant-design/icons'
 import { Button, Card, Checkbox, Empty, Modal, Select } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import type { RootState } from '@/app/store'
 import {
   clearCart,
   removeFromCart,
+  selectCartItems,
   toggleSelectAllCartItems,
   toggleSelectCartItem,
   updateCartVariant,
@@ -18,7 +18,7 @@ import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 
 export default function CartPage() {
   const dispatch = useDispatch()
-  const items = useSelector((state: RootState) => state.cart.items)
+  const items = useSelector(selectCartItems)
   const selectedItems = items.filter((item) => item.isSelected)
   const total = selectedItems.reduce(
     (sum, item) => sum + getCartLineEffectivePrice(item) * item.quantity,
