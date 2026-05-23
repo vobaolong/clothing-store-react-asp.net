@@ -5,41 +5,41 @@ import AppShell from '@/layouts/AppShell'
 import ScrollToTop from '@/components/scroll-to-top'
 import { getAuthToken, isAdmin } from '@/state/auth-session'
 
-const AboutPage = lazy(() => import('@/features/about/pages/about-page'))
-const AdminPage = lazy(() => import('@/features/admin/pages/admin-page'))
-const CartPage = lazy(() => import('@/features/cart/pages/cart-page'))
+const AboutPage = lazy(() => import('@/pages/AboutPage'))
+const AdminPage = lazy(() => import('@/pages/AdminPage'))
+const CartPage = lazy(() => import('@/pages/CartPage'))
 const CheckoutPage = lazy(
-  () => import('@/features/checkout/pages/checkout-page')
+  () => import('@/pages/CheckoutPage')
 )
 const ForgotPasswordPage = lazy(
-  () => import('@/features/auth/pages/forgot-password-page')
+  () => import('@/pages/ForgotPasswordPage')
 )
-const HomePage = lazy(() => import('@/features/home/pages/home-page'))
-const LoginPage = lazy(() => import('@/features/auth/pages/login-page'))
+const HomePage = lazy(() => import('@/pages/HomePage'))
+const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const OrderDetailPage = lazy(
-  () => import('@/features/orders/pages/order-detail-page')
+  () => import('@/pages/OrderDetailPage')
 )
 const AdminOrderDetailPage = lazy(
-  () => import('@/features/admin/pages/admin-order-detail-page')
+  () => import('@/pages/AdminOrderDetailPage')
 )
 const PaymentReturnPage = lazy(
-  () => import('@/features/checkout/pages/payment-return-page')
+  () => import('@/pages/PaymentReturnPage')
 )
 const ProductDetailPage = lazy(
-  () => import('@/features/products/pages/product-detail-page')
+  () => import('@/pages/ProductDetailPage')
 )
 const ProductsPage = lazy(
-  () => import('@/features/products/pages/products-page')
+  () => import('@/pages/ProductsPage')
 )
-const ProfilePage = lazy(() => import('@/features/profile/pages/profile-page'))
-const RegisterPage = lazy(() => import('@/features/auth/pages/register-page'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
+const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const ResetPasswordPage = lazy(
-  () => import('@/features/auth/pages/reset-password-page')
+  () => import('@/pages/ResetPasswordPage')
 )
 const VerifyOtpPage = lazy(
-  () => import('@/features/auth/pages/verify-otp-page')
+  () => import('@/pages/VerifyOtpPage')
 )
-const NotFoundPage = lazy(() => import('@/features/home/pages/not-found-page'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 function RouteSuspense({ children }: { children: ReactNode }) {
   return <Suspense fallback={null}>{children}</Suspense>
