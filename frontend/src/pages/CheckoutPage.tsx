@@ -30,11 +30,11 @@ import {
 } from '@/utils/checkout-utils'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
-import LoadingOverlay from '@/features/checkout/components/LoadingOverlay'
-import ShippingAddressSection from '@/features/checkout/components/ShippingAddressSection'
-import CouponSection from '@/features/checkout/components/CouponSection'
-import PaymentSection from '@/features/checkout/components/PaymentSection'
-import OrderSummary from '@/features/checkout/components/OrderSummary'
+import LoadingOverlay from '@/components/checkout/LoadingOverlay'
+import ShippingAddressSection from '@/components/checkout/ShippingAddressSection'
+import CouponSection from '@/components/checkout/CouponSection'
+import PaymentSection from '@/components/checkout/PaymentSection'
+import OrderSummary from '@/components/checkout/OrderSummary'
 import type {
   CheckoutFormValues,
   SelectOption,

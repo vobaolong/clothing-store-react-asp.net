@@ -11,7 +11,7 @@ import {
   updateCartVariant,
   updateQuantity
 } from '@/state/cart-slice'
-import CartQuantityControl from '@/components/cart-quantity-control'
+import CartQuantityControl from '@/components/CartQuantityControl'
 import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'

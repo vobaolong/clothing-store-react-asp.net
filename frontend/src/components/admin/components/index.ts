@@ -1,2 +1,2 @@
-export { default as AdminTableHeader } from '@/features/admin/components/Admin/AdminTableHeader'
-export { default as AdminTrashBulkActions } from '@/features/admin/components/Admin/AdminTrashBulkActions'
+export { default as AdminTableHeader } from '@/components/admin/AdminTableHeader'
+export { default as AdminTrashBulkActions } from '@/components/admin/AdminTrashBulkActions'

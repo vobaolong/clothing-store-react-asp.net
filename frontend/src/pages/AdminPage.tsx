@@ -1,6 +1,6 @@
 import { Navigate, useParams } from 'react-router-dom'
-import AdminPageModals from '@/features/admin/components/admin-page-modals'
-import AdminPageSections from '@/features/admin/components/admin-page-sections'
+import AdminPageModals from '@/components/admin/AdminPageModals'
+import AdminPageSections from '@/components/admin/AdminPageSections'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
 import type { RootState } from '@/app/store'

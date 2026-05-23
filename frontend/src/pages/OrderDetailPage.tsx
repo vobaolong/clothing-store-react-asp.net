@@ -11,7 +11,7 @@ import { LeftOutlined } from '@ant-design/icons'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { createReview } from '@/api/reviews-api'
 import toast from 'react-hot-toast'
-import ReviewForm from '@/features/reviews/components/review-form'
+import ReviewForm from '@/components/reviews/ReviewForm'
 import { useOrderRealtime } from '@/hooks/use-order-realtime'
 
 const formatStructuredAddress = (detail: {

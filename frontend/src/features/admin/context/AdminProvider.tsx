@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAdminEditor } from '@/features/admin/hooks/useAdminEditor'
 import { FilterStatus } from '@/enums'
 import type { AdminBanner, AdminCategory, AdminProduct, Coupon } from '@/types'
-import type { AdminProductListMode } from '@/features/admin/sections/admin-products-section'
+import type { AdminProductListMode } from '@/components/admin/AdminProductsSection'
 import {
   AdminContext,
   type AdminContextType

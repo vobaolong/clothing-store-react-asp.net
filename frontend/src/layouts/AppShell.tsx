@@ -6,8 +6,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/app/store'
 
-import Footer from '@/components/app-footer'
-import AppHeader from '@/components/app-header'
+import Footer from '@/components/AppFooter'
+import AppHeader from '@/components/AppHeader'
 import { getCategories } from '@/api/products-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
@@ -19,7 +19,7 @@ import {
 import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
-import CartQuantityControl from '@/components/cart-quantity-control'
+import CartQuantityControl from '@/components/CartQuantityControl'
 import { logout } from '@/state/auth-slice'
 
 const { Content } = Layout

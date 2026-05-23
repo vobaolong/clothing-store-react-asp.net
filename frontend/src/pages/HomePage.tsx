@@ -7,8 +7,8 @@ import { getCategories, getProducts } from '@/api/products-api'
 import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import HomeHeroBanner from '@/features/home/components/home-hero-banner'
-import HomeProductRail from '@/features/home/components/home-product-rail'
+import HomeHeroBanner from '@/components/home/HomeHeroBanner'
+import HomeProductRail from '@/components/home/HomeProductRail'
 
 interface CategoryBrowserProps {
   rootCategories: Category[]

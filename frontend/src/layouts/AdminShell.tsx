@@ -9,8 +9,8 @@ import {
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { isAdmin, removeAuthToken } from '@/state/auth-session'
-import { NotificationCenter } from '@/components/notification-center'
-import AdminPageSidebar from '@/features/admin/components/admin-page-sidebar'
+import { NotificationCenter } from '@/components/NotificationCenter'
+import AdminPageSidebar from '@/components/admin/AdminPageSidebar'
 
 const { Header, Content } = Layout
 

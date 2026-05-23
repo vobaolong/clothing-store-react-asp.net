@@ -21,8 +21,8 @@ import type { DescriptionLayout } from '@/types/product'
 import { formatDescriptionSpecDisplayValue } from '@/constants/product'
 import { MEASUREMENT_PRESETS } from '@/constants/measurement-presets'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import CartQuantityControl from '@/components/cart-quantity-control'
-import ProductCard from '@/components/product-card'
+import CartQuantityControl from '@/components/CartQuantityControl'
+import ProductCard from '@/components/ProductCard'
 import {
   getCategoryAncestorChain,
   toProductsCategorySearchUrl
@@ -36,7 +36,7 @@ import { toCapitalize } from '@/utils/table.lib'
 const { Timer } = Statistic
 
 const ProductReviewsSection = lazy(
-  () => import('@/features/reviews/components/product-reviews-section')
+  () => import('@/components/reviews/ProductReviewsSection')
 )
 
 export default function ProductDetailPage() {

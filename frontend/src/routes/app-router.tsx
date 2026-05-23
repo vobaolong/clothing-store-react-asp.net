@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { lazy, Suspense, type ReactNode } from 'react'
 import AdminShell from '@/layouts/AdminShell'
 import AppShell from '@/layouts/AppShell'
-import ScrollToTop from '@/components/scroll-to-top'
+import ScrollToTop from '@/components/ScrollToTop'
 import { getAuthToken, isAdmin } from '@/state/auth-session'
 
 const AboutPage = lazy(() => import('@/pages/AboutPage'))

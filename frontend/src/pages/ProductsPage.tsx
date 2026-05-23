@@ -3,9 +3,9 @@ import { FilterOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import ProductCard from '@/components/product-card'
-import ProductsFilter from '@/features/products/components/products-filter'
-import ProductsSearchFilter from '@/features/products/components/products-search-filter'
+import ProductCard from '@/components/ProductCard'
+import ProductsFilter from '@/components/products/ProductsFilter'
+import ProductsSearchFilter from '@/components/products/ProductsSearchFilter'
 import { getCategories, getProducts } from '@/api/products-api'
 import {
   buildCategoryFilterTreeRows,
