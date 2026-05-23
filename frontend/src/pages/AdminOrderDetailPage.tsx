@@ -13,7 +13,7 @@ import {
   getVietnameseStatusLabel
 } from '@/utils/enum.utils'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
-import { useOrderRealtime } from '@/hooks/use-order-realtime'
+import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { toCapitalize } from '@/utils/table.lib'
 import { openBillPrintWindow } from '@/utils/bill-export'
 import { OrderStatus } from '@/enums'

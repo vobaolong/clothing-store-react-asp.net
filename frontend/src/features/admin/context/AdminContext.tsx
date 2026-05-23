@@ -1,6 +1,6 @@
 import { createContext, use } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAdminEditor } from '@/features/admin/hooks/useAdminEditor'
+import { useAdminEditor } from '@/hooks/useAdminEditor'
 import type { AdminBanner, AdminCategory, AdminProduct, Coupon } from '@/types'
 import type { AdminProductListMode } from '@/components/admin/AdminProductsSection'
 

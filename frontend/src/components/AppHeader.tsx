@@ -18,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { NotificationCenter } from '@/components/NotificationCenter'
-import { useHeaderVisibility } from '@/hooks/use-header-visibility'
+import { useHeaderVisibility } from '@/hooks/useHeaderVisibility'
 
 export type AppHeaderProps = {
   isAdminUser: boolean

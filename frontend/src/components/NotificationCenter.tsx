@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useNotifications } from '@/hooks/use-notifications'
+import { useNotifications } from '@/hooks/useNotifications'
 import { NotificationType } from '@/types/notification'
 import type { NotificationDto } from '@/types/notification'
 import { Button, Spin } from 'antd'

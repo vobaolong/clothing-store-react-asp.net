@@ -1,5 +1,5 @@
 import { AppRouter } from '@/routes/app-router'
-import { useSignalR } from '@/hooks/use-signalr'
+import { useSignalR } from '@/hooks/useSignalR'
 import NotificationToastManager from '@/components/NotificationToast'
 
 export default function App() {

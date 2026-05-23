@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Tag } from 'antd'
-import { useNotifications } from '@/hooks/use-notifications'
+import { useNotifications } from '@/hooks/useNotifications'
 import { NotificationType } from '@/types/notification'
 import { formatDate } from '@/utils/format'
 import type { NotificationDto } from '@/types/notification'

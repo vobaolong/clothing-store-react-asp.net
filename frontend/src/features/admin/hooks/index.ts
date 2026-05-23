@@ -1,2 +1,2 @@
-export { useTableSelection } from '@/features/admin/hooks/useTableSelection'
-export { useBulkActivate } from '@/features/admin/hooks/useBulkActivate'
+export { useTableSelection } from '@/hooks/useTableSelection'
+export { useBulkActivate } from '@/hooks/useBulkActivate'

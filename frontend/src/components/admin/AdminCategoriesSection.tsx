@@ -8,7 +8,7 @@ import {
   buildCategoryTreeSelectData,
   removeCategorySubtreeFromTree
 } from '@/utils/category-tree'
-import { useTableSelection } from '@/features/admin/hooks'
+import { useTableSelection } from '@/hooks/useTableSelection'
 import { getAdminCategories, updateAdminCategory } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { useAdmin } from '@/features/admin/context/AdminContext'

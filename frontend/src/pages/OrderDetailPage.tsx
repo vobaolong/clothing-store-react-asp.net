@@ -12,7 +12,7 @@ import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { createReview } from '@/api/reviews-api'
 import toast from 'react-hot-toast'
 import ReviewForm from '@/components/reviews/ReviewForm'
-import { useOrderRealtime } from '@/hooks/use-order-realtime'
+import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
