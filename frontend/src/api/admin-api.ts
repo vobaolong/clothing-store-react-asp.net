@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { apiClient } from '@/api/api-client'
+import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import type {
   AdminCategory,
@@ -19,8 +19,9 @@ import type {
 import { CategoryGender, CategoryProductType, FilterStatus } from '@/enums'
 
 export const getAdminProducts = async (): Promise<AdminProduct[]> => {
-  const rows = (await apiClient.get(API_ENDPOINTS.admin.products)).data
-    .data as AdminProduct[]
+  const rows = await apiData<AdminProduct[]>(
+    apiClient.get(API_ENDPOINTS.admin.products)
+  )
   return rows.map((p) => ({
     ...p,
     isActive: typeof p.isActive === 'boolean' ? p.isActive : true
@@ -28,8 +29,9 @@ export const getAdminProducts = async (): Promise<AdminProduct[]> => {
 }
 
 export const getAdminDeletedProducts = async (): Promise<AdminProduct[]> => {
-  const rows = (await apiClient.get(API_ENDPOINTS.admin.productsDeleted)).data
-    .data as AdminProduct[]
+  const rows = await apiData<AdminProduct[]>(
+    apiClient.get(API_ENDPOINTS.admin.productsDeleted)
+  )
   return rows.map((p) => ({
     ...p,
     isActive: typeof p.isActive === 'boolean' ? p.isActive : true,
@@ -43,13 +45,13 @@ export const getAdminDeletedProducts = async (): Promise<AdminProduct[]> => {
 }
 
 export const restoreAdminProduct = async (id: string) =>
-  apiClient.post(API_ENDPOINTS.admin.productRestoreById(id))
+  apiVoid(apiClient.post(API_ENDPOINTS.admin.productRestoreById(id)))
 
 export const bulkRestoreAdminProducts = async (payload: { ids: string[] }) =>
-  apiClient.post(API_ENDPOINTS.admin.productsBulkRestore, payload)
+  apiVoid(apiClient.post(API_ENDPOINTS.admin.productsBulkRestore, payload))
 
 export const createAdminProduct = async (payload: AdminProductUpsertPayload) =>
-  apiClient.post(API_ENDPOINTS.admin.products, payload)
+  apiVoid(apiClient.post(API_ENDPOINTS.admin.products, payload))
 
 export type AdminProductImportResult = {
   totalRows: number
@@ -65,27 +67,28 @@ export const importAdminProducts = async (
 ): Promise<AdminProductImportResult> => {
   const formData = new FormData()
   formData.append('file', file)
-  const res = await apiClient.post(API_ENDPOINTS.admin.productsImport, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
-  return res.data.data as AdminProductImportResult
+  return apiData(
+    apiClient.post(API_ENDPOINTS.admin.productsImport, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  )
 }
 
 export const updateAdminProductActive = async (
   id: string,
   payload: { isActive: boolean }
-) => apiClient.put(API_ENDPOINTS.admin.productActiveById(id), payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.productActiveById(id), payload))
 
 export const bulkUpdateAdminProductsActive = async (payload: {
   ids: string[]
   isActive: boolean
-}) => apiClient.put(API_ENDPOINTS.admin.productsBulk, payload)
+}) => apiVoid(apiClient.put(API_ENDPOINTS.admin.productsBulk, payload))
 
 export const bulkDeleteAdminProducts = async (payload: { ids: string[] }) =>
-  apiClient.delete(API_ENDPOINTS.admin.productsBulk, { data: payload })
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.productsBulk, { data: payload }))
 
 export const deleteAdminProductPermanent = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.admin.productPermanentById(id))
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.productPermanentById(id)))
 
 export type AdminBulkPermanentProductsResult = {
   deleted: number
@@ -96,13 +99,11 @@ export type AdminBulkPermanentProductsResult = {
 export const bulkDeleteAdminProductsPermanent = async (payload: {
   ids: string[]
 }): Promise<AdminBulkPermanentProductsResult> => {
-  const res = await apiClient.delete(
-    API_ENDPOINTS.admin.productsBulkPermanent,
-    {
+  return apiData(
+    apiClient.delete(API_ENDPOINTS.admin.productsBulkPermanent, {
       data: payload
-    }
+    })
   )
-  return res.data.data as AdminBulkPermanentProductsResult
 }
 
 export const getAdminApiErrorMessage = (error: unknown): string | undefined => {
@@ -114,16 +115,16 @@ export const getAdminApiErrorMessage = (error: unknown): string | undefined => {
 export const updateAdminProduct = async (
   id: string,
   payload: AdminProductUpsertPayload
-) => apiClient.put(API_ENDPOINTS.admin.productById(id), payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.productById(id), payload))
 
 export const deleteAdminProduct = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.admin.productById(id))
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.productById(id)))
 
 export const getAdminCategories = async (): Promise<AdminCategory[]> =>
   (
-    (await apiClient.get(API_ENDPOINTS.admin.categories)).data.data as Array<
-      Record<string, unknown>
-    >
+    await apiData<Array<Record<string, unknown>>>(
+      apiClient.get(API_ENDPOINTS.admin.categories)
+    )
   ).map((item) => ({
     id: String(item.id ?? ''),
     name: String(item.name ?? ''),
@@ -147,15 +148,15 @@ export const getAdminCategories = async (): Promise<AdminCategory[]> =>
 
 export const createAdminCategory = async (
   payload: AdminCategoryUpsertPayload
-) => apiClient.post(API_ENDPOINTS.admin.categories, payload)
+) => apiVoid(apiClient.post(API_ENDPOINTS.admin.categories, payload))
 
 export const updateAdminCategory = async (
   id: string,
   payload: AdminCategoryUpsertPayload
-) => apiClient.put(API_ENDPOINTS.admin.categoryById(id), payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.categoryById(id), payload))
 
 export const deleteAdminCategory = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.admin.categoryById(id))
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.categoryById(id)))
 
 export type AdminCategoryBulkCreatePayload = {
   items: Array<{ name: string; image?: string; description?: string }>
@@ -167,36 +168,39 @@ export type AdminCategoryBulkCreatePayload = {
 
 export const bulkCreateAdminCategories = async (
   payload: AdminCategoryBulkCreatePayload
-) => apiClient.post(API_ENDPOINTS.admin.categoriesBulk, payload)
+) => apiVoid(apiClient.post(API_ENDPOINTS.admin.categoriesBulk, payload))
 
 export const bulkUpdateCategoriesActive = async (payload: {
   ids: string[]
   isActive: boolean
-}) => apiClient.put(API_ENDPOINTS.admin.categoriesBulk, payload)
+}) => apiVoid(apiClient.put(API_ENDPOINTS.admin.categoriesBulk, payload))
 
 export const getAdminOrders = async (
   status: string = FilterStatus.ALL
 ): Promise<{ orders: AdminOrder[]; counts: StatusCount[] }> =>
-  (await apiClient.get(API_ENDPOINTS.admin.orders, { params: { status } })).data
-    .data
+  apiData(apiClient.get(API_ENDPOINTS.admin.orders, { params: { status } }))
 
 export const updateAdminOrderStatus = async (
   id: string,
   payload: AdminOrderStatusUpdatePayload
-) => apiClient.put(API_ENDPOINTS.admin.orderStatusById(id), payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.orderStatusById(id), payload))
 
 export const bulkUpdateAdminOrdersStatus = async (
   payload: { orderIds: string[]; status: string }
-) => apiClient.put(API_ENDPOINTS.admin.ordersBulkStatus, payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.ordersBulkStatus, payload))
 
 export const getAdminReviews = async (): Promise<Review[]> =>
-  (await apiClient.get(API_ENDPOINTS.admin.reviews)).data.data.items
+  (
+    await apiData<{ items: Review[] }>(
+      apiClient.get(API_ENDPOINTS.admin.reviews)
+    )
+  ).items
 
 export const deleteAdminReview = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.admin.reviewById(id))
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.reviewById(id)))
 
 export const getAdminCustomers = async (): Promise<Customer[]> =>
-  (await apiClient.get(API_ENDPOINTS.admin.customers)).data.data
+  apiData(apiClient.get(API_ENDPOINTS.admin.customers))
 
 export type LockCustomerResponse = {
   success: boolean
@@ -215,26 +219,26 @@ export const lockAdminCustomer = async (
 }
 
 export const unlockAdminCustomer = async (id: string) =>
-  apiClient.put(API_ENDPOINTS.admin.customerUnlockById(id))
+  apiVoid(apiClient.put(API_ENDPOINTS.admin.customerUnlockById(id)))
 
 export const getAdminOrderDetail = async (
   id: string
 ): Promise<AdminOrderDetail> =>
-  (await apiClient.get(API_ENDPOINTS.admin.orderById(id))).data.data
+  apiData(apiClient.get(API_ENDPOINTS.admin.orderById(id)))
 
 export const getAdminBanners = async (): Promise<AdminBanner[]> =>
-  (await apiClient.get(API_ENDPOINTS.admin.banners)).data.data
+  apiData(apiClient.get(API_ENDPOINTS.admin.banners))
 
 export const createAdminBanner = async (payload: AdminBannerUpsertPayload) =>
-  apiClient.post(API_ENDPOINTS.admin.banners, payload)
+  apiVoid(apiClient.post(API_ENDPOINTS.admin.banners, payload))
 
 export const updateAdminBanner = async (
   id: string,
   payload: AdminBannerUpsertPayload
-) => apiClient.put(API_ENDPOINTS.admin.bannerById(id), payload)
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.bannerById(id), payload))
 
 export const deleteAdminBanner = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.admin.bannerById(id))
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.bannerById(id)))
 
 export type {
   AdminCategory,

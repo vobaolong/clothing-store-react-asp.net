@@ -1,4 +1,4 @@
-import { apiClient } from '@/api/api-client'
+import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import type {
   ShippingAddress,
@@ -6,39 +6,28 @@ import type {
   UpdateShippingAddressPayload
 } from '@/types'
 
-export const getShippingAddresses = async (): Promise<ShippingAddress[]> => {
-  const { data } = await apiClient.get(API_ENDPOINTS.account.shippingAddresses)
-  return data.data
-}
+export const getShippingAddresses = async (): Promise<ShippingAddress[]> =>
+  apiData(apiClient.get(API_ENDPOINTS.account.shippingAddresses))
 
 export const createShippingAddress = async (
   payload: CreateShippingAddressPayload
-): Promise<string> => {
-  const { data } = await apiClient.post(
-    API_ENDPOINTS.account.shippingAddresses,
-    payload
-  )
-  return data.data as string
-}
+): Promise<string> =>
+  apiData(apiClient.post(API_ENDPOINTS.account.shippingAddresses, payload))
 
 export const updateShippingAddress = async (
   id: string,
   payload: UpdateShippingAddressPayload
-) => apiClient.put(API_ENDPOINTS.account.shippingAddressById(id), payload)
+): Promise<void> =>
+  apiVoid(apiClient.put(API_ENDPOINTS.account.shippingAddressById(id), payload))
 
-export const deleteShippingAddress = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.account.shippingAddressById(id))
+export const deleteShippingAddress = async (id: string): Promise<void> =>
+  apiVoid(apiClient.delete(API_ENDPOINTS.account.shippingAddressById(id)))
 
 export const getShippingAddressPrefill = async (): Promise<{
   fullName?: string
   email?: string
   phone?: string
-}> => {
-  const { data } = await apiClient.get(
-    `${API_ENDPOINTS.account.shippingAddresses}/prefill`
-  )
-  return data.data
-}
+}> => apiData(apiClient.get(API_ENDPOINTS.account.shippingAddressPrefill))
 
-export const setDefaultShippingAddress = async (id: string) =>
-  apiClient.put(API_ENDPOINTS.account.shippingAddressDefaultById(id))
+export const setDefaultShippingAddress = async (id: string): Promise<void> =>
+  apiVoid(apiClient.put(API_ENDPOINTS.account.shippingAddressDefaultById(id)))

@@ -1,5 +1,5 @@
+import { apiClient, apiData } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
-import { apiClient } from '@/api/api-client'
 import { getApiErrorMessage } from '@/utils/error-handler'
 
 export type UploadedImage = {
@@ -21,8 +21,7 @@ export const uploadImage = async (
   formData.append('folder', folder)
 
   try {
-    const { data } = await apiClient.post(API_ENDPOINTS.uploads.image, formData)
-    return data.data as UploadedImage
+    return apiData(apiClient.post(API_ENDPOINTS.uploads.image, formData))
   } catch (error: unknown) {
     const errorMessage = getApiErrorMessage(error)
     throw new Error(errorMessage)

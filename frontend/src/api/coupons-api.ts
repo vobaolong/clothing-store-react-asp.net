@@ -1,4 +1,4 @@
-import { apiClient } from '@/api/api-client'
+import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import { CouponStatus } from '@/enums'
 import type { Coupon, AvailableCoupon, CouponUpsertPayload } from '@/types'
@@ -7,22 +7,23 @@ import { calculateCouponDiscountAmount } from '@/utils/coupon-discount'
 export const getAdminCoupons = async (
   status?: CouponStatus
 ): Promise<Coupon[]> =>
-  (await apiClient.get(API_ENDPOINTS.coupons.admin, { params: { status } }))
-    .data.data
+  apiData(apiClient.get(API_ENDPOINTS.coupons.admin, { params: { status } }))
 
-export const createCoupon = async (payload: CouponUpsertPayload) =>
-  apiClient.post(API_ENDPOINTS.coupons.admin, payload)
+export const createCoupon = async (
+  payload: CouponUpsertPayload
+): Promise<void> => apiVoid(apiClient.post(API_ENDPOINTS.coupons.admin, payload))
 
 export const updateCoupon = async (
   id: string,
   payload: Partial<CouponUpsertPayload> & { status?: CouponStatus }
-) => apiClient.put(API_ENDPOINTS.coupons.adminById(id), payload)
+): Promise<void> =>
+  apiVoid(apiClient.put(API_ENDPOINTS.coupons.adminById(id), payload))
 
-export const deleteCoupon = async (id: string) =>
-  apiClient.delete(API_ENDPOINTS.coupons.adminById(id))
+export const deleteCoupon = async (id: string): Promise<void> =>
+  apiVoid(apiClient.delete(API_ENDPOINTS.coupons.adminById(id)))
 
 export const getAvailableCoupons = async (): Promise<AvailableCoupon[]> =>
-  (await apiClient.get(API_ENDPOINTS.coupons.available)).data.data
+  apiData(apiClient.get(API_ENDPOINTS.coupons.available))
 
 export const validateCoupon = async (payload: {
   code: string

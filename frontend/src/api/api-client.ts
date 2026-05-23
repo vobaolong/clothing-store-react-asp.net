@@ -1,9 +1,11 @@
-import axios from 'axios'
-import { getAuthToken, removeAuthToken } from '@/state/auth-session'
+import axios, { type AxiosResponse } from 'axios'
 import toast from 'react-hot-toast'
 
+import { getAuthToken, removeAuthToken } from '@/state/auth-session'
+import type { ApiResponse } from '@/types/common'
+
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5230/api',
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5230/api'
 })
 
 apiClient.interceptors.request.use((config) => {
@@ -25,5 +27,21 @@ apiClient.interceptors.response.use(
       }
     }
     return Promise.reject(error)
-  },
+  }
 )
+
+export const unwrapApiResponse = <T>(
+  response: AxiosResponse<ApiResponse<T>>
+): T => response.data.data
+
+export const apiData = async <T>(
+  request: Promise<AxiosResponse<ApiResponse<T>>>
+): Promise<T> => unwrapApiResponse(await request)
+
+export const apiResponse = async <T = unknown>(
+  request: Promise<AxiosResponse<ApiResponse<T>>>
+): Promise<ApiResponse<T>> => (await request).data
+
+export const apiVoid = async (request: Promise<unknown>): Promise<void> => {
+  await request
+}

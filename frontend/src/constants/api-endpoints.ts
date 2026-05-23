@@ -21,7 +21,8 @@ export const API_ENDPOINTS = {
   },
   reviews: {
     byProduct: (id: string) => `/products/${id}/reviews`,
-    root: '/reviews'
+    root: '/reviews',
+    byId: (id: string) => `/reviews/${id}`
   },
   account: {
     profile: '/profile/me',
@@ -29,7 +30,8 @@ export const API_ENDPOINTS = {
     shippingAddresses: '/shipping-addresses',
     shippingAddressById: (id: string) => `/shipping-addresses/${id}`,
     shippingAddressDefaultById: (id: string) =>
-      `/shipping-addresses/${id}/default`
+      `/shipping-addresses/${id}/default`,
+    shippingAddressPrefill: '/shipping-addresses/prefill'
   },
   wishlist: {
     root: '/wishlist',
