@@ -28,7 +28,7 @@ const RATING_FILTER_OPTIONS = [
 import { useQuery } from '@tanstack/react-query'
 import { getAdminReviews, deleteAdminReview } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 import toast from 'react-hot-toast'
 
 function buildColumns(

@@ -11,7 +11,7 @@ import {
 } from '@/api/admin-api'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 import ProductDrawer from '@/components/admin/ProductDrawer'
 import AdminProductsSelectionActions from '@/components/admin/AdminProductsSelectionActions'
 import AdminProductsTable from '@/components/admin/AdminProductsTable'

@@ -155,7 +155,7 @@ function buildCategoryRadarData(
   }))
 }
 
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 
 export default function AdminDashboardSection() {
   const { navigate } = useAdmin()

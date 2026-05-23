@@ -7,7 +7,7 @@ import type {
   AvailableCouponsQuery,
   CouponState,
   CheckoutFormValues
-} from '@/features/checkout/types'
+} from '@/types/checkout'
 import type { AvailableCoupon } from '@/types/coupon'
 import { formatCurrency } from '@/utils/format'
 

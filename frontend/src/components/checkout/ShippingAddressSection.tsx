@@ -11,7 +11,7 @@ import type {
   ShippingAddressesQuery,
   AddressState,
   CheckoutFormValues
-} from '@/features/checkout/types'
+} from '@/types/checkout'
 import type { QueryClient } from '@tanstack/react-query'
 
 type Props = {

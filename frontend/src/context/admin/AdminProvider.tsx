@@ -9,7 +9,7 @@ import type { AdminProductListMode } from '@/components/admin/AdminProductsSecti
 import {
   AdminContext,
   type AdminContextType
-} from '@/features/admin/context/AdminContext'
+} from '@/context/admin/AdminContext'
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate()

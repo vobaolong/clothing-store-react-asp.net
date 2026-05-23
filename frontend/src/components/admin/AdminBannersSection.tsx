@@ -12,7 +12,7 @@ import {
   updateAdminBanner
 } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 import toast from 'react-hot-toast'
 import { useCallback } from 'react'
 

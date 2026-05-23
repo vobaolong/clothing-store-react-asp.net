@@ -39,7 +39,7 @@ import type {
   CheckoutFormValues,
   SelectOption,
   CheckoutWardOption
-} from '@/features/checkout/types'
+} from '@/types/checkout'
 
 type CouponState = {
   isApplying: boolean

@@ -11,7 +11,7 @@ import {
 import { useTableSelection } from '@/hooks/useTableSelection'
 import { getAdminCategories, updateAdminCategory } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 import AdminCategoriesToolbar from '@/components/admin/AdminCategoriesToolbar'
 import AdminCategoriesTable from '@/components/admin/AdminCategoriesTable'
 import type { AdminCategoryFilters } from '@/components/admin/AdminCategoriesToolbar'

@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getAdminCategories, getAdminProducts } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/features/admin/context/AdminContext'
+import { useAdmin } from '@/context/admin/AdminContext'
 
 const AdminOrderDetailModal = lazy(
   () => import('@/components/admin/AdminOrderDetailModal')

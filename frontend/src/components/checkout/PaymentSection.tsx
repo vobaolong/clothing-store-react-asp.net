@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input, Radio } from 'antd'
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
-import type { CheckoutFormValues } from '@/features/checkout/types'
+import type { CheckoutFormValues } from '@/types/checkout'
 import { CheckoutSectionTitle } from '@/components/checkout/CheckoutSectionTitle'
 import { PaymentMethod } from '@/enums'
 
