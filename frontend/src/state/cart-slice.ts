@@ -1,11 +1,56 @@
 import {
-  createSlice,
   createSelector,
+  createSlice,
   type PayloadAction
 } from '@reduxjs/toolkit'
-import type { RootState } from '@/app/store'
 import toast from 'react-hot-toast'
+
+import type { RootState } from '@/app/store'
 import type { CartState, Product } from '@/types'
+
+type AddToCartPayload = {
+  product: Product
+  selectedVariant?: {
+    id: string
+    size: string
+    color: string
+    hex: string
+  }
+  productVariantId?: string
+  selectedSize?: string
+  selectedColor?: string
+  quantity: number
+}
+
+type CartItemIdentityPayload = {
+  productId?: string
+  variantId?: string
+  id?: string
+  productVariantId?: string
+}
+
+type UpdateQuantityPayload = CartItemIdentityPayload & {
+  quantity: number
+}
+
+type ToggleCartItemPayload = {
+  id: string
+  productVariantId: string
+  isSelected: boolean
+}
+
+type UpdateCartVariantPayload = {
+  id: string
+  oldProductVariantId: string
+  newProductVariantId: string
+  selectedSize: string
+  selectedColor: string
+}
+
+type PurchasedCartItemPayload = {
+  id: string
+  productVariantId: string
+}
 
 const initialState: CartState = {
   items: [],
@@ -22,22 +67,7 @@ const cartSlice = createSlice({
     closeDrawer: (state) => {
       state.isDrawerOpen = false
     },
-    addToCart: (
-      state,
-      action: PayloadAction<{
-        product: Product
-        selectedVariant?: {
-          id: string
-          size: string
-          color: string
-          hex: string
-        }
-        productVariantId?: string
-        selectedSize?: string
-        selectedColor?: string
-        quantity: number
-      }>
-    ) => {
+    addToCart: (state, action: PayloadAction<AddToCartPayload>) => {
       const { product, quantity } = action.payload
       const selectedVariant =
         action.payload.selectedVariant ??
@@ -70,16 +100,7 @@ const cartSlice = createSlice({
       }
       state.isDrawerOpen = true
     },
-    updateQuantity: (
-      state,
-      action: PayloadAction<{
-        productId?: string
-        variantId?: string
-        id?: string
-        productVariantId?: string
-        quantity: number
-      }>
-    ) => {
+    updateQuantity: (state, action: PayloadAction<UpdateQuantityPayload>) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
         action.payload.variantId ?? action.payload.productVariantId
@@ -94,12 +115,7 @@ const cartSlice = createSlice({
     },
     removeFromCart: (
       state,
-      action: PayloadAction<{
-        productId?: string
-        variantId?: string
-        id?: string
-        productVariantId?: string
-      }>
+      action: PayloadAction<CartItemIdentityPayload>
     ) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
@@ -118,11 +134,7 @@ const cartSlice = createSlice({
     },
     toggleSelectCartItem: (
       state,
-      action: PayloadAction<{
-        id: string
-        productVariantId: string
-        isSelected: boolean
-      }>
+      action: PayloadAction<ToggleCartItemPayload>
     ) => {
       const item = state.items.find(
         (x) =>
@@ -133,13 +145,7 @@ const cartSlice = createSlice({
     },
     updateCartVariant: (
       state,
-      action: PayloadAction<{
-        id: string
-        oldProductVariantId: string
-        newProductVariantId: string
-        selectedSize: string
-        selectedColor: string
-      }>
+      action: PayloadAction<UpdateCartVariantPayload>
     ) => {
       const item = state.items.find(
         (x) =>
@@ -166,7 +172,7 @@ const cartSlice = createSlice({
     },
     removePurchasedCartItems: (
       state,
-      action: PayloadAction<Array<{ id: string; productVariantId: string }>>
+      action: PayloadAction<PurchasedCartItemPayload[]>
     ) => {
       const purchasedKeys = new Set(
         action.payload.map((item) => `${item.id}::${item.productVariantId}`)
@@ -208,6 +214,11 @@ export const selectSelectedCartItems = createSelector(
 
 export const selectCartItemCount = createSelector(selectCartItems, (items) =>
   items.reduce((sum, item) => sum + item.quantity, 0)
+)
+
+export const selectSelectedCartItemCount = createSelector(
+  selectSelectedCartItems,
+  (items) => items.reduce((sum, item) => sum + item.quantity, 0)
 )
 
 export default cartSlice.reducer
