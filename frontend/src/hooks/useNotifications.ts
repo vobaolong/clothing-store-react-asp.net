@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -9,7 +8,6 @@ import {
 } from '@/api/notifications-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
-  setNotifications,
   markNotificationAsRead as markAsReadAction,
   markAllAsRead as markAllAsReadAction
 } from '@/state/notification-slice'
@@ -39,17 +37,6 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     refetchOnWindowFocus: false
   })
 
-  useEffect(() => {
-    if (notificationsData) {
-      dispatch(
-        setNotifications({
-          notifications: notificationsData.notifications,
-          unreadCount: notificationsData.unreadCount
-        })
-      )
-    }
-  }, [notificationsData, dispatch])
-
   // Note: unread count is available from the notifications response
   // and other parts of the app can use `useUnreadCount` hook which
   // polls on an interval. Here we avoid running a second unread-count
@@ -74,12 +61,12 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
   const markAllAsRead = () => markAllAsReadMutation.mutate()
 
   return {
-    notifications: notificationState.notifications,
+    notifications: notificationsData?.notifications ?? [],
     realtimeNotifications: notificationState.realtimeNotifications,
-    unreadCount: notificationState.unreadCount,
+    unreadCount: notificationsData?.unreadCount ?? notificationState.unreadCount,
     totalCount: notificationsData?.totalCount ?? 0,
 
-    isLoading: isLoading || notificationState.isLoading,
+    isLoading,
     isMarkingAsRead: markAsReadMutation.isPending,
     isMarkingAllAsRead: markAllAsReadMutation.isPending,
 
@@ -104,7 +91,7 @@ export const useUnreadCount = () => {
   })
 
   return {
-    unreadCount: unreadCount ?? data ?? 0,
+    unreadCount: data ?? unreadCount,
     isLoading,
     error
   }
