@@ -104,7 +104,6 @@ export default function OrderDetailPage() {
         queryClient.invalidateQueries({
           queryKey: QUERY_KEYS.myOrderDetail(id)
         }),
-        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() }),
         queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() })
       ])
     },
