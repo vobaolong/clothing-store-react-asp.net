@@ -168,7 +168,7 @@ export const NotificationCenter = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Button
         onClick={handleToggle}
-        className='relative p-2 text-gray-600 rounded-lg hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
+        className='relative p-2 text-gray-600 transition-colors rounded-lg hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
         aria-label='Thông báo'
         aria-expanded={isOpen}
         icon={<BellOutlined />}
@@ -189,7 +189,7 @@ export const NotificationCenter = ({
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead()}
-                className='text-sm font-medium text-blue-600 hover:text-blue-800'
+                className='text-sm font-medium cursor-pointer'
               >
                 Đánh dấu tất cả đã đọc
               </button>
@@ -221,7 +221,7 @@ export const NotificationCenter = ({
             <div className='px-4 py-3 text-center border-t border-gray-200 bg-gray-50'>
               <button
                 onClick={openNotificationsPage}
-                className='text-sm font-medium text-blue-600 hover:text-blue-800'
+                className='text-sm font-medium cursor-pointer'
               >
                 Xem tất cả thông báo
               </button>
