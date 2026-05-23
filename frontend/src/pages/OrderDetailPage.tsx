@@ -105,7 +105,7 @@ export default function OrderDetailPage() {
           queryKey: QUERY_KEYS.myOrderDetail(id)
         }),
         queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() }),
-        queryClient.invalidateQueries({ queryKey: ['my-orders'] })
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() })
       ])
     },
     onError: () => {

@@ -12,6 +12,9 @@ export const QUERY_KEYS = {
   myOrders: (status?: string) => ['my-orders', status] as const,
   myOrderDetail: (id?: string) => ['my-order-detail', id] as const,
   wishlist: ['wishlist'] as const,
+  notifications: ['notifications'] as const,
+  notificationsList: (params?: unknown) => ['notifications', params] as const,
+  notificationsUnreadCount: ['notifications', 'unread-count'] as const,
   productReviews: (productId?: string) =>
     ['product-reviews', productId] as const,
   adminProducts: ['admin-products'] as const,

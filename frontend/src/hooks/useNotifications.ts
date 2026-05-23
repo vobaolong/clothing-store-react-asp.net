@@ -7,6 +7,7 @@ import {
   markAllNotificationsAsRead,
   getUnreadCount
 } from '@/api/notifications-api'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   setNotifications,
   markNotificationAsRead as markAsReadAction,
@@ -32,7 +33,7 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     error,
     refetch
   } = useQuery<NotificationsResponse>({
-    queryKey: ['notifications', params],
+    queryKey: QUERY_KEYS.notificationsList(params),
     queryFn: () => getNotifications(params),
     staleTime: 30_000,
     refetchOnWindowFocus: false
@@ -58,7 +59,7 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     mutationFn: markNotificationAsRead,
     onSuccess: (_data, notificationId) => {
       dispatch(markAsReadAction(notificationId))
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications })
     }
   })
 
@@ -66,7 +67,7 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     mutationFn: markAllNotificationsAsRead,
     onSuccess: () => {
       dispatch(markAllAsReadAction())
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications })
     }
   })
   const markAsRead = (id: string) => markAsReadMutation.mutate(id)
@@ -96,7 +97,7 @@ export const useUnreadCount = () => {
   )
 
   const { data, isLoading, error } = useQuery<number>({
-    queryKey: ['notifications', 'unread-count'],
+    queryKey: QUERY_KEYS.notificationsUnreadCount,
     queryFn: getUnreadCount,
     refetchInterval: 60_000,
     staleTime: 30_000
