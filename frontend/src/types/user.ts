@@ -21,11 +21,9 @@ export type ShippingAddress = {
   id: string;
   fullName: string;
   phone: string;
-  address?: string;
+  fullAddress?: string;
   province: string;
   provinceId: string;
-  district: string;
-  districtId: string;
   ward: string;
   wardCode: string;
   street: string;
@@ -40,8 +38,6 @@ export type CreateShippingAddressPayload = {
   address?: string;
   province?: string;
   provinceId?: string;
-  district?: string;
-  districtId?: string;
   ward?: string;
   wardCode?: string;
   street?: string;

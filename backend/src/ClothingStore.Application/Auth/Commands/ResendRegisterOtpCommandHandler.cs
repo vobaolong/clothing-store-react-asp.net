@@ -24,7 +24,6 @@ public class ResendRegisterOtpCommandHandler(
         if (user.IsEmailVerified)
             throw new InvalidOperationException("User is already verified.");
 
-        // Generate new 6-digit OTP
         var random = new Random();
         var otpCode = random.Next(100000, 999999).ToString();
         var otpHash = passwordHasher.Hash(otpCode);

@@ -57,8 +57,6 @@ export type MyOrderDetail = {
   shippingAddress: string
   shippingProvince: string
   shippingProvinceId: string
-  shippingDistrict: string
-  shippingDistrictId: string
   shippingWard: string
   shippingWardCode: string
   shippingStreet: string

@@ -13,7 +13,7 @@ export type CheckoutFormValues = {
   fullName?: string
   email?: string
   phone?: string
-  address?: string
+  fullAddress?: string
   province?: string
   ward?: string
   street?: string

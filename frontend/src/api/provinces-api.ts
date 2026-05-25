@@ -14,7 +14,6 @@ export type ProvinceOption = {
 export type WardOption = {
   code: string
   name: string
-  districtName: string
 }
 
 const toText = (...values: unknown[]) =>
@@ -37,13 +36,11 @@ const normalizeProvince = (item: RawAddressItem): ProvinceOption => ({
 const normalizeWard = (item: RawAddressItem): WardOption => ({
   code: toCode(item.wardCode, item.code, item.id),
   name: toText(item.wardName, item.name, item.fullName, item.title),
-  districtName: toText(item.districtName, item.district, item.district_name),
 })
 
 const normalizeSearchResult = (item: RawAddressItem): WardOption => ({
   code: toCode(item.wardCode, item.code, item.id),
   name: toText(item.wardName, item.ward, item.name),
-  districtName: toText(item.districtName, item.district, item.district_name),
 })
 
 const asArray = (data: unknown): RawAddressItem[] => {

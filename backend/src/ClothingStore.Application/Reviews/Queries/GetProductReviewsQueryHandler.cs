@@ -1,3 +1,4 @@
+using AutoMapper;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Application.Reviews;
 using ClothingStore.Domain.Enums;
@@ -6,22 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Application.Reviews.Queries;
 
-public class GetProductReviewsQueryHandler(IApplicationDbContext context)
+public class GetProductReviewsQueryHandler(IApplicationDbContext context, IMapper mapper)
     : IRequestHandler<GetProductReviewsQuery, ProductReviewsDto>
 {
-    private static IReadOnlyList<string> ParseTags(string? tags)
-    {
-        if (string.IsNullOrWhiteSpace(tags))
-            return Array.Empty<string>();
-
-        return tags.Split(
-                ',',
-                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
-            )
-            .Where(tag => !string.IsNullOrWhiteSpace(tag))
-            .ToArray();
-    }
-
     public async Task<ProductReviewsDto> Handle(
         GetProductReviewsQuery request,
         CancellationToken cancellationToken
@@ -35,19 +23,14 @@ public class GetProductReviewsQueryHandler(IApplicationDbContext context)
             .ToListAsync(cancellationToken);
 
         var reviews = reviewEntities
-            .Select(review => new ProductReviewDto(
-                review.Id,
-                review.UserId,
-                review.User!.FullName,
-                review.Rating,
-                review.Comment,
-                ParseTags(review.Tags),
-                review.VariantSize,
-                review.VariantColor,
-                review.CreatedAt,
-                review.UpdatedAt,
-                request.CurrentUserId.HasValue && review.UserId == request.CurrentUserId.Value
-            ))
+            .Select(review =>
+                mapper.Map<ProductReviewDto>(review) with
+                {
+                    IsMine =
+                        request.CurrentUserId.HasValue
+                        && review.UserId == request.CurrentUserId.Value,
+                }
+            )
             .ToList();
 
         double averageRating = 0d;

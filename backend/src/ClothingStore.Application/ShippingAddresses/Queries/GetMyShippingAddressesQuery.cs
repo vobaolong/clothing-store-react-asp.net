@@ -30,8 +30,6 @@ public class GetMyShippingAddressesQueryHandler(IApplicationDbContext context)
                 x.Phone,
                 x.Province,
                 x.ProvinceId,
-                x.District,
-                x.DistrictId,
                 x.Ward,
                 x.WardCode,
                 x.Street,
@@ -45,7 +43,7 @@ public class GetMyShippingAddressesQueryHandler(IApplicationDbContext context)
 
     private static string BuildFullAddress(ShippingAddress address)
     {
-        var segments = new[] { address.Street, address.Ward, address.District, address.Province }
+        var segments = new[] { address.Street, address.Ward, address.Province }
             .Where(segment => !string.IsNullOrWhiteSpace(segment))
             .Select(segment => segment.Trim());
         return string.Join(", ", segments);

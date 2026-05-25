@@ -21,14 +21,12 @@ import { OrderStatus } from '@/enums'
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
   shippingWard?: string
-  shippingDistrict?: string
   shippingProvince?: string
   shippingAddress?: string
 }) => {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingDistrict,
     detail.shippingProvince
   ]
     .filter((x) => Boolean(x && x.trim()))
@@ -202,7 +200,7 @@ export default function AdminOrderDetailPage() {
                     return (
                       <div
                         key={row.id}
-                        className='flex items-center justify-between py-3 gap-4'
+                        className='flex items-center justify-between gap-4 py-3'
                       >
                         <div className='flex items-center min-w-0 gap-3'>
                           <Image
@@ -222,7 +220,7 @@ export default function AdminOrderDetailPage() {
                           </div>
                         </div>
 
-                        <div className='flex items-center shrink-0 gap-8'>
+                        <div className='flex items-center gap-8 shrink-0'>
                           <div className='text-sm text-slate-600'>
                             SL:{' '}
                             <span className='font-medium text-slate-800'>

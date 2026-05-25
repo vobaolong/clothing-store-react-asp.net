@@ -146,13 +146,6 @@ export default function AdminProductFormFields({
             <Input />
           </Form.Item>
           <Form.Item
-            name='productCode'
-            label='Mã sản phẩm'
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
             name='categoryId'
             label='Danh mục'
             rules={[{ required: true }]}

@@ -250,9 +250,8 @@ export default function ProductModal({
         toast.error('Giá sale phải nhỏ hơn giá gốc')
         return
       }
-      const payload = {
+      const payload: any = {
         name: values.name,
-        productCode: values.productCode,
         description: values.description,
         descriptionData,
         price: values.price,

@@ -122,8 +122,6 @@ public class PlaceOrderCommandHandler(
                 Phone = address.Phone,
                 Province = address.Province,
                 ProvinceId = address.ProvinceId,
-                District = address.District,
-                DistrictId = address.DistrictId,
                 Ward = address.Ward,
                 WardCode = address.WardCode,
                 Street = address.Street,

@@ -24,7 +24,6 @@ public class ProductService : IProductService
         var product = new Product
         {
             Name = dto.Name,
-            ProductCode = dto.ProductCode,
             Slug = slug,
             IsActive = true,
             Description = dto.Description,
@@ -37,12 +36,15 @@ public class ProductService : IProductService
             CategoryId = dto.CategoryId,
         };
 
+        // product.Id is initialized on construction (BaseEntity), derive ProductCode from it
+        product.ProductCode = product.Id.ToString("N").Substring(0, 8).ToUpperInvariant();
+
         await _context.Products.AddAsync(product, cancellationToken);
         foreach (var variant in dto.Variants)
         {
             var (cover, gallery) = VariantGallery.ToStorage(variant.ImageUrl, variant.ImageUrls);
             var sku = ResolveVariantSku(
-                dto.ProductCode,
+                product.ProductCode,
                 variant.Color,
                 variant.Size,
                 existingVariantSkus
@@ -85,7 +87,9 @@ public class ProductService : IProductService
             {
                 Id = product.Id,
                 Name = product.Name,
-                ProductCode = product.ProductCode,
+                ProductCode = !string.IsNullOrWhiteSpace(product.ProductCode)
+                    ? product.ProductCode
+                    : product.Id.ToString("N").Substring(0, 8).ToUpperInvariant(),
                 Slug = product.Slug,
                 Description = product.Description,
                 DescriptionData = product.DescriptionJson ?? string.Empty,
@@ -124,7 +128,9 @@ public class ProductService : IProductService
             {
                 Id = product.Id,
                 Name = product.Name,
-                ProductCode = product.ProductCode,
+                ProductCode = !string.IsNullOrWhiteSpace(product.ProductCode)
+                    ? product.ProductCode
+                    : product.Id.ToString("N").Substring(0, 8).ToUpperInvariant(),
                 Slug = product.Slug,
                 Description = product.Description,
                 DescriptionData = product.DescriptionJson ?? string.Empty,
@@ -175,7 +181,9 @@ public class ProductService : IProductService
                 cancellationToken
             ) ?? throw new InvalidOperationException("Product not found.");
         product.Name = dto.Name;
-        product.ProductCode = dto.ProductCode;
+        // keep existing ProductCode derived from Id; do not accept productCode from client
+        if (string.IsNullOrWhiteSpace(product.ProductCode))
+            product.ProductCode = product.Id.ToString("N").Substring(0, 8).ToUpperInvariant();
         product.Slug = await ResolveUniqueProductSlugAsync(dto.Name, product.Id, cancellationToken);
         product.Description = dto.Description;
         product.DescriptionHtml = dto.Description;
@@ -195,7 +203,7 @@ public class ProductService : IProductService
         {
             var (cover, gallery) = VariantGallery.ToStorage(variant.ImageUrl, variant.ImageUrls);
             var sku = ResolveVariantSku(
-                dto.ProductCode,
+                product.ProductCode,
                 variant.Color,
                 variant.Size,
                 existingVariantSkus

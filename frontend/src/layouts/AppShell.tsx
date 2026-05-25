@@ -79,7 +79,7 @@ export default function AppShell() {
         onLogout={handleLogout}
         categories={categoriesQuery.data ?? []}
       />
-      <Content className='flex-1 min-h-[90vh]! px-4! md:px-8! mx-auto w-full max-w-7xl pb-4 pt-18 md:pt-26'>
+      <Content className='flex-1 min-h-[90vh]! mx-auto w-full max-w-7xl pb-4 pt-32 px-4! md:px-8!'>
         <Outlet />
       </Content>
       {!isAdminUser && <Footer />}

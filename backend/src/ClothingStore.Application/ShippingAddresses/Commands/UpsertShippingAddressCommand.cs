@@ -13,8 +13,6 @@ public record UpsertShippingAddressCommand(
     string Phone,
     string? Province,
     string? ProvinceId,
-    string? District,
-    string? DistrictId,
     string? Ward,
     string? WardCode,
     string? Street,
@@ -57,8 +55,6 @@ public class UpsertShippingAddressCommandHandler(IApplicationDbContext context)
         address.Phone = request.Phone;
         address.Province = request.Province?.Trim() ?? string.Empty;
         address.ProvinceId = request.ProvinceId?.Trim() ?? string.Empty;
-        address.District = request.District?.Trim() ?? string.Empty;
-        address.DistrictId = request.DistrictId?.Trim() ?? string.Empty;
         address.Ward = request.Ward?.Trim() ?? string.Empty;
         address.WardCode = request.WardCode?.Trim() ?? string.Empty;
         address.Street = request.Street?.Trim() ?? string.Empty;

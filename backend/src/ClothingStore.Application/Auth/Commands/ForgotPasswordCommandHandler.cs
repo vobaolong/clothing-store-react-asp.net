@@ -31,6 +31,11 @@ public class ForgotPasswordCommandHandler(
         var resetLink = $"http://localhost:5173/reset-password?token={token}&email={request.Email}";
         var emailBody = emailTemplateBuilder.BuildResetPasswordEmail(user, resetLink);
 
-        await emailNotificationService.SendSafeAsync(user.Email, "Reset your password", emailBody);
+        await emailNotificationService.SendSafeAsync(
+            user.Email,
+            "Reset your password",
+            emailBody,
+            cancellationToken
+        );
     }
 }

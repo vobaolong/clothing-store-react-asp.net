@@ -1,159 +1,162 @@
 import { useState } from 'react'
-import {
-	Button,
-	Card,
-	Empty,
-	Modal,
-	Table,
-	Tag,
-	Form,
-	Input,
-	Checkbox,
-	Tooltip,
-} from 'antd'
+import { Button, Card, Empty, Table, Tooltip } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-	getShippingAddresses,
-	createShippingAddress,
-	deleteShippingAddress,
-	setDefaultShippingAddress,
+  getShippingAddresses,
+  deleteShippingAddress,
+  setDefaultShippingAddress
 } from '@/api/addresses-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import type { ShippingAddress } from '@/types'
 import toast from 'react-hot-toast'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
+import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/enums'
 
 export default function AddressList() {
-	const [open, setOpen] = useState(false)
-	const [form] = Form.useForm()
-	const queryClient = useQueryClient()
-	const { data, isLoading } = useQuery({
-		queryKey: QUERY_KEYS.shippingAddresses,
-		queryFn: getShippingAddresses,
-	})
+  const [open, setOpen] = useState(false)
+  const [editingAddress, setEditingAddress] = useState<ShippingAddress | null>(
+    null
+  )
+  const queryClient = useQueryClient()
+  const { data, isLoading } = useQuery({
+    queryKey: QUERY_KEYS.shippingAddresses,
+    queryFn: getShippingAddresses
+  })
 
-	const refreshAddresses = async () => {
-		await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.shippingAddresses })
-	}
+  const refreshAddresses = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: QUERY_KEYS.shippingAddresses
+    })
+  }
 
-	const createAddressMutation = useMutation({
-		mutationFn: createShippingAddress,
-		onSuccess: async () => {
-			toast.success('Đã thêm địa chỉ mới')
-			setOpen(false)
-			form.resetFields()
-			await refreshAddresses()
-		},
-	})
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteShippingAddress,
+    onSuccess: async () => {
+      toast.success('Đã xóa địa chỉ')
+      await refreshAddresses()
+    }
+  })
 
-	const deleteAddressMutation = useMutation({
-		mutationFn: deleteShippingAddress,
-		onSuccess: async () => {
-			toast.success('Đã xóa địa chỉ')
-			await refreshAddresses()
-		},
-	})
+  const setDefaultAddressMutation = useMutation({
+    mutationFn: setDefaultShippingAddress,
+    onSuccess: async () => {
+      await refreshAddresses()
+    }
+  })
 
-	const setDefaultAddressMutation = useMutation({
-		mutationFn: setDefaultShippingAddress,
-		onSuccess: async () => {
-			await refreshAddresses()
-		},
-	})
+  return (
+    <Card>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-medium'>Sổ Địa Chỉ</h1>
+        <Button
+          type='primary'
+          onClick={() => {
+            setEditingAddress(null)
+            setOpen(true)
+          }}
+        >
+          Thêm địa chỉ mới
+        </Button>
+      </div>
+      <div className='py-6 divide-y divide-slate-200'>
+        {(!data || data.length === 0) && !isLoading ? (
+          <Empty description='Không có địa chỉ nào' />
+        ) : (
+          <Table
+            rowKey='id'
+            loading={isLoading}
+            dataSource={data ?? []}
+            bordered
+            scroll={{ x: 'max-content' }}
+            columns={[
+              { title: 'Họ và tên', dataIndex: 'fullName' },
+              {
+                title: 'Địa chỉ',
+                dataIndex: 'fullAddress',
+                render: (_, row: ShippingAddress) => (
+                  <div className='flex flex-col w-full gap-2'>
+                    <span className='flex items-center gap-2'>
+                      <strong>
+                        {
+                          SHIPPING_ADDRESS_LABEL_OPTIONS.find(
+                            (x) => x.value === row.label
+                          )?.label
+                        }
+                      </strong>
+                      -
+                      {row.isDefault ? (
+                        <span className='px-1 font-medium text-green-500 border border-green-500 rounded-md w-fit'>
+                          Mặc định
+                        </span>
+                      ) : (
+                        <Button
+                          type='primary'
+                          className='p-0 w-fit!'
+                          loading={setDefaultAddressMutation.isPending}
+                          onClick={async () => {
+                            await setDefaultAddressMutation.mutateAsync(row.id)
+                          }}
+                        >
+                          Đặt làm mặc định
+                        </Button>
+                      )}
+                    </span>
+                    {row.fullAddress}
+                  </div>
+                )
+              },
+              {
+                title: 'Số điện thoại',
+                dataIndex: 'phone',
+                width: 150
+              },
 
-	return (
-		<Card>
-			<div className='flex items-center justify-between mb-3'>
-				<h3 className='text-lg font-medium'>Sổ Địa Chỉ</h3>
-				<Button type='primary' onClick={() => setOpen(true)}>
-					Thêm địa chỉ mới
-				</Button>
-			</div>
+              {
+                title: 'Thao tác',
+                align: 'center',
+                fixed: 'right',
+                width: 100,
+                render: (_value, row: ShippingAddress) => (
+                  <div className='flex items-center justify-center gap-2'>
+                    <Tooltip title='Chỉnh sửa địa chỉ'>
+                      <Button
+                        onClick={() => {
+                          setEditingAddress(row)
+                          setOpen(true)
+                        }}
+                        icon={<EditOutlined />}
+                      />
+                    </Tooltip>
+                    <Tooltip title='Xóa địa chỉ'>
+                      <Button
+                        danger
+                        loading={deleteAddressMutation.isPending}
+                        onClick={async () => {
+                          await deleteAddressMutation.mutateAsync(row.id)
+                        }}
+                        icon={<DeleteOutlined />}
+                      />
+                    </Tooltip>
+                  </div>
+                )
+              }
+            ]}
+          />
+        )}
+      </div>
 
-			{(!data || data.length === 0) && !isLoading ? (
-				<Empty description='Không có địa chỉ nào' />
-			) : (
-				<Table
-					rowKey='id'
-					loading={isLoading}
-					dataSource={data ?? []}
-					columns={[
-						{ title: 'Họ và tên', dataIndex: 'fullName' },
-						{ title: 'Số điện thoại', dataIndex: 'phone' },
-						{
-							title: 'Địa chỉ',
-							render: (_value, row: ShippingAddress) => row.address || '-',
-						},
-						{
-							title: 'Mặc định',
-							dataIndex: 'isDefault',
-							render: (val: boolean, row: ShippingAddress) =>
-								val ? (
-									<Tag color='green'>Mặc định</Tag>
-								) : (
-									<Button
-										type='link'
-										loading={setDefaultAddressMutation.isPending}
-										onClick={async () => {
-											await setDefaultAddressMutation.mutateAsync(row.id)
-										}}
-									>
-										Thiết lập làm mặc định
-									</Button>
-								),
-						},
-						{
-							title: 'Action',
-							render: (_value, row: ShippingAddress) => (
-								<Tooltip title='Xóa địa chỉ'>
-									<Button
-										danger
-										loading={deleteAddressMutation.isPending}
-										onClick={async () => {
-											await deleteAddressMutation.mutateAsync(row.id)
-										}}
-										icon={<DeleteOutlined />}
-									/>
-								</Tooltip>
-							),
-						},
-					]}
-				/>
-			)}
-
-			<Modal
-				title='Thêm địa chỉ mới'
-				open={open}
-				onCancel={() => setOpen(false)}
-				onOk={async () => {
-					const values = await form.validateFields()
-					await createAddressMutation.mutateAsync(values)
-				}}
-				confirmLoading={createAddressMutation.isPending}
-			>
-				<Form form={form} layout='vertical'>
-					<Form.Item
-						name='fullName'
-						label='Họ và tên'
-						rules={[{ required: true }]}
-					>
-						<Input />
-					</Form.Item>
-					<Form.Item name='phone' label='Số điện thoại' rules={[{ required: true }]}>
-						<Input />
-					</Form.Item>
-					<Form.Item
-						name='address'
-						label='Địa chỉ'
-						rules={[{ required: true }]}
-					>
-						<Input />
-					</Form.Item>
-					<Form.Item name='isDefault' valuePropName='checked'>
-						<Checkbox>Đặt làm địa chỉ mặc định</Checkbox>
-					</Form.Item>
-				</Form>
-			</Modal>
-		</Card>
-	)
+      <ShippingAddressFormModal
+        open={open}
+        address={editingAddress}
+        onCancel={() => {
+          setOpen(false)
+          setEditingAddress(null)
+        }}
+        onSaved={async () => {
+          await refreshAddresses()
+        }}
+      />
+    </Card>
+  )
 }

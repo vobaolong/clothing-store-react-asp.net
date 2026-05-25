@@ -43,7 +43,6 @@ builder.Services.Configure<CloudinaryOptions>(
 builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>();
 builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddAutoMapper(_ => { }, typeof(Program).Assembly);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 

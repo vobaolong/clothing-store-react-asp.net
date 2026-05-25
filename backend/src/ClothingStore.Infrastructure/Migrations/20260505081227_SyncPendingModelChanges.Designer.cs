@@ -425,14 +425,6 @@ namespace ClothingStore.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("DistrictId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -541,15 +533,6 @@ namespace ClothingStore.Infrastructure.Migrations
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("District")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ShippingDistrict");
-
-                            b1.Property<string>("DistrictId")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ShippingDistrictId");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()

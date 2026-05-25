@@ -149,7 +149,7 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
                 <strong>Phương thức thanh toán:</strong> {order.PaymentMethod}<br/>
                 {(order.ShippingInfo != null
 								? $@"<strong>Người nhận:</strong> {order.ShippingInfo.FullName}, {order.ShippingInfo.Phone}<br/>
-                        {order.ShippingInfo.Street}, {order.ShippingInfo.Ward}, {order.ShippingInfo.District}"
+                        {order.ShippingInfo.Street}, {order.ShippingInfo.Ward}, {order.ShippingInfo.Province}"
 								: "")}
             </div>
             <h3>Chi tiết đơn hàng</h3>

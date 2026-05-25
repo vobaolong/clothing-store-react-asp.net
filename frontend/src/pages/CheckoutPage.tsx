@@ -185,7 +185,10 @@ export default function CheckoutPage() {
         document.body.style.overflow = ''
       }
     })
-    observer.observe(document.body, { attributes: true, attributeFilter: ['style'] })
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['style']
+    })
     return () => observer.disconnect()
   }, [])
   const [uiState, uiDispatch] = useReducer(
@@ -233,7 +236,7 @@ export default function CheckoutPage() {
         fullName: '',
         email: '',
         phone: '',
-        address: '',
+        fullAddress: '',
         province: '',
         ward: '',
         street: '',
@@ -278,7 +281,7 @@ export default function CheckoutPage() {
         shippingAddressId: defaultAddress.id,
         fullName: defaultAddress.fullName,
         phone: defaultAddress.phone,
-        address: defaultAddress.address
+        fullAddress: defaultAddress.fullAddress
       })
     }
   }, [addressesQuery.data, getValues, reset])
@@ -334,7 +337,7 @@ export default function CheckoutPage() {
     const phone = values.phone?.trim() ?? ''
     const provinceCode = values.province?.trim() ?? ''
     const wardCode = values.ward?.trim() ?? ''
-    const street = values.street?.trim() ?? values.address?.trim() ?? ''
+    const street = values.street?.trim() ?? values.fullAddress?.trim() ?? ''
     const label = values.label
     const province =
       provincesQuery.data?.find((x) => x.code === provinceCode)?.name ||
@@ -357,8 +360,6 @@ export default function CheckoutPage() {
         address: addressStr,
         province,
         provinceId: provinceCode,
-        district: '',
-        districtId: '',
         ward: wardName,
         wardCode,
         street,

@@ -3,7 +3,7 @@ import {
   InstagramFilled,
   YoutubeFilled,
   PhoneFilled,
-  MailFilled,
+  MailFilled
 } from '@ant-design/icons'
 import type { ComponentType } from 'react'
 import { Button } from 'antd'
@@ -32,13 +32,13 @@ const contactItems: ContactItem[] = [
   {
     label: 'Hotline',
     value: '0123456789 - 0123456789',
-    icon: PhoneFilled,
+    icon: PhoneFilled
   },
   {
     label: 'Email',
     value: 'support@wearly.com',
-    icon: MailFilled,
-  },
+    icon: MailFilled
+  }
 ]
 
 const socialIcons = [FacebookFilled, InstagramFilled, YoutubeFilled]
@@ -51,14 +51,14 @@ const footerColumns: FooterColumn[] = [
         links: [
           'Tải khoản WearClub',
           'Đăng kí thành viên',
-          'Ưu đãi & Đặc quyền',
-        ],
+          'Ưu đãi & Đặc quyền'
+        ]
       },
       {
         title: 'TÀI LIỆU - TUYỂN DỤNG',
-        links: ['Tuyển dụng', 'Đăng ký bản quyền'],
-      },
-    ],
+        links: ['Tuyển dụng', 'Đăng ký bản quyền']
+      }
+    ]
   },
   {
     groups: [
@@ -69,22 +69,22 @@ const footerColumns: FooterColumn[] = [
           'Chính sách đổi trả 60 ngày online',
           'Chính sách khuyến mãi',
           'Chính sách bảo mật',
-          'Chính sách giao hàng',
-        ],
-      },
-    ],
+          'Chính sách giao hàng'
+        ]
+      }
+    ]
   },
   {
     groups: [
       {
         title: 'CHĂM SÓC KHÁCH HÀNG',
-        links: ['Trải nghiệm mua sắm 100% hài lòng', 'Hỏi đáp - FAQs'],
+        links: ['Trải nghiệm mua sắm 100% hài lòng', 'Hỏi đáp - FAQs']
       },
       {
         title: 'KIẾN THỨC MẶC ĐẸP',
-        links: ['Hướng dẫn chọn size', 'Blog'],
-      },
-    ],
+        links: ['Hướng dẫn chọn size', 'Blog']
+      }
+    ]
   },
   {
     groups: [
@@ -98,32 +98,32 @@ const footerColumns: FooterColumn[] = [
           'Nhà máy',
           'Care & Share',
           'Cam kết bền vững',
-          'Tầm nhìn 2030',
-        ],
-      },
-    ],
-  },
+          'Tầm nhìn 2030'
+        ]
+      }
+    ]
+  }
 ]
 
 const contactAddresses: ContactAddress[] = [
   {
     label: 'Cửa hàng:',
-    value: 'B2-34, Tầng B2, Hanoi Centre, 175 Nguyễn Thái Học, Đống Đa, Hà Nội',
+    value: 'B2-34, Tầng B2, Hanoi Centre, 175 Nguyễn Thái Học, Đống Đa, Hà Nội'
   },
   {
     label: 'Văn phòng Hà Nội:',
     value:
-      'Tầng 3-4, Tòa nhà BMM, Km2, Đường Phùng Hưng, Phường Hà Đông, Thành phố Hà Nội, Việt Nam',
-  },
+      'Tầng 3-4, Tòa nhà BMM, Km2, Đường Phùng Hưng, Phường Hà Đông, Thành phố Hà Nội, Việt Nam'
+  }
 ]
 
 export default function AppFooter() {
   return (
     <footer id='footer' className='text-white bg-black/90'>
       <div className='px-4! md:px-8! py-6 mx-auto w-full max-w-7xl md:py-10'>
-        <div className='flex flex-col justify-between pb-12 border-b gap-12 border-stone-800 lg:flex-row'>
+        <div className='flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row'>
           <div className='max-w-xl space-y-6'>
-            <h2 className='text-3xl font-bold tracking-tight'>
+            <h2 className='font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl'>
               Wearly lắng nghe bạn!
             </h2>
             <p className='text-sm leading-relaxed text-stone-400'>
@@ -133,7 +133,6 @@ export default function AppFooter() {
             </p>
             <Button
               type='primary'
-              size='large'
               className='font-semibold text-black bg-white border-none rounded-full'
             >
               ĐÓNG GÓP Ý KIẾN &rarr;
@@ -150,19 +149,19 @@ export default function AppFooter() {
                   <p className='text-xs font-semibold tracking-wider uppercase text-stone-500'>
                     {label}
                   </p>
-                  <p className='text-lg font-bold'>{value}</p>
+                  <p className='font-semibold text-md'>{value}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className='flex py-12 gap-4'>
+        <div className='flex gap-4 py-12'>
           {socialIcons.map((Icon) => (
             <a
               key={Icon.displayName ?? Icon.name}
               href='#'
-              className='flex items-center justify-center border rounded-lg size-10 transition-colors border-stone-800 hover:bg-stone-900'
+              className='flex items-center justify-center transition-colors border rounded-lg size-10 border-stone-800 hover:bg-stone-900'
             >
               <span className='text-xl'>
                 <Icon />
@@ -179,7 +178,7 @@ export default function AppFooter() {
                   <h3 className='text-sm font-bold tracking-wider uppercase'>
                     {group.title}
                   </h3>
-                  <ul className='text-sm space-y-2 text-stone-400'>
+                  <ul className='space-y-2 text-sm text-stone-400'>
                     {group.links.map((link) => (
                       <li key={link}>
                         <a href='#'>{link}</a>

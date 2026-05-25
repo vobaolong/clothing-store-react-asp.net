@@ -9,14 +9,12 @@ import { toCapitalize } from '@/utils/table.lib'
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
   shippingWard?: string
-  shippingDistrict?: string
   shippingProvince?: string
   shippingAddress?: string
 }) => {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingDistrict,
     detail.shippingProvince
   ]
     .filter((x) => Boolean(x && x.trim()))

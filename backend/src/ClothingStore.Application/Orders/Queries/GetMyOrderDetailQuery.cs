@@ -1,3 +1,4 @@
+using AutoMapper;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Enums;
 using MediatR;
@@ -7,7 +8,7 @@ namespace ClothingStore.Application.Orders.Queries;
 
 public record GetMyOrderDetailQuery(Guid UserId, Guid OrderId) : IRequest<OrderDetailDto>;
 
-public class GetMyOrderDetailQueryHandler(IApplicationDbContext context)
+public class GetMyOrderDetailQueryHandler(IApplicationDbContext context, IMapper mapper)
     : IRequestHandler<GetMyOrderDetailQuery, OrderDetailDto>
 {
     public async Task<OrderDetailDto> Handle(GetMyOrderDetailQuery request, CancellationToken ct)
@@ -50,26 +51,11 @@ public class GetMyOrderDetailQueryHandler(IApplicationDbContext context)
                 var canReview =
                     order.Status == OrderStatus.Delivered && inReviewWindow && !hasReviewed;
 
-                return new OrderDetailItemDto(
-                    item.Id,
-                    item.ProductId,
-                    !string.IsNullOrWhiteSpace(item.ProductName)
-                        ? item.ProductName
-                        : (item.Product?.Name ?? string.Empty),
-                    item.ProductVariantId,
-                    !string.IsNullOrWhiteSpace(item.ProductSlug)
-                        ? item.ProductSlug
-                        : (item.Product?.Slug ?? string.Empty),
-                    item.VariantName,
-                    item.ProductVariant?.Size,
-                    item.ProductVariant?.Color,
-                    item.Quantity,
-                    item.UnitPrice,
-                    item.Quantity * item.UnitPrice,
-                    hasReviewed,
-                    canReview,
-                    item.ProductVariant?.ImageUrl
-                );
+                return mapper.Map<OrderDetailItemDto>(item) with
+                {
+                    HasReviewed = hasReviewed,
+                    CanReview = canReview,
+                };
             })
             .ToList();
 
@@ -90,8 +76,6 @@ public class GetMyOrderDetailQueryHandler(IApplicationDbContext context)
             order.ShippingInfo.Street,
             order.ShippingInfo.Province,
             order.ShippingInfo.ProvinceId,
-            order.ShippingInfo.District,
-            order.ShippingInfo.DistrictId,
             order.ShippingInfo.Ward,
             order.ShippingInfo.WardCode,
             order.ShippingInfo.Street,
@@ -100,7 +84,7 @@ public class GetMyOrderDetailQueryHandler(IApplicationDbContext context)
             order.UpdatedAt,
             order
                 .StatusHistories.OrderBy(h => h.ChangedAt)
-                .Select(h => new OrderStatusHistoryDto(h.Status, h.ChangedAt))
+                .Select(h => mapper.Map<OrderStatusHistoryDto>(h))
                 .ToList(),
             items
         );

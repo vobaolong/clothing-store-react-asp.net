@@ -25,7 +25,6 @@ public class CreateProductCommandHandler(IApplicationDbContext context)
         var entity = new Product
         {
             Name = request.Name,
-            ProductCode = request.ProductCode,
             Slug = SlugGenerator.Generate(request.Name),
             IsActive = true,
             Description = request.Description,
@@ -36,12 +35,14 @@ public class CreateProductCommandHandler(IApplicationDbContext context)
             CategoryId = request.CategoryId,
         };
 
+        // derive ProductCode from entity.Id
+        entity.ProductCode = entity.Id.ToString("N").Substring(0, 8).ToUpperInvariant();
         await context.Products.AddAsync(entity, cancellationToken);
         foreach (var variant in request.Variants)
         {
             var (cover, gallery) = VariantGallery.ToStorage(variant.ImageUrl, variant.ImageUrls);
             var sku = ResolveVariantSku(
-                request.ProductCode,
+                entity.ProductCode,
                 variant.Color,
                 variant.Size,
                 existingVariantSkus

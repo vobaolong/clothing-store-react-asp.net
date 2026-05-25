@@ -64,8 +64,6 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
             order.ShippingInfo.Street,
             order.ShippingInfo.Province,
             order.ShippingInfo.ProvinceId,
-            order.ShippingInfo.District,
-            order.ShippingInfo.DistrictId,
             order.ShippingInfo.Ward,
             order.ShippingInfo.WardCode,
             order.ShippingInfo.Street,

@@ -8,8 +8,6 @@ public record ShippingAddressDto(
     string Phone,
     string Province,
     string ProvinceId,
-    string District,
-    string DistrictId,
     string Ward,
     string WardCode,
     string Street,

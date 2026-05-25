@@ -31,7 +31,6 @@ public class VerifyRegisterOtpCommandHandler(
         if (!passwordHasher.Verify(request.OtpCode, user.EmailVerificationOtpHash))
             throw new InvalidOperationException("Invalid OTP code.");
 
-        // OTP is valid
         user.IsEmailVerified = true;
         user.EmailVerificationOtpHash = null;
         user.EmailVerificationOtpExpiresAt = null;

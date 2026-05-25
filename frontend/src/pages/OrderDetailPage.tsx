@@ -17,14 +17,12 @@ import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
   shippingWard?: string
-  shippingDistrict?: string
   shippingProvince?: string
   shippingAddress?: string
 }) => {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingDistrict,
     detail.shippingProvince
   ]
     .filter((x) => Boolean(x && x.trim()))
@@ -210,7 +208,7 @@ export default function OrderDetailPage() {
   ]
 
   return (
-    <div className='space-y-4!'>
+    <div className='space-y-4! py-10'>
       <div className='flex flex-wrap items-center gap-3'>
         <Link
           to='/profile?tab=orders'
@@ -277,9 +275,7 @@ export default function OrderDetailPage() {
           </Descriptions.Item>
 
           {detail.note && (
-            <Descriptions.Item label='Ghi chú'>
-              {detail.note}
-            </Descriptions.Item>
+            <Descriptions.Item label='Ghi chú'>{detail.note}</Descriptions.Item>
           )}
         </Descriptions>
       </Card>
@@ -353,7 +349,7 @@ export default function OrderDetailPage() {
           ]}
         />
       </Card>
-      <div className='grid-cols-2 grid gap-4'>
+      <div className='grid grid-cols-2 gap-4'>
         <Card className='rounded-2xl' title='Trạng thái đơn hàng'>
           <Timeline items={timelineItems} />
         </Card>

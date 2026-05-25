@@ -36,8 +36,6 @@ public record OrderDetailDto(
     string ShippingAddress,
     string? ShippingProvince,
     string? ShippingProvinceId,
-    string? ShippingDistrict,
-    string? ShippingDistrictId,
     string? ShippingWard,
     string? ShippingWardCode,
     string? ShippingStreet,

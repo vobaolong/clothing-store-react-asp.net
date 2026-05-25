@@ -57,7 +57,6 @@ public class RegisterUserCommandHandler(
 
     private static string GenerateOtpCode()
     {
-        // Cryptographically secure — avoid new Random() for security-sensitive values
         var value = RandomNumberGenerator.GetInt32(100_000, 1_000_000);
         return value.ToString();
     }
@@ -68,12 +67,10 @@ public class RegisterUserCommandHandler(
             FullName = request.FullName,
             Email = request.Email,
             Phone = request.Phone,
-
             PasswordHash = passwordHasher.Hash(request.Password),
             IsAdmin = false,
             IsLocked = false,
             IsEmailVerified = false,
-
             EmailVerificationOtpHash = otpHash,
             EmailVerificationOtpExpiresAt = DateTime.UtcNow.AddMinutes(5),
         };

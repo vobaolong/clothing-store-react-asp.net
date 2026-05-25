@@ -198,8 +198,6 @@ public class ApplicationDbContext(
                     s.Property(x => x.Phone).HasColumnName("ShippingPhone");
                     s.Property(x => x.Province).HasColumnName("ShippingProvince");
                     s.Property(x => x.ProvinceId).HasColumnName("ShippingProvinceId");
-                    s.Property(x => x.District).HasColumnName("ShippingDistrict");
-                    s.Property(x => x.DistrictId).HasColumnName("ShippingDistrictId");
                     s.Property(x => x.Ward).HasColumnName("ShippingWard");
                     s.Property(x => x.WardCode).HasColumnName("ShippingWardCode");
                     s.Property(x => x.Street).HasColumnName("ShippingStreet");
