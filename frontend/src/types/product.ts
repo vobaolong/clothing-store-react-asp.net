@@ -54,6 +54,13 @@ export type DescriptionLayout = {
   specs?: Array<{ label: string; value: string }>
 }
 
+export type ProductSelection = {
+  color?: string | undefined
+  size?: string | undefined
+  quantity: number
+  image: string
+}
+
 export type SizeGuideItem = {
   size: string
   weight: string

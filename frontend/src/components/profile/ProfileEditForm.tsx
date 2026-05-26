@@ -43,7 +43,7 @@ export default function ProfileEditForm({ initial, onSaved, onCancel }: Props) {
           </Form.Item>
         </Col>
       </Row>
-      <div className='flex justify-end gap-2'>
+      <div className='flex gap-2 justify-end'>
         <Button onClick={onCancel}>Cancel</Button>
         <Button type='primary' onClick={() => form.submit()}>
           Save

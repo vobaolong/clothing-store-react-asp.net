@@ -21,7 +21,7 @@ import {
   getShippingAddresses,
   getShippingAddressPrefill
 } from '@/api/addresses-api'
-import { getProvinces, getWardsByProvinceCode } from '@/api/provinces-api'
+import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
@@ -185,7 +185,10 @@ export default function CheckoutPage() {
         document.body.style.overflow = ''
       }
     })
-    observer.observe(document.body, { attributes: true, attributeFilter: ['style'] })
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['style']
+    })
     return () => observer.disconnect()
   }, [])
   const [uiState, uiDispatch] = useReducer(
@@ -246,18 +249,24 @@ export default function CheckoutPage() {
     })
 
   const watchedCouponCode = useWatch({ control, name: 'couponCode' })
-  const selectedProvinceCode = useWatch({ control, name: 'province' })
+  const selectedProvinceId = useWatch({ control, name: 'province' })
 
   const wardsByProvinceQuery = useQuery({
-    queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceCode),
-    queryFn: () => getWardsByProvinceCode(String(selectedProvinceCode)),
-    enabled: Boolean(selectedProvinceCode)
+    queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
+    queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
+    enabled: Boolean(selectedProvinceId)
   })
 
   const subtotal = total
   const coupon = uiState.coupon
   const address = uiState.address
   const isSubmitting = uiState.isSubmitting
+
+  const provincesOptions =
+    provincesQuery.data?.map((x) => ({ label: x.name, value: x.code })) ?? []
+  const wardOptions =
+    wardsByProvinceQuery.data?.map((x) => ({ label: x.name, value: x.code })) ??
+    []
   const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
   const appliedCouponDetails = availableCouponsQuery.data?.find(
     (c) => c.code.toUpperCase() === coupon.appliedCode
@@ -332,16 +341,16 @@ export default function CheckoutPage() {
     const values = getValues()
     const fullName = values.fullName?.trim() ?? ''
     const phone = values.phone?.trim() ?? ''
-    const provinceCode = values.province?.trim() ?? ''
+    const provinceId = values.province?.trim() ?? ''
     const wardCode = values.ward?.trim() ?? ''
     const street = values.street?.trim() ?? values.address?.trim() ?? ''
     const label = values.label
     const province =
-      provincesQuery.data?.find((x) => x.code === provinceCode)?.name ||
-      address.provinceOptions.find((x) => x.value === provinceCode)?.label
+      provincesQuery.data?.find((x) => x.code === provinceId)?.name ||
+      provincesOptions.find((x) => x.value === provinceId)?.label
     const ward =
       wardsByProvinceQuery.data?.find((x) => x.code === wardCode) ||
-      address.wardOptions.find((x) => x.value === wardCode)
+      wardOptions.find((x) => x.value === wardCode)
     const wardName = ward
       ? (('name' in ward ? ward.name : ward.label) as string)
       : ''
@@ -356,9 +365,7 @@ export default function CheckoutPage() {
         phone,
         address: addressStr,
         province,
-        provinceId: provinceCode,
-        district: '',
-        districtId: '',
+        provinceId,
         ward: wardName,
         wardCode,
         street,
@@ -440,8 +447,8 @@ export default function CheckoutPage() {
                 : 'animate-out slide-out-to-right'
             }`}
           >
-            <div className='flex items-start gap-3'>
-              <div className='flex items-center justify-center bg-green-100 rounded-full size-10'>
+            <div className='flex gap-3 items-start'>
+              <div className='flex justify-center items-center bg-green-100 rounded-full size-10'>
                 <svg
                   className='w-5 h-5 text-green-600'
                   fill='none'
@@ -474,7 +481,7 @@ export default function CheckoutPage() {
                 ✕
               </button>
             </div>
-            <div className='flex items-center justify-end mt-4 gap-2'>
+            <div className='flex gap-2 justify-end items-center mt-4'>
               <Button onClick={() => toast.dismiss(t.id)} className='text-sm'>
                 Đóng
               </Button>
@@ -526,8 +533,11 @@ export default function CheckoutPage() {
         <div className='space-y-4!'>
           <ShippingAddressSection
             control={control}
+            setValue={setValue}
             addressesQuery={addressesQuery}
             addressState={address}
+            provincesOptions={provincesOptions}
+            wardOptions={wardOptions}
             onToggleNewForm={() =>
               uiDispatch({ type: 'address/toggle-new-form' })
             }

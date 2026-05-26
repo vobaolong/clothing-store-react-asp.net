@@ -1,4 +1,4 @@
-import { Button, Image, Modal, Statistic, Table, Tabs } from 'antd'
+import { Modal, Statistic, Table, Tabs } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import {
   Fragment,
@@ -10,19 +10,19 @@ import {
   useRef,
   useState
 } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { addToCart } from '@/state/cart-slice'
+import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
-import { DownOutlined, ShoppingOutlined, UpOutlined } from '@ant-design/icons'
-import type { DescriptionLayout } from '@/types/product'
+import type { DescriptionLayout, ProductSelection } from '@/types/product'
 import { formatDescriptionSpecDisplayValue } from '@/constants/product'
 import { MEASUREMENT_PRESETS } from '@/constants/measurement-presets'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import ProductCard from '@/components/ProductCard'
+import ProductGallery from '@/components/product/ProductGallery'
+import ProductPurchaseActions from '@/components/product/ProductPurchaseActions'
 import {
   getCategoryAncestorChain,
   toProductsCategorySearchUrl
@@ -43,9 +43,9 @@ export default function ProductDetailPage() {
   const { slug } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [selection, setSelection] = useState({
-    color: undefined as string | undefined,
-    size: undefined as string | undefined,
+  const [selection, setSelection] = useState<ProductSelection>({
+    color: undefined,
+    size: undefined,
     quantity: 1,
     image: ''
   })
@@ -72,6 +72,8 @@ export default function ProductDetailPage() {
     queryKey: QUERY_KEYS.categories,
     queryFn: getCategories
   })
+
+  const cartItems = useSelector(selectCartItems)
 
   const product = products.find((item) => item.slug === slug)
   const saleEndDate = product?.salePriceEndDate ?? null
@@ -175,15 +177,6 @@ export default function ProductDetailPage() {
     }))
   }, [])
 
-  const scrollProductThumbs = useCallback((dir: 'up' | 'down') => {
-    const el = thumbListRef.current
-    if (!el) return
-    const first = el.querySelector('button')
-    const gap = 8
-    const step = first ? first.getBoundingClientRect().height + gap : 88
-    el.scrollBy({ top: dir === 'down' ? step : -step, behavior: 'smooth' })
-  }, [])
-
   useEffect(() => {
     refreshThumbScrollEdges()
   }, [galleryImages.length, resolvedColor, refreshThumbScrollEdges])
@@ -244,6 +237,22 @@ export default function ProductDetailPage() {
       v.quantity > 0
   )
 
+  const cartQuantityForSelectedVariant = useMemo(() => {
+    if (!product || !selectedVariant) return 0
+    return cartItems
+      .filter(
+        (item) =>
+          item.id === product.id && item.productVariantId === selectedVariant.id
+      )
+      .reduce((sum, item) => sum + item.quantity, 0)
+  }, [cartItems, product, selectedVariant])
+
+  const remainingStock = Math.max(
+    0,
+    (selectedVariant?.quantity ?? 0) - cartQuantityForSelectedVariant
+  )
+  const isOutOfStock = !selectedVariant || remainingStock <= 0
+
   const productDetails = useMemo(() => {
     if (!descriptionLayout?.specs?.length || !product) return []
     return [
@@ -274,7 +283,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center min-h-80'>
+      <div className='flex justify-center items-center min-h-80'>
         <p className='text-sm uppercase tracking-[0.2em] text-stone-400'>
           Loading…
         </p>
@@ -284,7 +293,7 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className='flex items-center justify-center min-h-80'>
+      <div className='flex justify-center items-center min-h-80'>
         <p className='text-sm uppercase tracking-[0.2em] text-stone-400'>
           Product not found
         </p>
@@ -294,7 +303,7 @@ export default function ProductDetailPage() {
 
   return (
     <section>
-      <nav className='flex flex-wrap items-center mb-8 text-xs font-medium gap-2 text-stone-400'>
+      <nav className='flex flex-wrap gap-2 items-center mb-8 text-xs font-medium text-stone-400'>
         <Link
           to='/'
           className='text-stone-400! hover:text-stone-600 hover:underline!'
@@ -330,85 +339,14 @@ export default function ProductDetailPage() {
 
       <div className='grid gap-12 lg:grid-cols-2'>
         <div className='space-y-4'>
-          <div className='flex items-start gap-3 sm:gap-4'>
-            {galleryImages.length > 1 ? (
-              <div className='flex flex-col w-16 shrink-0 sm:w-20'>
-                <div
-                  ref={thumbListRef}
-                  className={
-                    thumbStripClamped
-                      ? 'flex max-h-110 flex-col gap-2 overflow-x-hidden overflow-y-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden'
-                      : 'flex flex-col gap-2'
-                  }
-                >
-                  {galleryImages.map((image, idx) => {
-                    const isActive = image === currentImage
-                    return (
-                      <button
-                        key={`${image}-${idx}`}
-                        type='button'
-                        onClick={() => setSelection((p) => ({ ...p, image }))}
-                        className={`relative size-16 shrink-0 overflow-hidden rounded-lg! border-none transition-all duration-200 sm:size-20 cursor-pointer ${
-                          isActive
-                            ? 'shadow-sm'
-                            : 'opacity-80 hover:opacity-100'
-                        }`}
-                      >
-                        <img
-                          src={image}
-                          alt={`${product.name} ${idx + 1}`}
-                          className='size-full rounded-lg! object-cover'
-                        />
-                        {isActive ? (
-                          <span
-                            className='pointer-events-none absolute inset-0 rounded-[inherit] bg-black/30!'
-                            aria-hidden
-                          />
-                        ) : null}
-                      </button>
-                    )
-                  })}
-                </div>
-                {thumbStripClamped ? (
-                  <div className='flex justify-center mt-2 gap-1'>
-                    <button
-                      type='button'
-                      aria-label='Ảnh nhỏ phía trên'
-                      disabled={ui.thumbScrollEdges.atTop}
-                      onClick={() => scrollProductThumbs('up')}
-                      className='flex items-center justify-center bg-white border cursor-pointer size-8 rounded-md transition-colors border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
-                    >
-                      <UpOutlined className='text-xs' />
-                    </button>
-                    <button
-                      type='button'
-                      aria-label='Ảnh nhỏ phía dưới'
-                      disabled={ui.thumbScrollEdges.atBottom}
-                      onClick={() => scrollProductThumbs('down')}
-                      className='flex items-center justify-center bg-white border cursor-pointer size-8 rounded-md transition-colors border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35'
-                    >
-                      <DownOutlined className='text-xs' />
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-
-            <div className='flex-1 min-w-0'>
-              <Image.PreviewGroup items={galleryImages.map((src) => ({ src }))}>
-                <div className='relative w-full overflow-hidden bg-white rounded-xl group aspect-square'>
-                  <Image
-                    src={currentImage}
-                    alt={product.name}
-                    className='absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]'
-                    rootClassName='absolute inset-0 block h-full w-full [&_.ant-image]:h-full [&_.ant-image]:w-full [&_.ant-image-img]:h-full [&_.ant-image-img]:w-full [&_.ant-image-img]:object-cover'
-                  />
-                </div>
-              </Image.PreviewGroup>
-            </div>
-          </div>
+          <ProductGallery
+            galleryImages={galleryImages}
+            selection={selection}
+            setSelection={setSelection}
+            productName={product.name}
+          />
           {productDetails.length > 0 && (
-            <div className='p-6 bg-white border rounded-lg border-stone-200'>
+            <div className='p-6 bg-white rounded-lg border border-stone-200'>
               <p className='mb-4 text-base font-semibold text-black'>
                 Thông số kỹ thuật
               </p>
@@ -416,7 +354,7 @@ export default function ProductDetailPage() {
                 {productDetails.map(({ label, value }, idx) => (
                   <div
                     key={`${label}-${idx}`}
-                    className='flex items-start justify-between py-3 gap-4'
+                    className='flex gap-4 justify-between items-start py-3'
                   >
                     <dt className='text-xs! uppercase text-stone-600 shrink-0'>
                       {label}
@@ -440,8 +378,8 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        <aside className='w-full space-y-8 lg:sticky lg:top-8 lg:h-fit'>
-          <div className='pb-4 border-b space-y-3 border-stone-200'>
+        <aside className='space-y-8 w-full lg:sticky lg:top-8 lg:h-fit'>
+          <div className='pb-4 space-y-3 border-b border-stone-200'>
             <h1 className='mt-3! text-3xl font-normal leading-snug tracking-tight text-stone-900'>
               {toCapitalize(product.name)}
             </h1>
@@ -454,11 +392,11 @@ export default function ProductDetailPage() {
 
           <div className='space-y-1'>
             {showSaleCountdown && saleEndDate ? (
-              <div className='flex flex-wrap items-center justify-between w-full gap-4'>
+              <div className='flex flex-wrap gap-4 justify-between items-center w-full'>
                 <span className='text-3xl font-semibold tabular-nums text-rose-700'>
                   {formatCurrency(product.salePrice ?? 0)}
                 </span>
-                <div className='flex flex-col items-center flex-1 p-2 bg-red-100 rounded-2xl min-w-40 shrink-0'>
+                <div className='flex flex-col flex-1 items-center p-2 bg-red-100 rounded-2xl min-w-40 shrink-0'>
                   <span className='text-[11px] font-medium uppercase tracking-wide text-stone-500'>
                     Kết thúc sau
                   </span>
@@ -475,12 +413,12 @@ export default function ProductDetailPage() {
                     }}
                   />
                 </div>
-                <span className='text-lg font-medium line-through tabular-nums text-stone-400'>
+                <span className='text-lg font-medium tabular-nums line-through text-stone-400'>
                   {formatCurrency(listPrice)}
                 </span>
               </div>
             ) : (
-              <div className='flex items-baseline gap-3'>
+              <div className='flex gap-3 items-baseline'>
                 <span className='text-3xl font-semibold text-stone-900'>
                   {effectiveDisplayPrice !== listPrice
                     ? formatCurrency(effectiveDisplayPrice)
@@ -493,7 +431,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
             )}
-            <div className='flex items-baseline gap-3'>
+            <div className='flex gap-3 items-baseline'>
               <img
                 src='https://n7media.coolmate.me/uploads/2026/04/15/icon4.png'
                 alt='Freeship'
@@ -547,7 +485,7 @@ export default function ProductDetailPage() {
                     }`}
                   >
                     {isDisabled && (
-                      <span className='absolute inset-0 flex items-center justify-center pointer-events-none'>
+                      <span className='flex absolute inset-0 justify-center items-center pointer-events-none'>
                         <span className='block h-px w-[80%] -rotate-12 bg-white mix-blend-difference' />
                       </span>
                     )}
@@ -558,7 +496,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div className='space-y-3'>
-            <div className='flex items-center justify-between'>
+            <div className='flex justify-between items-center'>
               <p className='text-sm font-semibold text-black m-0!'>
                 Kích thước:{' '}
                 <span className='text-base font-medium tracking-normal normal-case text-stone-700'>
@@ -601,7 +539,7 @@ export default function ProductDetailPage() {
                   >
                     {size}
                     {isDisabled && (
-                      <span className='absolute inset-0 flex items-center justify-center pointer-events-none'>
+                      <span className='flex absolute inset-0 justify-center items-center pointer-events-none'>
                         <span className='block h-px w-[75%] -rotate-12 bg-stone-500' />
                       </span>
                     )}
@@ -615,67 +553,48 @@ export default function ProductDetailPage() {
             <CartQuantityControl
               value={selection.quantity}
               min={1}
-              max={selectedVariant?.quantity ?? 1}
+              max={Math.max(1, remainingStock)}
               onChange={(next) =>
                 setSelection((p) => ({ ...p, quantity: next }))
               }
             />
             <p className='text-[11px] text-stone-400'>
-              {selectedVariant?.quantity ?? 0} sản phẩm có sẵn
+              {remainingStock} sản phẩm có sẵn
             </p>
           </div>
 
-          <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-            <Button
-              type='default'
-              disabled={!selectedVariant}
-              onClick={() =>
-                selectedVariant
-                  ? dispatch(
-                      addToCart({
-                        product,
-                        productVariantId: selectedVariant.id,
-                        selectedSize: selectedVariant.size,
-                        selectedColor: selectedVariant.color,
-                        quantity: selection.quantity
-                      })
-                    )
-                  : toast.error('Please select a valid color and size')
-              }
-              icon={<ShoppingOutlined />}
-              size='large'
-              className='w-full'
-            >
-              Thêm vào giỏ
-            </Button>
+          <ProductPurchaseActions
+            isOutOfStock={isOutOfStock}
+            selectedVariant={selectedVariant}
+            onAddToCart={() => {
+              if (isOutOfStock) return
+              dispatch(
+                addToCart({
+                  product,
+                  productVariantId: selectedVariant?.id,
+                  selectedSize: selectedVariant?.size,
+                  selectedColor: selectedVariant?.color,
+                  quantity: selection.quantity
+                })
+              )
+              dispatch(openDrawer())
+            }}
+            onBuyNow={() => {
+              if (isOutOfStock) return
+              dispatch(
+                addToCart({
+                  product,
+                  productVariantId: selectedVariant?.id,
+                  selectedSize: selectedVariant?.size,
+                  selectedColor: selectedVariant?.color,
+                  quantity: selection.quantity
+                })
+              )
+              navigate('/checkout')
+            }}
+          />
 
-            <Button
-              type='primary'
-              disabled={!selectedVariant}
-              onClick={() => {
-                if (!selectedVariant) {
-                  toast.error('Please select a valid color and size')
-                  return
-                }
-                dispatch(
-                  addToCart({
-                    product,
-                    productVariantId: selectedVariant.id,
-                    selectedSize: selectedVariant.size,
-                    selectedColor: selectedVariant.color,
-                    quantity: selection.quantity
-                  })
-                )
-                navigate('/checkout')
-              }}
-              size='large'
-              className='w-full'
-            >
-              Mua nhanh
-            </Button>
-          </div>
-
-          <div className='mt-4 rounded-lg grid grid-cols-2 bg-stone-200'>
+          <div className='grid grid-cols-2 mt-4 rounded-lg bg-stone-200'>
             {[
               {
                 title: 'https://www.coolmate.me/icons/product/free-ship.svg',
@@ -696,7 +615,7 @@ export default function ProductDetailPage() {
             ].map(({ title, sub }) => (
               <div
                 key={title}
-                className='flex items-center p-4 gap-2 text-start'
+                className='flex gap-2 items-center p-4 text-start'
               >
                 <img src={title} alt={title} className='size-9' />
                 <p className='whitespace-pre-line text-xs text-stone-700 m-0!'>
@@ -708,7 +627,7 @@ export default function ProductDetailPage() {
         </aside>
       </div>
 
-      <div className='w-full mt-8 bg-white'>
+      <div className='mt-8 w-full bg-white rounded-lg border border-stone-100'>
         <Tabs
           className='[&_.ant-tabs-nav]:mb-6 [&_.ant-tabs-nav-wrap]:w-full [&_.ant-tabs-nav-list]:flex [&_.ant-tabs-nav-list]:w-full [&_.ant-tabs-tab]:m-0 [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-tab-btn]:w-full [&_.ant-tabs-tab-btn]:text-center [&_.ant-tabs-tab]:py-3 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-ink-bar]:h-0.5'
           defaultActiveKey='description'
@@ -717,7 +636,7 @@ export default function ProductDetailPage() {
               key: 'description',
               label: 'Mô tả sản phẩm',
               children: (
-                <div className='px-4 py-3 md:px-6 md:py-4'>
+                <div className='py-3 px-4 md:px-6 md:py-4'>
                   <div
                     className='prose prose-sm max-w-none text-stone-600 [&_img]:h-auto [&_img]:max-w-full'
                     dangerouslySetInnerHTML={{ __html: product.description }}
@@ -729,7 +648,7 @@ export default function ProductDetailPage() {
               key: 'reviews',
               label: 'Đánh giá sản phẩm',
               children: (
-                <div className='px-4 py-3 md:px-6 md:py-4'>
+                <div className='py-3 px-4 md:px-6 md:py-4'>
                   <Suspense fallback={null}>
                     <ProductReviewsSection
                       productId={product.id}
@@ -745,14 +664,13 @@ export default function ProductDetailPage() {
 
       {similarProducts.length > 0 ? (
         <div className='mt-12'>
-          <div className='flex flex-wrap items-end justify-between mb-6 gap-4'>
+          <div className='flex flex-wrap gap-4 justify-between items-end mb-6'>
             <h2 className='text-xl font-semibold tracking-tight text-stone-900 md:text-2xl'>
               Sản phẩm tương tự
             </h2>
             <Link
               to={productCategoryListHref}
-              className='text-sm font-semibold shrink-0 hover:underline'
-              style={{ color: '#8B2332' }}
+              className='text-sm font-semibold shrink-0 hover:underline text-[#8B2332]'
             >
               Xem thêm trong danh mục
             </Link>
@@ -783,7 +701,7 @@ export default function ProductDetailPage() {
             size='small'
             rowKey='size'
             bordered
-            className='overflow-hidden border rounded-xl border-slate-200'
+            className='overflow-hidden rounded-xl border border-slate-200'
           />
         ) : (
           <Table
@@ -793,7 +711,7 @@ export default function ProductDetailPage() {
             size='small'
             rowKey='size'
             bordered
-            className='overflow-hidden border rounded-xl border-slate-200'
+            className='overflow-hidden rounded-xl border border-slate-200'
           />
         )}
       </Modal>

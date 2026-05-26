@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Tag } from 'antd'
+import { Card, Divider, Tag } from 'antd'
 import { useNotifications } from '@/hooks/useNotifications'
 import { NotificationType } from '@/types/notification'
 import { formatDate } from '@/utils/format'
@@ -95,11 +95,10 @@ export default function NotificationsSection() {
 
   return (
     <div>
-      <h1 className='mb-4 text-2xl font-semibold'>Thông báo</h1>
-
       {groupedOrderNotifications.length > 0 && (
-        <div className='mb-6'>
-          <h3 className='mb-2 text-lg font-medium'>Đơn hàng</h3>
+        <Card>
+          <h1 className='text-2xl font-medium m-0!'>Thông báo</h1>
+          <Divider />
           <div className='space-y-3 max-h-screen! overflow-y-auto'>
             {groupedOrderNotifications.map(
               ({ orderId, items, latest, unreadCount }) => {
@@ -108,16 +107,16 @@ export default function NotificationsSection() {
                 return (
                   <div
                     key={orderId}
-                    className='overflow-hidden bg-white border rounded-lg border-slate-200'
+                    className='overflow-hidden bg-white rounded-lg border border-slate-200'
                   >
                     <button
                       type='button'
-                      className='w-full p-4 text-left hover:bg-slate-50 transition-colors'
+                      className='p-4 w-full text-left transition-colors hover:bg-slate-50'
                       onClick={() => toggleGroup(orderId)}
                     >
-                      <div className='flex items-start justify-between gap-3'>
-                        <div className='flex items-start flex-1 min-w-0 gap-3'>
-                          <div className='flex items-center justify-center text-xl h-14 w-14 shrink-0 rounded-md bg-slate-100'>
+                      <div className='flex gap-3 justify-between items-start'>
+                        <div className='flex flex-1 gap-3 items-start min-w-0'>
+                          <div className='flex justify-center items-center w-14 h-14 text-xl rounded-md shrink-0 bg-slate-100'>
                             {thumbnailUrl ? (
                               <img
                                 src={thumbnailUrl}
@@ -129,7 +128,7 @@ export default function NotificationsSection() {
                             )}
                           </div>
                           <div className='min-w-0'>
-                            <div className='flex flex-wrap items-center gap-2'>
+                            <div className='flex flex-wrap gap-2 items-center'>
                               <div className='font-semibold truncate text-slate-900'>
                                 {latest.title}
                               </div>
@@ -148,7 +147,7 @@ export default function NotificationsSection() {
                             </div>
                           </div>
                         </div>
-                        <div className='flex items-center shrink-0 gap-3'>
+                        <div className='flex gap-3 items-center shrink-0'>
                           <div className='text-xs text-slate-400'>
                             {formatDate(latest.createdAt)}
                           </div>
@@ -162,7 +161,7 @@ export default function NotificationsSection() {
                       </div>
                     </button>
                     {isExpanded && (
-                      <div className='px-4 py-4 border-t border-slate-200 bg-slate-50'>
+                      <div className='py-4 px-4 border-t border-slate-200 bg-slate-50'>
                         <div className='space-y-4'>
                           {items.map((item, index) => (
                             <button
@@ -171,9 +170,9 @@ export default function NotificationsSection() {
                               onClick={() => {
                                 if (!item.isRead) markAsRead(item.id)
                               }}
-                              className='relative block w-full px-4 py-3 text-left bg-white rounded-md hover:bg-slate-100 transition-colors'
+                              className='block relative py-3 px-4 w-full text-left bg-white rounded-md transition-colors hover:bg-slate-100'
                             >
-                              <div className='absolute top-0 left-0 flex justify-center h-full w-7'>
+                              <div className='flex absolute top-0 left-0 justify-center w-7 h-full'>
                                 <span
                                   className={`absolute left-3.25 top-2 h-2.5 w-2.5 rounded-full ${item.isRead ? 'bg-slate-300' : 'bg-blue-500'}`}
                                 />
@@ -182,7 +181,7 @@ export default function NotificationsSection() {
                                 )}
                               </div>
                               <div className='pl-6'>
-                                <div className='flex items-start justify-between gap-3'>
+                                <div className='flex gap-3 justify-between items-start'>
                                   <div className='font-medium text-slate-900'>
                                     {item.title}
                                   </div>
@@ -204,7 +203,7 @@ export default function NotificationsSection() {
               }
             )}
           </div>
-        </div>
+        </Card>
       )}
 
       {otherNotifications.length > 0 && (
@@ -218,9 +217,9 @@ export default function NotificationsSection() {
                 onClick={() => {
                   if (!it.isRead) markAsRead(it.id)
                 }}
-                className='w-full p-4 text-left bg-white border rounded-md border-slate-200 transition-colors hover:bg-slate-50'
+                className='p-4 w-full text-left bg-white rounded-md border transition-colors border-slate-200 hover:bg-slate-50'
               >
-                <div className='flex items-start justify-between gap-3'>
+                <div className='flex gap-3 justify-between items-start'>
                   <div>
                     <div className='font-medium text-slate-900'>{it.title}</div>
                     <div className='mt-1 text-sm text-slate-600'>

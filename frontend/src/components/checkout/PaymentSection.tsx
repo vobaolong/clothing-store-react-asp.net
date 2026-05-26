@@ -14,10 +14,10 @@ type Props = {
 export default function PaymentSection({
   control,
   onSubmit,
-  isSubmitting,
+  isSubmitting
 }: Props) {
   return (
-    <Card className='rounded-2xl! border-slate-200! shadow-sm!'>
+    <Card>
       <CheckoutSectionTitle step={3} title='Phương thức thanh toán & ghi chú' />
       <Form layout='vertical' onFinish={onSubmit}>
         <Form.Item label='Phương thức thanh toán' className='mb-4!'>
@@ -29,9 +29,9 @@ export default function PaymentSection({
                 {[
                   {
                     value: PaymentMethod.COD,
-                    label: 'COD — Thanh toán khi nhận hàng',
+                    label: 'COD — Thanh toán khi nhận hàng'
                   },
-                  { value: PaymentMethod.VNPAY, label: 'VNPay' },
+                  { value: PaymentMethod.VNPAY, label: 'VNPay' }
                 ].map((option) => (
                   <label
                     key={option.value}
@@ -71,9 +71,8 @@ export default function PaymentSection({
         <Button
           type='primary'
           htmlType='submit'
-          size='large'
           block
-          className='rounded-xl! h-12! text-base! font-semibold!'
+          className='rounded-lg h-12! text-base font-semibold'
           loading={isSubmitting}
           disabled={isSubmitting}
         >

@@ -10,12 +10,7 @@ import type { CartState, Product } from '@/types'
 
 type AddToCartPayload = {
   product: Product
-  selectedVariant?: {
-    id: string
-    size: string
-    color: string
-    hex: string
-  }
+  selectedVariant?: Product['variants'][number]
   productVariantId?: string
   selectedSize?: string
   selectedColor?: string
@@ -77,14 +72,29 @@ const cartSlice = createSlice({
 
       if (!selectedVariant) return
 
+      const stock = Math.max(0, selectedVariant.quantity)
+      if (stock === 0) {
+        toast.error('Sản phẩm đã hết hàng')
+        return
+      }
+
       const existingItem = state.items.find(
         (item) =>
           item.id === product.id &&
           item.selectedVariant.id === selectedVariant.id
       )
 
+      const nextQuantity = Math.min(
+        stock,
+        (existingItem?.quantity ?? 0) + Math.max(1, quantity)
+      )
+
       if (existingItem) {
-        existingItem.quantity += quantity
+        if (nextQuantity === existingItem.quantity) {
+          toast.error('Số lượng trong giỏ đã đạt mức tồn kho tối đa')
+          return
+        }
+        existingItem.quantity = nextQuantity
         toast.success('Cập nhật số lượng trong giỏ hàng')
       } else {
         state.items.push({
@@ -94,11 +104,10 @@ const cartSlice = createSlice({
           selectedSize: selectedVariant.size,
           selectedColor: selectedVariant.color,
           isSelected: true,
-          quantity
+          quantity: nextQuantity
         })
         toast.success('Đã thêm vào giỏ hàng')
       }
-      state.isDrawerOpen = true
     },
     updateQuantity: (state, action: PayloadAction<UpdateQuantityPayload>) => {
       const productId = action.payload.productId ?? action.payload.id
@@ -113,10 +122,7 @@ const cartSlice = createSlice({
         item.quantity = Math.max(1, quantity)
       }
     },
-    removeFromCart: (
-      state,
-      action: PayloadAction<CartItemIdentityPayload>
-    ) => {
+    removeFromCart: (state, action: PayloadAction<CartItemIdentityPayload>) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
         action.payload.variantId ?? action.payload.productVariantId

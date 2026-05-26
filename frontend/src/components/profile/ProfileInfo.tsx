@@ -19,11 +19,11 @@ export default function ProfileInfo() {
 
   return (
     <Card>
-      <div className='flex items-start gap-6'>
+      <div className='flex gap-6 items-start'>
         <div className='flex-1'>
           {!editing ? (
             <>
-              <div className='flex items-start justify-between'>
+              <div className='flex justify-between items-start'>
                 <h2 className='text-xl font-semibold'>
                   {data?.fullName ?? '-'}
                 </h2>

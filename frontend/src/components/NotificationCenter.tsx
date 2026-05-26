@@ -74,10 +74,10 @@ const NotificationItem = ({
         !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
       ].join(' ')}
     >
-      <div className='flex items-start gap-3'>
+      <div className='flex gap-3 items-start'>
         <span className='text-lg shrink-0'>{getIcon(notification.type)}</span>
         <div className='flex-1 min-w-0'>
-          <div className='flex items-start justify-between gap-2'>
+          <div className='flex gap-2 justify-between items-start'>
             <h4
               className={`text-sm text-gray-900 ${!notification.isRead ? 'font-semibold' : 'font-medium'}`}
             >
@@ -168,13 +168,13 @@ export const NotificationCenter = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Button
         onClick={handleToggle}
-        className='relative p-2 text-gray-600 transition-colors rounded-lg hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+        className='relative p-2 text-gray-600 rounded-lg transition-colors hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
         aria-label='Thông báo'
         aria-expanded={isOpen}
         icon={<BellOutlined />}
       >
         {unreadCount > 0 && (
-          <span className='absolute flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full -top-1 -right-1'>
+          <span className='flex absolute -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full'>
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -182,9 +182,9 @@ export const NotificationCenter = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className='absolute right-0 z-50 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg w-80 sm:w-96'>
+        <div className='overflow-hidden absolute right-0 z-50 mt-2 w-80 bg-white rounded-lg border border-gray-200 shadow-lg sm:w-96'>
           {/* Header */}
-          <div className='flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50'>
+          <div className='flex justify-between items-center py-3 px-4 bg-gray-50 border-b border-gray-200'>
             <h3 className='text-base font-semibold text-gray-900'>Thông báo</h3>
             {unreadCount > 0 && (
               <button
@@ -218,7 +218,7 @@ export const NotificationCenter = ({
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className='px-4 py-3 text-center border-t border-gray-200 bg-gray-50'>
+            <div className='py-3 px-4 text-center bg-gray-50 border-t border-gray-200'>
               <button
                 onClick={openNotificationsPage}
                 className='text-sm font-medium cursor-pointer'

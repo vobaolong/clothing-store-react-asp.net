@@ -25,7 +25,7 @@ type ProductCardProps = {
 
 export default function ProductCard({
   product,
-  mode = 'featured',
+  mode = 'featured'
 }: ProductCardProps) {
   const navigate = useNavigate()
   const isCatalog = mode === 'catalog'
@@ -36,12 +36,12 @@ export default function ProductCard({
   const activeColor = previewColor ?? defaultColor
   const galleryUrls = useMemo(
     () => getGalleryUrlsForColor(product, activeColor),
-    [product, activeColor],
+    [product, activeColor]
   )
   const imageSrc = galleryUrls[0] ?? ''
   const imageSrc2 = galleryUrls[1] ?? galleryUrls[0] ?? ''
   const listPrice = product.price
-  const nowMs = Date.now()
+  const [nowMs] = useState(() => Date.now())
   const effectiveDisplayPrice = getEffectivePriceAt(product, nowMs)
   const discountPercent =
     product.salePrice !== null &&
@@ -67,7 +67,7 @@ export default function ProductCard({
       }
       onClick={() => navigate(`/products/${product.slug}`)}
       cover={
-        <div className='relative w-full overflow-hidden aspect-square bg-slate-100'>
+        <div className='overflow-hidden relative w-full aspect-square bg-slate-100'>
           {showNewBadge ? (
             <span className='absolute left-2 top-2 z-10 rounded bg-red-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white'>
               NEW
@@ -77,13 +77,13 @@ export default function ProductCard({
             loading='lazy'
             src={imageSrc}
             alt={product.name}
-            className='absolute inset-0 object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-0'
+            className='object-cover absolute inset-0 w-full h-full transition-opacity duration-300 group-hover:opacity-0'
           />
           <img
             loading='lazy'
             src={imageSrc2}
             alt={product.name}
-            className='absolute inset-0 object-cover w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+            className='object-cover absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100'
           />
         </div>
       }
@@ -142,9 +142,9 @@ export default function ProductCard({
         >
           Mua hàng
         </Button>
-        <div className='flex items-center justify-between mt-2'>
+        <div className='flex justify-between items-center mt-2'>
           {averageRating > 0 ? (
-            <span className='inline-flex items-center text-sm gap-1 text-slate-600'>
+            <span className='inline-flex gap-1 items-center text-sm text-slate-600'>
               <Rate
                 disabled
                 allowHalf

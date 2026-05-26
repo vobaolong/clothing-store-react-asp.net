@@ -16,5 +16,5 @@ public class Category : SoftDeletableEntity, IAuditableEntity
     public string? Image { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime UpdatedAt { get; set; }
-    public ICollection<Product> Products { get; set; } = []; //[]
+    public ICollection<Product> Products { get; set; } = [];
 }

@@ -40,10 +40,10 @@ export default function ReviewList({
       {reviews.map((review) => (
         <div
           key={review.id}
-          className='p-4 bg-white border rounded-2xl border-slate-200'
+          className='p-4 bg-white rounded-2xl border border-slate-200'
         >
           <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4'>
-            <div className='flex items-center w-full sm:w-44 sm:shrink-0 gap-3'>
+            <div className='flex gap-3 items-center w-full sm:w-44 sm:shrink-0'>
               <Avatar className='bg-slate-200! text-slate-700 font-semibold'>
                 {getInitial(review.userName)}
               </Avatar>
@@ -53,7 +53,7 @@ export default function ReviewList({
             </div>
 
             <div className='flex-1 w-full min-w-0'>
-              <div className='flex items-start justify-between gap-4'>
+              <div className='flex gap-4 justify-between items-start'>
                 <div>
                   <Rate
                     disabled
@@ -62,7 +62,7 @@ export default function ReviewList({
                     className='mt-1 text-xs text-amber-500'
                   />
                   {(review.variantSize || review.variantColor) && (
-                    <div className='flex flex-wrap items-center mt-1 text-xs gap-2 sm:gap-4 text-slate-500'>
+                    <div className='flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500'>
                       {review.variantSize && (
                         <span>
                           <span className='text-slate-400'>Kích thước:</span>{' '}
@@ -79,7 +79,7 @@ export default function ReviewList({
                   )}
                 </div>
                 {review.isMine && (
-                  <div className='flex items-center gap-1'>
+                  <div className='flex gap-1 items-center'>
                     {onEdit && (
                       <Button
                         type='text'
@@ -108,7 +108,7 @@ export default function ReviewList({
               )}
 
               {review.tags && review.tags.length > 0 && (
-                <div className='flex flex-wrap mt-4 gap-2'>
+                <div className='flex flex-wrap gap-2 mt-4'>
                   {review.tags.map((tag) => (
                     <Tag
                       key={tag}

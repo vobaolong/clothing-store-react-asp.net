@@ -275,7 +275,7 @@ export default function AdminOrdersSection() {
           className='w-full order-status-tabs'
           tabBarStyle={{ marginBottom: 0 }}
         />
-        <div className='flex items-center gap-2'>
+        <div className='flex gap-2 items-center'>
           {selectedRowKeys.length > 0 && (
             <Button
               type='primary'
@@ -288,7 +288,7 @@ export default function AdminOrdersSection() {
         </div>
       </div>
 
-      <div className='flex flex-wrap items-center gap-3'>
+      <div className='flex flex-wrap gap-3 items-center'>
         <Input.Search
           allowClear
           placeholder='Tìm theo mã đơn hàng, email...'

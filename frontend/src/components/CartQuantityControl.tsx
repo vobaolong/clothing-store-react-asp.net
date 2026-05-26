@@ -20,7 +20,7 @@ export default function CartQuantityControl({
   const canIncrease = typeof max === 'number' ? value < max : true
 
   return (
-    <div className='inline-flex items-center overflow-hidden border rounded-lg w-fit border-slate-300'>
+    <div className='inline-flex overflow-hidden items-center rounded-lg border w-fit border-slate-300'>
       {showButtons && (
         <Button
           type='text'

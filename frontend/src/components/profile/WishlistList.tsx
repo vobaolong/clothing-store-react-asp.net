@@ -1,4 +1,4 @@
-import { Card, Empty, Spin } from 'antd'
+import { Card, Divider, Empty, Spin } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { getWishlistProducts } from '@/api/wishlist-api'
@@ -13,20 +13,16 @@ export default function WishlistList() {
 
   if (isLoading) return <Spin className='flex justify-center py-12' />
 
-  if (!data || data.length === 0) {
-    return (
-      <Card>
-        <Empty description='Bạn chưa có sản phẩm nào trong danh sách yêu thích.' />
-      </Card>
-    )
-  }
-
   return (
     <Card>
-      <h3 className='mb-6 text-lg font-medium capitalize'>
+      <h1 className='text-2xl font-medium m-0!'>
         Danh Sách Yêu Thích Của Tôi ({data?.length || 0})
-      </h3>
-      <div className='grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      </h1>
+      <Divider />
+      <div className='flex justify-center'>
+        {data.length === 0 && (
+          <Empty description='Không có sản phẩm yêu thích' />
+        )}
         {data.map((product: Product) => (
           <div key={product.id} className='relative group'>
             <ProductCard product={product} mode='catalog' />

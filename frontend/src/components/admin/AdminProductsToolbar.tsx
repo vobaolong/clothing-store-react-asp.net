@@ -1,5 +1,5 @@
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Segmented } from 'antd'
+import { PlusOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons'
+import { Button, Segmented, FloatButton } from 'antd'
 import dayjs from 'dayjs'
 import type { ReactNode } from 'react'
 import {
@@ -64,7 +64,7 @@ export default function AdminProductsToolbar({
       />
 
       <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
-        <div className='flex flex-wrap justify-end w-full gap-2 sm:ml-auto sm:w-auto'>
+        <div className='hidden sm:flex flex-wrap gap-2 justify-end w-full sm:ml-auto sm:w-auto'>
           {selectedActions}
           <AdminQueryRefreshButton query={refreshQuery} />
           <Button icon={<UploadOutlined />} onClick={onImportExcel}>
@@ -104,6 +104,17 @@ export default function AdminProductsToolbar({
             }
           ]}
         />
+        <FloatButton.Group
+          trigger="click"
+          type="primary"
+          style={{ bottom: 24, right: 24 }}
+          icon={<PlusOutlined />}
+          className="sm:hidden!"
+        >
+          <FloatButton icon={<PlusOutlined />} onClick={onCreate} tooltip="Thêm sản phẩm" />
+          <FloatButton icon={<UploadOutlined />} onClick={onImportExcel} tooltip="Import Excel" />
+          <FloatButton icon={<ReloadOutlined />} onClick={() => refreshQuery.refetch()} tooltip="Tải lại" />
+        </FloatButton.Group>
       </div>
     </>
   )

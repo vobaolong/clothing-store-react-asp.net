@@ -323,7 +323,7 @@ export default forwardRef<
       <div className='p-4 border rounded-xl border-slate-200 bg-slate-50/30'>
         <p className='mb-3 text-sm font-semibold text-slate-800'>Màu sắc</p>
 
-        <div className='flex flex-wrap mb-4 gap-2'>
+        <div className='flex flex-wrap gap-2 mb-4'>
           {DEFAULT_COLORS.map((colorOption) => (
             <CheckableTag
               key={colorOption.hex}
@@ -335,7 +335,7 @@ export default forwardRef<
               style={{ display: 'flex' }}
             >
               <span
-                className='inline-block w-3 h-3 mr-1 align-middle border rounded-full shrink-0 border-slate-300'
+                className='inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300'
                 style={{ backgroundColor: colorOption.hex }}
               />
               <span className='inline-block leading-none align-middle'>
@@ -352,7 +352,7 @@ export default forwardRef<
               className='flex items-center! gap-2 px-3 text-sm text-white! rounded-full border-blue-200! border! bg-[#1677ff]! h-7!'
             >
               <span
-                className='inline-block w-3 h-3 mr-1 align-middle border rounded-full shrink-0 border-slate-300'
+                className='inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300'
                 style={{ backgroundColor: color.hex }}
               />
               <span>{color.name}</span>
@@ -389,7 +389,7 @@ export default forwardRef<
               onChange={(e) =>
                 setFormInputs((p) => ({ ...p, newColorHex: e.target.value }))
               }
-              className='w-10 h-8 p-0 bg-white border rounded cursor-pointer border-slate-300'
+              className='p-0 w-10 h-8 bg-white rounded border cursor-pointer border-slate-300'
             />
             <Button type='primary' onClick={addColor}>
               Xác nhận
@@ -410,9 +410,9 @@ export default forwardRef<
           <div className='space-y-5!'>
             {matrixData.colors.map((color) => (
               <div key={color.name} className='space-y-2'>
-                <div className='flex items-center min-w-40 gap-2'>
+                <div className='flex gap-2 items-center min-w-40'>
                   <span
-                    className='w-3 h-3 border rounded-full shrink-0 border-slate-300'
+                    className='w-3 h-3 rounded-full border shrink-0 border-slate-300'
                     style={{ backgroundColor: color.hex }}
                   />
                   <span className='text-sm font-medium text-slate-800'>
@@ -434,7 +434,7 @@ export default forwardRef<
                     + Upload
                   </Upload>
 
-                  <div className='flex flex-wrap items-end max-w-2xl gap-2'>
+                  <div className='flex flex-wrap gap-2 items-end max-w-2xl'>
                     <Input
                       className='flex-1 min-w-50'
                       placeholder='Thêm ảnh bằng URL…'
@@ -464,7 +464,7 @@ export default forwardRef<
       <div className='p-4 border rounded-xl border-slate-200 bg-slate-50/30'>
         <p className='mb-3 text-sm font-semibold text-slate-800'>Kích thước</p>
 
-        <div className='flex flex-wrap mb-4 gap-2'>
+        <div className='flex flex-wrap gap-2 mb-4'>
           {DEFAULT_SIZES.map((size) => (
             <CheckableTag
               key={size}
@@ -481,7 +481,7 @@ export default forwardRef<
               key={size}
               closable
               onClose={() => toggleSize(size)}
-              className='px-4 py-1 text-sm font-medium text-blue-700 border-blue-200 bg-blue-50 rounded-md'
+              className='py-1 px-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-md border-blue-200'
             >
               {size}
             </Tag>
@@ -501,7 +501,7 @@ export default forwardRef<
         </div>
 
         {uiState.showCustomSize && (
-          <div className='flex items-center p-3 bg-white border border-blue-100 rounded-lg gap-2 shadow-sm'>
+          <div className='flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100 shadow-sm'>
             <Input
               placeholder='Size mới (VD: XL)'
               value={formInputs.newSize}
@@ -525,8 +525,8 @@ export default forwardRef<
         )}
       </div>
 
-      <div className='p-3 border rounded-md border-slate-200'>
-        <div className='flex items-center mb-2 gap-2'>
+      <div className='p-3 rounded-md border border-slate-200'>
+        <div className='flex gap-2 items-center mb-2'>
           <span className='text-sm font-semibold text-slate-600'>
             Cấp số lượng tất cả:
           </span>
@@ -563,9 +563,9 @@ export default forwardRef<
                 {matrixData.colors.map((color) => (
                   <tr key={color.name}>
                     <td className='p-2 border-b border-slate-100'>
-                      <div className='inline-flex items-center gap-2'>
+                      <div className='inline-flex gap-2 items-center'>
                         <span
-                          className='w-3 h-3 border rounded-full border-slate-300'
+                          className='w-3 h-3 rounded-full border border-slate-300'
                           style={{ backgroundColor: color.hex }}
                         />
                         {color.name}

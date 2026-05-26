@@ -120,7 +120,7 @@ export default function AdminProductImportModal({
         ) : null}
 
         {result ? (
-          <div className='p-4 border border-gray-200 rounded-lg bg-gray-50'>
+          <div className='p-4 bg-gray-50 rounded-lg border border-gray-200'>
             <Typography.Title level={5} className='mb-3!'>
               Kết quả nhập
             </Typography.Title>
@@ -147,21 +147,21 @@ export default function AdminProductImportModal({
                 <Typography.Text strong className='block mb-2'>
                   Lỗi theo từng dòng
                 </Typography.Text>
-                <div className='overflow-auto bg-white border border-red-200 max-h-64 rounded-md'>
+                <div className='overflow-auto max-h-64 bg-white rounded-md border border-red-200'>
                   <table className='w-full text-sm text-left'>
                     <thead className='sticky top-0 text-red-700 bg-red-50'>
                       <tr>
-                        <th className='px-3 py-2'>Dòng</th>
-                        <th className='px-3 py-2'>Lỗi</th>
+                        <th className='py-2 px-3'>Dòng</th>
+                        <th className='py-2 px-3'>Lỗi</th>
                       </tr>
                     </thead>
                     <tbody>
                       {result.errors.map((errorRow: ImportErrorRow) => (
                         <tr key={`${errorRow.rowNumber}-${errorRow.error}`} className='border-t'>
-                          <td className='px-3 py-2 font-medium align-top'>
+                          <td className='py-2 px-3 font-medium align-top'>
                             {errorRow.rowNumber}
                           </td>
-                          <td className='px-3 py-2'>{errorRow.error}</td>
+                          <td className='py-2 px-3'>{errorRow.error}</td>
                         </tr>
                       ))}
                     </tbody>
