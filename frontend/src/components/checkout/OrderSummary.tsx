@@ -28,12 +28,12 @@ export default function OrderSummary({
       className='rounded-2xl border-slate-200 shadow-sm lg:sticky!'
       title={<span className='font-semibold text-slate-800'>Tổng tiền</span>}
     >
-      <div className='text-sm space-y-3'>
-        <div className='pr-1 overflow-y-auto space-y-2'>
+      <div className='space-y-3 text-sm'>
+        <div className='overflow-y-auto pr-1 space-y-2'>
           {items.map((item) => (
             <div
               key={`${item.id}-${item.productVariantId}`}
-              className='flex justify-between gap-2'
+              className='flex gap-2 justify-between'
             >
               <span className='text-slate-600'>
                 <span className='font-medium line-clamp-2'>{item.name}</span>
@@ -49,7 +49,7 @@ export default function OrderSummary({
           ))}
         </div>
 
-        <div className='pt-3 border-t space-y-2 border-slate-100'>
+        <div className='pt-3 space-y-2 border-t border-slate-100'>
           <div className='flex justify-between text-slate-600'>
             <span>Tổng tiền</span>
             <span>{formatCurrency(subtotal)}</span>

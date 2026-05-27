@@ -191,8 +191,8 @@ export default function VerifyOtpPage() {
   if (isVerified) {
     return (
       <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4'>
-        <Card className='w-full border rounded-3xl border-slate-200 shadow-sm'>
-          <div className='flex flex-col items-center py-6 text-center gap-4'>
+        <Card className='w-full rounded-3xl border shadow-sm border-slate-200'>
+          <div className='flex flex-col gap-4 items-center py-6 text-center'>
             <CheckCircleFilled className='text-6xl text-green-500' />
             <Title level={3} className='mb-1!'>
               Xác thực thành công!
@@ -216,9 +216,9 @@ export default function VerifyOtpPage() {
 
   return (
     <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4'>
-      <Card className='w-full border rounded-3xl border-slate-200 shadow-sm'>
+      <Card className='w-full rounded-3xl border shadow-sm border-slate-200'>
         <div className='mb-6 text-center'>
-          <div className='flex items-center justify-center mx-auto mb-4 rounded-full h-14 w-14 bg-indigo-50'>
+          <div className='flex justify-center items-center mx-auto mb-4 w-14 h-14 bg-indigo-50 rounded-full'>
             <MailOutlined className='text-2xl text-indigo-600' />
           </div>
           <Title level={3} className='mb-1!'>
@@ -233,7 +233,7 @@ export default function VerifyOtpPage() {
         </div>
 
         {/* OTP Input boxes */}
-        <div className='flex justify-center mb-6 gap-2' onPaste={handlePaste}>
+        <div className='flex gap-2 justify-center mb-6' onPaste={handlePaste}>
           {otp.map((digit, index) => (
             <input
               key={index}
@@ -308,7 +308,7 @@ export default function VerifyOtpPage() {
               type='button'
               disabled={resendMutation.isPending}
               onClick={() => resendMutation.mutate({ email })}
-              className='inline-flex items-center font-medium text-indigo-600 gap-1 hover:text-indigo-500 disabled:opacity-50'
+              className='inline-flex gap-1 items-center font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50'
             >
               <ReloadOutlined spin={resendMutation.isPending} />
               Gửi lại mã

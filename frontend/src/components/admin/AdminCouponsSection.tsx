@@ -1,5 +1,5 @@
-import { Button, Input, Select, Table, Tag, Space } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, Select, Table, Tag, Space, FloatButton } from 'antd'
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useCallback, useMemo, useState } from 'react'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import {
@@ -185,13 +185,13 @@ export default function AdminCouponsSection() {
   return (
     <div className='space-y-3'>
       <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
-        <div className='flex flex-wrap justify-end w-full gap-2 sm:ml-auto sm:w-auto'>
+        <div className='hidden sm:flex flex-wrap gap-2 justify-end w-full sm:ml-auto sm:w-auto'>
           <AdminQueryRefreshButton query={refreshQuery} />
           <Button type='primary' icon={<PlusOutlined />} onClick={onCreate}>
             Tạo Voucher
           </Button>
         </div>
-        <div className='flex flex-wrap items-center w-full mt-3 gap-3'>
+        <div className='flex flex-wrap gap-3 items-center mt-3 w-full'>
           <Input.Search
             allowClear
             placeholder='Tìm theo mã coupon, số tiền…'
@@ -217,6 +217,17 @@ export default function AdminCouponsSection() {
           />
         </div>
       </div>
+
+      <FloatButton.Group
+        trigger="click"
+        type="primary"
+        style={{ bottom: 24, right: 24 }}
+        icon={<PlusOutlined />}
+        className="sm:hidden!"
+      >
+        <FloatButton icon={<PlusOutlined />} onClick={onCreate} tooltip="Tạo Voucher" />
+        <FloatButton icon={<ReloadOutlined />} onClick={() => refreshQuery.refetch()} tooltip="Tải lại" />
+      </FloatButton.Group>
 
       <Table
         rowKey='id'

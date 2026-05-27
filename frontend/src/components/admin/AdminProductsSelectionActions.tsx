@@ -28,7 +28,7 @@ export default function AdminProductsSelectionActions({
 
   return (
     <div className='fixed z-50 p-4 bg-white border border-blue-300 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
-      <div className='flex flex-col items-center gap-4 sm:flex-row'>
+      <div className='flex flex-col gap-4 items-center sm:flex-row'>
         <Tag
           icon={<CheckCircleOutlined />}
           variant='outlined'

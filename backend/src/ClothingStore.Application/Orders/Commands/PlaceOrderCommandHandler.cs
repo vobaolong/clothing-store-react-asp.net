@@ -91,6 +91,13 @@ public class PlaceOrderCommandHandler(
                     $"Insufficient stock for product {product.Name} (Size: {variant.Size}, Color: {variant.Color})."
                 );
 
+            var unitPrice =
+                product.SalePrice != null
+                && product.SalePrice < product.Price
+                && IsInSalePeriod(product)
+                    ? product.SalePrice.Value
+                    : product.Price;
+
             order.Items.Add(
                 new OrderItem
                 {
@@ -100,7 +107,7 @@ public class PlaceOrderCommandHandler(
                     ProductVariantId = variant.Id,
                     VariantName = $"{variant.Size} - {variant.Color}",
                     Quantity = item.Quantity,
-                    UnitPrice = product.Price,
+                    UnitPrice = unitPrice,
                 }
             );
         }
@@ -222,5 +229,21 @@ public class PlaceOrderCommandHandler(
         );
 
         return order.Id;
+    }
+
+    private static bool IsInSalePeriod(Product product)
+    {
+        var now = DateTime.UtcNow;
+
+        if (product.SalePriceStartDate.HasValue && product.SalePriceEndDate.HasValue)
+            return now >= product.SalePriceStartDate.Value && now <= product.SalePriceEndDate.Value;
+
+        if (product.SalePriceStartDate.HasValue)
+            return now >= product.SalePriceStartDate.Value;
+
+        if (product.SalePriceEndDate.HasValue)
+            return now <= product.SalePriceEndDate.Value;
+
+        return true;
     }
 }

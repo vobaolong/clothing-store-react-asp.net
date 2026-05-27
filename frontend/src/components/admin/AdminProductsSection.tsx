@@ -168,7 +168,9 @@ export default function AdminProductsSection() {
         (!startOfDay ||
           createdAt.isAfter(startOfDay) ||
           createdAt.isSame(startOfDay)) &&
-        (!endOfDay || createdAt.isBefore(endOfDay) || createdAt.isSame(endOfDay))
+        (!endOfDay ||
+          createdAt.isBefore(endOfDay) ||
+          createdAt.isSame(endOfDay))
 
       return searchMatch && categoryMatch && activeMatch && dateMatch
     })

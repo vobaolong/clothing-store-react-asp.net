@@ -219,7 +219,7 @@ export default function OrderDetailPage() {
         <h1 className='text-xl font-semibold sm:text-2xl m-0!'>
           Chi tiết đơn hàng
         </h1>
-        <div className='flex items-center gap-3'>
+        <div className='flex gap-3 items-center'>
           {canCancelOrder ? (
             <Button
               danger
@@ -240,7 +240,7 @@ export default function OrderDetailPage() {
           ) : null}
         </div>
       </div>
-      <Card className='rounded-2xl'>
+      <Card className='rounded-2xl' title='Thông tin đơn hàng'>
         <Descriptions column={2} bordered size='small'>
           <Descriptions.Item label='Mã đơn hàng'>
             {detail.id.slice(0, 8).toUpperCase()}
@@ -275,6 +275,7 @@ export default function OrderDetailPage() {
           </Descriptions.Item>
 
           {detail.note && (
+            <Descriptions.Item label='Ghi chú'>{detail.note}</Descriptions.Item>
             <Descriptions.Item label='Ghi chú'>{detail.note}</Descriptions.Item>
           )}
         </Descriptions>

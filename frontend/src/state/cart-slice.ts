@@ -1,11 +1,51 @@
 import {
-  createSlice,
   createSelector,
+  createSlice,
   type PayloadAction
 } from '@reduxjs/toolkit'
-import type { RootState } from '@/app/store'
 import toast from 'react-hot-toast'
+
+import type { RootState } from '@/app/store'
 import type { CartState, Product } from '@/types'
+
+type AddToCartPayload = {
+  product: Product
+  selectedVariant?: Product['variants'][number]
+  productVariantId?: string
+  selectedSize?: string
+  selectedColor?: string
+  quantity: number
+}
+
+type CartItemIdentityPayload = {
+  productId?: string
+  variantId?: string
+  id?: string
+  productVariantId?: string
+}
+
+type UpdateQuantityPayload = CartItemIdentityPayload & {
+  quantity: number
+}
+
+type ToggleCartItemPayload = {
+  id: string
+  productVariantId: string
+  isSelected: boolean
+}
+
+type UpdateCartVariantPayload = {
+  id: string
+  oldProductVariantId: string
+  newProductVariantId: string
+  selectedSize: string
+  selectedColor: string
+}
+
+type PurchasedCartItemPayload = {
+  id: string
+  productVariantId: string
+}
 
 const initialState: CartState = {
   items: [],
@@ -22,22 +62,7 @@ const cartSlice = createSlice({
     closeDrawer: (state) => {
       state.isDrawerOpen = false
     },
-    addToCart: (
-      state,
-      action: PayloadAction<{
-        product: Product
-        selectedVariant?: {
-          id: string
-          size: string
-          color: string
-          hex: string
-        }
-        productVariantId?: string
-        selectedSize?: string
-        selectedColor?: string
-        quantity: number
-      }>
-    ) => {
+    addToCart: (state, action: PayloadAction<AddToCartPayload>) => {
       const { product, quantity } = action.payload
       const selectedVariant =
         action.payload.selectedVariant ??
@@ -47,14 +72,29 @@ const cartSlice = createSlice({
 
       if (!selectedVariant) return
 
+      const stock = Math.max(0, selectedVariant.quantity)
+      if (stock === 0) {
+        toast.error('Sản phẩm đã hết hàng')
+        return
+      }
+
       const existingItem = state.items.find(
         (item) =>
           item.id === product.id &&
           item.selectedVariant.id === selectedVariant.id
       )
 
+      const nextQuantity = Math.min(
+        stock,
+        (existingItem?.quantity ?? 0) + Math.max(1, quantity)
+      )
+
       if (existingItem) {
-        existingItem.quantity += quantity
+        if (nextQuantity === existingItem.quantity) {
+          toast.error('Số lượng trong giỏ đã đạt mức tồn kho tối đa')
+          return
+        }
+        existingItem.quantity = nextQuantity
         toast.success('Cập nhật số lượng trong giỏ hàng')
       } else {
         state.items.push({
@@ -64,22 +104,12 @@ const cartSlice = createSlice({
           selectedSize: selectedVariant.size,
           selectedColor: selectedVariant.color,
           isSelected: true,
-          quantity
+          quantity: nextQuantity
         })
         toast.success('Đã thêm vào giỏ hàng')
       }
-      state.isDrawerOpen = true
     },
-    updateQuantity: (
-      state,
-      action: PayloadAction<{
-        productId?: string
-        variantId?: string
-        id?: string
-        productVariantId?: string
-        quantity: number
-      }>
-    ) => {
+    updateQuantity: (state, action: PayloadAction<UpdateQuantityPayload>) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
         action.payload.variantId ?? action.payload.productVariantId
@@ -92,15 +122,7 @@ const cartSlice = createSlice({
         item.quantity = Math.max(1, quantity)
       }
     },
-    removeFromCart: (
-      state,
-      action: PayloadAction<{
-        productId?: string
-        variantId?: string
-        id?: string
-        productVariantId?: string
-      }>
-    ) => {
+    removeFromCart: (state, action: PayloadAction<CartItemIdentityPayload>) => {
       const productId = action.payload.productId ?? action.payload.id
       const variantId =
         action.payload.variantId ?? action.payload.productVariantId
@@ -118,11 +140,7 @@ const cartSlice = createSlice({
     },
     toggleSelectCartItem: (
       state,
-      action: PayloadAction<{
-        id: string
-        productVariantId: string
-        isSelected: boolean
-      }>
+      action: PayloadAction<ToggleCartItemPayload>
     ) => {
       const item = state.items.find(
         (x) =>
@@ -133,13 +151,7 @@ const cartSlice = createSlice({
     },
     updateCartVariant: (
       state,
-      action: PayloadAction<{
-        id: string
-        oldProductVariantId: string
-        newProductVariantId: string
-        selectedSize: string
-        selectedColor: string
-      }>
+      action: PayloadAction<UpdateCartVariantPayload>
     ) => {
       const item = state.items.find(
         (x) =>
@@ -166,7 +178,7 @@ const cartSlice = createSlice({
     },
     removePurchasedCartItems: (
       state,
-      action: PayloadAction<Array<{ id: string; productVariantId: string }>>
+      action: PayloadAction<PurchasedCartItemPayload[]>
     ) => {
       const purchasedKeys = new Set(
         action.payload.map((item) => `${item.id}::${item.productVariantId}`)
@@ -208,6 +220,11 @@ export const selectSelectedCartItems = createSelector(
 
 export const selectCartItemCount = createSelector(selectCartItems, (items) =>
   items.reduce((sum, item) => sum + item.quantity, 0)
+)
+
+export const selectSelectedCartItemCount = createSelector(
+  selectSelectedCartItems,
+  (items) => items.reduce((sum, item) => sum + item.quantity, 0)
 )
 
 export default cartSlice.reducer

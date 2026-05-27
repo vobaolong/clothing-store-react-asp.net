@@ -82,7 +82,7 @@ export default function AvailableCouponCard({
               tabIndex={0}
               style={{ outline: 'none' }}
             >
-              <div className='flex flex-col items-center gap-2'>
+              <div className='flex flex-col gap-2 items-center'>
                 <div
                   tabIndex={0}
                   aria-label='Điều kiện'
@@ -110,7 +110,7 @@ export default function AvailableCouponCard({
             </div>
           </div>
 
-          <div className='flex flex-col mt-auto gap-1'>
+          <div className='flex flex-col gap-1 mt-auto'>
             <p className='font-sans text-xs text-slate-900'>
               HSD: {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
             </p>

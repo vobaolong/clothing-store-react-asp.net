@@ -106,7 +106,7 @@ export default function NotificationsSection() {
                 return (
                   <div
                     key={orderId}
-                    className='overflow-hidden bg-white border rounded-lg border-slate-200'
+                    className='overflow-hidden bg-white rounded-lg border border-slate-200'
                   >
                     <button
                       type='button'
@@ -127,7 +127,7 @@ export default function NotificationsSection() {
                             )}
                           </div>
                           <div className='min-w-0'>
-                            <div className='flex flex-wrap items-center gap-2'>
+                            <div className='flex flex-wrap gap-2 items-center'>
                               <div className='font-semibold truncate text-slate-900'>
                                 {latest.title}
                               </div>
@@ -160,7 +160,7 @@ export default function NotificationsSection() {
                       </div>
                     </button>
                     {isExpanded && (
-                      <div className='px-4 py-4 border-t border-slate-200 bg-slate-50'>
+                      <div className='py-4 px-4 border-t border-slate-200 bg-slate-50'>
                         <div className='space-y-4'>
                           {items.map((item, index) => (
                             <button
@@ -171,7 +171,7 @@ export default function NotificationsSection() {
                               }}
                               className='relative block w-full px-4 py-3 text-left transition-colors bg-white rounded-md cursor-pointer hover:bg-slate-100'
                             >
-                              <div className='absolute top-0 left-0 flex justify-center h-full w-7'>
+                              <div className='flex absolute top-0 left-0 justify-center w-7 h-full'>
                                 <span
                                   className={`absolute left-3.25 top-2 h-2.5 w-2.5 rounded-full ${item.isRead ? 'bg-slate-300' : 'bg-blue-500'}`}
                                 />
@@ -180,7 +180,7 @@ export default function NotificationsSection() {
                                 )}
                               </div>
                               <div className='pl-6'>
-                                <div className='flex items-start justify-between gap-3'>
+                                <div className='flex gap-3 justify-between items-start'>
                                   <div className='font-medium text-slate-900'>
                                     {item.title}
                                   </div>
@@ -202,7 +202,7 @@ export default function NotificationsSection() {
               }
             )}
           </div>
-        </div>
+        </Card>
       )}
 
       {otherNotifications.length > 0 && (
@@ -218,7 +218,7 @@ export default function NotificationsSection() {
                 }}
                 className='w-full p-4 text-left transition-colors bg-white border rounded-md border-slate-200 hover:bg-slate-50'
               >
-                <div className='flex items-start justify-between gap-3'>
+                <div className='flex gap-3 justify-between items-start'>
                   <div>
                     <div className='font-medium text-slate-900'>{it.title}</div>
                     <div className='mt-1 text-sm text-slate-600'>

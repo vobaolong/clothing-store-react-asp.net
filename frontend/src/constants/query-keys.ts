@@ -6,8 +6,8 @@ export const QUERY_KEYS = {
   shippingAddresses: ['shipping-addresses'] as const,
   shippingAddressPrefill: ['shipping-address-prefill'] as const,
   checkoutProvinces: ['checkout-provinces'] as const,
-  checkoutWardsByProvince: (provinceCode?: string) =>
-    ['checkout-wards-by-province', provinceCode] as const,
+  checkoutWardsByProvince: (provinceId?: string) =>
+    ['checkout-wards-by-province', provinceId] as const,
   myProfile: ['my-profile'] as const,
   myOrders: (status?: string) => ['my-orders', status] as const,
   myOrderDetail: (id?: string) => ['my-order-detail', id] as const,

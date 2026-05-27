@@ -1,12 +1,9 @@
 import {
   EnvironmentOutlined,
-  GiftOutlined,
   HeartOutlined,
   LogoutOutlined,
-  MailOutlined,
   MenuOutlined,
   OrderedListOutlined,
-  PhoneOutlined,
   ShoppingOutlined,
   TruckOutlined,
   UserOutlined
@@ -19,6 +16,7 @@ import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import { useHeaderVisibility } from '@/hooks/useHeaderVisibility'
+import AnnouncementBar from './AnnouncementBar'
 
 export type AppHeaderProps = {
   isAdminUser: boolean
@@ -42,12 +40,14 @@ const NAV_ITEMS = [
   { key: '/', label: 'Trang chủ' },
   { key: '/products', label: 'Sản phẩm' },
   { key: '/about', label: 'Về Wearly' }
+  { key: '/about', label: 'Về Wearly' }
 ]
 
 const PROFILE_ROUTES: Record<string, string> = {
   profile: '/profile',
   'profile-wishlist': '/profile?tab=wishlist',
   'profile-orders': '/profile?tab=orders',
+  'profile-addresses': '/profile?tab=addresses'
   'profile-addresses': '/profile?tab=addresses'
 }
 
@@ -57,18 +57,22 @@ const USER_MENU_ITEMS: MenuProps['items'] = [
     key: 'profile-wishlist',
     label: 'Danh sách yêu thích',
     icon: <HeartOutlined />
+    icon: <HeartOutlined />
   },
   {
     key: 'profile-orders',
     label: 'Danh sách đơn hàng',
+    icon: <OrderedListOutlined />
     icon: <OrderedListOutlined />
   },
   {
     key: 'profile-addresses',
     label: 'Danh sách địa chỉ',
     icon: <EnvironmentOutlined />
+    icon: <EnvironmentOutlined />
   },
   { type: 'divider' },
+  { key: 'logout', label: 'Đăng xuất', danger: true, icon: <LogoutOutlined /> }
   { key: 'logout', label: 'Đăng xuất', danger: true, icon: <LogoutOutlined /> }
 ]
 
@@ -81,6 +85,7 @@ function useCategoryGroups(categories: Category[]): CategoryGroup[] {
         return acc
       },
       {}
+      {}
     )
 
     return categories
@@ -88,6 +93,8 @@ function useCategoryGroups(categories: Category[]): CategoryGroup[] {
       .map((parent) => ({
         parent,
         children: (childrenByParent[parent.id] ?? []).sort((a, b) =>
+          a.name.localeCompare(b.name)
+        )
           a.name.localeCompare(b.name)
         )
       }))
@@ -101,16 +108,18 @@ function navLinkClass(isActive: boolean) {
     'inline-flex items-center h-9 px-3 text-base font-medium rounded-none! bg-transparent! border-none! shadow-none! transition-colors text-nowrap',
     'text-slate-700 hover:text-slate-900 hover:bg-transparent! hover:underline! underline-offset-6 decoration-2',
     isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : ''
+    isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : ''
   ].join(' ')
 }
 
 function MegaMenuContent({
   categoryGroups
+  categoryGroups
 }: {
   categoryGroups: CategoryGroup[]
 }) {
   return (
-    <div className='p-6 bg-white border shadow-xl rounded-xl border-slate-200'>
+    <div className='p-6 bg-white rounded-xl border shadow-xl border-slate-200'>
       <div className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3'>
         {categoryGroups.map(({ parent, children }) => (
           <div key={parent.id}>
@@ -144,6 +153,7 @@ function DesktopNav({
   searchKeyword,
   onSearchChange,
   onSearch
+  onSearch
 }: {
   selectedRootPath: string
   categoryGroups: CategoryGroup[]
@@ -152,8 +162,8 @@ function DesktopNav({
   onSearch: () => void
 }) {
   return (
-    <div className='items-center flex-1 hidden justify-evenly md:flex'>
-      <div className='flex items-center gap-5'>
+    <div className='hidden flex-1 justify-evenly items-center md:flex'>
+      <div className='flex gap-5 items-center'>
         {NAV_ITEMS.map((item) => {
           const isActive = selectedRootPath === item.key
           const showMegaMenu =
@@ -197,6 +207,7 @@ function DesktopNav({
 function MobileNavDrawer({
   open,
   categoryGroups,
+  onClose
   onClose
 }: {
   open: boolean
@@ -277,6 +288,7 @@ export default function AppHeader({
   selectedRootPath,
   onCartClick,
   onLogout
+  onLogout
 }: AppHeaderProps) {
   const navigate = useNavigate()
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -294,6 +306,7 @@ export default function AppHeader({
     const keyword = searchKeyword.trim()
     navigate(
       keyword ? `/products?search=${encodeURIComponent(keyword)}` : '/products'
+      keyword ? `/products?search=${encodeURIComponent(keyword)}` : '/products'
     )
   }
 
@@ -308,6 +321,7 @@ export default function AppHeader({
     >
       {!isAdminUser && <AnnouncementBar />}
       <Header className='bg-white! border-b border-slate-200 px-4! md:px-8!'>
+        <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl'>
         <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl'>
           <Link
             to={isAdminUser ? '/admin' : '/'}
@@ -339,7 +353,7 @@ export default function AppHeader({
             </>
           )}
 
-          <div className='flex items-center gap-2 ml-auto shrink-0'>
+          <div className='flex gap-2 items-center ml-auto shrink-0'>
             {!isAdminUser && (
               <Button
                 type='default'

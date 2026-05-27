@@ -21,14 +21,14 @@ export default function AdminProductPreviewCard({
 }: AdminProductPreviewCardProps) {
   return (
     <aside className='relative z-10 min-w-0 isolate lg:sticky lg:top-0 lg:self-start'>
-      <div className='p-4 bg-white border rounded-2xl border-slate-200 shadow-sm'>
+      <div className='p-4 bg-white rounded-2xl border shadow-sm border-slate-200'>
         {discountPercent > 0 ? (
           <Badge.Ribbon
             text={`-${discountPercent}%`}
             color='red'
             placement='end'
           >
-            <div className='overflow-hidden border rounded-xl border-slate-200 bg-slate-100'>
+            <div className='overflow-hidden rounded-xl border border-slate-200 bg-slate-100'>
               {previewImageUrl ? (
                 <img
                   src={previewImageUrl}
@@ -36,14 +36,14 @@ export default function AdminProductPreviewCard({
                   className='object-cover w-full h-auto aspect-square'
                 />
               ) : (
-                <div className='flex items-center justify-center h-56 text-sm text-slate-500'>
+                <div className='flex justify-center items-center h-56 text-sm text-slate-500'>
                   Chưa có hình ảnh sản phẩm
                 </div>
               )}
             </div>
           </Badge.Ribbon>
         ) : (
-          <div className='overflow-hidden border rounded-xl border-slate-200 bg-slate-100'>
+          <div className='overflow-hidden rounded-xl border border-slate-200 bg-slate-100'>
             {previewImageUrl ? (
               <img
                 src={previewImageUrl}
@@ -51,7 +51,7 @@ export default function AdminProductPreviewCard({
                 className='object-cover w-full h-auto aspect-square'
               />
             ) : (
-              <div className='flex items-center justify-center h-56 text-sm text-slate-500'>
+              <div className='flex justify-center items-center h-56 text-sm text-slate-500'>
                 Chưa có hình ảnh sản phẩm
               </div>
             )}
@@ -65,7 +65,7 @@ export default function AdminProductPreviewCard({
             {previewName}
           </p>
         </div>
-        <div className='flex flex-wrap mt-2 gap-2'>
+        <div className='flex flex-wrap gap-2 mt-2'>
           {previewColors.length ? (
             previewColors.map((item) => (
               <div
@@ -78,7 +78,7 @@ export default function AdminProductPreviewCard({
             <span className='text-xs text-slate-500'>Không có màu</span>
           )}
         </div>
-        <div className='flex items-center justify-between p-3 mt-4 rounded-lg bg-slate-50'>
+        <div className='flex justify-between items-center p-3 mt-4 rounded-lg bg-slate-50'>
           <span className='font-semibold text-slate-900'>
             {previewSalePriceFormatted}
           </span>

@@ -101,7 +101,7 @@ export default function ChangePasswordForm() {
             type='primary'
             htmlType='submit'
             loading={isPending}
-            className='h-10 px-8 font-medium rounded-lg'
+            className='px-8 h-10 font-medium rounded-lg'
           >
             Cập nhật mật khẩu
           </Button>

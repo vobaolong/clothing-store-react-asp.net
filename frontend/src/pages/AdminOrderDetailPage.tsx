@@ -92,8 +92,8 @@ export default function AdminOrderDetailPage() {
 
   return (
     <div className='space-y-4!'>
-      <div className='flex flex-wrap items-center justify-between gap-3'>
-        <div className='flex items-center min-w-0 gap-3'>
+      <div className='flex flex-wrap gap-3 justify-between items-center'>
+        <div className='flex gap-3 items-center min-w-0'>
           <Link
             to='/admin/orders'
             className='text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 '
@@ -112,7 +112,7 @@ export default function AdminOrderDetailPage() {
           </div>
         </div>
 
-        <div className='flex flex-wrap items-center gap-2'>
+        <div className='flex flex-wrap gap-2 items-center'>
           {detail && (
             <Tag>{getVietnameseStatusLabel(detail.paymentStatus)}</Tag>
           )}
@@ -202,7 +202,7 @@ export default function AdminOrderDetailPage() {
                         key={row.id}
                         className='flex items-center justify-between gap-4 py-3'
                       >
-                        <div className='flex items-center min-w-0 gap-3'>
+                        <div className='flex gap-3 items-center min-w-0'>
                           <Image
                             alt={row.productName}
                             src={row.imageUrl}
@@ -250,7 +250,7 @@ export default function AdminOrderDetailPage() {
                   <span>Giảm giá</span>
                   <span className='text-emerald-600'>
                     {detail.couponCodeSnapshot && (
-                      <span className='inline-block px-2 py-1 mr-2 text-xs rounded bg-emerald-100 text-emerald-800'>
+                      <span className='inline-block py-1 px-2 mr-2 text-xs text-emerald-800 bg-emerald-100 rounded'>
                         {detail.couponCodeSnapshot}
                       </span>
                     )}

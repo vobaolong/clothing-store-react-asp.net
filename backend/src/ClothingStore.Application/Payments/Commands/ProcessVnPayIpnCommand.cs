@@ -23,7 +23,7 @@ public class ProcessVnPayIpnCommandHandler(IPaymentService paymentService)
         var expectedAmount = Convert.ToInt64(
             Math.Round(order.TotalAmount * 100m, MidpointRounding.AwayFromZero)
         );
-        if (request.VnpAmount != expectedAmount)
+        if (request.VnpAmount > expectedAmount)
             return new VnPayIpnResponseDto("04", "Invalid amount");
 
         if (request.ResponseCode != "00")

@@ -20,7 +20,7 @@ const HomeHeroBanner = ({ banners }: { banners: HomepageBanner[] }) => (
         <div key={banner.id}>
           <Link
             to={banner.ctaLink || '/products'}
-            className='relative block overflow-hidden group'
+            className='block overflow-hidden relative group'
           >
             <div className='relative w-full overflow-hidden aspect-14/5 '>
               <img

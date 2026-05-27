@@ -10,7 +10,7 @@ export default function BannerPreviewPanel({ form }: BannerPreviewPanelProps) {
   const cleanImageUrl = String(imageUrl ?? '').trim()
 
   return (
-    <div className='relative w-full h-48 overflow-hidden bg-white border rounded-lg border-slate-200'>
+    <div className='overflow-hidden relative w-full h-48 bg-white rounded-lg border border-slate-200'>
       {cleanImageUrl ? (
         <img
           src={cleanImageUrl}
@@ -18,7 +18,7 @@ export default function BannerPreviewPanel({ form }: BannerPreviewPanelProps) {
           className='object-cover w-full h-full'
         />
       ) : (
-        <div className='flex items-center justify-center h-full text-sm text-slate-400'>
+        <div className='flex justify-center items-center h-full text-sm text-slate-400'>
           Xem trước Banner
         </div>
       )}

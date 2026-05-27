@@ -19,7 +19,7 @@ export default function ReviewForm({
   review,
   loading,
   onSubmit,
-  onCancel,
+  onCancel
 }: ReviewFormProps) {
   const [form] = Form.useForm<ReviewFormValues>()
 
@@ -27,7 +27,7 @@ export default function ReviewForm({
     form.setFieldsValue({
       rating: review?.rating ?? 5,
       comment: review?.comment ?? '',
-      tags: review?.tags ?? [],
+      tags: review?.tags ?? []
     })
   }, [form, review])
 
@@ -37,7 +37,7 @@ export default function ReviewForm({
     'Giao hàng nhanh',
     'Đóng gói kỹ',
     'Giá hợp lý',
-    'Giống mô tả',
+    'Giống mô tả'
   ]
 
   return (
@@ -47,7 +47,7 @@ export default function ReviewForm({
       initialValues={{
         rating: review?.rating ?? 5,
         comment: review?.comment ?? '',
-        tags: review?.tags ?? [],
+        tags: review?.tags ?? []
       }}
       onFinish={onSubmit}
     >
@@ -76,17 +76,17 @@ export default function ReviewForm({
           placeholder='Chia sẻ trải nghiệm của bạn về sản phẩm này'
         />
       </Form.Item>
-      <div className='flex items-center justify-end gap-2'>
+      <div className='flex gap-2 justify-end items-center'>
         {onCancel ? (
           <Button onClick={onCancel} disabled={loading}>
-            Cancel
+            Hủy
           </Button>
         ) : null}
         <Button
           type='primary'
           htmlType='submit'
           loading={loading}
-          className='h-10 px-6 rounded-xl'
+          className='px-6 h-10 rounded-xl'
         >
           {review ? 'Cập nhật' : 'Gửi đánh giá'}
         </Button>

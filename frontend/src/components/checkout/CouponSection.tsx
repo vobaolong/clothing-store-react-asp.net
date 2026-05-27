@@ -33,9 +33,9 @@ export default function CouponSection({
   subtotal
 }: Props) {
   return (
-    <Card className='rounded-2xl! border-slate-200! shadow-sm!'>
+    <Card>
       <CheckoutSectionTitle step={2} title='Mã giảm giá' />
-      <div className='flex mb-4 gap-2'>
+      <div className='flex gap-2 mb-4'>
         <Controller
           name='couponCode'
           control={control}
@@ -43,7 +43,6 @@ export default function CouponSection({
             <Input
               {...field}
               placeholder='Nhập mã giảm giá'
-              className='uppercase'
               onChange={(e) => handleCouponCodeChange(e.target.value)}
             />
           )}
@@ -68,7 +67,7 @@ export default function CouponSection({
       </div>
 
       {coupon.appliedCode && (
-        <div className='flex items-center p-3 mb-4 text-sm text-green-700 border border-green-200 gap-2 bg-green-50 rounded-xl'>
+        <div className='flex gap-2 items-center p-3 mb-4 text-sm text-green-700 bg-green-50 rounded-xl border border-green-200'>
           <svg
             className='w-4 h-4 shrink-0'
             fill='none'
@@ -92,7 +91,7 @@ export default function CouponSection({
       )}
 
       {(availableCouponsQuery.data ?? []).length > 0 && (
-        <div className='pr-1 overflow-y-auto max-h-64'>
+        <div className='overflow-y-auto pr-1 max-h-64'>
           <p className='mb-3 text-xs font-medium tracking-wide uppercase text-slate-400'>
             Mã giảm giá có sẵn
           </p>

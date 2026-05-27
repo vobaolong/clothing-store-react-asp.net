@@ -141,8 +141,8 @@ export default function AppFooter() {
 
           <div className='flex flex-col gap-8 md:flex-row lg:gap-16'>
             {contactItems.map(({ label, value, icon: Icon }) => (
-              <div key={label} className='flex items-start gap-4'>
-                <div className='flex items-center justify-center w-12 h-12 rounded-full bg-stone-900'>
+              <div key={label} className='flex gap-4 items-start'>
+                <div className='flex justify-center items-center w-12 h-12 rounded-full bg-stone-900'>
                   <Icon className='text-xl' />
                 </div>
                 <div>
@@ -156,6 +156,7 @@ export default function AppFooter() {
           </div>
         </div>
 
+        <div className='flex gap-4 py-12'>
         <div className='flex gap-4 py-12'>
           {socialIcons.map((Icon) => (
             <a
@@ -178,6 +179,7 @@ export default function AppFooter() {
                   <h3 className='text-sm font-bold tracking-wider uppercase'>
                     {group.title}
                   </h3>
+                  <ul className='space-y-2 text-sm text-stone-400'>
                   <ul className='space-y-2 text-sm text-stone-400'>
                     {group.links.map((link) => (
                       <li key={link}>

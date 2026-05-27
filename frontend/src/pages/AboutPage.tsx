@@ -17,7 +17,7 @@ export default function AboutPage() {
 						khách hàng tận tâm. Chúng tôi giúp doanh nghiệp xây dựng bộ sưu tập
 						mới mẻ, phù hợp xu thế và tăng trưởng bền vững.
 					</p>
-					<div className='flex flex-col mt-8 gap-3 sm:flex-row sm:items-center'>
+					<div className='flex flex-col gap-3 mt-8 sm:flex-row sm:items-center'>
 						<Link
 							to='/products'
 							className='inline-flex h-12 items-center justify-center rounded-full bg-[#234483] px-6 text-sm font-semibold text-[#FAF9F6] transition hover:bg-[#2E5299]'

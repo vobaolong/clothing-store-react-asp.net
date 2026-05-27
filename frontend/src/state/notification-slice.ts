@@ -1,10 +1,20 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction
+} from '@reduxjs/toolkit'
+
 import type { RootState } from '@/app/store'
 import type {
   NotificationDto,
   NotificationState,
   RealtimeNotificationDto
 } from '@/types/notification'
+
+type SetNotificationsPayload = {
+  notifications: NotificationDto[]
+  unreadCount: number
+}
 
 const initialState: NotificationState = {
   notifications: [],
@@ -30,10 +40,7 @@ const notificationSlice = createSlice({
     },
     setNotifications: (
       state,
-      action: PayloadAction<{
-        notifications: NotificationDto[]
-        unreadCount: number
-      }>
+      action: PayloadAction<SetNotificationsPayload>
     ) => {
       state.notifications = action.payload.notifications
       state.unreadCount = action.payload.unreadCount
@@ -114,11 +121,19 @@ export const {
 } = notificationSlice.actions
 
 export const selectNotificationState = (state: RootState) => state.notifications
+export const selectNotifications = (state: RootState) =>
+  state.notifications.notifications
 export const selectRealtimeNotifications = (state: RootState) =>
   state.notifications.realtimeNotifications
 export const selectNotificationUnreadCount = (state: RootState) =>
   state.notifications.unreadCount
+export const selectNotificationIsLoading = (state: RootState) =>
+  state.notifications.isLoading
 export const selectNotificationError = (state: RootState) =>
   state.notifications.error
+export const selectRecentRealtimeNotifications = createSelector(
+  selectRealtimeNotifications,
+  (notifications) => notifications.slice(0, 10)
+)
 
 export default notificationSlice.reducer

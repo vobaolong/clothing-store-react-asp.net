@@ -213,7 +213,7 @@ export default function AdminProductFormFields({
           ) : null}
 
           <div className='mb-4'>
-            <div className='flex items-center justify-between mb-2'>
+            <div className='flex justify-between items-center mb-2'>
               <span className='text-sm font-medium text-slate-900'>
                 Thông số
               </span>
@@ -259,7 +259,7 @@ export default function AdminProductFormFields({
             {hasSpecs && (
               <div className='p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30'>
                 {DESCRIPTION_SPEC_LABELS.map((label, index) => (
-                  <div key={label} className='flex items-start gap-2'>
+                  <div key={label} className='flex gap-2 items-start'>
                     <Form.Item
                       className='hidden mb-0'
                       name={['descriptionSpecs', index, 'label']}
@@ -267,7 +267,7 @@ export default function AdminProductFormFields({
                     >
                       <Input />
                     </Form.Item>
-                    <div className='flex items-center h-8 px-3 text-sm font-medium border rounded-lg w-36 border-slate-200 bg-slate-50 text-slate-700'>
+                    <div className='flex items-center px-3 w-36 h-8 text-sm font-medium rounded-lg border border-slate-200 bg-slate-50 text-slate-700'>
                       {label}
                     </div>
                     <AdminDescriptionSpecField
@@ -325,7 +325,7 @@ export default function AdminProductFormFields({
             <Input />
           </Form.Item>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <Form.Item
               name='price'
               label='Giá gốc (VND)'
@@ -364,7 +364,7 @@ export default function AdminProductFormFields({
               <InputNumber min={0} className='w-full!' />
             </Form.Item>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <Form.Item
               name='salePriceStartDate'
               label='Ngày bắt đầu giảm giá (Tùy chọn)'

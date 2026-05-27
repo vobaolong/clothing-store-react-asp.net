@@ -6,8 +6,13 @@ import {
   deleteShippingAddress,
   setDefaultShippingAddress
 } from '@/api/addresses-api'
+import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
+import {
+  ShippingAddressLabel,
+  ShippingAddressType
+} from '@/enums/shipping-address.enum'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import type { ShippingAddress } from '@/types'
+import type { ShippingAddress, UpdateShippingAddressPayload } from '@/types'
 import toast from 'react-hot-toast'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
@@ -30,6 +35,13 @@ export default function AddressList() {
     })
   }
 
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteShippingAddress,
+    onSuccess: async () => {
+      toast.success('Đã xóa địa chỉ')
+      await refreshAddresses()
+    }
+  })
   const deleteAddressMutation = useMutation({
     mutationFn: deleteShippingAddress,
     onSuccess: async () => {

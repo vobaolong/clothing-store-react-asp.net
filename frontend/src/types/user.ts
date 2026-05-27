@@ -1,21 +1,21 @@
-import type { ShippingAddressLabel } from '@/enums';
+import type { ShippingAddressLabel } from '@/enums'
 
 export type JwtPayload = {
-  sub: string;
-  email: string;
-  fullName: string;
-  isAdmin?: boolean;
-  iat: number;
-  exp: number;
-};
+  sub: string
+  email: string
+  fullName: string
+  isAdmin?: boolean
+  iat: number
+  exp: number
+}
 
 export type MyProfile = {
-  id: string;
-  email: string;
-  fullName: string;
-  phone: string;
-  isAdmin: boolean;
-};
+  id: string
+  email: string
+  fullName: string
+  phone: string
+  isAdmin: boolean
+}
 
 export type ShippingAddress = {
   id: string;
@@ -45,4 +45,4 @@ export type CreateShippingAddressPayload = {
   isDefault?: boolean;
 };
 
-export type UpdateShippingAddressPayload = CreateShippingAddressPayload;
+export type UpdateShippingAddressPayload = CreateShippingAddressPayload

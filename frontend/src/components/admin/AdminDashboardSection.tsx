@@ -287,7 +287,7 @@ export default function AdminDashboardSection() {
       <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
         <Card
           hoverable
-          className='cursor-pointer rounded-xl border-slate-200 shadow-sm transition-shadow hover:shadow-md'
+          className='rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md'
           onClick={() => navigate(`/admin/${AdminNavKey.PRODUCTS}`)}
         >
           <Statistic
@@ -298,7 +298,7 @@ export default function AdminDashboardSection() {
         </Card>
         <Card
           hoverable
-          className='cursor-pointer rounded-xl border-slate-200 shadow-sm transition-shadow hover:shadow-md'
+          className='rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md'
           onClick={() => navigate(`/admin/${AdminNavKey.CATEGORIES}`)}
         >
           <Statistic
@@ -309,7 +309,7 @@ export default function AdminDashboardSection() {
         </Card>
         <Card
           hoverable
-          className='cursor-pointer rounded-xl border-slate-200 shadow-sm transition-shadow hover:shadow-md'
+          className='rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md'
           onClick={() => navigate(`/admin/${AdminNavKey.ORDERS}`)}
         >
           <Statistic
@@ -320,7 +320,7 @@ export default function AdminDashboardSection() {
         </Card>
         <Card
           hoverable
-          className='cursor-pointer rounded-xl border-slate-200 shadow-sm transition-shadow hover:shadow-md'
+          className='rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md'
           onClick={() => navigate(`/admin/${AdminNavKey.COUPONS}`)}
         >
           <Statistic
@@ -362,7 +362,7 @@ export default function AdminDashboardSection() {
         <Col xs={24} lg={10}>
           <Card
             title={
-              <div className='flex items-center justify-between w-full'>
+              <div className='flex justify-between items-center w-full'>
                 <span className='pr-2 truncate'>
                   {selectedRadarParent
                     ? `Danh mục: ${selectedRadarParent}`

@@ -64,7 +64,7 @@ export default function AdminProductsTable({
             const src = getAdminProductThumbnail(row)
             if (!src) {
               return (
-                <div className='flex items-center justify-center size-20 rounded-md bg-slate-100'>
+                <div className='flex justify-center items-center rounded-md size-20 bg-slate-100'>
                   <Typography.Text type='secondary' style={{ fontSize: 10 }}>
                     No image
                   </Typography.Text>
@@ -75,7 +75,7 @@ export default function AdminProductsTable({
               <img
                 src={src}
                 alt='Product'
-                className='object-cover size-20 rounded-md'
+                className='object-cover rounded-md size-20'
                 onError={(event) => {
                   event.currentTarget.style.display = 'none'
                 }}
@@ -110,7 +110,7 @@ export default function AdminProductsTable({
             const src = getAdminProductThumbnail(row)
             if (!src) {
               return (
-                <div className='flex items-center justify-center size-16 rounded-md bg-slate-100'>
+                <div className='flex justify-center items-center rounded-md size-16 bg-slate-100'>
                   <Typography.Text type='secondary' style={{ fontSize: 10 }}>
                     No image
                   </Typography.Text>
@@ -121,7 +121,7 @@ export default function AdminProductsTable({
               <img
                 src={src}
                 alt='Product'
-                className='object-cover size-16 rounded-md'
+                className='object-cover rounded-md size-16'
                 onError={(event) => {
                   event.currentTarget.style.display = 'none'
                 }}

@@ -271,15 +271,15 @@ export default function PaymentReturnPage() {
 
   return (
     <div className='mx-auto flex min-h-[70vh] w-full max-w-lg items-center px-4 py-10'>
-      <div className='w-full overflow-hidden bg-white border border-gray-100 rounded-2xl shadow-sm'>
-        <div className='px-8 py-8 text-center border-b border-gray-100'>
+      <div className='overflow-hidden w-full bg-white rounded-2xl border border-gray-100 shadow-sm'>
+        <div className='py-8 px-8 text-center border-b border-gray-100'>
           <div
             className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full ${config.iconBg}`}
           >
             {config.icon}
           </div>
 
-          <h1 className='mb-2 text-2xl font-normal leading-tight tracking-tight text-gray-900'>
+          <h1 className='mb-2 text-2xl font-normal tracking-tight leading-tight text-gray-900'>
             {config.title}
           </h1>
           <p className='text-sm font-light leading-relaxed text-gray-700'>
@@ -288,7 +288,7 @@ export default function PaymentReturnPage() {
         </div>
 
         {query.data && (
-          <div className='px-8 py-4'>
+          <div className='py-4 px-8'>
             <DetailRow
               label='Mã đơn hàng'
               value={`#${query.data.orderId.slice(0, 8).toUpperCase()}`}

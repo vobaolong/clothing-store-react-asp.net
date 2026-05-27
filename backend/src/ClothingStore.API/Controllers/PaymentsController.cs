@@ -8,8 +8,12 @@ using VNPAY;
 namespace ClothingStore.API.Controllers;
 
 [Route("api/payments")]
-public class PaymentsController(IVnpayClient vnpayClient, IUserContext userContext, ISender sender)
-    : BaseApiController
+public class PaymentsController(
+    IVnpayClient vnpayClient,
+    IUserContext userContext,
+    ISender sender,
+    IConfiguration configuration
+) : BaseApiController
 {
     [HttpPost("vnpay/create-url")]
     [Authorize]
@@ -45,11 +49,12 @@ public class PaymentsController(IVnpayClient vnpayClient, IUserContext userConte
         var vnpAmountRaw = Request.Query["vnp_Amount"].ToString();
         long.TryParse(vnpAmountRaw, out var vnpAmount);
 
-        var result = await sender.Send(
-            new ProcessVnPayIpnCommand(paymentResult, responseCode, vnpAmount),
-            ct
-        );
-        return Ok(result);
+        await sender.Send(new ProcessVnPayIpnCommand(paymentResult, responseCode, vnpAmount), ct);
+
+        var frontendBaseUrl = configuration["Frontend:BaseUrl"] ?? "http://localhost:5173";
+        var redirectUrl =
+            $"{frontendBaseUrl}/payment-return?{Request.QueryString.Value?.TrimStart('?')}";
+        return Redirect(redirectUrl);
     }
 }
 

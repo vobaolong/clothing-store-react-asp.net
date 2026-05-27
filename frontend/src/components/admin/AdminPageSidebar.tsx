@@ -39,7 +39,7 @@ export default function AdminPageSidebar({
         ) : (
           <div className='h-3 shrink-0' aria-hidden />
         )}
-        <div className='flex-1 min-h-0 overflow-y-auto'>
+        <div className='overflow-y-auto flex-1 min-h-0'>
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>
         <div className='p-2 border-t shrink-0 border-slate-200'>
