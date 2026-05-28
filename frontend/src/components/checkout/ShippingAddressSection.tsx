@@ -14,7 +14,7 @@ import type {
 } from '@/types/checkout.type'
 import type { ShippingAddress } from '@/types'
 import type { QueryClient } from '@tanstack/react-query'
-import { ShippingAddressLabel, ShippingAddressType } from '@/enums'
+import { ShippingAddressType } from '@/enums'
 
 type Props = {
   control: Control<CheckoutFormValues>
