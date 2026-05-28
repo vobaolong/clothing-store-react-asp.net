@@ -1,4 +1,9 @@
-import { CheckCircleOutlined, DeleteOutlined, UndoOutlined } from '@ant-design/icons'
+import {
+  CheckCircleOutlined,
+  DeleteOutlined,
+  FileExcelOutlined,
+  UndoOutlined,
+} from '@ant-design/icons'
 import { Button, Modal, Tag } from 'antd'
 import type { Key } from 'react'
 import toast from 'react-hot-toast'
@@ -7,7 +12,7 @@ import {
   bulkDeleteAdminProductsPermanent,
   bulkRestoreAdminProducts,
   bulkUpdateAdminProductsActive,
-  getAdminApiErrorMessage
+  getAdminApiErrorMessage,
 } from '@/api/admin-api'
 
 type AdminProductsSelectionActionsProps = {
@@ -15,13 +20,15 @@ type AdminProductsSelectionActionsProps = {
   selectedRowKeys: Key[]
   onClearSelection: () => void
   onRefresh: () => Promise<void>
+  onExportExcel: () => void
 }
 
 export default function AdminProductsSelectionActions({
   isTrash,
   selectedRowKeys,
+  onExportExcel,
   onClearSelection,
-  onRefresh
+  onRefresh,
 }: AdminProductsSelectionActionsProps) {
   const selectedIds = selectedRowKeys.map(String)
   const selectedCount = selectedIds.length
@@ -35,9 +42,15 @@ export default function AdminProductsSelectionActions({
           color='blue'
           className='font-semibold text-gray-700 text-nowrap h-8! items-center flex!'
         >
-          {selectedCount} sản phẩm
-          {selectedCount !== 1 ? 's' : ''} được chọn
+          {selectedCount} sản phẩm được chọn
         </Tag>
+        <Button
+          color='green'
+          icon={<FileExcelOutlined />}
+          onClick={onExportExcel}
+        >
+          Export Excel
+        </Button>
         {isTrash ? (
           <>
             <Button
@@ -71,27 +84,27 @@ export default function AdminProductsSelectionActions({
                   onOk: async () => {
                     try {
                       const response = await bulkDeleteAdminProductsPermanent({
-                        ids: selectedIds
+                        ids: selectedIds,
                       })
                       onClearSelection()
                       if (response.deleted === 0) {
                         toast.error(
-                          'Không xóa vĩnh viễn được sản phẩm nào (có trong đơn hoặc không còn trong thùng rác).'
+                          'Không xóa vĩnh viễn được sản phẩm nào (có trong đơn hoặc không còn trong thùng rác).',
                         )
                         return Promise.reject(new Error('none-deleted'))
                       }
 
                       await onRefresh()
                       const parts = [
-                        `Đã xóa vĩnh viễn ${response.deleted} sản phẩm.`
+                        `Đã xóa vĩnh viễn ${response.deleted} sản phẩm.`,
                       ]
                       if (response.skippedDueToOrders > 0)
                         parts.push(
-                          `${response.skippedDueToOrders} bỏ qua (liên kết đơn hàng).`
+                          `${response.skippedDueToOrders} bỏ qua (liên kết đơn hàng).`,
                         )
                       if (response.skippedNotInTrash > 0)
                         parts.push(
-                          `${response.skippedNotInTrash} bỏ qua (không ở thùng rác).`
+                          `${response.skippedNotInTrash} bỏ qua (không ở thùng rác).`,
                         )
                       toast.success(parts.join(' '))
                     } catch (error) {
@@ -102,11 +115,12 @@ export default function AdminProductsSelectionActions({
                         return Promise.reject(error)
                       }
                       toast.error(
-                        getAdminApiErrorMessage(error) ?? 'Xóa vĩnh viễn thất bại'
+                        getAdminApiErrorMessage(error) ??
+                          'Xóa vĩnh viễn thất bại',
                       )
                       return Promise.reject(error)
                     }
-                  }
+                  },
                 })
               }}
             >
@@ -120,7 +134,7 @@ export default function AdminProductsSelectionActions({
                 try {
                   await bulkUpdateAdminProductsActive({
                     ids: selectedIds,
-                    isActive: true
+                    isActive: true,
                   })
                   toast.success('Kích hoạt sản phẩm thành công')
                   onClearSelection()
@@ -137,7 +151,7 @@ export default function AdminProductsSelectionActions({
                 try {
                   await bulkUpdateAdminProductsActive({
                     ids: selectedIds,
-                    isActive: false
+                    isActive: false,
                   })
                   toast.success('Ngừng kích hoạt sản phẩm thành công')
                   onClearSelection()
@@ -168,7 +182,7 @@ export default function AdminProductsSelectionActions({
                       toast.error('Xóa sản phẩm thất bại')
                       throw new Error('abort')
                     }
-                  }
+                  },
                 })
               }}
             >

@@ -3,11 +3,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { notification as antdNotification } from 'antd'
 import { getSignalRService } from '@/utils/signalr-service'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { NotificationType } from '@/types/notification'
+import { NotificationType } from '@/types/notification.type'
 import type {
   RealtimeNotificationDto,
   OrderUpdateDto
-} from '@/types/notification'
+} from '@/types/notification.type'
 
 const STATUS_ICON: Record<string, string> = {
   OrderConfirmed: '✅',

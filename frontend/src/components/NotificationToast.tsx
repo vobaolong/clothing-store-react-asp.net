@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { notification as antdNotification } from 'antd'
 import {
   clearRealtimeNotifications,
-  selectRealtimeNotifications
+  selectRealtimeNotifications,
 } from '@/state/notification-slice'
-import { NotificationType } from '@/types/notification'
-import type { RealtimeNotificationDto } from '@/types/notification'
-import { isAdmin } from '@/state/auth-session'
+import { NotificationType } from '@/types/notification.type'
+import type { RealtimeNotificationDto } from '@/types/notification.type'
+import { isAdmin } from '@/state/auth/auth-session'
 
 const getIcon = (type: RealtimeNotificationDto['type']): string => {
   switch (type) {
@@ -84,7 +84,7 @@ export const NotificationToastManager = () => {
             n.message
           ),
         placement: 'topRight',
-        duration: 6
+        duration: 6,
       })
     })
   }, [queue, dispatch])

@@ -56,67 +56,6 @@ export default function OrderList() {
     [orders, search, activeStatus]
   )
 
-  const buildColumns = (
-    navigate: ReturnType<typeof useNavigate>
-  ): ColumnsType<MyOrder> => {
-    return [
-      {
-        title: '#',
-        align: 'center',
-        width: 60,
-        fixed: 'left',
-        render: (_, row: MyOrder) => filteredOrders.indexOf(row) + 1
-      },
-      {
-        title: 'Mã đơn hàng',
-        dataIndex: 'id',
-        align: 'center',
-        render: (_, row) => row.id.slice(0, 8).toUpperCase()
-      },
-      {
-        title: 'Tổng cộng',
-        dataIndex: 'totalAmount',
-        align: 'right',
-        render: (_, row) => formatCurrency(row.totalAmount)
-      },
-      {
-        title: 'Thanh toán',
-        dataIndex: 'paymentStatus',
-        align: 'center',
-        render: (_, row) => (
-          <Tag>{getVietnameseStatusLabel(row.paymentStatus)}</Tag>
-        )
-      },
-      {
-        title: 'Trạng thái đơn hàng',
-        dataIndex: 'status',
-        align: 'center',
-        render: (_, row) => <Tag>{getVietnameseStatusLabel(row.status)}</Tag>
-      },
-      {
-        title: 'Ngày mua',
-        dataIndex: 'createdAt',
-        align: 'right',
-        sorter: (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-        defaultSortOrder: 'descend',
-        render: (_, row) => formatDate(row.createdAt)
-      },
-      {
-        title: 'Xem',
-        align: 'center',
-        fixed: 'right',
-        render: (_, row) => (
-          <Tooltip title='Xem chi tiết'>
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => navigate(`/orders/${row.id}`)}
-            />
-          </Tooltip>
-        )
-      }
-    ]
-  }
   const tabItems = useMemo(
     () =>
       ORDER_FILTER_STATUSES.map((status) => {

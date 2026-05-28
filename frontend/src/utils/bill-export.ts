@@ -1,4 +1,4 @@
-import type { AdminOrderDetail } from '@/types/admin'
+import type { AdminOrderDetail } from '@/types/admin.type'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 

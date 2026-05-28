@@ -5,7 +5,7 @@ import {
 } from '@/utils/cart-storage'
 import cartReducer from '@/state/cart-slice'
 import notificationReducer from '@/state/notification-slice'
-import authReducer from '@/state/auth-slice'
+import authReducer from '@/state/auth/auth-slice'
 
 const preloadedCartItems =
   typeof window !== 'undefined' ? loadCartItemsFromStorage() : []

@@ -125,6 +125,95 @@ public class AdminProductsController(ISender sender) : BaseApiController
         );
     }
 
+    [HttpPost("export")]
+    public async Task<IActionResult> ExportToExcel(
+        [FromBody] JsonElement body,
+        CancellationToken ct
+    )
+    {
+        if (
+            !body.TryGetProperty("ids", out var idsProp)
+            || idsProp.ValueKind != JsonValueKind.Array
+        )
+            return BadRequest("ids is required.");
+
+        var ids = idsProp.EnumerateArray().Select(j => Guid.Parse(j.GetString()!)).ToList();
+        if (ids.Count == 0)
+            return BadRequest("No product ids provided.");
+
+        var allProducts = await sender.Send(new GetAdminProductsQuery(false), ct);
+        var products = allProducts.Where(p => ids.Contains(p.Id)).ToList();
+
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Products");
+
+        var headers = new[]
+        {
+            "ID",
+            "Product Name",
+            "Product Code",
+            "Category",
+            "Price",
+            "Sale Price",
+            "Stock Quantity",
+            "Sold Count",
+            "Status",
+            "Created Date",
+            "Updated Date",
+        };
+
+        for (var i = 0; i < headers.Length; i++)
+        {
+            worksheet.Cell(1, i + 1).Value = headers[i];
+            worksheet.Cell(1, i + 1).Style.Font.Bold = true;
+            worksheet.Cell(1, i + 1).Style.Fill.BackgroundColor = XLColor.FromHtml("#4472C4");
+            worksheet.Cell(1, i + 1).Style.Font.FontColor = XLColor.White;
+        }
+
+        worksheet.Row(1).Height = 30;
+
+        // Format columns once (not per row)
+        worksheet.Column(5).Style.NumberFormat.Format = "#,##0.00";
+        worksheet.Column(6).Style.NumberFormat.Format = "#,##0.00";
+        worksheet.Column(10).Style.NumberFormat.Format = "yyyy-mm-dd hh:mm:ss";
+        worksheet.Column(11).Style.NumberFormat.Format = "yyyy-mm-dd hh:mm:ss";
+
+        var row = 2;
+        foreach (var product in products)
+        {
+            var totalStock = product.Variants?.Sum(v => v.Quantity) ?? 0;
+
+            worksheet.Cell(row, 1).Value = product.Id.ToString();
+            worksheet.Cell(row, 2).Value = product.Name;
+            worksheet.Cell(row, 3).Value = product.ProductCode;
+            worksheet.Cell(row, 4).Value = product.CategoryName;
+            worksheet.Cell(row, 5).Value = product.Price;
+            worksheet.Cell(row, 6).Value = product.SalePrice.HasValue
+                ? product.SalePrice.Value
+                : 0m;
+            worksheet.Cell(row, 7).Value = totalStock;
+            worksheet.Cell(row, 8).Value = product.SoldCount;
+            worksheet.Cell(row, 9).Value = product.IsActive ? "Active" : "Inactive";
+            worksheet.Cell(row, 10).Value = product.CreatedAt;
+            worksheet.Cell(row, 11).Value = product.UpdatedAt;
+
+            row++;
+        }
+
+        worksheet.Columns().AdjustToContents();
+        worksheet.Column(1).Width = 40;
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+
+        var fileName = $"products_export_{DateTime.Now:yyyyMMdd}.xlsx";
+        return File(
+            stream.ToArray(),
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            fileName
+        );
+    }
+
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,

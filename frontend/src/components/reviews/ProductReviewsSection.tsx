@@ -5,16 +5,16 @@ import toast from 'react-hot-toast'
 import {
   createReview,
   deleteReview,
-  getProductReviews
+  getProductReviews,
 } from '@/api/reviews-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { getAuthToken } from '@/state/auth-session'
+import { getAuthToken } from '@/state/auth/auth-session'
 import ReviewForm from '@/components/reviews/ReviewForm'
 import ReviewList from '@/components/reviews/ReviewList'
 
 export default function ProductReviewsSection({
   productId,
-  productName
+  productName,
 }: {
   productId: string
   productName: string
@@ -24,12 +24,12 @@ export default function ProductReviewsSection({
   const isAuthenticated = Boolean(getAuthToken())
   const [starFilter, setStarFilter] = useState<number | 'all'>('all')
   const [sortOrder, setSortOrder] = useState<'low-to-high' | 'high-to-low'>(
-    'high-to-low'
+    'high-to-low',
   )
 
   const reviewsQuery = useQuery({
     queryKey: QUERY_KEYS.productReviews(productId),
-    queryFn: () => getProductReviews(productId)
+    queryFn: () => getProductReviews(productId),
   })
 
   const createMutation = useMutation({
@@ -42,14 +42,14 @@ export default function ProductReviewsSection({
         productId,
         rating: values.rating,
         comment: values.comment,
-        tags: values.tags
+        tags: values.tags,
       }),
     onSuccess: async () => {
       toast.success('Review saved')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.productReviews(productId)
+        queryKey: QUERY_KEYS.productReviews(productId),
       })
-    }
+    },
   })
 
   const deleteMutation = useMutation({
@@ -57,9 +57,9 @@ export default function ProductReviewsSection({
     onSuccess: async () => {
       toast.success('Review deleted')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.productReviews(productId)
+        queryKey: QUERY_KEYS.productReviews(productId),
       })
-    }
+    },
   })
 
   const summary = reviewsQuery.data
@@ -72,7 +72,7 @@ export default function ProductReviewsSection({
       [2, 0],
       [3, 0],
       [4, 0],
-      [5, 0]
+      [5, 0],
     ])
     for (const review of summary?.reviews ?? []) {
       const rating = Math.max(1, Math.min(5, Math.round(review.rating)))
@@ -83,7 +83,7 @@ export default function ProductReviewsSection({
       return {
         rating,
         count,
-        percent: totalReviews > 0 ? (count / totalReviews) * 100 : 0
+        percent: totalReviews > 0 ? (count / totalReviews) * 100 : 0,
       }
     })
   }, [summary?.reviews, totalReviews])
@@ -110,7 +110,7 @@ export default function ProductReviewsSection({
         ? reviews
         : reviews.filter((review) => review.rating === starFilter)
     return [...filtered].sort((a, b) =>
-      sortOrder === 'low-to-high' ? a.rating - b.rating : b.rating - a.rating
+      sortOrder === 'low-to-high' ? a.rating - b.rating : b.rating - a.rating,
     )
   }, [summary?.reviews, starFilter, sortOrder])
 
@@ -122,7 +122,7 @@ export default function ProductReviewsSection({
     await createMutation.mutateAsync({
       rating: values.rating,
       comment: values.comment,
-      tags: values.tags
+      tags: values.tags,
     })
   }
 
@@ -153,7 +153,7 @@ export default function ProductReviewsSection({
               onClick={() =>
                 reviewFormRef.current?.scrollIntoView({
                   behavior: 'smooth',
-                  block: 'start'
+                  block: 'start',
                 })
               }
             >
@@ -242,7 +242,7 @@ export default function ProductReviewsSection({
               className='w-40'
               options={[
                 { value: 'high-to-low', label: 'Cao đến thấp' },
-                { value: 'low-to-high', label: 'Thấp đến cao' }
+                { value: 'low-to-high', label: 'Thấp đến cao' },
               ]}
             />
           </div>
@@ -285,7 +285,7 @@ export default function ProductReviewsSection({
                 okText: 'Xóa',
                 okButtonProps: { danger: true },
                 cancelText: 'Hủy',
-                onOk: () => deleteMutation.mutateAsync(review.id)
+                onOk: () => deleteMutation.mutateAsync(review.id),
               })
             }
           />

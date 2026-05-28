@@ -3,7 +3,7 @@ import { Card, Descriptions, Empty, Modal, Spin, Table, Tag } from 'antd'
 import { getAdminOrderDetail } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { getOrderStatusLabel } from '@/types/constants'
+import { getOrderStatusLabel } from '@/types/constants.type'
 import { toCapitalize } from '@/utils/table.lib'
 
 const formatStructuredAddress = (detail: {
@@ -15,7 +15,7 @@ const formatStructuredAddress = (detail: {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingProvince
+    detail.shippingProvince,
   ]
     .filter((x) => Boolean(x && x.trim()))
     .join(', ')
@@ -31,12 +31,12 @@ type Props = {
 export default function AdminOrderDetailModal({
   open,
   orderId,
-  onClose
+  onClose,
 }: Props) {
   const detailQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrderDetail(orderId ?? undefined),
     queryFn: () => getAdminOrderDetail(String(orderId)),
-    enabled: open && Boolean(orderId)
+    enabled: open && Boolean(orderId),
   })
 
   const detail = detailQuery.data
@@ -122,32 +122,32 @@ export default function AdminOrderDetailModal({
                   align: 'center',
                   width: 60,
                   fixed: 'left',
-                  render: (_, row) => detail.items.indexOf(row) + 1
+                  render: (_, row) => detail.items.indexOf(row) + 1,
                 },
                 {
                   title: 'Sản phẩm',
                   dataIndex: 'productName',
-                  render: (value: string) => toCapitalize(value)
+                  render: (value: string) => toCapitalize(value),
                 },
                 {
                   title: 'Phân loại',
                   align: 'right',
                   render: (_, row) =>
-                    `${toCapitalize(row.variantSize)} / ${toCapitalize(row.variantColor)}`
+                    `${toCapitalize(row.variantSize)} / ${toCapitalize(row.variantColor)}`,
                 },
                 { title: 'Số lượng', dataIndex: 'quantity', align: 'right' },
                 {
                   title: 'Đơn giá',
                   align: 'right',
                   dataIndex: 'unitPrice',
-                  render: (value: number) => formatCurrency(value)
+                  render: (value: number) => formatCurrency(value),
                 },
                 {
                   title: 'Tổng tiền',
                   align: 'right',
                   dataIndex: 'lineTotal',
-                  render: (value: number) => formatCurrency(value)
-                }
+                  render: (value: number) => formatCurrency(value),
+                },
               ]}
             />
           </Card>

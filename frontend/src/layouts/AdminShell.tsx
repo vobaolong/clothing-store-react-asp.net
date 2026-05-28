@@ -5,10 +5,10 @@ import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   ADMIN_PAGE_BRAND_TITLE,
-  ADMIN_PAGE_HEADER_TITLE
+  ADMIN_PAGE_HEADER_TITLE,
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
-import { isAdmin, removeAuthToken } from '@/state/auth-session'
+import { isAdmin, removeAuthToken } from '@/state/auth/auth-session'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import AdminPageSidebar from '@/components/admin/AdminPageSidebar'
 
@@ -40,7 +40,7 @@ export default function AdminShell() {
         removeAuthToken()
         toast.success('Đăng xuất thành công')
         window.location.href = '/'
-      }
+      },
     })
   }
 

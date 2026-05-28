@@ -2,7 +2,7 @@ import { Card, Tag } from 'antd'
 import { formatCurrency } from '@/utils/format'
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from '@/utils/checkout-utils'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
-import type { CartItem } from '@/types/cart'
+import type { CartItem } from '@/types/cart.type'
 
 type Props = {
   items: CartItem[]
@@ -21,7 +21,7 @@ export default function OrderSummary({
   finalTotal,
   total,
   discountAmount,
-  appliedCouponCode
+  appliedCouponCode,
 }: Props) {
   return (
     <Card
@@ -42,7 +42,7 @@ export default function OrderSummary({
               <span className=' text-slate-400'>×{item.quantity}</span>
               <span className='text-slate-800 shrink-0'>
                 {formatCurrency(
-                  getEffectivePriceAt(item, nowMs) * item.quantity
+                  getEffectivePriceAt(item, nowMs) * item.quantity,
                 )}
               </span>
             </div>

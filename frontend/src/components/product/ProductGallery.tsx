@@ -1,7 +1,7 @@
 import { Image } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { ProductSelection } from '@/types/product'
+import type { ProductSelection } from '@/types/product.type'
 
 type Props = {
   galleryImages: string[]
@@ -14,12 +14,12 @@ export default function ProductGallery({
   galleryImages,
   selection,
   setSelection,
-  productName
+  productName,
 }: Props) {
   const thumbListRef = useRef<HTMLDivElement | null>(null)
   const [thumbScrollEdges, setThumbScrollEdges] = useState({
     atTop: true,
-    atBottom: true
+    atBottom: true,
   })
 
   const thumbStripClamped = galleryImages.length > 6
@@ -30,7 +30,7 @@ export default function ProductGallery({
     const { scrollTop, scrollHeight, clientHeight } = el
     setThumbScrollEdges({
       atTop: scrollTop <= 1,
-      atBottom: scrollTop + clientHeight >= scrollHeight - 1
+      atBottom: scrollTop + clientHeight >= scrollHeight - 1,
     })
   }, [])
 
@@ -75,7 +75,7 @@ export default function ProductGallery({
     if (idx < 0) return
     el.querySelectorAll('button')[idx]?.scrollIntoView({
       block: 'nearest',
-      behavior: 'smooth'
+      behavior: 'smooth',
     })
   }, [thumbStripClamped, currentImage, galleryImages])
 

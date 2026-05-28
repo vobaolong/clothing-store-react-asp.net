@@ -41,6 +41,7 @@ builder.Services.Configure<CloudinaryOptions>(
 
 // ── Application Services ─────────────────────────────────────────
 builder.Services.AddScoped<IImageStorageService, CloudinaryImageStorageService>();
+builder.Services.AddScoped<IImageProcessingService, ImageProcessingService>();
 builder.Services.AddSingleton<IConnectionManager, ConnectionManager>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddHttpContextAccessor();

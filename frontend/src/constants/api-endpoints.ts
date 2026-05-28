@@ -65,6 +65,7 @@ export const API_ENDPOINTS = {
     products: '/admin/products',
     productsDeleted: '/admin/products/deleted',
     productsImport: '/admin/products/import',
+    productsExport: '/admin/products/export',
     productsBulk: '/admin/products/bulk',
     productsBulkRestore: '/admin/products/bulk-restore',
     productsBulkPermanent: '/admin/products/bulk/permanent',

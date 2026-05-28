@@ -1,4 +1,4 @@
-import type { Product } from '@/types/product'
+import type { Product } from '@/types/product.type'
 
 const SYNONYM_GROUPS: readonly (readonly string[])[] = [
   [

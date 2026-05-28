@@ -12,10 +12,7 @@ public enum OrderStatus
 public enum PaymentMethod
 {
     COD,
-    BankTransfer,
-    Momo,
     VNPAY,
-    ZaloPay,
 }
 
 public enum PaymentStatus

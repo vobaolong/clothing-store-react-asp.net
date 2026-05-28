@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Button, Card, Form, Input, message, Typography } from 'antd'
 import { Link } from 'react-router-dom'
 import { forgotPassword } from '@/api/auth-api'
-import type { ApiError } from '@/types/common'
+import type { ApiError } from '@/types/common.type'
 
 export default function ForgotPasswordPage() {
   const [form] = Form.useForm()
@@ -12,15 +12,15 @@ export default function ForgotPasswordPage() {
     mutationFn: forgotPassword,
     onSuccess: () => {
       message.success(
-        'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.'
+        'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.',
       )
       form.resetFields()
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.',
       )
-    }
+    },
   })
 
   const onFinish = (values: { email: string }) => {
@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
             label='Email'
             rules={[
               { required: true, message: 'Vui lòng nhập email!' },
-              { type: 'email', message: 'Email không hợp lệ!' }
+              { type: 'email', message: 'Email không hợp lệ!' },
             ]}
           >
             <Input

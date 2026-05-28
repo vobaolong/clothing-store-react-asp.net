@@ -4,16 +4,15 @@ import dayjs from 'dayjs'
 import type { ReactNode } from 'react'
 import {
   ADMIN_ACTIVE_FILTER_OPTIONS,
-  ADMIN_FILTER_ALL_VALUE
+  ADMIN_FILTER_ALL_VALUE,
 } from '@/constants/admin-filter.constant'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 import {
   AdminQueryRefreshButton,
-  type AdminRefreshQuery
+  type AdminRefreshQuery,
 } from '@/components/admin/AdminQueryRefreshButton'
-import type { AdminProduct } from '@/types'
+import type { AdminProduct, AdminProductListMode } from '@/types'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
-import type { AdminProductListMode } from '@/components/admin/AdminProductsSection'
 
 type AdminProductsToolbarProps = {
   listMode: AdminProductListMode
@@ -31,7 +30,7 @@ type AdminProductsToolbarProps = {
   onActiveChange: (value: string) => void
   dateRange: [dayjs.Dayjs | null, dayjs.Dayjs | null]
   onDateRangeChange: (
-    dates: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
+    dates: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null,
   ) => void
 }
 
@@ -50,7 +49,7 @@ export default function AdminProductsToolbar({
   activeValue,
   onActiveChange,
   dateRange,
-  onDateRangeChange
+  onDateRangeChange,
 }: AdminProductsToolbarProps) {
   return (
     <>
@@ -59,7 +58,7 @@ export default function AdminProductsToolbar({
         onChange={(value) => onListModeChange(value)}
         options={[
           { label: 'Sản phẩm hoạt động', value: 'active' },
-          { label: 'Sản phẩm đã xóa', value: 'deleted' }
+          { label: 'Sản phẩm đã xóa', value: 'deleted' },
         ]}
       />
 
@@ -87,33 +86,45 @@ export default function AdminProductsToolbar({
               treeData: categoryTreeData,
               placeholder: 'Tất cả danh mục',
               onChange: onCategoryChange,
-              className: 'min-w-56'
+              className: 'min-w-56',
             },
             {
               value: activeValue,
               options: [...ADMIN_ACTIVE_FILTER_OPTIONS],
               onChange: onActiveChange,
-              className: 'min-w-36'
+              className: 'min-w-36',
             },
             {
               kind: 'date-range',
               value: dateRange,
               onChange: onDateRangeChange,
               placeholder: ['Từ ngày', 'Đến ngày'],
-              className: 'w-full sm:w-auto'
-            }
+              className: 'w-full sm:w-auto',
+            },
           ]}
         />
         <FloatButton.Group
-          trigger="click"
-          type="primary"
+          trigger='click'
+          type='primary'
           style={{ bottom: 24, right: 24 }}
           icon={<PlusOutlined />}
-          className="sm:hidden!"
+          className='sm:hidden!'
         >
-          <FloatButton icon={<PlusOutlined />} onClick={onCreate} tooltip="Thêm sản phẩm" />
-          <FloatButton icon={<UploadOutlined />} onClick={onImportExcel} tooltip="Import Excel" />
-          <FloatButton icon={<ReloadOutlined />} onClick={() => refreshQuery.refetch()} tooltip="Tải lại" />
+          <FloatButton
+            icon={<PlusOutlined />}
+            onClick={onCreate}
+            tooltip='Thêm sản phẩm'
+          />
+          <FloatButton
+            icon={<UploadOutlined />}
+            onClick={onImportExcel}
+            tooltip='Import Excel'
+          />
+          <FloatButton
+            icon={<ReloadOutlined />}
+            onClick={() => refreshQuery.refetch()}
+            tooltip='Tải lại'
+          />
         </FloatButton.Group>
       </div>
     </>

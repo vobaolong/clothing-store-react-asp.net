@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input, Radio } from 'antd'
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
-import type { CheckoutFormValues } from '@/types/checkout'
+import type { CheckoutFormValues } from '@/types/checkout.type'
 import { CheckoutSectionTitle } from '@/components/checkout/CheckoutSectionTitle'
 import { PaymentMethod } from '@/enums'
 
@@ -14,7 +14,7 @@ type Props = {
 export default function PaymentSection({
   control,
   onSubmit,
-  isSubmitting
+  isSubmitting,
 }: Props) {
   return (
     <Card>
@@ -29,9 +29,9 @@ export default function PaymentSection({
                 {[
                   {
                     value: PaymentMethod.COD,
-                    label: 'COD — Thanh toán khi nhận hàng'
+                    label: 'COD — Thanh toán khi nhận hàng',
                   },
-                  { value: PaymentMethod.VNPAY, label: 'VNPay' }
+                  { value: PaymentMethod.VNPAY, label: 'VNPay' },
                 ].map((option) => (
                   <label
                     key={option.value}

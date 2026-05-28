@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNotifications } from '@/hooks/useNotifications'
-import { NotificationType } from '@/types/notification'
-import type { NotificationDto } from '@/types/notification'
+import { NotificationType } from '@/types/notification.type'
+import type { NotificationDto } from '@/types/notification.type'
 import { Button, Spin } from 'antd'
 import { BellOutlined } from '@ant-design/icons'
-import { isAdmin } from '@/state/auth-session'
+import { isAdmin } from '@/state/auth/auth-session'
 
 const formatRelativeTime = (dateString: string): string => {
   const diffSec = Math.floor(
-    (Date.now() - new Date(dateString).getTime()) / 1_000
+    (Date.now() - new Date(dateString).getTime()) / 1_000,
   )
   if (diffSec < 60) return 'Vừa xong'
   if (diffSec < 3_600) return `${Math.floor(diffSec / 60)} phút trước`
@@ -42,7 +42,7 @@ const NotificationItem = ({
   notification,
   onMarkAsRead,
   onOpenNotifications,
-  onNavigateToOrderDetail
+  onNavigateToOrderDetail,
 }: {
   notification: NotificationDto
   onMarkAsRead: (id: string) => void
@@ -71,7 +71,7 @@ const NotificationItem = ({
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       className={[
         'p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors',
-        !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+        !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : '',
       ].join(' ')}
     >
       <div className='flex gap-3 items-start'>
@@ -109,7 +109,7 @@ interface NotificationCenterProps {
 }
 
 export const NotificationCenter = ({
-  className = ''
+  className = '',
 }: NotificationCenterProps) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
@@ -121,7 +121,7 @@ export const NotificationCenter = ({
     isLoading,
     markAsRead,
     markAllAsRead,
-    refetch
+    refetch,
   } = useNotifications({ page: 1, pageSize: 20 })
 
   // Close on outside click

@@ -3,42 +3,24 @@ import { lazy, Suspense, type ReactNode } from 'react'
 import AdminShell from '@/layouts/AdminShell'
 import AppShell from '@/layouts/AppShell'
 import ScrollToTop from '@/components/ScrollToTop'
-import { getAuthToken, isAdmin } from '@/state/auth-session'
+import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 
 const AboutPage = lazy(() => import('@/pages/AboutPage'))
 const AdminPage = lazy(() => import('@/pages/AdminPage'))
 const CartPage = lazy(() => import('@/pages/CartPage'))
-const CheckoutPage = lazy(
-  () => import('@/pages/CheckoutPage')
-)
-const ForgotPasswordPage = lazy(
-  () => import('@/pages/ForgotPasswordPage')
-)
+const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'))
+const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'))
 const HomePage = lazy(() => import('@/pages/HomePage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
-const OrderDetailPage = lazy(
-  () => import('@/pages/OrderDetailPage')
-)
-const AdminOrderDetailPage = lazy(
-  () => import('@/pages/AdminOrderDetailPage')
-)
-const PaymentReturnPage = lazy(
-  () => import('@/pages/PaymentReturnPage')
-)
-const ProductDetailPage = lazy(
-  () => import('@/pages/ProductDetailPage')
-)
-const ProductsPage = lazy(
-  () => import('@/pages/ProductsPage')
-)
+const OrderDetailPage = lazy(() => import('@/pages/OrderDetailPage'))
+const AdminOrderDetailPage = lazy(() => import('@/pages/AdminOrderDetailPage'))
+const PaymentReturnPage = lazy(() => import('@/pages/PaymentReturnPage'))
+const ProductDetailPage = lazy(() => import('@/pages/ProductDetailPage'))
+const ProductsPage = lazy(() => import('@/pages/ProductsPage'))
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
-const ResetPasswordPage = lazy(
-  () => import('@/pages/ResetPasswordPage')
-)
-const VerifyOtpPage = lazy(
-  () => import('@/pages/VerifyOtpPage')
-)
+const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
+const VerifyOtpPage = lazy(() => import('@/pages/VerifyOtpPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 function RouteSuspense({ children }: { children: ReactNode }) {

@@ -1,8 +1,8 @@
 import type { Control, UseFormSetValue } from 'react-hook-form'
 import type { UseQueryResult, QueryClient } from '@tanstack/react-query'
 import type { ShippingAddress } from '@/types'
-import type { AvailableCoupon } from '@/types/coupon'
-import type { CartItem } from '@/types/cart'
+import type { AvailableCoupon } from '@/types/coupon.type'
+import type { CartItem } from '@/types/cart.type'
 import type { PaymentMethod as PaymentMethodType } from '@/enums/payment.enum'
 import type { ShippingAddressLabel } from '@/enums/shipping-address.enum'
 

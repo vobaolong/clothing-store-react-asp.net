@@ -12,8 +12,8 @@ import type {
   ShippingAddressesQuery,
   AddressState,
   CheckoutFormValues,
-  SelectOption
-} from '@/types/checkout'
+  SelectOption,
+} from '@/types/checkout.type'
 import type { QueryClient } from '@tanstack/react-query'
 
 type Props = {
@@ -37,7 +37,7 @@ export default function ShippingAddressSection({
   wardOptions,
   onToggleNewForm,
   handleSaveNewAddress,
-  qc
+  qc,
 }: Props) {
   return (
     <>
@@ -88,7 +88,7 @@ export default function ShippingAddressSection({
                             onClick={async () => {
                               await setDefaultShippingAddress(addressItem.id)
                               await qc.invalidateQueries({
-                                queryKey: QUERY_KEYS.shippingAddresses
+                                queryKey: QUERY_KEYS.shippingAddresses,
                               })
                               toast.success('Đã đặt làm mặc định')
                             }}
@@ -208,7 +208,7 @@ export default function ShippingAddressSection({
                         placeholder='Chọn nhãn'
                         options={SHIPPING_ADDRESS_LABEL_OPTIONS.map((o) => ({
                           label: o.label,
-                          value: o.value
+                          value: o.value,
                         }))}
                       />
                     )}

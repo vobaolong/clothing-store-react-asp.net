@@ -17,14 +17,6 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(opts =>
             opts.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
         );
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
-    {
-        services.AddDbContext<ApplicationDbContext>(opts =>
-            opts.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-        );
 
         services.AddScoped<IApplicationDbContext>(sp =>
             sp.GetRequiredService<ApplicationDbContext>()

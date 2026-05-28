@@ -1,8 +1,13 @@
 import { createContext, use } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAdminEditor } from '@/hooks/useAdminEditor'
-import type { AdminBanner, AdminCategory, AdminProduct, Coupon } from '@/types'
-import type { AdminProductListMode } from '@/components/admin/AdminProductsSection'
+import type {
+  AdminBanner,
+  AdminCategory,
+  AdminProduct,
+  AdminProductListMode,
+  Coupon,
+} from '@/types'
 
 export interface AdminContextType {
   // Navigation & General
@@ -60,7 +65,7 @@ export interface AdminContextType {
 }
 
 export const AdminContext = createContext<AdminContextType | undefined>(
-  undefined
+  undefined,
 )
 
 export function useAdmin() {

@@ -1,12 +1,10 @@
-type CheckoutSectionTitleProps = {
-  step: number
-  title: string
-}
-
 export function CheckoutSectionTitle({
   step,
-  title
-}: CheckoutSectionTitleProps) {
+  title,
+}: {
+  step: number
+  title: string
+}) {
   return (
     <div className='flex gap-3 items-center mb-5'>
       <div className='flex items-center justify-center text-xs font-bold text-white bg-[#990021] rounded-full h-7 w-7 shrink-0'>

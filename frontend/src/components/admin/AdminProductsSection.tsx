@@ -1,197 +1,54 @@
-import { useCallback, useMemo, useState } from 'react'
-import dayjs from 'dayjs'
-import toast from 'react-hot-toast'
-import { useQuery } from '@tanstack/react-query'
-import {
-  deleteAdminProduct,
-  getAdminDeletedProducts,
-  getAdminProducts,
-  restoreAdminProduct,
-  updateAdminProductActive
-} from '@/api/admin-api'
-import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { useState } from 'react'
 import { useAdmin } from '@/context/admin/AdminContext'
-import ProductDrawer from '@/components/admin/ProductDrawer'
-import AdminProductsSelectionActions from '@/components/admin/AdminProductsSelectionActions'
-import AdminProductsTable from '@/components/admin/AdminProductsTable'
-import AdminProductImportModal from '@/components/admin/AdminProductImportModal'
+import { useAdminProducts } from '@/hooks/useAdminProducts'
+import { useProductSelection } from '@/hooks/useProductSelection'
+import { useProductActions } from '@/hooks/useProductActions'
 import AdminProductsToolbar from '@/components/admin/AdminProductsToolbar'
-import { buildAdminProductView } from '@/components/admin/admin-products-utils'
-import type { AdminProduct, ProductView } from '@/types'
-import { adminRowMatches, adminSearchNeedle } from '@/utils/admin-list-filter'
+import AdminProductsTable from '@/components/admin/AdminProductsTable'
+import ProductDrawer from '@/components/admin/ProductDrawer'
+import AdminProductImportModal from '@/components/admin/AdminProductImportModal'
+import AdminProductsSelectionActions from '@/components/admin/AdminProductsSelectionActions'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 
-export type AdminProductListMode = 'active' | 'deleted'
-
 export default function AdminProductsSection() {
-  const {
-    filters: adminFilters,
-    refresh,
-    confirmDelete,
-    modals,
-    editing,
-    editor
-  } = useAdmin()
+  const { filters: adminFilters, refresh, editing, modals, editor } = useAdmin()
   const { productListMode: listMode, setProductListMode } = adminFilters
   const { clearDirty } = editor
 
-  const productsQuery = useQuery({
-    queryKey: QUERY_KEYS.adminProducts,
-    queryFn: getAdminProducts,
-    enabled: listMode === 'active'
+  // Query + filter
+  const { loading, refreshQuery, filters, setFilters, filteredData } =
+    useAdminProducts(listMode)
+
+  // Selection
+  const {
+    selectionState,
+    setSelectionState,
+    rowSelection,
+    clearSelection,
+    hasSelection,
+  } = useProductSelection()
+
+  // Actions
+  const {
+    onCreate,
+    onEdit,
+    onDelete,
+    onRestore,
+    onToggleActive,
+    openProductView,
+    onExportExcel,
+  } = useProductActions({
+    refresh,
+    editing,
+    modals,
+    clearDirty,
+    setSelectionState,
   })
-
-  const deletedProductsQuery = useQuery({
-    queryKey: QUERY_KEYS.adminProductsDeleted,
-    queryFn: getAdminDeletedProducts,
-    enabled: listMode === 'deleted'
-  })
-
-  const categoriesQuery = useQuery({
-    queryKey: QUERY_KEYS.adminCategories,
-    queryFn: () => import('@/api/admin-api').then((m) => m.getAdminCategories())
-  })
-
-  const data =
-    listMode === 'active' ? productsQuery.data : deletedProductsQuery.data
-  const loading =
-    listMode === 'active'
-      ? productsQuery.isLoading
-      : deletedProductsQuery.isLoading
-  const categories = categoriesQuery.data
-  const refreshQuery =
-    listMode === 'active' ? productsQuery : deletedProductsQuery
-
-  const onCreate = useCallback(() => {
-    editing.setProduct(null)
-    clearDirty('product')
-    modals.setProduct(true)
-  }, [clearDirty, editing, modals])
-
-  const onEdit = useCallback(
-    (product: AdminProduct) => {
-      editing.setProduct(product)
-      clearDirty('product')
-      modals.setProduct(true)
-    },
-    [clearDirty, editing, modals]
-  )
-
-  const onDelete = useCallback(
-    (product: AdminProduct) =>
-      confirmDelete('Bạn có chắc chắn muốn xóa sản phẩm này?', async () => {
-        await deleteAdminProduct(product.id)
-        toast.success('Sản phẩm đã được xóa')
-        await refresh()
-      }),
-    [confirmDelete, refresh]
-  )
-
-  const onToggleActive = useCallback(
-    async (product: AdminProduct, isActive: boolean) => {
-      await updateAdminProductActive(product.id, { isActive })
-      toast.success(
-        isActive ? 'Sản phẩm đã được kích hoạt' : 'Sản phẩm đã được vô hiệu hóa'
-      )
-      await refresh()
-    },
-    [refresh]
-  )
-
-  const onRestore = useCallback(
-    async (product: AdminProduct) => {
-      await restoreAdminProduct(product.id)
-      toast.success('Sản phẩm đã được khôi phục')
-      await refresh()
-    },
-    [refresh]
-  )
-
-  const [selectionState, setSelectionState] = useState({
-    selectedRowKeys: [] as React.Key[],
-    viewProduct: null as ProductView | null
-  })
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
-  const [filters, setFilters] = useState({
-    search: '',
-    categoryId: ADMIN_FILTER_ALL_VALUE,
-    active: ADMIN_FILTER_ALL_VALUE,
-    dateRange: [null, null] as [dayjs.Dayjs | null, dayjs.Dayjs | null]
-  })
-
-  const openProductView = useCallback(
-    (product: AdminProduct, updatedAt?: string | null) => {
-      setSelectionState((current) => ({
-        ...current,
-        viewProduct: buildAdminProductView(product, updatedAt)
-      }))
-    },
-    []
-  )
-
-  const categoryTreeData = useMemo(
-    () => buildCategoryTreeSelectData(categories ?? []),
-    [categories]
-  )
-
-  const filteredData = useMemo(() => {
-    const list = data ?? []
-    const needle = adminSearchNeedle(filters.search)
-    const startOfDay = filters.dateRange?.[0]?.startOf('day')
-    const endOfDay = filters.dateRange?.[1]?.endOf('day')
-
-    return list.filter((product) => {
-      const searchMatch =
-        !needle ||
-        adminRowMatches(
-          needle,
-          product.name,
-          product.productCode,
-          product.slug,
-          product.categoryName,
-          product.id,
-          product.categoryId
-        )
-      const categoryMatch =
-        filters.categoryId === ADMIN_FILTER_ALL_VALUE ||
-        product.categoryId === filters.categoryId
-      const activeMatch =
-        filters.active === ADMIN_FILTER_ALL_VALUE
-          ? true
-          : filters.active === 'active'
-            ? product.isActive
-            : !product.isActive
-
-      const createdAt = dayjs(product.createdAt)
-      const dateMatch =
-        (!startOfDay ||
-          createdAt.isAfter(startOfDay) ||
-          createdAt.isSame(startOfDay)) &&
-        (!endOfDay ||
-          createdAt.isBefore(endOfDay) ||
-          createdAt.isSame(endOfDay))
-
-      return searchMatch && categoryMatch && activeMatch && dateMatch
-    })
-  }, [data, filters])
-
-  const rowSelection = {
-    selectedRowKeys: selectionState.selectedRowKeys,
-    onChange: (keys: React.Key[]) =>
-      setSelectionState((current) => ({
-        ...current,
-        selectedRowKeys: keys
-      }))
-  }
-
-  const clearSelection = useCallback(
-    () => setSelectionState((current) => ({ ...current, selectedRowKeys: [] })),
-    []
-  )
 
   const isTrash = listMode === 'deleted'
-  const hasSelection = selectionState.selectedRowKeys.length > 0
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
+
+  const categoryTreeData = buildCategoryTreeSelectData([])
 
   return (
     <div className='space-y-3!'>
@@ -208,33 +65,34 @@ export default function AdminProductsSection() {
               selectedRowKeys={selectionState.selectedRowKeys}
               onClearSelection={clearSelection}
               onRefresh={refresh}
+              onExportExcel={() => {
+                const selectedIds = selectionState.selectedRowKeys.map(String)
+                const selectedProducts = filteredData.filter((p) =>
+                  selectedIds.includes(p.id)
+                )
+                onExportExcel(selectedProducts)
+              }}
             />
           ) : null
         }
         searchValue={filters.search}
-        onSearchChange={(value) =>
-          setFilters((current) => ({ ...current, search: value }))
-        }
+        onSearchChange={(value) => setFilters((c) => ({ ...c, search: value }))}
         categoryId={filters.categoryId}
         categoryTreeData={categoryTreeData}
         onCategoryChange={(value) =>
-          setFilters((current) => ({
-            ...current,
-            categoryId: value ?? ADMIN_FILTER_ALL_VALUE
-          }))
+          setFilters((c) => ({ ...c, categoryId: value ?? '' }))
         }
         activeValue={filters.active}
-        onActiveChange={(value) =>
-          setFilters((current) => ({ ...current, active: value }))
-        }
+        onActiveChange={(value) => setFilters((c) => ({ ...c, active: value }))}
         dateRange={filters.dateRange}
         onDateRangeChange={(dates) =>
-          setFilters((current) => ({
-            ...current,
-            dateRange: dates ? [dates[0], dates[1]] : [null, null]
+          setFilters((c) => ({
+            ...c,
+            dateRange: dates ? [dates[0], dates[1]] : [null, null],
           }))
         }
       />
+
       <AdminProductsTable
         dataSource={filteredData}
         loading={loading}
@@ -247,6 +105,7 @@ export default function AdminProductsSection() {
         onToggleActive={onToggleActive}
         onRefresh={refresh}
       />
+
       <ProductDrawer
         open={Boolean(selectionState.viewProduct)}
         product={selectionState.viewProduct}
@@ -254,6 +113,7 @@ export default function AdminProductsSection() {
           setSelectionState((current) => ({ ...current, viewProduct: null }))
         }
       />
+
       <AdminProductImportModal
         open={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}

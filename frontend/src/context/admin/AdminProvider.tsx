@@ -4,11 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAdminEditor } from '@/hooks/useAdminEditor'
 import { FilterStatus } from '@/enums'
-import type { AdminBanner, AdminCategory, AdminProduct, Coupon } from '@/types'
-import type { AdminProductListMode } from '@/components/admin/AdminProductsSection'
+import type {
+  AdminBanner,
+  AdminCategory,
+  AdminProduct,
+  AdminProductListMode,
+  Coupon,
+} from '@/types'
 import {
   AdminContext,
-  type AdminContextType
+  type AdminContextType,
 } from '@/context/admin/AdminContext'
 
 export function AdminProvider({ children }: { children: ReactNode }) {
@@ -20,7 +25,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   // Grouped States
   const [filters, setFilters] = useState({
     productListMode: 'active' as AdminProductListMode,
-    orderStatusFilter: FilterStatus.ALL as string
+    orderStatusFilter: FilterStatus.ALL as string,
   })
 
   const [modals, setModals] = useState({
@@ -29,14 +34,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     bulkCategory: false,
     coupon: false,
     banner: false,
-    orderDetailId: null as string | null
+    orderDetailId: null as string | null,
   })
 
   const [editing, setEditing] = useState({
     product: null as AdminProduct | null,
     category: null as AdminCategory | null,
     coupon: null as Coupon | null,
-    banner: null as AdminBanner | null
+    banner: null as AdminBanner | null,
   })
 
   const refresh = useCallback(async () => {
@@ -44,7 +49,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       predicate: (query) => {
         const key = query.queryKey[0]
         return typeof key === 'string' && key.startsWith('admin')
-      }
+      },
     })
   }, [qc])
 
@@ -59,10 +64,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         okButtonProps: { danger: true },
         onOk: async () => {
           await onOk()
-        }
+        },
       })
     },
-    []
+    [],
   )
 
   const handleSuccess = useCallback(
@@ -71,7 +76,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setModals((prev) => ({ ...prev, [modalKey]: false }))
       await refresh()
     },
-    [clearDirty, refresh]
+    [clearDirty, refresh],
   )
 
   const value: AdminContextType = {
@@ -84,7 +89,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setProductListMode: (mode) =>
         setFilters((prev) => ({ ...prev, productListMode: mode })),
       setOrderStatusFilter: (status) =>
-        setFilters((prev) => ({ ...prev, orderStatusFilter: status }))
+        setFilters((prev) => ({ ...prev, orderStatusFilter: status })),
     },
     modals: {
       ...modals,
@@ -95,22 +100,22 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setCoupon: (open) => setModals((prev) => ({ ...prev, coupon: open })),
       setBanner: (open) => setModals((prev) => ({ ...prev, banner: open })),
       setOrderDetailId: (id) =>
-        setModals((prev) => ({ ...prev, orderDetailId: id }))
+        setModals((prev) => ({ ...prev, orderDetailId: id })),
     },
     editing: {
       ...editing,
       setProduct: (p) => setEditing((prev) => ({ ...prev, product: p })),
       setCategory: (c) => setEditing((prev) => ({ ...prev, category: c })),
       setCoupon: (c) => setEditing((prev) => ({ ...prev, coupon: c })),
-      setBanner: (b) => setEditing((prev) => ({ ...prev, banner: b }))
+      setBanner: (b) => setEditing((prev) => ({ ...prev, banner: b })),
     },
     onSaved: {
       product: () => handleSuccess('product', 'product'),
       category: () => handleSuccess('category', 'category'),
       bulkCategory: () => handleSuccess('bulkCategory', 'categoryBulk'),
       coupon: () => handleSuccess('coupon', 'coupon'),
-      banner: () => handleSuccess('banner', 'banner')
-    }
+      banner: () => handleSuccess('banner', 'banner'),
+    },
   }
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>

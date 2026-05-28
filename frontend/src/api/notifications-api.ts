@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import type {
   NotificationsResponse,
   GetNotificationsRequest
-} from '@/types/notification'
+} from '@/types/notification.type'
 
 export const getNotifications = async (
   params: GetNotificationsRequest = {}

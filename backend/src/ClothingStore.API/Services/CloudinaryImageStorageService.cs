@@ -1,13 +1,18 @@
+using ClothingStore.API.Extensions;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
+using SixLabors.ImageSharp;
 
 namespace ClothingStore.API.Services;
 
-public sealed class CloudinaryImageStorageService(IOptions<CloudinaryOptions> options)
-    : IImageStorageService
+public sealed class CloudinaryImageStorageService(
+    IOptions<CloudinaryOptions> options,
+    IImageProcessingService imageProcessingService
+) : IImageStorageService
 {
     private readonly CloudinaryOptions _options = options.Value;
+    private readonly IImageProcessingService _imageProcessingService = imageProcessingService;
 
     public async Task<ImageUploadResult> UploadImageAsync(
         IFormFile file,
@@ -37,14 +42,23 @@ public sealed class CloudinaryImageStorageService(IOptions<CloudinaryOptions> op
             throw new InvalidOperationException("Only image files are allowed.");
         }
 
+        // Convert image to WebP format before uploading
+        await using var fileStream = file.OpenReadStream();
+        using var webPStream = await _imageProcessingService.ConvertToWebPAsync(
+            fileStream,
+            cancellationToken: cancellationToken
+        );
+
         var account = new Account(_options.CloudName, _options.ApiKey, _options.ApiSecret);
         var cloudinary = new Cloudinary(account);
         cloudinary.Api.Secure = true;
 
-        await using var stream = file.OpenReadStream();
         var uploadParams = new ImageUploadParams
         {
-            File = new FileDescription(file.FileName, stream),
+            File = new FileDescription(
+                $"{Path.GetFileNameWithoutExtension(file.FileName)}.webp",
+                webPStream
+            ),
             Folder = BuildFolder(folder),
             UseFilename = true,
             UniqueFilename = true,

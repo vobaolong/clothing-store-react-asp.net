@@ -17,7 +17,7 @@ import {
 import type {
   GetNotificationsRequest,
   NotificationsResponse
-} from '@/types/notification'
+} from '@/types/notification.type'
 
 export const useNotifications = (params: GetNotificationsRequest = {}) => {
   const dispatch = useDispatch()

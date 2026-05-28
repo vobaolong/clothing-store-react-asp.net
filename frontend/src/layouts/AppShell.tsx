@@ -16,13 +16,13 @@ import {
   selectIsCartDrawerOpen,
   openDrawer,
   removeFromCart,
-  updateQuantity
+  updateQuantity,
 } from '@/state/cart-slice'
 import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import CartQuantityControl from '@/components/CartQuantityControl'
-import { logout, selectAuth } from '@/state/auth-slice'
+import { logout, selectAuth } from '@/state/auth'
 
 const { Content } = Layout
 
@@ -36,14 +36,14 @@ export default function AppShell() {
   const categoriesQuery = useQuery({
     queryKey: QUERY_KEYS.categories,
     queryFn: getCategories,
-    enabled: !isAdminUser
+    enabled: !isAdminUser,
   })
   const cartItems = useSelector(selectCartItems)
   const isCartDrawerOpen = useSelector(selectIsCartDrawerOpen)
   const itemCount = useSelector(selectCartItemCount)
   const cartTotal = cartItems.reduce(
     (sum, item) => sum + getCartLineEffectivePrice(item) * item.quantity,
-    0
+    0,
   )
 
   const handleLogout = () => {
@@ -58,7 +58,7 @@ export default function AppShell() {
         dispatch(logout())
         toast.success('Đăng xuất thành công')
         navigate('/')
-      }
+      },
     })
   }
 
@@ -136,13 +136,13 @@ export default function AppShell() {
                             updateQuantity({
                               id: item.id,
                               productVariantId: item.productVariantId,
-                              quantity
-                            })
+                              quantity,
+                            }),
                           )
                         }
                         max={
                           item.variants?.find(
-                            (variant) => variant.id === item.productVariantId
+                            (variant) => variant.id === item.productVariantId,
                           )?.quantity ?? undefined
                         }
                       />
@@ -153,8 +153,8 @@ export default function AppShell() {
                           dispatch(
                             removeFromCart({
                               id: item.id,
-                              productVariantId: item.productVariantId
-                            })
+                              productVariantId: item.productVariantId,
+                            }),
                           )
                         }
                       />

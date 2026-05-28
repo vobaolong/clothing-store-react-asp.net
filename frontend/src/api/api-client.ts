@@ -1,8 +1,8 @@
 import axios, { type AxiosResponse } from 'axios'
 import toast from 'react-hot-toast'
 
-import { getAuthToken, removeAuthToken } from '@/state/auth-session'
-import type { ApiResponse } from '@/types/common'
+import { getAuthToken, removeAuthToken } from '@/state/auth/auth-session'
+import type { ApiResponse } from '@/types/common.type'
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5230/api'

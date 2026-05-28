@@ -9,7 +9,7 @@ import type {
   NotificationDto,
   NotificationState,
   RealtimeNotificationDto
-} from '@/types/notification'
+} from '@/types/notification.type'
 
 type SetNotificationsPayload = {
   notifications: NotificationDto[]

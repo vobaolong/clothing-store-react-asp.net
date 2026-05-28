@@ -2,7 +2,7 @@ import { LockOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, message } from 'antd'
 import { changePassword } from '@/api/auth-api'
-import type { ApiError } from '@/types/common'
+import type { ApiError } from '@/types/common.type'
 
 interface ChangePasswordFormValues {
   currentPassword: string

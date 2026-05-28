@@ -5,8 +5,7 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login } from '@/api/auth-api'
-import { isAdmin } from '@/state/auth-session'
-import { setAuth } from '@/state/auth-slice'
+import { setAuth, isAdmin } from '@/state/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useRef } from 'react'
 
@@ -35,20 +34,19 @@ export default function LoginPage() {
           : undefined
       const msg = typeof raw === 'string' && raw.trim() ? raw.trim() : null
 
-      // Detect unverified account and redirect to OTP page
       if (msg?.includes('chưa được xác thực') || msg?.includes('OTP')) {
         toast.error(
           'Tài khoản chưa xác thực. Vui lòng nhập OTP được gửi qua email.',
           {
-            duration: 4000
-          }
+            duration: 4000,
+          },
         )
         navigate('/verify-otp', { state: { email: emailRef.current } })
         return
       }
 
       toast.error(msg ?? 'Đăng nhập thất bại. Kiểm tra email và mật khẩu.')
-    }
+    },
   })
 
   return (

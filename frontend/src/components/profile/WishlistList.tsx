@@ -1,4 +1,4 @@
-import { Card, Divider, Empty, Spin } from 'antd'
+import { Card, Empty, Spin } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { getWishlistProducts } from '@/api/wishlist-api'

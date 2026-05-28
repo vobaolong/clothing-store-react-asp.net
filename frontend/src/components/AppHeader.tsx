@@ -5,7 +5,6 @@ import {
   MenuOutlined,
   OrderedListOutlined,
   ShoppingOutlined,
-  TruckOutlined,
   UserOutlined
 } from '@ant-design/icons'
 import { Badge, Button, Drawer, Dropdown, Input, Layout } from 'antd'
@@ -40,14 +39,12 @@ const NAV_ITEMS = [
   { key: '/', label: 'Trang chủ' },
   { key: '/products', label: 'Sản phẩm' },
   { key: '/about', label: 'Về Wearly' }
-  { key: '/about', label: 'Về Wearly' }
 ]
 
 const PROFILE_ROUTES: Record<string, string> = {
   profile: '/profile',
   'profile-wishlist': '/profile?tab=wishlist',
   'profile-orders': '/profile?tab=orders',
-  'profile-addresses': '/profile?tab=addresses'
   'profile-addresses': '/profile?tab=addresses'
 }
 
@@ -57,22 +54,18 @@ const USER_MENU_ITEMS: MenuProps['items'] = [
     key: 'profile-wishlist',
     label: 'Danh sách yêu thích',
     icon: <HeartOutlined />
-    icon: <HeartOutlined />
   },
   {
     key: 'profile-orders',
     label: 'Danh sách đơn hàng',
-    icon: <OrderedListOutlined />
     icon: <OrderedListOutlined />
   },
   {
     key: 'profile-addresses',
     label: 'Danh sách địa chỉ',
     icon: <EnvironmentOutlined />
-    icon: <EnvironmentOutlined />
   },
   { type: 'divider' },
-  { key: 'logout', label: 'Đăng xuất', danger: true, icon: <LogoutOutlined /> }
   { key: 'logout', label: 'Đăng xuất', danger: true, icon: <LogoutOutlined /> }
 ]
 
@@ -85,7 +78,6 @@ function useCategoryGroups(categories: Category[]): CategoryGroup[] {
         return acc
       },
       {}
-      {}
     )
 
     return categories
@@ -93,8 +85,6 @@ function useCategoryGroups(categories: Category[]): CategoryGroup[] {
       .map((parent) => ({
         parent,
         children: (childrenByParent[parent.id] ?? []).sort((a, b) =>
-          a.name.localeCompare(b.name)
-        )
           a.name.localeCompare(b.name)
         )
       }))
@@ -108,12 +98,10 @@ function navLinkClass(isActive: boolean) {
     'inline-flex items-center h-9 px-3 text-base font-medium rounded-none! bg-transparent! border-none! shadow-none! transition-colors text-nowrap',
     'text-slate-700 hover:text-slate-900 hover:bg-transparent! hover:underline! underline-offset-6 decoration-2',
     isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : ''
-    isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : ''
   ].join(' ')
 }
 
 function MegaMenuContent({
-  categoryGroups
   categoryGroups
 }: {
   categoryGroups: CategoryGroup[]
@@ -152,7 +140,6 @@ function DesktopNav({
   categoryGroups,
   searchKeyword,
   onSearchChange,
-  onSearch
   onSearch
 }: {
   selectedRootPath: string
@@ -208,7 +195,6 @@ function MobileNavDrawer({
   open,
   categoryGroups,
   onClose
-  onClose
 }: {
   open: boolean
   categoryGroups: CategoryGroup[]
@@ -261,25 +247,6 @@ function MobileNavDrawer({
   )
 }
 
-function AnnouncementBar() {
-  return (
-    <div className='hidden bg-[#2f2f2f] py-1 text-center text-xs text-white md:flex md:text-sm justify-evenly p-2! px-4! md:px-8!'>
-      <span>
-        <TruckOutlined className='me-1' /> Miễn phí vận chuyển cho đơn từ
-        499.000K
-      </span>
-      <span>
-        <GiftOutlined className='me-1' /> Ưu đãi đến 20% cho thành viên mới
-      </span>
-      <span className='gap-2'>
-        <PhoneOutlined className='me-1' /> Hotline: 0123 456 789
-        <span className='px-4!'>|</span>
-        <MailOutlined className='me-1' /> support@wearly.com
-      </span>
-    </div>
-  )
-}
-
 export default function AppHeader({
   isAdminUser,
   isAuthenticated,
@@ -287,7 +254,6 @@ export default function AppHeader({
   categories,
   selectedRootPath,
   onCartClick,
-  onLogout
   onLogout
 }: AppHeaderProps) {
   const navigate = useNavigate()
@@ -306,7 +272,6 @@ export default function AppHeader({
     const keyword = searchKeyword.trim()
     navigate(
       keyword ? `/products?search=${encodeURIComponent(keyword)}` : '/products'
-      keyword ? `/products?search=${encodeURIComponent(keyword)}` : '/products'
     )
   }
 
@@ -321,7 +286,6 @@ export default function AppHeader({
     >
       {!isAdminUser && <AnnouncementBar />}
       <Header className='bg-white! border-b border-slate-200 px-4! md:px-8!'>
-        <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl'>
         <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl'>
           <Link
             to={isAdminUser ? '/admin' : '/'}

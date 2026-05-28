@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr'
-import { getAuthToken } from '@/state/auth-session'
-import type { RealtimeNotificationDto } from '@/types/notification'
+import { getAuthToken } from '@/state/auth/auth-session'
+import type { RealtimeNotificationDto } from '@/types/notification.type'
 
 export class SignalRService {
   private connection: signalR.HubConnection | null = null

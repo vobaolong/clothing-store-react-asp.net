@@ -3,7 +3,7 @@ import AdminPageModals from '@/components/admin/AdminPageModals'
 import AdminPageSections from '@/components/admin/AdminPageSections'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
-import { selectAuthUser } from '@/state/auth-slice'
+import { selectAuthUser } from '@/state/auth'
 import { AdminProvider } from '@/context/admin/AdminProvider'
 
 export default function AdminPage() {

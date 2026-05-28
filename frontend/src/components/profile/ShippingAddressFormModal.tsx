@@ -6,7 +6,7 @@ import {
   createShippingAddress,
   updateShippingAddress
 } from '@/api/addresses-api'
-import { getProvinces, getWardsByProvinceCode } from '@/api/provinces-api'
+import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   SHIPPING_ADDRESS_LABEL_OPTIONS,
@@ -39,7 +39,7 @@ export default function ShippingAddressFormModal({
 }: Props) {
   const [form] = Form.useForm<ShippingAddressFormValues>()
   const queryClient = useQueryClient()
-  const previousProvinceCodeRef = useRef<string | undefined>(undefined)
+  const previousProvinceIdRef = useRef<string | undefined>(undefined)
   const isEditMode = Boolean(address)
 
   const provincesQuery = useQuery({
@@ -48,19 +48,19 @@ export default function ShippingAddressFormModal({
     enabled: open
   })
 
-  const selectedProvinceCode = Form.useWatch('province', form)
+  const selectedProvinceId = Form.useWatch('province', form)
   const selectedLabel = Form.useWatch('label', form)
 
   const wardsQuery = useQuery({
-    queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceCode),
-    queryFn: () => getWardsByProvinceCode(String(selectedProvinceCode)),
-    enabled: Boolean(open && selectedProvinceCode)
+    queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
+    queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
+    enabled: Boolean(open && selectedProvinceId)
   })
 
   useEffect(() => {
     if (!open) {
       form.resetFields()
-      previousProvinceCodeRef.current = undefined
+      previousProvinceIdRef.current = undefined
       return
     }
 
@@ -80,21 +80,21 @@ export default function ShippingAddressFormModal({
   useEffect(() => {
     if (!open) return
 
-    if (!previousProvinceCodeRef.current) {
-      previousProvinceCodeRef.current = selectedProvinceCode
+    if (!previousProvinceIdRef.current) {
+      previousProvinceIdRef.current = selectedProvinceId
       return
     }
 
     if (
-      previousProvinceCodeRef.current &&
-      selectedProvinceCode &&
-      previousProvinceCodeRef.current !== selectedProvinceCode
+      previousProvinceIdRef.current &&
+      selectedProvinceId &&
+      previousProvinceIdRef.current !== selectedProvinceId
     ) {
       form.setFieldValue('ward', undefined)
     }
 
-    previousProvinceCodeRef.current = selectedProvinceCode
-  }, [form, open, selectedProvinceCode])
+    previousProvinceIdRef.current = selectedProvinceId
+  }, [form, open, selectedProvinceId])
 
   const createAddressMutation = useMutation({
     mutationFn: createShippingAddress,
@@ -131,19 +131,21 @@ export default function ShippingAddressFormModal({
   const handleFinish = async (values: ShippingAddressFormValues) => {
     const fullName = values.fullName?.trim() ?? ''
     const phone = values.phone?.trim() ?? ''
-    const provinceCode = values.province?.trim() ?? ''
+    const provinceId = values.province?.trim() ?? ''
     const wardCode = values.ward?.trim() ?? ''
     const street = values.street?.trim() ?? ''
 
     const provinceName =
-      provincesQuery.data?.find((x) => x.code === provinceCode)?.name ?? ''
+      provincesQuery.data?.find((x) => x.code === provinceId)?.name ?? ''
     const wardName =
-      wardsQuery.data?.find((x) => x.code === wardCode)?.name ?? ''
+      wardsQuery.data?.find(
+        (x: { name: string; code: string }) => x.code === wardCode
+      )?.name ?? ''
     const fullAddress = [street, wardName, provinceName]
       .filter(Boolean)
       .join(', ')
 
-    if (!fullName || !phone || !provinceCode || !wardCode || !street) {
+    if (!fullName || !phone || !provinceId || !wardCode || !street) {
       toast.error('Vui lòng nhập đầy đủ thông tin địa chỉ')
       return
     }
@@ -153,7 +155,7 @@ export default function ShippingAddressFormModal({
       phone,
       address: fullAddress,
       province: provinceName,
-      provinceId: provinceCode,
+      provinceId: provinceId,
       ward: wardName,
       wardCode,
       street,
@@ -228,13 +230,15 @@ export default function ShippingAddressFormModal({
         >
           <Select
             showSearch
-            disabled={!selectedProvinceCode}
+            disabled={!selectedProvinceId}
             placeholder='Chọn phường / xã'
-            options={(wardsQuery.data ?? []).map((item) => ({
-              label: item.name,
-              value: item.code
-            }))}
-            filterOption={(input, option) =>
+            options={(wardsQuery.data ?? []).map(
+              (item: { name: string; code: string }) => ({
+                label: item.name,
+                value: item.code
+              })
+            )}
+						filterOption={(input, option) =>
               String(option?.label ?? '')
                 .toLowerCase()
                 .includes(input.toLowerCase())

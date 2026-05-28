@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, Modal, message } from 'antd'
 import { LockOutlined } from '@ant-design/icons'
 import { changePassword } from '@/api/auth-api'
-import type { ApiError } from '@/types/common'
+import type { ApiError } from '@/types/common.type'
 
 type PasswordFormValues = {
   currentPassword: string
@@ -16,14 +16,14 @@ const passwordRules = [
   'Chứa ít nhất 1 chữ cái in hoa.',
   'Chứa ít nhất 1 chữ cái in thường.',
   'Chứa ít nhất 1 chữ số.',
-  'Chứa ít nhất 1 ký tự đặc biệt.'
+  'Chứa ít nhất 1 ký tự đặc biệt.',
 ]
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/
 
 export default function PasswordDialog({
   open,
-  onClose
+  onClose,
 }: {
   open: boolean
   onClose: () => void
@@ -39,16 +39,10 @@ export default function PasswordDialog({
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.'
+        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.',
       )
-    }
+    },
   })
-
-  useEffect(() => {
-    if (!open) {
-      form.resetFields()
-    }
-  }, [form, open])
 
   const handleSubmit = () => {
     form.submit()
@@ -57,9 +51,15 @@ export default function PasswordDialog({
   const onFinish = (values: PasswordFormValues) => {
     mutate({
       currentPassword: values.currentPassword,
-      newPassword: values.newPassword
+      newPassword: values.newPassword,
     })
   }
+
+  useEffect(() => {
+    if (!open) {
+      form.resetFields()
+    }
+  }, [form, open])
 
   return (
     <Modal
@@ -77,9 +77,9 @@ export default function PasswordDialog({
           onClick={handleSubmit}
         >
           Đổi mật khẩu
-        </Button>
+        </Button>,
       ]}
-      destroyOnClose
+      destroyOnHidden
       centered
     >
       <div className='space-y-4'>
@@ -104,7 +104,7 @@ export default function PasswordDialog({
             name='currentPassword'
             label='Mật khẩu hiện tại'
             rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu hiện tại.' }
+              { required: true, message: 'Vui lòng nhập mật khẩu hiện tại.' },
             ]}
           >
             <Input.Password
@@ -126,11 +126,11 @@ export default function PasswordDialog({
 
                   return Promise.reject(
                     new Error(
-                      'Mật khẩu mới chưa đáp ứng đủ các quy tắc bảo mật.'
-                    )
+                      'Mật khẩu mới chưa đáp ứng đủ các quy tắc bảo mật.',
+                    ),
                   )
-                }
-              })
+                },
+              }),
             ]}
           >
             <Input.Password
@@ -152,10 +152,10 @@ export default function PasswordDialog({
                   }
 
                   return Promise.reject(
-                    new Error('Mật khẩu xác nhận không khớp.')
+                    new Error('Mật khẩu xác nhận không khớp.'),
                   )
-                }
-              })
+                },
+              }),
             ]}
           >
             <Input.Password

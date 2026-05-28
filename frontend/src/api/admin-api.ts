@@ -74,6 +74,13 @@ export const importAdminProducts = async (
   )
 }
 
+export const exportAdminProducts = async (ids: string[]): Promise<Blob> => {
+  const response = await apiClient.post(API_ENDPOINTS.admin.productsExport, { ids }, {
+    responseType: 'blob'
+  })
+  return response.data as Blob
+}
+
 export const updateAdminProductActive = async (
   id: string,
   payload: { isActive: boolean }

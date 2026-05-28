@@ -11,22 +11,22 @@ import { z } from 'zod'
 import { PaymentMethod } from '@/enums'
 import {
   removePurchasedCartItems,
-  selectSelectedCartItems
+  selectSelectedCartItems,
 } from '@/state/cart-slice'
-import { getAuthToken } from '@/state/auth-session'
+import { getAuthToken } from '@/state/auth/auth-session'
 import { placeOrder } from '@/api/orders-api'
 import { getAvailableCoupons, validateCoupon } from '@/api/coupons-api'
 import {
   createShippingAddress,
   getShippingAddresses,
-  getShippingAddressPrefill
+  getShippingAddressPrefill,
 } from '@/api/addresses-api'
 import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   calculateFinalTotal,
-  normalizeCouponCode
+  normalizeCouponCode,
 } from '@/utils/checkout-utils'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
@@ -38,8 +38,8 @@ import OrderSummary from '@/components/checkout/OrderSummary'
 import type {
   CheckoutFormValues,
   SelectOption,
-  CheckoutWardOption
-} from '@/types/checkout'
+  CheckoutWardOption,
+} from '@/types/checkout.type'
 
 type CouponState = {
   isApplying: boolean
@@ -74,25 +74,25 @@ const checkoutUiInitialState: CheckoutUiState = {
   coupon: {
     isApplying: false,
     appliedCode: '',
-    discountAmount: 0
+    discountAmount: 0,
   },
   address: {
     showNewForm: false,
     provinceOptions: [],
-    wardOptions: []
+    wardOptions: [],
   },
-  isSubmitting: false
+  isSubmitting: false,
 }
 
 function checkoutUiReducer(
   state: CheckoutUiState,
-  action: CheckoutUiAction
+  action: CheckoutUiAction,
 ): CheckoutUiState {
   switch (action.type) {
     case 'coupon/applying':
       return {
         ...state,
-        coupon: { ...state.coupon, isApplying: action.value }
+        coupon: { ...state.coupon, isApplying: action.value },
       }
     case 'coupon/set':
       return {
@@ -100,8 +100,8 @@ function checkoutUiReducer(
         coupon: {
           isApplying: false,
           appliedCode: action.appliedCode,
-          discountAmount: action.discountAmount
-        }
+          discountAmount: action.discountAmount,
+        },
       }
     case 'coupon/clear':
       return {
@@ -109,8 +109,8 @@ function checkoutUiReducer(
         coupon: {
           isApplying: false,
           appliedCode: '',
-          discountAmount: 0
-        }
+          discountAmount: 0,
+        },
       }
     case 'coupon/code-input':
       return state
@@ -119,37 +119,37 @@ function checkoutUiReducer(
         ...state,
         address: {
           ...state.address,
-          showNewForm: !state.address.showNewForm
-        }
+          showNewForm: !state.address.showNewForm,
+        },
       }
     case 'address/set-province-options':
       return {
         ...state,
         address: {
           ...state.address,
-          provinceOptions: action.options
-        }
+          provinceOptions: action.options,
+        },
       }
     case 'address/set-ward-options':
       return {
         ...state,
         address: {
           ...state.address,
-          wardOptions: action.options
-        }
+          wardOptions: action.options,
+        },
       }
     case 'address/hide-new-form':
       return {
         ...state,
         address: {
           ...state.address,
-          showNewForm: false
-        }
+          showNewForm: false,
+        },
       }
     case 'submitting/set':
       return {
         ...state,
-        isSubmitting: action.value
+        isSubmitting: action.value,
       }
     default:
       return state
@@ -169,7 +169,7 @@ const checkoutSchema = z.object({
   paymentMethod: z.enum(PaymentMethod),
   shippingAddressId: z.string().optional(),
   couponCode: z.string().optional(),
-  note: z.string().max(2000).optional()
+  note: z.string().max(2000).optional(),
 })
 
 export default function CheckoutPage() {
@@ -187,22 +187,22 @@ export default function CheckoutPage() {
     })
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ['style']
+      attributeFilter: ['style'],
     })
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ['style']
+      attributeFilter: ['style'],
     })
     return () => observer.disconnect()
   }, [])
   const [uiState, uiDispatch] = useReducer(
     checkoutUiReducer,
-    checkoutUiInitialState
+    checkoutUiInitialState,
   )
   const total = items.reduce((sum, item) => {
     const effective = getEffectivePriceAt(
       item as unknown as import('@/types').Product,
-      nowMs
+      nowMs,
     )
     return sum + effective * item.quantity
   }, 0)
@@ -217,20 +217,20 @@ export default function CheckoutPage() {
   const addressesQuery = useQuery({
     queryKey: QUERY_KEYS.shippingAddresses,
     queryFn: getShippingAddresses,
-    enabled: Boolean(getAuthToken())
+    enabled: Boolean(getAuthToken()),
   })
   const prefillQuery = useQuery({
     queryKey: QUERY_KEYS.shippingAddressPrefill,
     queryFn: getShippingAddressPrefill,
-    enabled: Boolean(getAuthToken())
+    enabled: Boolean(getAuthToken()),
   })
   const availableCouponsQuery = useQuery({
     queryKey: QUERY_KEYS.availableCoupons,
-    queryFn: getAvailableCoupons
+    queryFn: getAvailableCoupons,
   })
   const provincesQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutProvinces,
-    queryFn: () => getProvinces()
+    queryFn: () => getProvinces(),
   })
 
   const { control, handleSubmit, reset, setValue, getValues } =
@@ -248,8 +248,8 @@ export default function CheckoutPage() {
         setAsDefault: false,
         paymentMethod: PaymentMethod.COD,
         couponCode: '',
-        note: ''
-      }
+        note: '',
+      },
     })
 
   const watchedCouponCode = useWatch({ control, name: 'couponCode' })
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
   const wardsByProvinceQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
     queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
-    enabled: Boolean(selectedProvinceId)
+    enabled: Boolean(selectedProvinceId),
   })
 
   const subtotal = total
@@ -273,7 +273,7 @@ export default function CheckoutPage() {
     []
   const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
   const appliedCouponDetails = availableCouponsQuery.data?.find(
-    (c) => c.code.toUpperCase() === coupon.appliedCode
+    (c) => c.code.toUpperCase() === coupon.appliedCode,
   )
   const isAppliedCouponEligible = appliedCouponDetails
     ? subtotal >= appliedCouponDetails.minOrderSubtotal
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
         shippingAddressId: defaultAddress.id,
         fullName: defaultAddress.fullName,
         phone: defaultAddress.phone,
-        fullAddress: defaultAddress.fullAddress
+        fullAddress: defaultAddress.fullAddress,
       })
     }
   }, [addressesQuery.data, getValues, reset])
@@ -320,13 +320,13 @@ export default function CheckoutPage() {
       uiDispatch({ type: 'coupon/applying', value: true })
       const result = await validateCoupon({
         code: rawCode,
-        orderTotal: subtotal
+        orderTotal: subtotal,
       })
       const finalCode = normalizeCouponCode(result.code)
       uiDispatch({
         type: 'coupon/set',
         appliedCode: finalCode,
-        discountAmount: result.discountAmount
+        discountAmount: result.discountAmount,
       })
       setValue('couponCode', finalCode)
       toast.success('Đã áp dụng mã giảm giá')
@@ -369,12 +369,12 @@ export default function CheckoutPage() {
         phone,
         address: addressStr,
         province,
-        provinceId: provinceCode,
+        provinceId,
         ward: wardName,
         wardCode,
         street,
         label,
-        isDefault: Boolean(values.setAsDefault)
+        isDefault: Boolean(values.setAsDefault),
       })
       await qc.invalidateQueries({ queryKey: QUERY_KEYS.shippingAddresses })
       setValue('shippingAddressId', addressId)
@@ -420,13 +420,13 @@ export default function CheckoutPage() {
         items: items.map((item) => ({
           productId: item.id,
           productVariantId: item.productVariantId,
-          quantity: item.quantity
+          quantity: item.quantity,
         })),
         couponCode: coupon.appliedCode || undefined,
         shippingAddressId: values.shippingAddressId,
         paymentMethod: values.paymentMethod,
         note: noteTrimmed ? noteTrimmed : undefined,
-        idempotencyKey
+        idempotencyKey,
       })
       if (values.paymentMethod === 'VNPAY') {
         const data = await createVnPayUrl(orderId)
@@ -437,9 +437,9 @@ export default function CheckoutPage() {
         removePurchasedCartItems(
           items.map((item) => ({
             id: item.id,
-            productVariantId: item.productVariantId
-          }))
-        )
+            productVariantId: item.productVariantId,
+          })),
+        ),
       )
       const shortOrderId = orderId.slice(0, 8).toUpperCase()
       toast.custom(
@@ -502,7 +502,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         ),
-        { duration: 50000 }
+        { duration: 50000 },
       )
       navigate('/')
     } catch (error: unknown) {

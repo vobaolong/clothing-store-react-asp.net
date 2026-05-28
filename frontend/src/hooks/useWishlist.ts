@@ -7,7 +7,7 @@ import {
 } from '@/api/wishlist-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import type { Product } from '@/types'
-import { getAuthToken } from '@/state/auth-session'
+import { getAuthToken } from '@/state/auth/auth-session'
 
 type WishlistContext = {
   previous: Product[]

@@ -4,11 +4,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getSignalRService } from '@/utils/signalr-service'
 import { addRealtimeNotification } from '@/state/notification-slice'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { selectAuthToken } from '@/state/auth-slice'
+import { selectAuthToken } from '@/state/auth'
 import type {
   RealtimeNotificationDto,
   OrderUpdateDto
-} from '@/types/notification'
+} from '@/types/notification.type'
 
 export const useSignalR = () => {
   const dispatch = useDispatch()

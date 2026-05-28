@@ -7,10 +7,10 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { getAdminOrderDetail, updateAdminOrderStatus } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { getAuthToken, isAdmin } from '@/state/auth-session'
+import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 import {
   createOrderStatusOptions,
-  getVietnameseStatusLabel
+  getVietnameseStatusLabel,
 } from '@/utils/enum.utils'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
@@ -27,7 +27,7 @@ const formatStructuredAddress = (detail: {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingProvince
+    detail.shippingProvince,
   ]
     .filter((x) => Boolean(x && x.trim()))
     .join(', ')
@@ -39,13 +39,13 @@ export default function AdminOrderDetailPage() {
   const token = getAuthToken()
   const qc = useQueryClient()
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
-    undefined
+    undefined,
   )
 
   const detailQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined),
     queryFn: () => getAdminOrderDetail(String(id)),
-    enabled: Boolean(id)
+    enabled: Boolean(id),
   })
 
   useOrderRealtime(id)
@@ -57,14 +57,14 @@ export default function AdminOrderDetailPage() {
       toast.success('Cập nhật trạng thái đơn hàng thành công')
       await Promise.all([
         qc.invalidateQueries({
-          queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined)
+          queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined),
         }),
-        qc.invalidateQueries({ queryKey: QUERY_KEYS.adminOrdersBase })
+        qc.invalidateQueries({ queryKey: QUERY_KEYS.adminOrdersBase }),
       ])
     },
     onError: () => {
       toast.error('Cập nhật trạng thái đơn hàng thất bại')
-    }
+    },
   })
 
   if (!token || !isAdmin()) return <Navigate to='/' replace />
@@ -79,7 +79,7 @@ export default function AdminOrderDetailPage() {
   const statusHistories = Array.isArray(detail?.statusHistories)
     ? detail!.statusHistories.toSorted(
         (a, b) =>
-          new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime()
+          new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime(),
       )
     : []
 
@@ -130,7 +130,7 @@ export default function AdminOrderDetailPage() {
               label: getVietnameseStatusLabel(String(option.value)),
               disabled:
                 detail == null ||
-                !canUpdateToStatus(detail.status, String(option.value))
+                !canUpdateToStatus(detail.status, String(option.value)),
             }))}
             style={{ width: 150 }}
           />
@@ -150,10 +150,10 @@ export default function AdminOrderDetailPage() {
                     title: 'Cập nhật trạng thái đơn hàng?',
                     onOk: async () =>
                       updateStatusMutation.mutateAsync({
-                        status: selectedStatus
+                        status: selectedStatus,
                       }),
                     okText: 'Cập nhật',
-                    cancelText: 'Hủy'
+                    cancelText: 'Hủy',
                   })
                 }}
               >

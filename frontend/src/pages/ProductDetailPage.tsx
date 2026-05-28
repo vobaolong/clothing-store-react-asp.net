@@ -8,14 +8,14 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
-import type { DescriptionLayout, ProductSelection } from '@/types/product'
+import type { DescriptionLayout, ProductSelection } from '@/types/product.type'
 import { formatDescriptionSpecDisplayValue } from '@/constants/product'
 import { MEASUREMENT_PRESETS } from '@/constants/measurement-presets'
 import { QUERY_KEYS } from '@/constants/query-keys'
@@ -25,7 +25,7 @@ import ProductGallery from '@/components/product/ProductGallery'
 import ProductPurchaseActions from '@/components/product/ProductPurchaseActions'
 import {
   getCategoryAncestorChain,
-  toProductsCategorySearchUrl
+  toProductsCategorySearchUrl,
 } from '@/utils/category-tree'
 import { getGalleryUrlsForColor } from '@/utils/product-color-images'
 import { getStatisticTimerFormatForSaleEnd } from '@/utils/countdown-statistic-format'
@@ -36,7 +36,7 @@ import { toCapitalize } from '@/utils/table.lib'
 const { Timer } = Statistic
 
 const ProductReviewsSection = lazy(
-  () => import('@/components/reviews/ProductReviewsSection')
+  () => import('@/components/reviews/ProductReviewsSection'),
 )
 
 export default function ProductDetailPage() {
@@ -47,16 +47,16 @@ export default function ProductDetailPage() {
     color: undefined,
     size: undefined,
     quantity: 1,
-    image: ''
+    image: '',
   })
 
   const [ui, setUi] = useState({
     isSizeGuideOpen: false,
-    thumbScrollEdges: { atTop: true, atBottom: true }
+    thumbScrollEdges: { atTop: true, atBottom: true },
   })
 
   const [timer, setTimer] = useState(() => ({
-    now: Date.now()
+    now: Date.now(),
   }))
 
   const refreshSaleTimer = useCallback(() => {
@@ -65,12 +65,12 @@ export default function ProductDetailPage() {
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: QUERY_KEYS.products,
-    queryFn: getProducts
+    queryFn: getProducts,
   })
 
   const { data: categories = [] } = useQuery({
     queryKey: QUERY_KEYS.categories,
-    queryFn: getCategories
+    queryFn: getCategories,
   })
 
   const cartItems = useSelector(selectCartItems)
@@ -82,13 +82,13 @@ export default function ProductDetailPage() {
     : false
   const effectiveDisplayPrice = useMemo(
     () => (product ? getEffectivePriceAt(product, timer.now) : 0),
-    [product, timer.now]
+    [product, timer.now],
   )
   const showSaleCountdown = Boolean(
     product &&
     saleEndDate &&
     hasDiscount &&
-    effectiveDisplayPrice < product.price
+    effectiveDisplayPrice < product.price,
   )
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
       saleEndDate
         ? getStatisticTimerFormatForSaleEnd(saleEndDate, timer.now)
         : 'HH:mm:ss',
-    [saleEndDate, timer.now]
+    [saleEndDate, timer.now],
   )
 
   const similarProducts = useMemo(() => {
@@ -134,7 +134,7 @@ export default function ProductDetailPage() {
       return apiTrail.map((category) => ({
         id: category.id,
         name: category.name,
-        slug: category.slug ?? ''
+        slug: category.slug ?? '',
       }))
     }
     return getCategoryAncestorChain(categories, product?.categoryId)
@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
   const variants = useMemo(() => product?.variants ?? [], [product?.variants])
   const colorOptions = [...new Set(variants.map((v) => v.color))]
   const firstAvailableColor = colorOptions.find((color) =>
-    variants.some((v) => v.color === color && v.quantity > 0)
+    variants.some((v) => v.color === color && v.quantity > 0),
   )
 
   const resolvedColor =
@@ -172,8 +172,8 @@ export default function ProductDetailPage() {
       ...prev,
       thumbScrollEdges: {
         atTop: scrollTop <= 1,
-        atBottom: scrollTop + clientHeight >= scrollHeight - 1
-      }
+        atBottom: scrollTop + clientHeight >= scrollHeight - 1,
+      },
     }))
   }, [])
 
@@ -201,7 +201,7 @@ export default function ProductDetailPage() {
     if (idx < 0) return
     el.querySelectorAll('button')[idx]?.scrollIntoView({
       block: 'nearest',
-      behavior: 'smooth'
+      behavior: 'smooth',
     })
   }, [thumbStripClamped, currentImage, galleryImages])
 
@@ -211,10 +211,10 @@ export default function ProductDetailPage() {
         new Set(
           variants
             .filter((v) => v.color === resolvedColor)
-            .map((v) => normalizeSize(v.size))
-        )
+            .map((v) => normalizeSize(v.size)),
+        ),
       ).toSorted(compareSizes),
-    [variants, resolvedColor]
+    [variants, resolvedColor],
   )
 
   const firstAvailableSize = sizeOptions.find((size) =>
@@ -222,8 +222,8 @@ export default function ProductDetailPage() {
       (v) =>
         v.color === resolvedColor &&
         normalizeSize(v.size) === size &&
-        v.quantity > 0
-    )
+        v.quantity > 0,
+    ),
   )
 
   const resolvedSize = selection.size ?? firstAvailableSize ?? sizeOptions[0]
@@ -234,7 +234,7 @@ export default function ProductDetailPage() {
     (v) =>
       v.color === resolvedColor &&
       normalizeSize(v.size) === resolvedSize &&
-      v.quantity > 0
+      v.quantity > 0,
   )
 
   const cartQuantityForSelectedVariant = useMemo(() => {
@@ -242,14 +242,15 @@ export default function ProductDetailPage() {
     return cartItems
       .filter(
         (item) =>
-          item.id === product.id && item.productVariantId === selectedVariant.id
+          item.id === product.id &&
+          item.productVariantId === selectedVariant.id,
       )
       .reduce((sum, item) => sum + item.quantity, 0)
   }, [cartItems, product, selectedVariant])
 
   const remainingStock = Math.max(
     0,
-    (selectedVariant?.quantity ?? 0) - cartQuantityForSelectedVariant
+    (selectedVariant?.quantity ?? 0) - cartQuantityForSelectedVariant,
   )
   const isOutOfStock = !selectedVariant || remainingStock <= 0
 
@@ -258,12 +259,12 @@ export default function ProductDetailPage() {
     return [
       {
         label: 'Mã SP',
-        value: (selectedVariant?.sku ?? product.productCode).toUpperCase()
+        value: (selectedVariant?.sku ?? product.productCode).toUpperCase(),
       },
       ...descriptionLayout.specs.map((spec) => ({
         label: String(spec.label ?? ''),
-        value: formatDescriptionSpecDisplayValue(String(spec.value ?? ''))
-      }))
+        value: formatDescriptionSpecDisplayValue(String(spec.value ?? '')),
+      })),
     ]
   }, [descriptionLayout, product, selectedVariant?.sku])
 
@@ -278,7 +279,7 @@ export default function ProductDetailPage() {
     : `/products?category=${encodeURIComponent(
         product?.categorySlug?.trim()
           ? product.categorySlug
-          : (product?.categoryId ?? '')
+          : (product?.categoryId ?? ''),
       )}`
 
   if (isLoading) {
@@ -409,7 +410,7 @@ export default function ProductDetailPage() {
                     classNames={{
                       root: '!m-0 !p-0 leading-tight',
                       content:
-                        '!text-xl !font-semibold tabular-nums text-rose-600'
+                        '!text-xl !font-semibold tabular-nums text-rose-600',
                     }}
                   />
                 </div>
@@ -470,7 +471,7 @@ export default function ProductDetailPage() {
                         color,
                         size: undefined,
                         quantity: 1,
-                        image: ''
+                        image: '',
                       }))
                     }}
                     style={{ backgroundColor: variant?.hex ?? '#e5e7eb' }}
@@ -515,7 +516,7 @@ export default function ProductDetailPage() {
               {sizeOptions.map((size) => {
                 const sizeVariant = variants.find(
                   (v) =>
-                    v.color === resolvedColor && normalizeSize(v.size) === size
+                    v.color === resolvedColor && normalizeSize(v.size) === size,
                 )
                 const isDisabled = (sizeVariant?.quantity ?? 0) <= 0
 
@@ -574,8 +575,8 @@ export default function ProductDetailPage() {
                   productVariantId: selectedVariant?.id,
                   selectedSize: selectedVariant?.size,
                   selectedColor: selectedVariant?.color,
-                  quantity: selection.quantity
-                })
+                  quantity: selection.quantity,
+                }),
               )
               dispatch(openDrawer())
             }}
@@ -587,8 +588,8 @@ export default function ProductDetailPage() {
                   productVariantId: selectedVariant?.id,
                   selectedSize: selectedVariant?.size,
                   selectedColor: selectedVariant?.color,
-                  quantity: selection.quantity
-                })
+                  quantity: selection.quantity,
+                }),
               )
               navigate('/checkout')
             }}
@@ -598,20 +599,20 @@ export default function ProductDetailPage() {
             {[
               {
                 title: 'https://www.coolmate.me/icons/product/free-ship.svg',
-                sub: 'Free ship cho đơn từ 200k'
+                sub: 'Free ship cho đơn từ 200k',
               },
               {
                 title: 'https://www.coolmate.me/icons/product/return-60.svg',
-                sub: '60 ngày đổi trả vì bất kỳ lý do gì'
+                sub: '60 ngày đổi trả vì bất kỳ lý do gì',
               },
               {
                 title: 'https://www.coolmate.me/icons/product/phone.svg',
-                sub: 'Hotline 1900272737\nhỗ trợ từ 8h30 - 22h'
+                sub: 'Hotline 1900272737\nhỗ trợ từ 8h30 - 22h',
               },
               {
                 title: 'https://www.coolmate.me/icons/product/location.svg',
-                sub: 'Đến tận nơi nhận hàng trả,\nhoàn tiền 2-3 ngày (trừ T7, CN)'
-              }
+                sub: 'Đến tận nơi nhận hàng trả,\nhoàn tiền 2-3 ngày (trừ T7, CN)',
+              },
             ].map(({ title, sub }) => (
               <div
                 key={title}
@@ -642,7 +643,7 @@ export default function ProductDetailPage() {
                     dangerouslySetInnerHTML={{ __html: product.description }}
                   />
                 </div>
-              )
+              ),
             },
             {
               key: 'reviews',
@@ -656,8 +657,8 @@ export default function ProductDetailPage() {
                     />
                   </Suspense>
                 </div>
-              )
-            }
+              ),
+            },
           ]}
         />
       </div>

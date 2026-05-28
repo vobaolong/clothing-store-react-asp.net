@@ -1,7 +1,7 @@
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { HomeOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import { isAdmin } from '@/state/auth-session'
+import { isAdmin } from '@/state/auth/auth-session'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()

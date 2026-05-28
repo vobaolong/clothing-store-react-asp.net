@@ -1,5 +1,5 @@
 import type { Product } from '@/types'
-import type { CartItem } from '@/types/cart'
+import type { CartItem } from '@/types/cart.type'
 
 // effective price helpers
 

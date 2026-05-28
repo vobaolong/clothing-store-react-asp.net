@@ -12,16 +12,16 @@ type Props = {
 export default function AdminCategoriesBulkActions({
   selectedIds,
   onClearSelection,
-  onRefresh
+  onRefresh,
 }: Props) {
   const handleBulkActiveChange = async (isActive: boolean) => {
     try {
       await bulkUpdateCategoriesActive({
         ids: selectedIds,
-        isActive
+        isActive,
       })
       toast.success(
-        isActive ? 'Đã kích hoạt danh mục' : 'Đã vô hiệu hóa danh mục'
+        isActive ? 'Đã kích hoạt danh mục' : 'Đã vô hiệu hóa danh mục',
       )
       onClearSelection()
       await onRefresh()
@@ -31,7 +31,7 @@ export default function AdminCategoriesBulkActions({
   }
 
   return (
-    <div className='fixed z-50 p-4 bg-red-100 border border-red-800 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
+    <div className='fixed z-50 p-4 bg-white border border-blue-300 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
       <div className='flex flex-col gap-4 items-center sm:flex-row'>
         <Tag
           icon={<CheckCircleOutlined />}

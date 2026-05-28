@@ -6,9 +6,9 @@ import type { Control } from 'react-hook-form'
 import type {
   AvailableCouponsQuery,
   CouponState,
-  CheckoutFormValues
-} from '@/types/checkout'
-import type { AvailableCoupon } from '@/types/coupon'
+  CheckoutFormValues,
+} from '@/types/checkout.type'
+import type { AvailableCoupon } from '@/types/coupon.type'
 import { formatCurrency } from '@/utils/format'
 
 type Props = {
@@ -30,7 +30,7 @@ export default function CouponSection({
   handleCouponCodeChange,
   handleRemoveCoupon,
   watchedCouponCode,
-  subtotal
+  subtotal,
 }: Props) {
   return (
     <Card>

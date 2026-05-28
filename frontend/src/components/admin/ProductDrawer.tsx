@@ -13,7 +13,7 @@ type ProductDrawerProps = {
 export default function ProductDrawer({
   open,
   product,
-  onClose
+  onClose,
 }: ProductDrawerProps) {
   const [fallbackShown, setFallbackShown] = useState(false)
 
@@ -40,7 +40,7 @@ export default function ProductDrawer({
           <Image
             src={displaySrc}
             alt={product.name}
-            className='object-cover w-full h-40 rounded-xl'
+            className='object-cover rounded-xl border! border-slate-200!'
             preview={false}
             onError={handleImgError}
           />
@@ -77,7 +77,7 @@ export default function ProductDrawer({
                   >
                     {product.id}
                   </Typography.Paragraph>
-                )
+                ),
               },
               {
                 key: 'price',
@@ -86,23 +86,23 @@ export default function ProductDrawer({
                   <Typography.Paragraph strong className='m-0!'>
                     {formatCurrency(product.price)}
                   </Typography.Paragraph>
-                )
+                ),
               },
               {
                 key: 'category',
                 label: 'Phân loại',
-                children: product.category
+                children: product.category,
               },
               {
                 key: 'createdAt',
                 label: 'Ngày thêm',
-                children: formatDate(product.createdAt)
+                children: formatDate(product.createdAt),
               },
               {
                 key: 'updatedAt',
                 label: 'Cập nhật',
-                children: formatDate(product.updatedAt)
-              }
+                children: formatDate(product.updatedAt),
+              },
             ]}
           />
         </div>

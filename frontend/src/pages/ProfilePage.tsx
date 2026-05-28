@@ -3,13 +3,7 @@ import {
   Navigate,
   useLocation,
   useNavigate,
-  useSearchParams
-} from 'react-router-dom'
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useSearchParams
+  useSearchParams,
 } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
@@ -22,7 +16,7 @@ import PasswordDialog from '@/components/profile/PasswordDialog'
 import AddressList from '@/components/profile/AddressList'
 import WishlistList from '@/components/profile/WishlistList'
 import OrderList from '@/components/profile/OrderList'
-import { getAuthToken } from '@/state/auth-session'
+import { getAuthToken } from '@/state/auth/auth-session'
 
 type Section = 'profile' | 'addresses' | 'wishlist' | 'orders' | 'notifications'
 
@@ -46,30 +40,12 @@ export default function ProfilePage() {
       return tab
     return 'profile'
   })()
-  const section: Section = (() => {
-    if (location.pathname === '/profile/notifications') return 'notifications'
-    const tab = searchParams.get('tab')
-    if (
-      tab === 'addresses' ||
-      tab === 'wishlist' ||
-      tab === 'orders' ||
-      tab === 'notifications'
-    )
-      return tab
-    return 'profile'
-  })()
 
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
   const { data: profile, isLoading } = useQuery({
     queryKey: QUERY_KEYS.myProfile,
     queryFn: getMyProfile,
-    enabled: Boolean(token)
-  })
-  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
-  const { data: profile, isLoading } = useQuery({
-    queryKey: QUERY_KEYS.myProfile,
-    queryFn: getMyProfile,
-    enabled: Boolean(token)
+    enabled: Boolean(token),
   })
 
   const handleSectionChange = (nextSection: Section) => {
@@ -88,34 +64,14 @@ export default function ProfilePage() {
       setSearchParams({})
       return
     }
-    if (nextSection === 'profile') {
-      if (location.pathname === '/profile/notifications') {
-        navigate('/profile')
-        return
-      }
-      setSearchParams({})
-      return
-    }
-
-    if (location.pathname === '/profile/notifications') {
-      navigate(`/profile?tab=${nextSection}`)
-      return
-    }
-    if (location.pathname === '/profile/notifications') {
-      navigate(`/profile?tab=${nextSection}`)
-      return
-    }
 
     setSearchParams({ tab: nextSection })
   }
-    setSearchParams({ tab: nextSection })
-  }
 
-  if (!token) return <Navigate to='/login' replace />
   if (!token) return <Navigate to='/login' replace />
 
   return (
-    <div className=''>
+    <div>
       <FloatButton
         icon={<MenuOutlined />}
         type='primary'
@@ -174,22 +130,6 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </section>
-                  <div>
-                    <label className='block mb-1 text-sm font-medium text-slate-900'>
-                      Họ và tên
-                    </label>
-                    {isLoading ? (
-                      <Spin />
-                    ) : (
-                      <Input
-                        value={profile?.fullName ?? '-'}
-                        readOnly
-                        disabled
-                        className='h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700'
-                      />
-                    )}
-                  </div>
-                </section>
 
                 <section className='grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start'>
                   <div>
@@ -201,18 +141,6 @@ export default function ProfilePage() {
                     </p>
                   </div>
 
-                  <div className='space-y-6'>
-                    <div>
-                      <label className='block mb-1 text-sm font-medium text-slate-900'>
-                        Email
-                      </label>
-                      <Input
-                        value={profile?.email ?? '-'}
-                        readOnly
-                        disabled
-                        className='h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700'
-                      />
-                    </div>
                   <div className='space-y-6'>
                     <div>
                       <label className='block mb-1 text-sm font-medium text-slate-900'>
@@ -245,10 +173,7 @@ export default function ProfilePage() {
           {section === 'addresses' && <AddressList />}
           {section === 'wishlist' && <WishlistList />}
           {section === 'orders' && <OrderList />}
-          {section === 'notifications' && (
-            // lazy-load notifications section
-            <NotificationsSection />
-          )}
+          {section === 'notifications' && <NotificationsSection />}
         </div>
       </div>
       <PasswordDialog

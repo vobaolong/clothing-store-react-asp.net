@@ -3,7 +3,7 @@ import { Button, Card, Descriptions, Empty, Modal, Table, Timeline } from 'antd'
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { getAuthToken } from '@/state/auth-session'
+import { getAuthToken } from '@/state/auth/auth-session'
 import { cancelMyOrder, getMyOrderDetail } from '@/api/orders-api'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { OrderStatus } from '@/enums'
@@ -23,7 +23,7 @@ const formatStructuredAddress = (detail: {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingProvince
+    detail.shippingProvince,
   ]
     .filter((x) => Boolean(x && x.trim()))
     .join(', ')
@@ -34,7 +34,7 @@ const STEP_COPY: Partial<Record<OrderStatus, string>> = {
   [OrderStatus.CONFIRMED]: 'Đơn hàng đã được xác nhận',
   [OrderStatus.SHIPPING]: 'Đơn hàng đang trên đường vận chuyển',
   [OrderStatus.DELIVERED]: 'Giao hàng thành công',
-  [OrderStatus.CANCELLED]: 'Đơn hàng đã bị huỷ'
+  [OrderStatus.CANCELLED]: 'Đơn hàng đã bị huỷ',
 }
 
 const timelineColorForStatus = (status: OrderStatus) => {
@@ -52,7 +52,7 @@ export default function OrderDetailPage() {
   const detailQuery = useQuery({
     queryKey: QUERY_KEYS.myOrderDetail(id),
     queryFn: () => getMyOrderDetail(String(id)),
-    enabled: Boolean(token && id)
+    enabled: Boolean(token && id),
   })
 
   useOrderRealtime(id)
@@ -70,23 +70,23 @@ export default function OrderDetailPage() {
         orderItemId: reviewingItem?.id,
         rating: values.rating,
         comment: values.comment,
-        tags: values.tags
+        tags: values.tags,
       }),
     onSuccess: async () => {
       toast.success('Đã gửi đánh giá')
       setReviewingItemId(null)
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.myOrderDetail(id)
+          queryKey: QUERY_KEYS.myOrderDetail(id),
         }),
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.productReviews(reviewingItem?.productId)
-        })
+          queryKey: QUERY_KEYS.productReviews(reviewingItem?.productId),
+        }),
       ])
     },
     onError: () => {
       toast.error('Không thể gửi đánh giá')
-    }
+    },
   })
   const canCancelOrder =
     detailData?.status === OrderStatus.PENDING ||
@@ -100,14 +100,14 @@ export default function OrderDetailPage() {
       toast.success('Đã hủy đơn hàng')
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.myOrderDetail(id)
+          queryKey: QUERY_KEYS.myOrderDetail(id),
         }),
-        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() })
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.myOrders() }),
       ])
     },
     onError: () => {
       toast.error('Không thể hủy đơn hàng')
-    }
+    },
   })
 
   if (!token) return <Navigate to='/login' replace />
@@ -118,10 +118,10 @@ export default function OrderDetailPage() {
   const subtotal = detail.items.reduce((sum, item) => sum + item.lineTotal, 0)
   const shippingFee = Math.max(
     detail.totalAmount - subtotal + detail.discountAmount,
-    0
+    0,
   )
   const histories = (detail.statusHistories ?? []).toSorted(
-    (a, b) => new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime()
+    (a, b) => new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime(),
   )
   const seenStep = new Set<OrderStatus>()
   const historySteps = histories
@@ -133,7 +133,7 @@ export default function OrderDetailPage() {
     })
     .map((h) => ({
       status: h.status,
-      changedAt: h.changedAt
+      changedAt: h.changedAt,
     }))
 
   const synthFromStatus = (): {
@@ -146,7 +146,7 @@ export default function OrderDetailPage() {
     ) {
       return {
         status: OrderStatus.DELIVERED,
-        changedAt: detail.updatedAt ?? detail.paidAt ?? detail.createdAt
+        changedAt: detail.updatedAt ?? detail.paidAt ?? detail.createdAt,
       }
     }
     if (
@@ -155,7 +155,7 @@ export default function OrderDetailPage() {
     ) {
       return {
         status: OrderStatus.CANCELLED,
-        changedAt: detail.updatedAt ?? detail.createdAt
+        changedAt: detail.updatedAt ?? detail.createdAt,
       }
     }
     return null
@@ -173,7 +173,7 @@ export default function OrderDetailPage() {
             {formatDate(detail.createdAt)}
           </div>
         </div>
-      )
+      ),
     },
     ...historySteps.map((step) => ({
       color: timelineColorForStatus(step.status),
@@ -186,7 +186,7 @@ export default function OrderDetailPage() {
             {formatDate(step.changedAt)}
           </div>
         </div>
-      )
+      ),
     })),
     ...(synthetic
       ? [
@@ -201,10 +201,10 @@ export default function OrderDetailPage() {
                   {formatDate(synthetic.changedAt)}
                 </div>
               </div>
-            )
-          }
+            ),
+          },
         ]
-      : [])
+      : []),
   ]
 
   return (
@@ -231,7 +231,7 @@ export default function OrderDetailPage() {
                   okText: 'Hủy đơn',
                   okButtonProps: { danger: true },
                   cancelText: 'Đóng',
-                  onOk: () => cancelOrderMutation.mutateAsync()
+                  onOk: () => cancelOrderMutation.mutateAsync(),
                 })
               }
             >
@@ -276,7 +276,6 @@ export default function OrderDetailPage() {
 
           {detail.note && (
             <Descriptions.Item label='Ghi chú'>{detail.note}</Descriptions.Item>
-            <Descriptions.Item label='Ghi chú'>{detail.note}</Descriptions.Item>
           )}
         </Descriptions>
       </Card>
@@ -306,24 +305,24 @@ export default function OrderDetailPage() {
                   />
                   {row.productName}
                 </Link>
-              )
+              ),
             },
             {
               title: 'Màu sắc',
-              render: (_, row) => `${row.variantColor} / ${row.variantSize}`
+              render: (_, row) => `${row.variantColor} / ${row.variantSize}`,
             },
             { title: 'Số lượng', dataIndex: 'quantity', align: 'right' },
             {
               title: 'Đơn giá',
               dataIndex: 'unitPrice',
               align: 'right',
-              render: (value: number) => formatCurrency(value)
+              render: (value: number) => formatCurrency(value),
             },
             {
               title: 'Thành tiền',
               dataIndex: 'lineTotal',
               align: 'right',
-              render: (value: number) => formatCurrency(value)
+              render: (value: number) => formatCurrency(value),
             },
             {
               title: 'Đánh giá',
@@ -345,8 +344,8 @@ export default function OrderDetailPage() {
                   <span className='text-xs text-slate-400'>
                     Chưa thể đánh giá
                   </span>
-                )
-            }
+                ),
+            },
           ]}
         />
       </Card>

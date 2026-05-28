@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Card, Tag } from 'antd'
 import { useNotifications } from '@/hooks/useNotifications'
-import { NotificationType } from '@/types/notification'
+import { NotificationType } from '@/types/notification.type'
 import { formatDate } from '@/utils/format'
-import type { NotificationDto } from '@/types/notification'
+import type { NotificationDto } from '@/types/notification.type'
 import { DownOutlined } from '@ant-design/icons'
 
 const getNotificationIcon = (type: NotificationDto['type']) => {
@@ -35,24 +35,24 @@ const getPrimaryImageUrl = (data: NotificationDto['data']) => {
 export default function NotificationsSection() {
   const { notifications, markAsRead } = useNotifications({
     page: 1,
-    pageSize: 100
+    pageSize: 100,
   })
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
-    {}
+    {},
   )
 
   const { groupedOrderNotifications, otherNotifications } = useMemo(() => {
     const orderNotifications = notifications.filter(
       (notification) =>
         notification.relatedEntityType === 'Order' &&
-        notification.relatedEntityId
+        notification.relatedEntityId,
     )
     const nonOrderNotifications = notifications.filter(
       (notification) =>
         !(
           notification.relatedEntityType === 'Order' &&
           notification.relatedEntityId
-        )
+        ),
     )
 
     const groupedMap = new Map<string, NotificationDto[]>()
@@ -68,24 +68,24 @@ export default function NotificationsSection() {
         const sortedItems = [...items].sort(
           (left, right) =>
             new Date(right.createdAt).getTime() -
-            new Date(left.createdAt).getTime()
+            new Date(left.createdAt).getTime(),
         )
         return {
           orderId,
           items: sortedItems,
           latest: sortedItems[0],
-          unreadCount: sortedItems.filter((item) => !item.isRead).length
+          unreadCount: sortedItems.filter((item) => !item.isRead).length,
         }
       })
       .sort(
         (left, right) =>
           new Date(right.latest.createdAt).getTime() -
-          new Date(left.latest.createdAt).getTime()
+          new Date(left.latest.createdAt).getTime(),
       )
 
     return {
       groupedOrderNotifications: grouped,
-      otherNotifications: nonOrderNotifications
+      otherNotifications: nonOrderNotifications,
     }
   }, [notifications])
 
@@ -199,10 +199,10 @@ export default function NotificationsSection() {
                     )}
                   </div>
                 )
-              }
+              },
             )}
           </div>
-        </Card>
+        </div>
       )}
 
       {otherNotifications.length > 0 && (
