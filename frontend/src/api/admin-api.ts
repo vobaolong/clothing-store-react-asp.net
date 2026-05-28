@@ -16,7 +16,8 @@ import type {
   Review,
   Customer
 } from '@/types'
-import { CategoryGender, CategoryProductType, FilterStatus } from '@/enums'
+import { CategoryGender, CategoryProductType } from '@/enums'
+import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 
 export const getAdminProducts = async (): Promise<AdminProduct[]> => {
   const rows = await apiData<AdminProduct[]>(
@@ -103,12 +104,10 @@ export type AdminBulkPermanentProductsResult = {
   skippedNotInTrash: number
 }
 
-export const bulkDeleteAdminProductsPermanent = async (payload: {
-  ids: string[]
-}): Promise<AdminBulkPermanentProductsResult> => {
+export const bulkDeleteAdminProductsPermanent = async (ids: string[]): Promise<AdminBulkPermanentProductsResult> => {
   return apiData(
     apiClient.delete(API_ENDPOINTS.admin.productsBulkPermanent, {
-      data: payload
+      data: ids
     })
   )
 }
@@ -183,7 +182,7 @@ export const bulkUpdateCategoriesActive = async (payload: {
 }) => apiVoid(apiClient.put(API_ENDPOINTS.admin.categoriesBulk, payload))
 
 export const getAdminOrders = async (
-  status: string = FilterStatus.ALL
+  status: string = ADMIN_FILTER_ALL_VALUE
 ): Promise<{ orders: AdminOrder[]; counts: StatusCount[] }> =>
   apiData(apiClient.get(API_ENDPOINTS.admin.orders, { params: { status } }))
 

@@ -10,7 +10,6 @@ public class OrderItem : BaseEntity
     public string ProductSlug { get; set; } = string.Empty;
     public Guid ProductVariantId { get; set; }
     public ProductVariant? ProductVariant { get; set; }
-    public string? VariantName { get; set; }
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
 }

@@ -53,7 +53,6 @@ public class AdminCreateOrderCommandHandler(IApplicationDbContext context)
                         ProductId = x.ProductId,
                         ProductName = product?.Name ?? string.Empty,
                         ProductVariantId = x.ProductVariantId,
-                        VariantName = variant != null ? $"{variant.Size} - {variant.Color}" : null,
                         Quantity = x.Quantity,
                         UnitPrice = x.UnitPrice,
                     };

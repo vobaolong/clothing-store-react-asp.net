@@ -16,7 +16,8 @@ import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { toCapitalize } from '@/utils/table.lib'
 import { openBillPrintWindow } from '@/utils/bill-export'
-import { OrderStatus } from '@/enums'
+import { OrderStatus, ShippingAddressType } from '@/enums'
+import { STATUS_COLORS } from '@/types'
 
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
@@ -114,7 +115,9 @@ export default function AdminOrderDetailPage() {
 
         <div className='flex flex-wrap gap-2 items-center'>
           {detail && (
-            <Tag>{getVietnameseStatusLabel(detail.paymentStatus)}</Tag>
+            <Tag color={STATUS_COLORS[detail.paymentStatus]}>
+              {getVietnameseStatusLabel(detail.paymentStatus)}
+            </Tag>
           )}
           <Select
             value={selectedStatus ?? detail?.status}
@@ -282,7 +285,12 @@ export default function AdminOrderDetailPage() {
                   Địa chỉ: {formatStructuredAddress(detail) || '—'}
                 </div>
                 <div className='whitespace-nowrap'>
-                  Nhãn: {detail.shippingLabel || '—'}
+                  Nhãn:{' '}
+                  {
+                    ShippingAddressType[
+                      detail.shippingLabel.toUpperCase() as keyof typeof ShippingAddressType
+                    ]
+                  }
                 </div>
               </div>
             </Card>

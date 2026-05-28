@@ -16,7 +16,7 @@ export default function AdminPageSidebar({
   collapsed,
   onCollapsedChange,
   brandTitle,
-  onLogout
+  onLogout,
 }: AdminPageSidebarProps) {
   return (
     <Sider
@@ -42,7 +42,7 @@ export default function AdminPageSidebar({
         <div className='overflow-y-auto flex-1 min-h-0'>
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>
-        <div className='p-2 border-t shrink-0 border-slate-200'>
+        <div className='p-2 border-t shrink-0 border-slate-200 flex justify-center'>
           <Tooltip title={collapsed ? 'Logout' : undefined}>
             <Button
               danger

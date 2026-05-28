@@ -51,7 +51,7 @@ export default function CouponSection({
           type='primary'
           loading={coupon.isApplying}
           onClick={() => void applyCouponByCode()}
-          className='rounded-lg! shrink-0'
+          className='rounded-md shrink-0'
         >
           Áp dụng
         </Button>

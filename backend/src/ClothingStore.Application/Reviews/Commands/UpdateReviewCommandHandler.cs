@@ -57,8 +57,7 @@ public class UpdateReviewCommandHandler(IApplicationDbContext context)
             x.VariantSize,
             x.VariantColor,
             x.CreatedAt,
-            x.UpdatedAt,
-            x.UserId == request.UserId
+            x.UpdatedAt
         );
     }
 }

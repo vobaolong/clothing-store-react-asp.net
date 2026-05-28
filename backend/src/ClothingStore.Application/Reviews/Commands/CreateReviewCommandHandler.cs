@@ -169,8 +169,7 @@ public class CreateReviewCommandHandler(IApplicationDbContext context)
             x.VariantSize,
             x.VariantColor,
             x.CreatedAt,
-            x.UpdatedAt,
-            x.UserId == currentUserId
+            x.UpdatedAt
         );
     }
 }

@@ -105,7 +105,6 @@ public class PlaceOrderCommandHandler(
                     ProductName = product.Name,
                     ProductSlug = product.Slug,
                     ProductVariantId = variant.Id,
-                    VariantName = $"{variant.Size} - {variant.Color}",
                     Quantity = item.Quantity,
                     UnitPrice = unitPrice,
                 }

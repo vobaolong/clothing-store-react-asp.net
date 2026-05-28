@@ -5,7 +5,7 @@ import {
   Radar,
   RadarChart,
   ResponsiveContainer,
-  Tooltip
+  Tooltip,
 } from 'recharts'
 import type { CategoryRadarData } from '@/types'
 
@@ -25,7 +25,7 @@ type CustomTickProps = {
 export default function CategoryRadarChart({
   data,
   height = 300,
-  onCategoryClick
+  onCategoryClick,
 }: CategoryRadarChartProps) {
   return (
     <ResponsiveContainer width='100%' height={height}>
@@ -64,14 +64,14 @@ export default function CategoryRadarChart({
           formatter={(value) => {
             const numericValue =
               typeof value === 'number' ? value : Number(value ?? 0)
-            return [numericValue.toLocaleString('vi-VN'), 'Sold'] as [
+            return [numericValue.toLocaleString('vi-VN'), 'Lượt bán'] as [
               string,
-              string
+              string,
             ]
           }}
         />
         <Radar
-          name='Sold'
+          name='Lượt bán'
           dataKey='value'
           stroke='#0ea5e9'
           fill='#0ea5e94d'

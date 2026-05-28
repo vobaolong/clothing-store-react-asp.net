@@ -127,7 +127,7 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
             order.Items.Select(item =>
                 $@"
             <tr>
-                <td>{item.ProductName}<br/><small style='color: #64748b;'>{item.VariantName}</small></td>
+                <td>{item.ProductName}<br/><small style='color: #64748b;'>{item.ProductVariant?.Size} - {item.ProductVariant?.Color}</small></td>
                 <td>{item.Quantity}</td>
                 <td>{item.UnitPrice:N0}đ</td>
             </tr>

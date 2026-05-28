@@ -4,13 +4,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import {
   createShippingAddress,
-  updateShippingAddress
+  updateShippingAddress,
 } from '@/api/addresses-api'
 import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   SHIPPING_ADDRESS_LABEL_OPTIONS,
-  ShippingAddressLabel
+  ShippingAddressLabel,
 } from '@/enums/shipping-address.enum'
 import type { CreateShippingAddressPayload, ShippingAddress } from '@/types'
 
@@ -35,7 +35,7 @@ export default function ShippingAddressFormModal({
   open,
   onCancel,
   address,
-  onSaved
+  onSaved,
 }: Props) {
   const [form] = Form.useForm<ShippingAddressFormValues>()
   const queryClient = useQueryClient()
@@ -45,7 +45,7 @@ export default function ShippingAddressFormModal({
   const provincesQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutProvinces,
     queryFn: () => getProvinces(),
-    enabled: open
+    enabled: open,
   })
 
   const selectedProvinceId = Form.useWatch('province', form)
@@ -54,7 +54,7 @@ export default function ShippingAddressFormModal({
   const wardsQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
     queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
-    enabled: Boolean(open && selectedProvinceId)
+    enabled: Boolean(open && selectedProvinceId),
   })
 
   useEffect(() => {
@@ -72,8 +72,10 @@ export default function ShippingAddressFormModal({
         ward: address.wardCode,
         street: address.street,
         label: address.label ?? undefined,
-        isDefault: address.isDefault
+        isDefault: address.isDefault,
       })
+    } else {
+      form.setFieldsValue({ label: 'Home' })
     }
   }, [address, form, open])
 
@@ -101,18 +103,18 @@ export default function ShippingAddressFormModal({
     onSuccess: async (addressId) => {
       toast.success('Đã thêm địa chỉ mới')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.shippingAddresses
+        queryKey: QUERY_KEYS.shippingAddresses,
       })
       form.resetFields()
       await onSaved?.(addressId)
       onCancel()
-    }
+    },
   })
 
   const updateAddressMutation = useMutation({
     mutationFn: async ({
       id,
-      payload
+      payload,
     }: {
       id: string
       payload: CreateShippingAddressPayload
@@ -120,12 +122,12 @@ export default function ShippingAddressFormModal({
     onSuccess: async (_, variables) => {
       toast.success('Đã cập nhật địa chỉ')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.shippingAddresses
+        queryKey: QUERY_KEYS.shippingAddresses,
       })
       form.resetFields()
       await onSaved?.(variables.id)
       onCancel()
-    }
+    },
   })
 
   const handleFinish = async (values: ShippingAddressFormValues) => {
@@ -139,7 +141,7 @@ export default function ShippingAddressFormModal({
       provincesQuery.data?.find((x) => x.code === provinceId)?.name ?? ''
     const wardName =
       wardsQuery.data?.find(
-        (x: { name: string; code: string }) => x.code === wardCode
+        (x: { name: string; code: string }) => x.code === wardCode,
       )?.name ?? ''
     const fullAddress = [street, wardName, provinceName]
       .filter(Boolean)
@@ -160,7 +162,7 @@ export default function ShippingAddressFormModal({
       wardCode,
       street,
       label: values.label,
-      isDefault: Boolean(values.isDefault)
+      isDefault: Boolean(values.isDefault),
     }
 
     if (address) {
@@ -182,7 +184,7 @@ export default function ShippingAddressFormModal({
       }
       okText={isEditMode ? 'Cập nhật địa chỉ' : 'Lưu địa chỉ'}
       cancelText='Hủy'
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout='vertical' onFinish={handleFinish}>
         <Form.Item
@@ -205,7 +207,7 @@ export default function ShippingAddressFormModal({
           name='province'
           label='Tỉnh / Thành phố'
           rules={[
-            { required: true, message: 'Vui lòng chọn tỉnh / thành phố' }
+            { required: true, message: 'Vui lòng chọn tỉnh / thành phố' },
           ]}
         >
           <Select
@@ -213,7 +215,7 @@ export default function ShippingAddressFormModal({
             placeholder='Chọn tỉnh / thành phố'
             options={(provincesQuery.data ?? []).map((item) => ({
               label: item.name,
-              value: item.code
+              value: item.code,
             }))}
             filterOption={(input, option) =>
               String(option?.label ?? '')
@@ -235,10 +237,10 @@ export default function ShippingAddressFormModal({
             options={(wardsQuery.data ?? []).map(
               (item: { name: string; code: string }) => ({
                 label: item.name,
-                value: item.code
-              })
+                value: item.code,
+              }),
             )}
-						filterOption={(input, option) =>
+            filterOption={(input, option) =>
               String(option?.label ?? '')
                 .toLowerCase()
                 .includes(input.toLowerCase())
@@ -262,7 +264,10 @@ export default function ShippingAddressFormModal({
                 key={item.value}
                 checked={selectedLabel === item.value}
                 onChange={(checked) => {
-                  form.setFieldValue('label', checked ? item.value : undefined)
+                  form.setFieldValue(
+                    'label',
+                    checked ? item.value : SHIPPING_ADDRESS_LABEL_OPTIONS[0],
+                  )
                 }}
                 className='flex! items-center! justify-center! px-3 py-1.5 h-8! text-sm leading-none border cursor-pointer border-slate-300!'
               >

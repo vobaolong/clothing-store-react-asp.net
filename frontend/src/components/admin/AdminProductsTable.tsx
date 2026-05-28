@@ -1,4 +1,4 @@
-import { Switch, Table, Tooltip, Typography } from 'antd'
+import { Button, Switch, Table, Tooltip, Typography } from 'antd'
 import type { ColumnsType, TableRowSelection } from 'antd/es/table/interface'
 import toast from 'react-hot-toast'
 import { AdminTableEditDeleteActions } from '@/components/admin/AdminTableEditDeleteActions'
@@ -6,6 +6,7 @@ import type { AdminProduct } from '@/types'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { toCapitalize } from '@/utils/table.lib'
 import { getAdminProductThumbnail } from '@/components/admin/admin-products-utils'
+import { UndoOutlined } from '@ant-design/icons'
 
 type AdminProductsTableProps = {
   dataSource: AdminProduct[]
@@ -30,12 +31,12 @@ export default function AdminProductsTable({
   onDelete,
   onRestore,
   onToggleActive,
-  onRefresh
+  onRefresh,
 }: AdminProductsTableProps) {
   void onRestore
   void onRefresh
   const rowNumberById = new Map(
-    dataSource.map((product, index) => [product.id, index + 1])
+    dataSource.map((product, index) => [product.id, index + 1]),
   )
 
   const columns: ColumnsType<AdminProduct> = isTrash
@@ -46,7 +47,7 @@ export default function AdminProductsTable({
           align: 'center',
           width: 60,
           fixed: 'left',
-          render: (_: unknown, row: AdminProduct) => rowNumberById.get(row.id)
+          render: (_: unknown, row: AdminProduct) => rowNumberById.get(row.id),
         },
         {
           title: 'Tên sản phẩm',
@@ -55,7 +56,7 @@ export default function AdminProductsTable({
             <Tooltip title={value}>
               <div className='line-clamp-2 max-w-56'>{toCapitalize(value)}</div>
             </Tooltip>
-          )
+          ),
         },
         {
           title: 'Ảnh',
@@ -81,8 +82,22 @@ export default function AdminProductsTable({
                 }}
               />
             )
-          }
-        }
+          },
+        },
+        {
+          title: 'Thao tác',
+          align: 'center',
+          width: 100,
+          fixed: 'right',
+          render: (_: unknown, row: AdminProduct) => (
+            <Tooltip title='Khôi phục'>
+              <Button
+                icon={<UndoOutlined />}
+                onClick={() => onRestore?.(row)}
+              />
+            </Tooltip>
+          ),
+        },
       ]
     : [
         {
@@ -91,7 +106,7 @@ export default function AdminProductsTable({
           align: 'center',
           width: 60,
           fixed: 'left',
-          render: (_: unknown, row: AdminProduct) => rowNumberById.get(row.id)
+          render: (_: unknown, row: AdminProduct) => rowNumberById.get(row.id),
         },
         {
           title: 'Tên sản phẩm',
@@ -100,7 +115,7 @@ export default function AdminProductsTable({
             <Tooltip title={value}>
               <div className='line-clamp-2 max-w-56'>{toCapitalize(value)}</div>
             </Tooltip>
-          )
+          ),
         },
         {
           title: 'Ảnh',
@@ -127,7 +142,7 @@ export default function AdminProductsTable({
                 }}
               />
             )
-          }
+          },
         },
         { title: 'Mã SP', dataIndex: 'productCode' },
         { title: 'Danh mục', dataIndex: 'categoryName' },
@@ -135,23 +150,23 @@ export default function AdminProductsTable({
           title: 'Giá gốc',
           dataIndex: 'price',
           align: 'right',
-          render: (value: number) => formatCurrency(value)
+          render: (value: number) => formatCurrency(value),
         },
         {
           title: 'Giá sale',
           dataIndex: 'salePrice',
           align: 'right',
-          render: (value: number) => formatCurrency(value)
+          render: (value: number) => formatCurrency(value),
         },
         {
           title: 'Tồn kho',
           dataIndex: 'stock',
-          align: 'right'
+          align: 'right',
         },
         {
           title: 'Đã bán',
           dataIndex: 'soldCount',
-          align: 'right'
+          align: 'right',
         },
         {
           title: 'Kích hoạt',
@@ -168,12 +183,12 @@ export default function AdminProductsTable({
                 }
               }}
             />
-          )
+          ),
         },
         {
           title: 'Ngày tạo',
           dataIndex: 'createdAt',
-          render: (value: string) => formatDate(value)
+          render: (value: string) => formatDate(value),
         },
         {
           title: 'Thao tác',
@@ -186,8 +201,8 @@ export default function AdminProductsTable({
               onEdit={onEdit}
               onDelete={onDelete}
             />
-          )
-        }
+          ),
+        },
       ]
 
   return (
@@ -202,7 +217,7 @@ export default function AdminProductsTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} sản phẩm`
+        showTotal: (total) => `Tổng ${total} sản phẩm`,
       }}
       columns={columns}
     />

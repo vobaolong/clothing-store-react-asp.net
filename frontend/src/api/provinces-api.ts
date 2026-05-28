@@ -3,7 +3,7 @@ import axios from 'axios'
 type RawAddressItem = Record<string, unknown>
 
 const provincesClient = axios.create({
-  baseURL: 'https://tinhthanhpho.com/api/v1'
+  baseURL: 'https://tinhthanhpho.com/api/v1',
 })
 
 export type ProvinceOption = {
@@ -11,10 +11,7 @@ export type ProvinceOption = {
   name: string
 }
 
-export type WardOption = {
-  code: string
-  name: string
-}
+export type WardOption = ProvinceOption
 
 const toText = (...values: unknown[]) =>
   values
@@ -30,7 +27,7 @@ const toCode = (...values: unknown[]) =>
 
 const normalizeProvince = (item: RawAddressItem): ProvinceOption => ({
   code: toCode(item.provinceId, item.code, item.id),
-  name: toText(item.provinceName, item.name, item.fullName, item.title)
+  name: toText(item.provinceName, item.name, item.fullName, item.title),
 })
 
 const normalizeWard = (item: RawAddressItem): WardOption => ({
@@ -46,21 +43,21 @@ const normalizeSearchResult = (item: RawAddressItem): WardOption => ({
 const asArray = (data: unknown): RawAddressItem[] => {
   if (Array.isArray(data))
     return data.filter(
-      (x): x is RawAddressItem => Boolean(x) && typeof x === 'object'
+      (x): x is RawAddressItem => Boolean(x) && typeof x === 'object',
     )
   if (data && typeof data === 'object') {
     const obj = data as Record<string, unknown>
     if (Array.isArray(obj.data))
       return obj.data.filter(
-        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object'
+        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object',
       )
     if (Array.isArray(obj.results))
       return obj.results.filter(
-        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object'
+        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object',
       )
     if (Array.isArray(obj.items))
       return obj.items.filter(
-        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object'
+        (x): x is RawAddressItem => Boolean(x) && typeof x === 'object',
       )
   }
   return []
@@ -69,14 +66,14 @@ const asArray = (data: unknown): RawAddressItem[] => {
 export const getProvinces = async (
   keyword?: string,
   limit: number = 100,
-  page: number = 1
+  page: number = 1,
 ): Promise<ProvinceOption[]> => {
   const { data } = await provincesClient.get('/new-provinces', {
     params: {
       keyword: keyword || undefined,
       limit,
-      page
-    }
+      page,
+    },
   })
   return asArray(data)
     .map(normalizeProvince)
@@ -87,7 +84,7 @@ export const getWardsByProvinceId = async (
   provinceId: string,
   keyword?: string,
   limit: number = 200,
-  page: number = 1
+  page: number = 1,
 ): Promise<WardOption[]> => {
   const { data } = await provincesClient.get(
     `/new-provinces/${provinceId}/wards`,
@@ -95,9 +92,9 @@ export const getWardsByProvinceId = async (
       params: {
         keyword: keyword || undefined,
         limit,
-        page
-      }
-    }
+        page,
+      },
+    },
   )
   return asArray(data)
     .map(normalizeWard)
@@ -106,13 +103,13 @@ export const getWardsByProvinceId = async (
 
 export const searchNewAddress = async (
   keyword: string,
-  limit: number = 20
+  limit: number = 20,
 ): Promise<WardOption[]> => {
   const { data } = await provincesClient.get('/search-new-address', {
     params: {
       keyword,
-      limit
-    }
+      limit,
+    },
   })
   return asArray(data)
     .map(normalizeSearchResult)

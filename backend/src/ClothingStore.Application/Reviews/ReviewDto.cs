@@ -26,15 +26,13 @@ public record ProductReviewDto(
     string? VariantSize,
     string? VariantColor,
     DateTime CreatedAt,
-    DateTime UpdatedAt,
-    bool IsMine
+    DateTime UpdatedAt
 );
 
 public record ProductReviewsDto(
     Guid ProductId,
     double AverageRating,
     int TotalCount,
-    ProductReviewDto? MyReview,
     IReadOnlyList<ProductReviewDto> Reviews,
     bool CanReview,
     string? EligibilityMessage

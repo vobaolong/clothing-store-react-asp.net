@@ -23,14 +23,7 @@ public class GetProductReviewsQueryHandler(IApplicationDbContext context, IMappe
             .ToListAsync(cancellationToken);
 
         var reviews = reviewEntities
-            .Select(review =>
-                mapper.Map<ProductReviewDto>(review) with
-                {
-                    IsMine =
-                        request.CurrentUserId.HasValue
-                        && review.UserId == request.CurrentUserId.Value,
-                }
-            )
+            .Select(review => mapper.Map<ProductReviewDto>(review))
             .ToList();
 
         double averageRating = 0d;
@@ -38,10 +31,6 @@ public class GetProductReviewsQueryHandler(IApplicationDbContext context, IMappe
         {
             averageRating = Math.Round(reviews.Average(x => (double)x.Rating), 1);
         }
-        var myReview = reviews
-            .Where(review => review.IsMine)
-            .OrderByDescending(review => review.CreatedAt)
-            .FirstOrDefault();
 
         bool canReview = false;
         string? eligibilityMessage = null;
@@ -107,7 +96,6 @@ public class GetProductReviewsQueryHandler(IApplicationDbContext context, IMappe
             request.ProductId,
             averageRating,
             reviews.Count,
-            myReview,
             reviews,
             canReview,
             eligibilityMessage

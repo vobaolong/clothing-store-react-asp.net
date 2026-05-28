@@ -70,11 +70,8 @@ public class BulkUpdateOrderStatusCommandHandler(
                         product.SoldCount += item.Quantity;
                 }
 
-                if (order.PaymentMethod == PaymentMethod.COD)
-                {
-                    order.PaymentStatus = PaymentStatus.Paid;
-                    order.PaidAt ??= DateTime.UtcNow;
-                }
+                order.PaymentStatus = PaymentStatus.Paid;
+                order.PaidAt ??= DateTime.UtcNow;
             }
             else if (
                 order.Status == OrderStatus.Delivered

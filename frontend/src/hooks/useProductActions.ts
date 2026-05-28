@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { Modal } from 'antd'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
 import {
@@ -41,11 +42,18 @@ export function useProductActions({ refresh, editing, modals, clearDirty, setSel
   }, [clearDirty, editing, modals])
 
   const onDelete = useCallback((product: AdminProduct) => {
-    return async () => {
-      await deleteAdminProduct(product.id)
-      toast.success('Sản phẩm đã được xóa')
-      await refresh()
-    }
+    Modal.confirm({
+      title: `Xóa sản phẩm "${product.name}"?`,
+      content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
+      okText: 'Xác nhận',
+      cancelText: 'Hủy',
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        await deleteAdminProduct(product.id)
+        toast.success('Sản phẩm đã được xóa')
+        await refresh()
+      },
+    })
   }, [refresh])
 
   const onToggleActive = useCallback(async (product: AdminProduct, isActive: boolean) => {
@@ -55,9 +63,17 @@ export function useProductActions({ refresh, editing, modals, clearDirty, setSel
   }, [refresh])
 
   const onRestore = useCallback(async (product: AdminProduct) => {
-    await restoreAdminProduct(product.id)
-    toast.success('Sản phẩm đã được khôi phục')
-    await refresh()
+		Modal.confirm({
+      title: `Khôi phục sản phẩm "${product.name}"?`,
+      content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
+      okText: 'Xác nhận',
+      cancelText: 'Hủy',
+      onOk: async () => {
+        await restoreAdminProduct(product.id)
+        toast.success('Sản phẩm đã được khôi phục')
+        await refresh()
+      },
+    })
   }, [refresh])
 
   const openProductView = useCallback((product: AdminProduct, updatedAt?: string | null) => {

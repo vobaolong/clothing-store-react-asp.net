@@ -42,11 +42,8 @@ public class UpdateOrderStatusCommandHandler(
                 product?.SoldCount += item.Quantity;
             }
 
-            if (order.PaymentMethod == PaymentMethod.COD)
-            {
-                order.PaymentStatus = PaymentStatus.Paid;
-                order.PaidAt ??= DateTime.UtcNow;
-            }
+            order.PaymentStatus = PaymentStatus.Paid;
+            order.PaidAt ??= DateTime.UtcNow;
         }
         else if (order.Status == OrderStatus.Delivered && request.Status != OrderStatus.Delivered)
         {
@@ -70,6 +67,7 @@ public class UpdateOrderStatusCommandHandler(
                 order.PaymentStatus = PaymentStatus.Unpaid;
                 order.PaidAt = null;
             }
+
         }
 
         // ChangeStatus will validate the transition and throw if invalid

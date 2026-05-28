@@ -258,15 +258,15 @@ export default function ProductDetailPage() {
     if (!descriptionLayout?.specs?.length || !product) return []
     return [
       {
-        label: 'Mã SP',
-        value: (selectedVariant?.sku ?? product.productCode).toUpperCase(),
+        label: 'Mã sản phẩm',
+        value: product.productCode.toUpperCase(),
       },
       ...descriptionLayout.specs.map((spec) => ({
         label: String(spec.label ?? ''),
         value: formatDescriptionSpecDisplayValue(String(spec.value ?? '')),
       })),
     ]
-  }, [descriptionLayout, product, selectedVariant?.sku])
+  }, [descriptionLayout, product])
 
   const listCategory = categories.find((c) => c.id === product?.categoryId)
   const sizeGuideProfile =
@@ -637,7 +637,7 @@ export default function ProductDetailPage() {
               key: 'description',
               label: 'Mô tả sản phẩm',
               children: (
-                <div className='py-3 px-4 md:px-6 md:py-4'>
+                <div className='px-4 py-3 md:px-6 md:py-4'>
                   <div
                     className='prose prose-sm max-w-none text-stone-600 [&_img]:h-auto [&_img]:max-w-full'
                     dangerouslySetInnerHTML={{ __html: product.description }}
@@ -649,7 +649,7 @@ export default function ProductDetailPage() {
               key: 'reviews',
               label: 'Đánh giá sản phẩm',
               children: (
-                <div className='py-3 px-4 md:px-6 md:py-4'>
+                <div className='px-4 py-3 md:px-6 md:py-4'>
                   <Suspense fallback={null}>
                     <ProductReviewsSection
                       productId={product.id}

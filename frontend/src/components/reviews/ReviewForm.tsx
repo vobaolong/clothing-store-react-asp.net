@@ -1,6 +1,6 @@
 import { Button, Form, Input, Rate, Select } from 'antd'
 import { useEffect } from 'react'
-import type { ProductReview } from '@/types'
+import { tagOptions } from '@/constants/review-label.constrant'
 
 type ReviewFormValues = {
   rating: number
@@ -9,53 +9,29 @@ type ReviewFormValues = {
 }
 
 type ReviewFormProps = {
-  review?: ProductReview | null
   loading?: boolean
   onSubmit: (values: ReviewFormValues) => Promise<void> | void
   onCancel?: () => void
 }
 
 export default function ReviewForm({
-  review,
   loading,
   onSubmit,
-  onCancel
+  onCancel,
 }: ReviewFormProps) {
   const [form] = Form.useForm<ReviewFormValues>()
 
   useEffect(() => {
     form.setFieldsValue({
-      rating: review?.rating ?? 5,
-      comment: review?.comment ?? '',
-      tags: review?.tags ?? []
+      rating: 5,
+      comment: '',
+      tags: [],
     })
-  }, [form, review])
-
-  const tagOptions = [
-    'Chất vải đẹp',
-    'Đúng size',
-    'Giao hàng nhanh',
-    'Đóng gói kỹ',
-    'Giá hợp lý',
-    'Giống mô tả'
-  ]
+  }, [form])
 
   return (
-    <Form
-      form={form}
-      layout='vertical'
-      initialValues={{
-        rating: review?.rating ?? 5,
-        comment: review?.comment ?? '',
-        tags: review?.tags ?? []
-      }}
-      onFinish={onSubmit}
-    >
-      <Form.Item
-        name='rating'
-        label='Đánh giá'
-        rules={[{ required: true, message: 'Vui lòng chọn mức độ hài lòng' }]}
-      >
+    <Form form={form} layout='vertical' onFinish={onSubmit}>
+      <Form.Item name='rating' label='Chấm điểm đơn hàng của bạn'>
         <Rate />
       </Form.Item>
       <Form.Item name='tags' label='Đặc điểm sản phẩm'>
@@ -68,12 +44,12 @@ export default function ReviewForm({
       </Form.Item>
       <Form.Item
         name='comment'
-        label='Nhận xét'
-        rules={[{ max: 1000, message: 'Nội dung quá dài' }]}
+        label='Chất lượng sản phẩm'
+        rules={[{ max: 300, message: 'Nội dung quá dài' }]}
       >
         <Input.TextArea
           rows={4}
-          placeholder='Chia sẻ trải nghiệm của bạn về sản phẩm này'
+          placeholder='Bạn thích hoặc không thích điều gì về sản phẩm này?'
         />
       </Form.Item>
       <div className='flex gap-2 justify-end items-center'>
@@ -88,7 +64,7 @@ export default function ReviewForm({
           loading={loading}
           className='px-6 h-10 rounded-xl'
         >
-          {review ? 'Cập nhật' : 'Gửi đánh giá'}
+          Gửi đánh giá
         </Button>
       </div>
     </Form>

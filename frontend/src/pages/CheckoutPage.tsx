@@ -17,11 +17,9 @@ import { getAuthToken } from '@/state/auth/auth-session'
 import { placeOrder } from '@/api/orders-api'
 import { getAvailableCoupons, validateCoupon } from '@/api/coupons-api'
 import {
-  createShippingAddress,
   getShippingAddresses,
   getShippingAddressPrefill,
 } from '@/api/addresses-api'
-import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
@@ -40,6 +38,7 @@ import type {
   SelectOption,
   CheckoutWardOption,
 } from '@/types/checkout.type'
+import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
 
 type CouponState = {
   isApplying: boolean
@@ -189,10 +188,6 @@ export default function CheckoutPage() {
       attributes: true,
       attributeFilter: ['style'],
     })
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['style'],
-    })
     return () => observer.disconnect()
   }, [])
   const [uiState, uiDispatch] = useReducer(
@@ -228,10 +223,6 @@ export default function CheckoutPage() {
     queryKey: QUERY_KEYS.availableCoupons,
     queryFn: getAvailableCoupons,
   })
-  const provincesQuery = useQuery({
-    queryKey: QUERY_KEYS.checkoutProvinces,
-    queryFn: () => getProvinces(),
-  })
 
   const { control, handleSubmit, reset, setValue, getValues } =
     useForm<CheckoutFormValues>({
@@ -253,24 +244,14 @@ export default function CheckoutPage() {
     })
 
   const watchedCouponCode = useWatch({ control, name: 'couponCode' })
-  const selectedProvinceId = useWatch({ control, name: 'province' })
 
-  const wardsByProvinceQuery = useQuery({
-    queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
-    queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
-    enabled: Boolean(selectedProvinceId),
-  })
-
-  const subtotal = total
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  )
   const coupon = uiState.coupon
-  const address = uiState.address
   const isSubmitting = uiState.isSubmitting
 
-  const provincesOptions =
-    provincesQuery.data?.map((x) => ({ label: x.name, value: x.code })) ?? []
-  const wardOptions =
-    wardsByProvinceQuery.data?.map((x) => ({ label: x.name, value: x.code })) ??
-    []
   const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
   const appliedCouponDetails = availableCouponsQuery.data?.find(
     (c) => c.code.toUpperCase() === coupon.appliedCode,
@@ -278,6 +259,24 @@ export default function CheckoutPage() {
   const isAppliedCouponEligible = appliedCouponDetails
     ? subtotal >= appliedCouponDetails.minOrderSubtotal
     : true
+
+  const [editingAddress, setEditingAddress] = useState<import('@/types').ShippingAddress | null>(null)
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
+
+  const handleOpenAddAddress = () => {
+    setEditingAddress(null)
+    setIsAddressModalOpen(true)
+  }
+
+  const handleEditAddress = (address: import('@/types').ShippingAddress) => {
+    setEditingAddress(address)
+    setIsAddressModalOpen(true)
+  }
+
+  const handleCloseAddressModal = () => {
+    setEditingAddress(null)
+    setIsAddressModalOpen(false)
+  }
 
   useEffect(() => {
     if (prefillQuery.data) setValue('fullName', prefillQuery.data.fullName)
@@ -341,48 +340,10 @@ export default function CheckoutPage() {
     setValue('couponCode', '')
   }
 
-  const handleSaveNewAddress = async () => {
-    const values = getValues()
-    const fullName = values.fullName?.trim() ?? ''
-    const phone = values.phone?.trim() ?? ''
-    const provinceId = values.province?.trim() ?? ''
-    const wardCode = values.ward?.trim() ?? ''
-    const street = values.street?.trim() ?? values.fullAddress?.trim() ?? ''
-    const label = values.label
-    const province =
-      provincesQuery.data?.find((x) => x.code === provinceId)?.name ||
-      provincesOptions.find((x) => x.value === provinceId)?.label
-    const ward =
-      wardsByProvinceQuery.data?.find((x) => x.code === wardCode) ||
-      wardOptions.find((x) => x.value === wardCode)
-    const wardName = ward
-      ? (('name' in ward ? ward.name : ward.label) as string)
-      : ''
-    const addressStr = [street, wardName, province].filter(Boolean).join(', ')
-    if (!fullName || !phone || !province || !wardName || !street) {
-      toast.error('Vui lòng chọn tỉnh, huyện và nhập địa chỉ')
-      return
-    }
-    try {
-      const addressId = await createShippingAddress({
-        fullName,
-        phone,
-        address: addressStr,
-        province,
-        provinceId,
-        ward: wardName,
-        wardCode,
-        street,
-        label,
-        isDefault: Boolean(values.setAsDefault),
-      })
-      await qc.invalidateQueries({ queryKey: QUERY_KEYS.shippingAddresses })
-      setValue('shippingAddressId', addressId)
-      uiDispatch({ type: 'address/hide-new-form' })
-      toast.success('Địa chỉ mới đã được thêm')
-    } catch {
-      toast.error('Không thể lưu địa chỉ mới')
-    }
+  const handleAddressModalSaved = async (addressId: string) => {
+    setValue('shippingAddressId', addressId)
+    await qc.invalidateQueries({ queryKey: QUERY_KEYS.shippingAddresses })
+    handleCloseAddressModal()
   }
 
   const submitOrder = async () => {
@@ -537,15 +498,9 @@ export default function CheckoutPage() {
         <div className='space-y-4!'>
           <ShippingAddressSection
             control={control}
-            setValue={setValue}
             addressesQuery={addressesQuery}
-            addressState={address}
-            provincesOptions={provincesOptions}
-            wardOptions={wardOptions}
-            onToggleNewForm={() =>
-              uiDispatch({ type: 'address/toggle-new-form' })
-            }
-            handleSaveNewAddress={handleSaveNewAddress}
+            onOpenModal={handleOpenAddAddress}
+            onEditAddress={handleEditAddress}
             qc={qc}
           />
 
@@ -577,6 +532,13 @@ export default function CheckoutPage() {
           appliedCouponCode={coupon.appliedCode || undefined}
         />
       </div>
+
+      <ShippingAddressFormModal
+        open={isAddressModalOpen}
+        address={editingAddress}
+        onCancel={handleCloseAddressModal}
+        onSaved={handleAddressModalSaved}
+      />
     </div>
   )
 }

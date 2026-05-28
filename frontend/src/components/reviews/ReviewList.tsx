@@ -1,29 +1,12 @@
-import { Avatar, Button, Empty, Rate, Tag } from 'antd'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { Avatar, Empty, Rate, Tag } from 'antd'
 import type { ProductReview } from '@/types'
 import { formatDate } from '@/utils/format'
 
-type ReviewListProps = {
-  reviews: ProductReview[]
-  onEdit?: (review: ProductReview) => void
-  onDelete?: (review: ProductReview) => void
-}
-
-export default function ReviewList({
-  reviews,
-  onEdit,
-  onDelete
-}: ReviewListProps) {
+export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
   const getInitial = (name: string) => {
     const normalized = name.trim()
     if (!normalized) return 'U'
     return normalized.charAt(0).toUpperCase()
-  }
-
-  const isDeleteAllowed = (createdAt: string) => {
-    const createdTime = new Date(createdAt).getTime()
-    const currentTime = new Date().getTime()
-    return currentTime - createdTime <= 24 * 60 * 60 * 1000
   }
 
   if (!reviews.length) {
@@ -53,62 +36,39 @@ export default function ReviewList({
             </div>
 
             <div className='flex-1 w-full min-w-0'>
-              <div className='flex gap-4 justify-between items-start'>
-                <div>
-                  <Rate
-                    disabled
-                    size='small'
-                    value={review.rating}
-                    className='mt-1 text-xs text-amber-500'
-                  />
-                  {(review.variantSize || review.variantColor) && (
-                    <div className='flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500'>
-                      {review.variantSize && (
-                        <span>
-                          <span className='text-slate-400'>Kích thước:</span>{' '}
-                          {review.variantSize}
-                        </span>
-                      )}
-                      {review.variantColor && (
-                        <span>
-                          <span className='text-slate-400'>Màu sắc:</span>{' '}
-                          {review.variantColor}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                {review.isMine && (
-                  <div className='flex gap-1 items-center'>
-                    {onEdit && (
-                      <Button
-                        type='text'
-                        size='small'
-                        icon={<EditOutlined className='text-slate-400' />}
-                        onClick={() => onEdit(review)}
-                      />
+              <div>
+                <Rate
+                  disabled
+                  size='small'
+                  value={review.rating}
+                  className='mt-1 text-xs text-amber-500'
+                />
+                {(review.variantSize || review.variantColor) && (
+                  <div className='flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500'>
+                    {review.variantSize && (
+                      <span>
+                        <span className='text-slate-400'>Kích thước:</span>{' '}
+                        {review.variantSize}
+                      </span>
                     )}
-                    {onDelete && isDeleteAllowed(review.createdAt) && (
-                      <Button
-                        danger
-                        type='text'
-                        size='small'
-                        icon={<DeleteOutlined />}
-                        onClick={() => onDelete(review)}
-                      />
+                    {review.variantColor && (
+                      <span>
+                        <span className='text-slate-400'>Màu sắc:</span>{' '}
+                        {review.variantColor}
+                      </span>
                     )}
                   </div>
                 )}
               </div>
 
               {review.comment && (
-                <p className='mt-3 text-[14px] leading-relaxed text-slate-800 font-medium'>
+                <p className='m-0! pt-2! text-sm font-medium leading-relaxed text-slate-800'>
                   {review.comment}
                 </p>
               )}
 
               {review.tags && review.tags.length > 0 && (
-                <div className='flex flex-wrap gap-2 mt-4'>
+                <div className='flex flex-wrap gap-2 pt-2!'>
                   {review.tags.map((tag) => (
                     <Tag
                       key={tag}
@@ -119,10 +79,9 @@ export default function ReviewList({
                   ))}
                 </div>
               )}
-
-              <div className='mt-3 text-xs text-right text-slate-400'>
-                {formatDate(review.createdAt)}
-              </div>
+            </div>
+            <div className='text-xs text-right text-slate-400'>
+              {formatDate(review.createdAt)}
             </div>
           </div>
         </div>

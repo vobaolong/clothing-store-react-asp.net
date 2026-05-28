@@ -39,7 +39,7 @@ public class GetAdminOrdersQueryHandler(IApplicationDbContext context)
                 o.CreatedAt,
                 o.UpdatedAt,
                 o.PaymentMethod,
-                o.PaidAt != null ? PaymentStatus.Paid : o.PaymentStatus,
+                o.Status == OrderStatus.Delivered ? PaymentStatus.Paid : o.PaymentStatus,
                 o.Note,
                 o.DiscountAmount,
                 o.Items.Count,

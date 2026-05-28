@@ -25,7 +25,6 @@ export default function OrderSummary({
 }: Props) {
   return (
     <Card
-      className='rounded-2xl border-slate-200 shadow-sm lg:sticky!'
       title={<span className='font-semibold text-slate-800'>Tổng tiền</span>}
     >
       <div className='space-y-3 text-sm'>
@@ -39,7 +38,7 @@ export default function OrderSummary({
                 <span className='font-medium line-clamp-2'>{item.name}</span>
                 {item.selectedSize} / {item.selectedColor}
               </span>
-              <span className=' text-slate-400'>×{item.quantity}</span>
+              <span className='text-slate-400'>×{item.quantity}</span>
               <span className='text-slate-800 shrink-0'>
                 {formatCurrency(
                   getEffectivePriceAt(item, nowMs) * item.quantity,

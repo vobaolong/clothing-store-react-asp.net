@@ -1,16 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Card, Divider, Modal, Rate, Select, Skeleton } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import { Button, Card, Divider, Rate, Select, Skeleton } from 'antd'
 import { useMemo, useRef, useState } from 'react'
-import toast from 'react-hot-toast'
-import {
-  createReview,
-  deleteReview,
-  getProductReviews,
-} from '@/api/reviews-api'
+import { getProductReviews } from '@/api/reviews-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
-import { getAuthToken } from '@/state/auth/auth-session'
-import ReviewForm from '@/components/reviews/ReviewForm'
 import ReviewList from '@/components/reviews/ReviewList'
+
+const LOAD_MORE_COUNT = 4
 
 export default function ProductReviewsSection({
   productId,
@@ -19,47 +14,15 @@ export default function ProductReviewsSection({
   productId: string
   productName: string
 }) {
-  const queryClient = useQueryClient()
-  const reviewFormRef = useRef<HTMLDivElement>(null)
-  const isAuthenticated = Boolean(getAuthToken())
   const [starFilter, setStarFilter] = useState<number | 'all'>('all')
   const [sortOrder, setSortOrder] = useState<'low-to-high' | 'high-to-low'>(
     'high-to-low',
   )
+  const [loadedCount, setLoadedCount] = useState(LOAD_MORE_COUNT)
 
   const reviewsQuery = useQuery({
     queryKey: QUERY_KEYS.productReviews(productId),
     queryFn: () => getProductReviews(productId),
-  })
-
-  const createMutation = useMutation({
-    mutationFn: (values: {
-      rating: number
-      comment?: string
-      tags?: string[]
-    }) =>
-      createReview({
-        productId,
-        rating: values.rating,
-        comment: values.comment,
-        tags: values.tags,
-      }),
-    onSuccess: async () => {
-      toast.success('Review saved')
-      await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.productReviews(productId),
-      })
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: (reviewId: string) => deleteReview(reviewId),
-    onSuccess: async () => {
-      toast.success('Review deleted')
-      await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.productReviews(productId),
-      })
-    },
   })
 
   const summary = reviewsQuery.data
@@ -109,21 +72,19 @@ export default function ProductReviewsSection({
       starFilter === 'all'
         ? reviews
         : reviews.filter((review) => review.rating === starFilter)
-    return [...filtered].sort((a, b) =>
+    const sorted = [...filtered].sort((a, b) =>
       sortOrder === 'low-to-high' ? a.rating - b.rating : b.rating - a.rating,
     )
-  }, [summary?.reviews, starFilter, sortOrder])
+    return sorted.slice(0, loadedCount)
+  }, [summary?.reviews, starFilter, sortOrder, loadedCount])
 
-  const handleSubmit = async (values: {
-    rating: number
-    comment?: string
-    tags?: string[]
-  }) => {
-    await createMutation.mutateAsync({
-      rating: values.rating,
-      comment: values.comment,
-      tags: values.tags,
-    })
+  const hasMore = (summary?.reviews?.length ?? 0) > loadedCount
+
+  // Reset loadedCount when filters change
+  const prevFilterRef = useRef([starFilter, sortOrder])
+  if (prevFilterRef.current[0] !== starFilter || prevFilterRef.current[1] !== sortOrder) {
+    prevFilterRef.current = [starFilter, sortOrder]
+    setLoadedCount(LOAD_MORE_COUNT)
   }
 
   return (
@@ -146,20 +107,6 @@ export default function ProductReviewsSection({
           <span className='text-sm text-slate-500'>
             {totalReviews} lượt đánh giá
           </span>
-          {summary?.canReview ? (
-            <Button
-              type='primary'
-              className='mt-2 rounded-lg'
-              onClick={() =>
-                reviewFormRef.current?.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start',
-                })
-              }
-            >
-              Viết đánh giá
-            </Button>
-          ) : null}
         </div>
 
         <div className='px-4 space-y-2 border-x border-slate-100'>
@@ -253,42 +200,19 @@ export default function ProductReviewsSection({
         <Skeleton active paragraph={{ rows: 4 }} />
       ) : null}
 
-      {!reviewsQuery.isLoading && summary?.canReview ? (
-        <div
-          ref={reviewFormRef}
-          className='p-4 rounded-2xl border border-slate-200 bg-slate-50'
-        >
-          <div className='block mb-3 font-medium text-slate-700'>
-            Viết đánh giá
-          </div>
-          <ReviewForm
-            loading={createMutation.isPending}
-            onSubmit={handleSubmit}
-          />
-        </div>
-      ) : null}
-
-      {!reviewsQuery.isLoading && !isAuthenticated ? (
-        <div className='p-4 text-sm border border-dashed rounded-2xl border-slate-200 bg-slate-50/70 text-slate-500'>
-          Mua hàng để viết đánh giá.
-        </div>
-      ) : null}
-
       {!reviewsQuery.isLoading ? (
         <div className='mt-6'>
-          <ReviewList
-            reviews={visibleReviews}
-            onDelete={(review) =>
-              Modal.confirm({
-                title: 'Xóa đánh giá?',
-                content: 'Bạn có chắc chắn muốn xóa đánh giá này không?',
-                okText: 'Xóa',
-                okButtonProps: { danger: true },
-                cancelText: 'Hủy',
-                onOk: () => deleteMutation.mutateAsync(review.id),
-              })
-            }
-          />
+          <ReviewList reviews={visibleReviews} />
+          {hasMore && (
+            <div className='flex justify-center pt-4'>
+              <Button
+                size='large'
+                onClick={() => setLoadedCount((c) => c + LOAD_MORE_COUNT)}
+              >
+                Xem thêm
+              </Button>
+            </div>
+          )}
         </div>
       ) : null}
     </Card>

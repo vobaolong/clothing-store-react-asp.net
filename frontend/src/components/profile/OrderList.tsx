@@ -8,7 +8,7 @@ import {
   Table,
   Tag,
   Tabs,
-  Tooltip
+  Tooltip,
 } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ import { getMyOrders } from '@/api/orders-api'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { FilterStatus, ORDER_FILTER_STATUSES } from '@/enums'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
-import type { MyOrder } from '@/types'
+import { STATUS_COLORS, type MyOrder } from '@/types'
 
 const matchesSearch = (needle: string, order: MyOrder) => {
   const normalized = needle.trim().toLowerCase()
@@ -29,7 +29,7 @@ const matchesSearch = (needle: string, order: MyOrder) => {
     order.status,
     order.paymentStatus,
     String(order.totalAmount),
-    String(order.itemCount)
+    String(order.itemCount),
   ].some((value) => value.toLowerCase().includes(normalized))
 }
 
@@ -40,7 +40,7 @@ export default function OrderList() {
 
   const { data, isLoading } = useQuery({
     queryKey: QUERY_KEYS.myOrders(),
-    queryFn: ({ queryKey }) => getMyOrders(queryKey[1])
+    queryFn: ({ queryKey }) => getMyOrders(queryKey[1]),
   })
 
   const orders = useMemo(() => data?.orders ?? [], [data])
@@ -51,9 +51,9 @@ export default function OrderList() {
         (order) =>
           (activeStatus === FilterStatus.ALL ||
             order.status === activeStatus) &&
-          matchesSearch(search, order)
+          matchesSearch(search, order),
       ),
-    [orders, search, activeStatus]
+    [orders, search, activeStatus],
   )
 
   const tabItems = useMemo(
@@ -74,10 +74,10 @@ export default function OrderList() {
               </span>
               <Badge count={count} />
             </div>
-          )
+          ),
         }
       }),
-    [orders]
+    [orders],
   )
 
   const emptyText =
@@ -97,33 +97,39 @@ export default function OrderList() {
           <span className='font-semibold'>
             {filteredOrders.indexOf(row) + 1}
           </span>
-        )
+        ),
       },
       {
         title: 'Mã đơn hàng',
         dataIndex: 'id',
         width: 150,
-        render: (_, row) => row.id.slice(0, 8).toUpperCase()
+        render: (_, row) => row.id.slice(0, 8).toUpperCase(),
       },
       {
         title: 'Tổng cộng',
         dataIndex: 'totalAmount',
         align: 'right',
-        render: (_, row) => formatCurrency(row.totalAmount)
+        render: (_, row) => formatCurrency(row.totalAmount),
       },
       {
         title: 'Thanh toán',
         dataIndex: 'paymentStatus',
         width: 120,
         render: (_, row) => (
-          <Tag>{getVietnameseStatusLabel(row.paymentStatus)}</Tag>
-        )
+          <Tag variant='outlined' color={STATUS_COLORS[row.paymentStatus]}>
+            {getVietnameseStatusLabel(row.paymentStatus)}
+          </Tag>
+        ),
       },
       {
         title: 'Trạng thái',
         dataIndex: 'status',
         width: 120,
-        render: (_, row) => <Tag>{getVietnameseStatusLabel(row.status)}</Tag>
+        render: (_, row) => (
+          <Tag variant='outlined' color={STATUS_COLORS[row.status]}>
+            {getVietnameseStatusLabel(row.status)}
+          </Tag>
+        ),
       },
       {
         title: 'Ngày mua',
@@ -132,7 +138,7 @@ export default function OrderList() {
         sorter: (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         defaultSortOrder: 'descend',
-        render: (_, row) => formatDate(row.createdAt)
+        render: (_, row) => formatDate(row.createdAt),
       },
       {
         title: 'Thao tác',
@@ -146,10 +152,10 @@ export default function OrderList() {
               onClick={() => navigate(`/orders/${row.id}`)}
             />
           </Tooltip>
-        )
-      }
+        ),
+      },
     ],
-    [filteredOrders, navigate]
+    [filteredOrders, navigate],
   )
 
   return (

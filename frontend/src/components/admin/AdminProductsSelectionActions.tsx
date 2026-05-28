@@ -2,6 +2,7 @@ import {
   CheckCircleOutlined,
   DeleteOutlined,
   FileExcelOutlined,
+  StopOutlined,
   UndoOutlined,
 } from '@ant-design/icons'
 import { Button, Modal, Tag } from 'antd'
@@ -34,22 +35,18 @@ export default function AdminProductsSelectionActions({
   const selectedCount = selectedIds.length
 
   return (
-    <div className='fixed z-50 p-4 bg-white border border-blue-300 rounded-lg shadow-lg left-1/2 top-4/5 -translate-x-1/2'>
+    <div className='fixed left-1/2 z-50 p-4 bg-white rounded-lg border border-blue-300 shadow-lg -translate-x-1/2 top-4/5'>
       <div className='flex flex-col gap-4 items-center sm:flex-row'>
         <Tag
           icon={<CheckCircleOutlined />}
           variant='outlined'
           color='blue'
-          className='font-semibold text-gray-700 text-nowrap h-8! items-center flex!'
+          className='font-semibold text-gray-700 text-nowrap h-8! flex! items-center'
         >
-          {selectedCount} sản phẩm được chọn
+          {selectedCount} sản phẩm
         </Tag>
-        <Button
-          color='green'
-          icon={<FileExcelOutlined />}
-          onClick={onExportExcel}
-        >
-          Export Excel
+        <Button icon={<FileExcelOutlined />} onClick={onExportExcel}>
+          <span className='hidden md:block'>Export Excel</span>
         </Button>
         {isTrash ? (
           <>
@@ -68,7 +65,7 @@ export default function AdminProductsSelectionActions({
                 }
               }}
             >
-              Khôi phục
+              <span className='hidden md:block'>Khôi phục</span>
             </Button>
             <Button
               danger
@@ -83,9 +80,8 @@ export default function AdminProductsSelectionActions({
                   okButtonProps: { danger: true },
                   onOk: async () => {
                     try {
-                      const response = await bulkDeleteAdminProductsPermanent({
-                        ids: selectedIds,
-                      })
+                      const response =
+                        await bulkDeleteAdminProductsPermanent(selectedIds)
                       onClearSelection()
                       if (response.deleted === 0) {
                         toast.error(
@@ -95,9 +91,7 @@ export default function AdminProductsSelectionActions({
                       }
 
                       await onRefresh()
-                      const parts = [
-                        `Đã xóa vĩnh viễn ${response.deleted} sản phẩm.`,
-                      ]
+                      const parts = [`Đã xóa vĩnh viễn sản phẩm.`]
                       if (response.skippedDueToOrders > 0)
                         parts.push(
                           `${response.skippedDueToOrders} bỏ qua (liên kết đơn hàng).`,
@@ -124,12 +118,13 @@ export default function AdminProductsSelectionActions({
                 })
               }}
             >
-              Xóa vĩnh viễn
+              <span className='hidden md:block'>Xóa vĩnh viễn</span>
             </Button>
           </>
         ) : (
           <>
             <Button
+              icon={<CheckCircleOutlined />}
               onClick={async () => {
                 try {
                   await bulkUpdateAdminProductsActive({
@@ -144,9 +139,10 @@ export default function AdminProductsSelectionActions({
                 }
               }}
             >
-              Kích hoạt
+              <span className='hidden md:block'>Kích hoạt</span>
             </Button>
             <Button
+              icon={<StopOutlined />}
               onClick={async () => {
                 try {
                   await bulkUpdateAdminProductsActive({
@@ -161,10 +157,11 @@ export default function AdminProductsSelectionActions({
                 }
               }}
             >
-              Ngừng kích hoạt
+              <span className='hidden md:block'>Ngừng kích hoạt</span>
             </Button>
             <Button
-              type='primary'
+              danger
+              icon={<DeleteOutlined />}
               onClick={() => {
                 Modal.confirm({
                   title: `Xóa ${selectedCount} sản phẩm?`,
@@ -186,7 +183,7 @@ export default function AdminProductsSelectionActions({
                 })
               }}
             >
-              Xóa
+              <span className='hidden md:block'>Xóa</span>
             </Button>
           </>
         )}

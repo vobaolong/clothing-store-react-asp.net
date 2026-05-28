@@ -195,11 +195,11 @@ export const generateBillHtml = (detail: AdminOrderDetail): string => {
 						<div class="totals-row"><span>Giảm giá${detail.couponCodeSnapshot ? ` (${escapeHtml(detail.couponCodeSnapshot)})` : ''}</span><span>- ${escapeHtml(formatCurrency(detail.discountAmount || 0))}</span></div>
 						<div class="totals-row"><span>Phí vận chuyển</span><span>${escapeHtml(formatCurrency(shippingFee))}</span></div>
 						<div class="totals-row total"><span>Tổng cộng</span><span>${escapeHtml(formatCurrency(detail.totalAmount))}</span></div>
-						<div class="muted" style="margin-top:10px">Thanh toán: ${escapeHtml(getVietnameseStatusLabel(detail.paymentStatus))}${detail.paidAt ? ` • Đã thanh toán lúc ${escapeHtml(formatDate(detail.paidAt))}` : ''}</div>
+						<div class="muted" style="margin-top:10px">Thanh toán: ${escapeHtml(getVietnameseStatusLabel(detail.paymentStatus))}${detail.paidAt ? ` lúc ${escapeHtml(formatDate(detail.paidAt))}` : ''}</div>
 					</div>
 				</div>
 
-				<div class="footer-note">Cảm ơn bạn đã mua hàng!</div>
+				<div class="footer-note">Cảm ơn bạn đã mua hàng tại Wearly!</div>
 			</div>
 			<script>
 				window.addEventListener('load', () => {

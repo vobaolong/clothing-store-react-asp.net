@@ -1,6 +1,8 @@
-import { Empty, Table, Tag } from 'antd'
+import { Button, Empty, Table, Tag, Tooltip } from 'antd'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { getOrderStatusLabel, STATUS_COLORS, type OrderOverview } from '@/types'
+import { EyeOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 type OrdersTableProps = {
   data: OrderOverview[]
@@ -9,8 +11,10 @@ type OrdersTableProps = {
 
 export default function OrdersTable({
   data,
-  loading = false
+  loading = false,
 }: OrdersTableProps) {
+  const navigate = useNavigate()
+
   return (
     <Table<OrderOverview>
       rowKey='id'
@@ -19,7 +23,7 @@ export default function OrdersTable({
       size='small'
       dataSource={data}
       locale={{ emptyText: <Empty description='Không có đơn hàng nào' /> }}
-      pagination={{ pageSize: 6, hideOnSinglePage: true }}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       scroll={{ x: 'max-content' }}
       columns={[
         {
@@ -28,25 +32,25 @@ export default function OrdersTable({
           key: 'stt',
           align: 'center',
           width: 60,
-          render: (_, __, index: number) => index + 1
+          render: (_, __, index: number) => index + 1,
         },
         {
           title: 'ID',
           dataIndex: 'id',
           key: 'id',
-          render: (value: string) => value.slice(0, 8).toUpperCase()
+          render: (value: string) => value.slice(0, 8).toUpperCase(),
         },
         {
           title: 'Khách hàng',
           dataIndex: 'customerEmail',
-          key: 'customerEmail'
+          key: 'customerEmail',
         },
         {
           title: 'Tổng tiền',
           dataIndex: 'totalAmount',
           key: 'totalAmount',
           align: 'right',
-          render: (value: number) => formatCurrency(value)
+          render: (value: number) => formatCurrency(value),
         },
         {
           title: 'Trạng thái',
@@ -57,14 +61,27 @@ export default function OrdersTable({
             <Tag color={STATUS_COLORS[value] ?? 'default'}>
               {getOrderStatusLabel(value)}
             </Tag>
-          )
+          ),
         },
         {
           title: 'Ngày đặt hàng',
           dataIndex: 'createdAt',
           key: 'createdAt',
-          render: (value: string) => formatDate(value)
-        }
+          render: (value: string) => formatDate(value),
+        },
+        {
+          title: 'Thao tác',
+          key: 'action',
+          align: 'center',
+          render: (record: OrderOverview) => (
+            <Tooltip title='Xem chi tiết'>
+              <Button
+                onClick={() => navigate(`/admin/orders/${record.id}`)}
+                icon={<EyeOutlined />}
+              />
+            </Tooltip>
+          ),
+        },
       ]}
     />
   )

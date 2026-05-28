@@ -3,7 +3,6 @@ import { Modal } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAdminEditor } from '@/hooks/useAdminEditor'
-import { FilterStatus } from '@/enums'
 import type {
   AdminBanner,
   AdminCategory,
@@ -25,7 +24,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   // Grouped States
   const [filters, setFilters] = useState({
     productListMode: 'active' as AdminProductListMode,
-    orderStatusFilter: FilterStatus.ALL as string,
+    orderStatusFilter: 'all' as string,
   })
 
   const [modals, setModals] = useState({

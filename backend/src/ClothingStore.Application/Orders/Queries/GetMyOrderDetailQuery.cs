@@ -65,7 +65,7 @@ public class GetMyOrderDetailQueryHandler(IApplicationDbContext context, IMapper
             order.Status,
             order.TotalAmount,
             order.PaymentMethod,
-            order.PaidAt != null ? PaymentStatus.Paid : order.PaymentStatus,
+            order.Status == OrderStatus.Delivered ? PaymentStatus.Paid : order.PaymentStatus,
             order.PaidAt,
             order.CouponCodeSnapshot,
             order.CouponDiscountTypeSnapshot,

@@ -1,4 +1,5 @@
 using ClothingStore.Application.Common.Interfaces;
+using ClothingStore.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,11 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
                 .FirstOrDefaultAsync(ct)
             ?? throw new KeyNotFoundException("Order not found.");
 
+        var effectivePaymentStatus =
+            order.Status == OrderStatus.Delivered
+                ? PaymentStatus.Paid
+                : order.PaymentStatus;
+
         var items = order
             .Items.Select(item => new OrderDetailItemDto(
                 item.Id,
@@ -35,7 +41,6 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
                 !string.IsNullOrWhiteSpace(item.ProductSlug)
                     ? item.ProductSlug
                     : (item.Product?.Slug ?? string.Empty),
-                item.VariantName,
                 item.ProductVariant?.Size,
                 item.ProductVariant?.Color,
                 item.Quantity,
@@ -53,7 +58,7 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
             order.Status,
             order.TotalAmount,
             order.PaymentMethod,
-            order.PaymentStatus,
+            effectivePaymentStatus,
             order.PaidAt,
             order.CouponCodeSnapshot,
             order.CouponDiscountTypeSnapshot,

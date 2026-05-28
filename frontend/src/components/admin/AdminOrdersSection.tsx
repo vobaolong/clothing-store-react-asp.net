@@ -9,18 +9,18 @@ import {
   Table,
   Tabs,
   Tag,
-  Tooltip
+  Tooltip,
 } from 'antd'
 import { useCallback, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import {
   ADMIN_FILTER_ALL_VALUE,
   ADMIN_ORDER_STATUS_FILTER_OPTIONS,
-  ADMIN_PAYMENT_STATUS_FILTER_OPTIONS
+  ADMIN_PAYMENT_STATUS_FILTER_OPTIONS,
 } from '@/constants/admin-filter.constant'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
-import type { AdminOrder } from '@/types'
+import { STATUS_COLORS, type AdminOrder } from '@/types'
 import { AdminQueryRefreshButton } from '@/components/admin/AdminQueryRefreshButton'
 import { OrderStatus } from '@/enums'
 import { adminRowMatches, adminSearchNeedle } from '@/utils/admin-list-filter'
@@ -32,7 +32,7 @@ import {
   getAdminOrders,
   updateAdminOrderStatus,
   bulkUpdateAdminOrdersStatus,
-  getAdminApiErrorMessage
+  getAdminApiErrorMessage,
 } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { useAdmin } from '@/context/admin/AdminContext'
@@ -45,7 +45,7 @@ export default function AdminOrdersSection() {
 
   const ordersQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrders(orderStatusFilter),
-    queryFn: () => getAdminOrders(orderStatusFilter)
+    queryFn: () => getAdminOrders(orderStatusFilter),
   })
 
   const data = ordersQuery.data?.orders
@@ -56,13 +56,13 @@ export default function AdminOrdersSection() {
     search: '',
     status: ADMIN_FILTER_ALL_VALUE,
     payment: ADMIN_FILTER_ALL_VALUE,
-    dateRange: [null, null] as [dayjs.Dayjs | null, dayjs.Dayjs | null]
+    dateRange: [null, null] as [dayjs.Dayjs | null, dayjs.Dayjs | null],
   })
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [isBulkUpdateModalOpen, setIsBulkUpdateModalOpen] = useState(false)
   const [bulkUpdateStatus, setBulkUpdateStatus] = useState<string>(
-    OrderStatus.CONFIRMED
+    OrderStatus.CONFIRMED,
   )
   const [isBulkUpdating, setIsBulkUpdating] = useState(false)
 
@@ -74,19 +74,19 @@ export default function AdminOrdersSection() {
     getCheckboxProps: (record: AdminOrder) => ({
       disabled:
         record.status === OrderStatus.DELIVERED ||
-        record.status === OrderStatus.CANCELLED
-    })
+        record.status === OrderStatus.CANCELLED,
+    }),
   }
 
   const bulkUpdateOptions = useMemo(
     () =>
       ADMIN_ORDER_STATUS_FILTER_OPTIONS.filter(
-        (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE
+        (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE,
       ).map((opt) => ({
         ...opt,
-        label: getVietnameseStatusLabel(opt.value)
+        label: getVietnameseStatusLabel(opt.value),
       })),
-    []
+    [],
   )
 
   const handleBulkUpdate = useCallback(async () => {
@@ -95,7 +95,7 @@ export default function AdminOrdersSection() {
     try {
       await bulkUpdateAdminOrdersStatus({
         orderIds: selectedRowKeys as string[],
-        status: bulkUpdateStatus
+        status: bulkUpdateStatus,
       })
       toast.success('Cập nhật trạng thái hàng loạt thành công')
       setSelectedRowKeys([])
@@ -104,7 +104,7 @@ export default function AdminOrdersSection() {
     } catch (error: unknown) {
       toast.error(
         getAdminApiErrorMessage(error) ||
-          'Có lỗi xảy ra khi cập nhật trạng thái'
+          'Có lỗi xảy ra khi cập nhật trạng thái',
       )
     } finally {
       setIsBulkUpdating(false)
@@ -113,7 +113,7 @@ export default function AdminOrdersSection() {
 
   const onView = useCallback(
     (order: AdminOrder) => navigate(`/admin/orders/${order.id}`),
-    [navigate]
+    [navigate],
   )
 
   const onUpdateStatus = useCallback(
@@ -122,7 +122,7 @@ export default function AdminOrdersSection() {
       toast.success('Cập nhật trạng thái đơn hàng thành công')
       await refresh()
     },
-    [refresh]
+    [refresh],
   )
 
   const filteredData = useMemo(() => {
@@ -156,7 +156,7 @@ export default function AdminOrdersSection() {
           getVietnameseStatusLabel(o.status),
           getVietnameseStatusLabel(o.paymentStatus),
           String(o.totalAmount),
-          String(o.itemCount ?? '')
+          String(o.itemCount ?? ''),
         )
       return statusMatch && paymentMatch && createdAtMatch && searchMatch
     })
@@ -171,18 +171,18 @@ export default function AdminOrdersSection() {
           <Badge count={list.reduce((acc, curr) => acc + curr.count, 0)}>
             <span className='pr-5'>Tất cả</span>
           </Badge>
-        )
+        ),
       },
       ...ADMIN_ORDER_STATUS_FILTER_OPTIONS.filter(
-        (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE
+        (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE,
       ).map((opt) => ({
         key: opt.value,
         label: (
           <Badge count={list.find((c) => c.status === opt.value)?.count || 0}>
             <span className='pr-5'>{opt.label}</span>
           </Badge>
-        )
-      }))
+        ),
+      })),
     ]
   }, [counts])
 
@@ -194,25 +194,29 @@ export default function AdminOrdersSection() {
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_: unknown, row: AdminOrder) => filteredData.indexOf(row) + 1
+        render: (_: unknown, row: AdminOrder) => filteredData.indexOf(row) + 1,
       },
       {
         title: 'Mã đơn',
         dataIndex: 'id',
-        render: (value: string) => value.slice(0, 8).toUpperCase()
+        render: (value: string) => value.slice(0, 8).toUpperCase(),
       },
       { title: 'Người dùng', dataIndex: 'userEmail' },
       {
         title: 'Tổng tiền',
         align: 'right',
         dataIndex: 'totalAmount',
-        render: (value: number) => formatCurrency(value)
+        render: (value: number) => formatCurrency(value),
       },
       {
         title: 'Thanh toán',
         align: 'center',
         dataIndex: 'paymentStatus',
-        render: (value: string) => <Tag>{getVietnameseStatusLabel(value)}</Tag>
+        render: (value: string) => (
+          <Tag variant='outlined' color={STATUS_COLORS[value]}>
+            {getVietnameseStatusLabel(value)}
+          </Tag>
+        ),
       },
       {
         title: 'Trạng thái',
@@ -228,11 +232,11 @@ export default function AdminOrdersSection() {
             options={ADMIN_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
               ...option,
               label: getVietnameseStatusLabel(option.value),
-              disabled: !canUpdateToStatus(row.status, option.value)
+              disabled: !canUpdateToStatus(row.status, option.value),
             }))}
             onChange={(value) => onUpdateStatus(row, value)}
           />
-        )
+        ),
       },
       {
         title: 'Ngày tạo',
@@ -240,7 +244,7 @@ export default function AdminOrdersSection() {
         sorter: (a: AdminOrder, b: AdminOrder) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         dataIndex: 'createdAt',
-        render: (value: string) => formatDate(value)
+        render: (value: string) => formatDate(value),
       },
       {
         title: 'Cập nhật lúc',
@@ -249,7 +253,8 @@ export default function AdminOrdersSection() {
           new Date(a.updatedAt ?? a.createdAt).getTime() -
           new Date(b.updatedAt ?? b.createdAt).getTime(),
         dataIndex: 'updatedAt',
-        render: (value: string | undefined) => (value ? formatDate(value) : '-')
+        render: (value: string | undefined) =>
+          value ? formatDate(value) : '-',
       },
       {
         title: 'Thao tác',
@@ -259,10 +264,10 @@ export default function AdminOrdersSection() {
           <Tooltip title='Xem chi tiết'>
             <Button icon={<EyeOutlined />} onClick={() => onView(row)} />
           </Tooltip>
-        )
-      }
+        ),
+      },
     ],
-    [onUpdateStatus, onView, filteredData]
+    [onUpdateStatus, onView, filteredData],
   )
 
   return (
@@ -316,7 +321,7 @@ export default function AdminOrdersSection() {
           onChange={(dates) =>
             setLocalFilters((p) => ({
               ...p,
-              dateRange: dates ? [dates[0], dates[1]] : [null, null]
+              dateRange: dates ? [dates[0], dates[1]] : [null, null],
             }))
           }
           placeholder={['Từ ngày', 'Đến ngày']}
@@ -335,7 +340,7 @@ export default function AdminOrdersSection() {
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '50', '100'],
-          showTotal: (total) => `Tổng ${total} đơn hàng`
+          showTotal: (total) => `Tổng ${total} đơn hàng`,
         }}
         locale={{ emptyText: <Empty description='Không có dữ liệu' /> }}
         columns={columns}

@@ -23,7 +23,6 @@ public class MappingProfile : Profile
                 !string.IsNullOrWhiteSpace(src.ProductSlug)
                     ? src.ProductSlug
                     : (src.Product != null ? src.Product.Slug ?? string.Empty : string.Empty),
-                src.VariantName,
                 src.ProductVariant != null ? src.ProductVariant.Size : null,
                 src.ProductVariant != null ? src.ProductVariant.Color : null,
                 src.Quantity,
@@ -45,8 +44,7 @@ public class MappingProfile : Profile
                 src.VariantSize,
                 src.VariantColor,
                 src.CreatedAt,
-                src.UpdatedAt,
-                false
+                src.UpdatedAt
             ));
     }
 

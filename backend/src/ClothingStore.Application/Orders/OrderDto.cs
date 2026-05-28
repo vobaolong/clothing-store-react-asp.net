@@ -14,7 +14,7 @@ public record OrderSummaryDto(
     decimal DiscountAmount,
     int ItemCount,
     IReadOnlyList<OrderItemSummaryDto> Items,
-    string? UserEmail = null // For Admin view
+    string? UserEmail = null
 );
 
 public record OrderItemSummaryDto(Guid ProductId, int Quantity, decimal UnitPrice);
@@ -56,7 +56,6 @@ public record OrderDetailItemDto(
     string ProductName,
     Guid? ProductVariantId,
     string ProductSlug,
-    string? VariantName,
     string? VariantSize,
     string? VariantColor,
     int Quantity,

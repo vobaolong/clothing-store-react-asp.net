@@ -110,12 +110,12 @@ export default function NotificationsSection() {
                   >
                     <button
                       type='button'
-                      className='w-full p-4 text-left transition-colors cursor-pointer hover:bg-slate-50'
+                      className='p-4 w-full text-left transition-colors cursor-pointer hover:bg-slate-50'
                       onClick={() => toggleGroup(orderId)}
                     >
-                      <div className='flex items-start justify-between gap-3'>
-                        <div className='flex items-start flex-1 min-w-0 gap-3'>
-                          <div className='flex items-center justify-center text-xl rounded-md h-14 w-14 shrink-0 bg-slate-100'>
+                      <div className='flex gap-3 justify-between items-start'>
+                        <div className='flex flex-1 gap-3 items-start min-w-0'>
+                          <div className='flex justify-center items-center w-14 h-14 text-xl rounded-md shrink-0 bg-slate-100'>
                             {thumbnailUrl ? (
                               <img
                                 src={thumbnailUrl}
@@ -141,12 +141,9 @@ export default function NotificationsSection() {
                             <div className='mt-1 text-sm line-clamp-2 text-slate-600'>
                               {latest.message}
                             </div>
-                            <div className='mt-2 text-xs text-slate-800'>
-                              Mã đơn #{orderId.slice(0, 8).toUpperCase()}
-                            </div>
                           </div>
                         </div>
-                        <div className='flex items-center gap-3 shrink-0'>
+                        <div className='flex gap-3 items-center shrink-0'>
                           <div className='text-xs text-slate-400'>
                             {formatDate(latest.createdAt)}
                           </div>
@@ -160,7 +157,7 @@ export default function NotificationsSection() {
                       </div>
                     </button>
                     {isExpanded && (
-                      <div className='py-4 px-4 border-t border-slate-200 bg-slate-50'>
+                      <div className='px-4 py-4 border-t border-slate-200 bg-slate-50'>
                         <div className='space-y-4'>
                           {items.map((item, index) => (
                             <button
@@ -169,7 +166,7 @@ export default function NotificationsSection() {
                               onClick={() => {
                                 if (!item.isRead) markAsRead(item.id)
                               }}
-                              className='relative block w-full px-4 py-3 text-left transition-colors bg-white rounded-md cursor-pointer hover:bg-slate-100'
+                              className='block relative px-4 py-3 w-full text-left bg-white rounded-md transition-colors cursor-pointer hover:bg-slate-100'
                             >
                               <div className='flex absolute top-0 left-0 justify-center w-7 h-full'>
                                 <span
@@ -216,7 +213,7 @@ export default function NotificationsSection() {
                 onClick={() => {
                   if (!it.isRead) markAsRead(it.id)
                 }}
-                className='w-full p-4 text-left transition-colors bg-white border rounded-md border-slate-200 hover:bg-slate-50'
+                className='p-4 w-full text-left bg-white rounded-md border transition-colors border-slate-200 hover:bg-slate-50'
               >
                 <div className='flex gap-3 justify-between items-start'>
                   <div>
