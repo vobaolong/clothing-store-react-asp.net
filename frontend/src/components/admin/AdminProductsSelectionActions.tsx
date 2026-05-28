@@ -3,7 +3,7 @@ import {
   DeleteOutlined,
   FileExcelOutlined,
   StopOutlined,
-  UndoOutlined,
+  UndoOutlined
 } from '@ant-design/icons'
 import { Button, Modal, Tag } from 'antd'
 import type { Key } from 'react'
@@ -13,7 +13,7 @@ import {
   bulkDeleteAdminProductsPermanent,
   bulkRestoreAdminProducts,
   bulkUpdateAdminProductsActive,
-  getAdminApiErrorMessage,
+  getAdminApiErrorMessage
 } from '@/api/admin-api'
 
 type AdminProductsSelectionActionsProps = {
@@ -29,7 +29,7 @@ export default function AdminProductsSelectionActions({
   selectedRowKeys,
   onExportExcel,
   onClearSelection,
-  onRefresh,
+  onRefresh
 }: AdminProductsSelectionActionsProps) {
   const selectedIds = selectedRowKeys.map(String)
   const selectedCount = selectedIds.length
@@ -85,7 +85,7 @@ export default function AdminProductsSelectionActions({
                       onClearSelection()
                       if (response.deleted === 0) {
                         toast.error(
-                          'Không xóa vĩnh viễn được sản phẩm nào (có trong đơn hoặc không còn trong thùng rác).',
+                          'Không xóa vĩnh viễn được sản phẩm nào (có trong đơn hoặc không còn trong thùng rác).'
                         )
                         return Promise.reject(new Error('none-deleted'))
                       }
@@ -94,11 +94,11 @@ export default function AdminProductsSelectionActions({
                       const parts = [`Đã xóa vĩnh viễn sản phẩm.`]
                       if (response.skippedDueToOrders > 0)
                         parts.push(
-                          `${response.skippedDueToOrders} bỏ qua (liên kết đơn hàng).`,
+                          `${response.skippedDueToOrders} bỏ qua (liên kết đơn hàng).`
                         )
                       if (response.skippedNotInTrash > 0)
                         parts.push(
-                          `${response.skippedNotInTrash} bỏ qua (không ở thùng rác).`,
+                          `${response.skippedNotInTrash} bỏ qua (không ở thùng rác).`
                         )
                       toast.success(parts.join(' '))
                     } catch (error) {
@@ -110,11 +110,11 @@ export default function AdminProductsSelectionActions({
                       }
                       toast.error(
                         getAdminApiErrorMessage(error) ??
-                          'Xóa vĩnh viễn thất bại',
+                          'Xóa vĩnh viễn thất bại'
                       )
                       return Promise.reject(error)
                     }
-                  },
+                  }
                 })
               }}
             >
@@ -129,7 +129,7 @@ export default function AdminProductsSelectionActions({
                 try {
                   await bulkUpdateAdminProductsActive({
                     ids: selectedIds,
-                    isActive: true,
+                    isActive: true
                   })
                   toast.success('Kích hoạt sản phẩm thành công')
                   onClearSelection()
@@ -147,17 +147,17 @@ export default function AdminProductsSelectionActions({
                 try {
                   await bulkUpdateAdminProductsActive({
                     ids: selectedIds,
-                    isActive: false,
+                    isActive: false
                   })
-                  toast.success('Ngừng kích hoạt sản phẩm thành công')
+                  toast.success('Hủy kích hoạt sản phẩm thành công')
                   onClearSelection()
                   await onRefresh()
                 } catch {
-                  toast.error('Ngừng kích hoạt sản phẩm thất bại')
+                  toast.error('Hủy kích hoạt sản phẩm thất bại')
                 }
               }}
             >
-              <span className='hidden md:block'>Ngừng kích hoạt</span>
+              <span className='hidden md:block'>Hủy kích hoạt</span>
             </Button>
             <Button
               danger
@@ -179,7 +179,7 @@ export default function AdminProductsSelectionActions({
                       toast.error('Xóa sản phẩm thất bại')
                       throw new Error('abort')
                     }
-                  },
+                  }
                 })
               }}
             >

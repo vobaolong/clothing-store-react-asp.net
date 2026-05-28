@@ -1,6 +1,16 @@
 import { LeftOutlined, PrinterOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Card, Empty, Image, Modal, Select, Skeleton, Tag } from 'antd'
+import {
+  Button,
+  Card,
+  Descriptions,
+  Empty,
+  Image,
+  Modal,
+  Select,
+  Skeleton,
+  Tag
+} from 'antd'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, Navigate, useParams } from 'react-router-dom'
@@ -10,7 +20,7 @@ import { formatCurrency, formatDate } from '@/utils/format'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 import {
   createOrderStatusOptions,
-  getVietnameseStatusLabel,
+  getVietnameseStatusLabel
 } from '@/utils/enum.utils'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
@@ -28,7 +38,7 @@ const formatStructuredAddress = (detail: {
   const structured = [
     detail.shippingStreet,
     detail.shippingWard,
-    detail.shippingProvince,
+    detail.shippingProvince
   ]
     .filter((x) => Boolean(x && x.trim()))
     .join(', ')
@@ -40,13 +50,13 @@ export default function AdminOrderDetailPage() {
   const token = getAuthToken()
   const qc = useQueryClient()
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
-    undefined,
+    undefined
   )
 
   const detailQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined),
     queryFn: () => getAdminOrderDetail(String(id)),
-    enabled: Boolean(id),
+    enabled: Boolean(id)
   })
 
   useOrderRealtime(id)
@@ -58,14 +68,14 @@ export default function AdminOrderDetailPage() {
       toast.success('Cập nhật trạng thái đơn hàng thành công')
       await Promise.all([
         qc.invalidateQueries({
-          queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined),
+          queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined)
         }),
-        qc.invalidateQueries({ queryKey: QUERY_KEYS.adminOrdersBase }),
+        qc.invalidateQueries({ queryKey: QUERY_KEYS.adminOrdersBase })
       ])
     },
     onError: () => {
       toast.error('Cập nhật trạng thái đơn hàng thất bại')
-    },
+    }
   })
 
   if (!token || !isAdmin()) return <Navigate to='/' replace />
@@ -80,7 +90,7 @@ export default function AdminOrderDetailPage() {
   const statusHistories = Array.isArray(detail?.statusHistories)
     ? detail!.statusHistories.toSorted(
         (a, b) =>
-          new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime(),
+          new Date(a.changedAt).getTime() - new Date(b.changedAt).getTime()
       )
     : []
 
@@ -133,7 +143,7 @@ export default function AdminOrderDetailPage() {
               label: getVietnameseStatusLabel(String(option.value)),
               disabled:
                 detail == null ||
-                !canUpdateToStatus(detail.status, String(option.value)),
+                !canUpdateToStatus(detail.status, String(option.value))
             }))}
             style={{ width: 150 }}
           />
@@ -153,10 +163,10 @@ export default function AdminOrderDetailPage() {
                     title: 'Cập nhật trạng thái đơn hàng?',
                     onOk: async () =>
                       updateStatusMutation.mutateAsync({
-                        status: selectedStatus,
+                        status: selectedStatus
                       }),
                     okText: 'Cập nhật',
-                    cancelText: 'Hủy',
+                    cancelText: 'Hủy'
                   })
                 }}
               >
@@ -274,35 +284,34 @@ export default function AdminOrderDetailPage() {
 
           <div className='space-y-4! lg:col-span-1'>
             <Card className='rounded-2xl' title='Địa chỉ giao hàng'>
-              <div className='space-y-1 text-slate-700'>
-                <div className='whitespace-nowrap'>
-                  Họ tên: {detail.shippingName || '—'}
-                </div>
-                <div className='whitespace-nowrap'>
-                  Điện thoại: {detail.shippingPhone || '—'}
-                </div>
-                <div className='whitespace-nowrap'>
-                  Địa chỉ: {formatStructuredAddress(detail) || '—'}
-                </div>
-                <div className='whitespace-nowrap'>
-                  Nhãn:{' '}
-                  {
-                    ShippingAddressType[
-                      detail.shippingLabel.toUpperCase() as keyof typeof ShippingAddressType
-                    ]
-                  }
-                </div>
-              </div>
+              <Descriptions column={1} size='small' layout='horizontal'>
+                <Descriptions.Item label='Họ tên'>
+                  {detail.shippingName || '—'}
+                </Descriptions.Item>
+                <Descriptions.Item label='Điện thoại'>
+                  {detail.shippingPhone || '—'}
+                </Descriptions.Item>
+                <Descriptions.Item label='Địa chỉ'>
+                  {formatStructuredAddress(detail) || '—'}
+                </Descriptions.Item>
+                <Descriptions.Item label='Nhãn'>
+                  {ShippingAddressType[
+                    detail.shippingLabel?.toUpperCase() as keyof typeof ShippingAddressType
+                  ] || '—'}
+                </Descriptions.Item>
+              </Descriptions>
             </Card>
             <Card className='rounded-2xl' title='Thông tin khách hàng'>
-              <div className='space-y-1 text-slate-700'>
-                <div className='whitespace-nowrap'>
-                  Tên người dùng: {detail.userName || '—'}
-                </div>
-                <div className='whitespace-nowrap'>
-                  Email: {detail.userEmail || '—'}
-                </div>
-              </div>
+              <Descriptions column={1} size='small' layout='horizontal'>
+                <Descriptions.Item label='Tên người dùng'>
+                  {detail.userName || '—'}
+                </Descriptions.Item>
+                <Descriptions.Item label='Email'>
+                  <span className='whitespace-nowrap'>
+                    {detail.userEmail || '—'}
+                  </span>
+                </Descriptions.Item>
+              </Descriptions>
             </Card>
             {detail.note && (
               <Card className='rounded-2xl' title='Ghi chú'>

@@ -36,9 +36,13 @@ export function useOtp(expirySeconds = 300, resendSeconds = 60) {
   }, [resendSeconds])
 
   return {
-    otp, setOtp,
-    resendDown, startDown,
-    expiryLeft, setExpiryLeft,
-    inputRefs, expiryRef
+    otp,
+    setOtp,
+    resendDown,
+    startDown,
+    expiryLeft,
+    setExpiryLeft,
+    inputRefs,
+    expiryRef
   }
 }

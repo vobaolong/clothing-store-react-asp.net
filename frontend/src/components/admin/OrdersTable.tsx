@@ -11,7 +11,7 @@ type OrdersTableProps = {
 
 export default function OrdersTable({
   data,
-  loading = false,
+  loading = false
 }: OrdersTableProps) {
   const navigate = useNavigate()
 
@@ -28,29 +28,29 @@ export default function OrdersTable({
       columns={[
         {
           title: '#',
-          dataIndex: 'stt',
           key: 'stt',
           align: 'center',
           width: 60,
-          render: (_, __, index: number) => index + 1,
+          fixed: 'left',
+          render: (_, __, index: number) => index + 1
         },
         {
           title: 'ID',
           dataIndex: 'id',
           key: 'id',
-          render: (value: string) => value.slice(0, 8).toUpperCase(),
+          render: (value: string) => value.slice(0, 8).toUpperCase()
         },
         {
           title: 'Khách hàng',
           dataIndex: 'customerEmail',
-          key: 'customerEmail',
+          key: 'customerEmail'
         },
         {
           title: 'Tổng tiền',
           dataIndex: 'totalAmount',
           key: 'totalAmount',
           align: 'right',
-          render: (value: number) => formatCurrency(value),
+          render: (value: number) => formatCurrency(value)
         },
         {
           title: 'Trạng thái',
@@ -61,18 +61,19 @@ export default function OrdersTable({
             <Tag color={STATUS_COLORS[value] ?? 'default'}>
               {getOrderStatusLabel(value)}
             </Tag>
-          ),
+          )
         },
         {
           title: 'Ngày đặt hàng',
           dataIndex: 'createdAt',
           key: 'createdAt',
-          render: (value: string) => formatDate(value),
+          render: (value: string) => formatDate(value)
         },
         {
           title: 'Thao tác',
           key: 'action',
           align: 'center',
+          fixed: 'right',
           render: (record: OrderOverview) => (
             <Tooltip title='Xem chi tiết'>
               <Button
@@ -80,8 +81,8 @@ export default function OrdersTable({
                 icon={<EyeOutlined />}
               />
             </Tooltip>
-          ),
-        },
+          )
+        }
       ]}
     />
   )

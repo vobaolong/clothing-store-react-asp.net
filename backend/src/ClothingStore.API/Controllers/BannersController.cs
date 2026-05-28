@@ -21,13 +21,14 @@ public class BannersController(IApplicationDbContext context) : BaseApiControlle
                 && (banner.StartsAt == null || banner.StartsAt <= now)
                 && (banner.EndsAt == null || banner.EndsAt >= now)
             )
-            .OrderByDescending(banner => banner.CreatedAt)
-            .ThenByDescending(banner => banner.Id)
+            .OrderBy(banner => banner.DisplayOrder)
+            .ThenBy(banner => banner.CreatedAt)
             .Select(banner => new
             {
                 banner.Id,
                 banner.ImageUrl,
                 banner.CtaLink,
+                banner.DisplayOrder,
             })
             .ToListAsync(ct);
 
@@ -40,14 +41,15 @@ public class BannersController(IApplicationDbContext context) : BaseApiControlle
     {
         var data = await context
             .Banners.AsNoTracking()
-            .OrderByDescending(banner => banner.CreatedAt)
-            .ThenByDescending(banner => banner.Id)
+            .OrderBy(banner => banner.DisplayOrder)
+            .ThenBy(banner => banner.CreatedAt)
             .Select(banner => new
             {
                 banner.Id,
                 banner.ImageUrl,
                 banner.CtaLink,
                 banner.IsActive,
+                banner.DisplayOrder,
                 banner.StartsAt,
                 banner.EndsAt,
                 banner.CreatedAt,
@@ -85,6 +87,30 @@ public class BannersController(IApplicationDbContext context) : BaseApiControlle
         return Ok("Banner updated.");
     }
 
+    [HttpPut("api/admin/banners/reorder")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Reorder(
+        [FromBody] IReadOnlyList<BannerReorderItem> items,
+        CancellationToken ct
+    )
+    {
+        if (items is null || items.Count == 0)
+            return BadRequest("No items provided.");
+
+        var ids = items.Select(i => i.Id).ToList();
+        var banners = await context.Banners.Where(b => ids.Contains(b.Id)).ToListAsync(ct);
+
+        foreach (var banner in banners)
+        {
+            var match = items.FirstOrDefault(i => i.Id == banner.Id);
+            if (match is not null)
+                banner.DisplayOrder = match.DisplayOrder;
+        }
+
+        await context.SaveChangesAsync(ct);
+        return Ok("Banners reordered.");
+    }
+
     [HttpDelete("api/admin/banners/{id:guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
@@ -106,6 +132,7 @@ public class BannersController(IApplicationDbContext context) : BaseApiControlle
         banner.ImageUrl = request.ImageUrl.Trim();
         banner.CtaLink = request.CtaLink.Trim();
         banner.IsActive = request.IsActive;
+        banner.DisplayOrder = request.DisplayOrder;
         banner.StartsAt = startsAt;
         banner.EndsAt = endsAt;
     }

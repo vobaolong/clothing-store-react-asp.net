@@ -181,7 +181,7 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
           <Select
             options={[
               { label: 'Hoạt động', value: CouponStatus.ACTIVE },
-              { label: 'Ngừng hoạt động', value: CouponStatus.INACTIVE },
+              { label: 'Không hoạt động', value: CouponStatus.INACTIVE },
               { label: 'Lưu trữ (Archived)', value: CouponStatus.ARCHIVED }
             ]}
           />

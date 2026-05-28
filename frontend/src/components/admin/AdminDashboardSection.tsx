@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   AppstoreOutlined,
   FolderOutlined,
-  TagsOutlined,
+  TagsOutlined
 } from '@ant-design/icons'
 import {
   Alert,
@@ -14,13 +14,13 @@ import {
   Skeleton,
   Statistic,
   Table,
-  Button,
+  Button
 } from 'antd'
 import { useMemo, useState } from 'react'
 import {
   getAdminCategories,
   getAdminOrders,
-  getAdminProducts,
+  getAdminProducts
 } from '@/api/admin-api'
 import { getAdminCoupons } from '@/api/coupons-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
@@ -33,7 +33,7 @@ import type {
   AnalyticsPoint,
   CategoryRadarData,
   OrderOverview,
-  Coupon,
+  Coupon
 } from '@/types'
 import AnalyticsAreaChart from '@/components/admin/AnalyticsAreaChart'
 import CategoryRadarChart from '@/components/admin/CategoryRadarChart'
@@ -58,7 +58,7 @@ function getWeekKey(date: Date) {
 
 function buildAnalytics(
   orders: AdminOrder[],
-  granularity: RevenueGranularity,
+  granularity: RevenueGranularity
 ): AnalyticsPoint[] {
   const map = new Map<string, { revenue: number; label: string }>()
   for (const order of orders) {
@@ -87,24 +87,24 @@ function buildAnalytics(
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([, value]) => ({
       date: value.label,
-      revenue: value.revenue,
+      revenue: value.revenue
     }))
 }
 
 function buildCategoryRadarData(
   categories: AdminCategory[],
   products: AdminProduct[],
-  selectedParentName: string | null = null,
+  selectedParentName: string | null = null
 ): CategoryRadarData[] {
   const byId = new Map(categories.map((category) => [category.id, category]))
   const byName = new Map(
-    categories.map((category) => [category.name, category]),
+    categories.map((category) => [category.name, category])
   )
   const totals = new Map<string, number>()
 
   if (!selectedParentName) {
     const parentCategories = categories.filter(
-      (category) => category.parentId === null,
+      (category) => category.parentId === null
     )
     for (const parent of parentCategories) totals.set(parent.name, 0)
     for (const product of products) {
@@ -116,7 +116,7 @@ function buildCategoryRadarData(
       if (!parentName) continue
       totals.set(
         parentName,
-        (totals.get(parentName) ?? 0) + (product.soldCount ?? 0),
+        (totals.get(parentName) ?? 0) + (product.soldCount ?? 0)
       )
     }
   } else {
@@ -124,7 +124,7 @@ function buildCategoryRadarData(
     if (!parentCategory) return []
 
     const childCategories = categories.filter(
-      (category) => category.parentId === parentCategory.id,
+      (category) => category.parentId === parentCategory.id
     )
     for (const child of childCategories) totals.set(child.name, 0)
     totals.set('Trực tiếp', 0)
@@ -135,12 +135,12 @@ function buildCategoryRadarData(
       if (category.parentId === parentCategory.id) {
         totals.set(
           category.name,
-          (totals.get(category.name) ?? 0) + (product.soldCount ?? 0),
+          (totals.get(category.name) ?? 0) + (product.soldCount ?? 0)
         )
       } else if (category.id === parentCategory.id) {
         totals.set(
           'Trực tiếp',
-          (totals.get('Trực tiếp') ?? 0) + (product.soldCount ?? 0),
+          (totals.get('Trực tiếp') ?? 0) + (product.soldCount ?? 0)
         )
       }
     }
@@ -152,7 +152,7 @@ function buildCategoryRadarData(
 
   return Array.from(totals.entries()).map(([categoryName, value]) => ({
     categoryName,
-    value,
+    value
   }))
 }
 
@@ -162,24 +162,24 @@ export default function AdminDashboardSection() {
   const { navigate } = useAdmin()
   const [granularity, setGranularity] = useState<RevenueGranularity>('day')
   const [selectedRadarParent, setSelectedRadarParent] = useState<string | null>(
-    null,
+    null
   )
 
   const productsQuery = useQuery({
     queryKey: QUERY_KEYS.adminProducts,
-    queryFn: getAdminProducts,
+    queryFn: getAdminProducts
   })
   const categoriesQuery = useQuery({
     queryKey: QUERY_KEYS.adminCategories,
-    queryFn: getAdminCategories,
+    queryFn: getAdminCategories
   })
   const ordersQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrders(ADMIN_FILTER_ALL_VALUE),
-    queryFn: () => getAdminOrders(ADMIN_FILTER_ALL_VALUE),
+    queryFn: () => getAdminOrders(ADMIN_FILTER_ALL_VALUE)
   })
   const couponsQuery = useQuery<Coupon[]>({
     queryKey: QUERY_KEYS.adminCoupons,
-    queryFn: () => getAdminCoupons(),
+    queryFn: () => getAdminCoupons()
   })
 
   const loading =
@@ -196,11 +196,11 @@ export default function AdminDashboardSection() {
   const products = useMemo(() => productsQuery.data ?? [], [productsQuery.data])
   const categories = useMemo(
     () => categoriesQuery.data ?? [],
-    [categoriesQuery.data],
+    [categoriesQuery.data]
   )
   const orders = useMemo(
     () => ordersQuery.data?.orders ?? [],
-    [ordersQuery.data],
+    [ordersQuery.data]
   )
   const coupons = useMemo(() => couponsQuery.data ?? [], [couponsQuery.data])
 
@@ -209,18 +209,18 @@ export default function AdminDashboardSection() {
       products: products.length,
       categories: categories.length,
       orders: orders.length,
-      coupons: coupons.length,
+      coupons: coupons.length
     }),
-    [products.length, categories.length, orders.length, coupons.length],
+    [products.length, categories.length, orders.length, coupons.length]
   )
 
   const analyticsData = useMemo(
     () => buildAnalytics(orders, granularity),
-    [orders, granularity],
+    [orders, granularity]
   )
   const categoryRadarData = useMemo(
     () => buildCategoryRadarData(categories, products, selectedRadarParent),
-    [categories, products, selectedRadarParent],
+    [categories, products, selectedRadarParent]
   )
   const orderOverviewData = useMemo<OrderOverview[]>(
     () =>
@@ -230,14 +230,14 @@ export default function AdminDashboardSection() {
           customerEmail: order.userEmail,
           totalAmount: order.totalAmount,
           status: order.status,
-          createdAt: order.createdAt,
+          createdAt: order.createdAt
         }))
         .sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
         .slice(0, 10),
-    [orders],
+    [orders]
   )
   const mostSoldProducts = useMemo(
     () =>
@@ -246,12 +246,12 @@ export default function AdminDashboardSection() {
           id: product.id,
           name: product.name,
           category: product.categoryName,
-          soldCount: product.soldCount ?? 0,
+          soldCount: product.soldCount ?? 0
         }))
         .filter((product) => product.soldCount > 0)
         .sort((a, b) => b.soldCount - a.soldCount)
         .slice(0, 10),
-    [products],
+    [products]
   )
 
   const mostSoldColumns = useMemo(
@@ -261,7 +261,7 @@ export default function AdminDashboardSection() {
         key: 'stt',
         width: 60,
         align: 'center' as const,
-        render: (_: unknown, __: unknown, index: number) => index + 1,
+        render: (_: unknown, __: unknown, index: number) => index + 1
       },
       { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
       {
@@ -269,10 +269,10 @@ export default function AdminDashboardSection() {
         dataIndex: 'soldCount',
         className: 'truncate',
         key: 'soldCount',
-        align: 'right' as const,
-      },
+        align: 'right' as const
+      }
     ],
-    [],
+    []
   )
 
   if (loading) return <Skeleton active paragraph={{ rows: 10 }} />
@@ -345,7 +345,7 @@ export default function AdminDashboardSection() {
                   { label: 'Ngày', value: 'day' },
                   { label: 'Tuần', value: 'week' },
                   { label: 'Tháng', value: 'month' },
-                  { label: 'Năm', value: 'year' },
+                  { label: 'Năm', value: 'year' }
                 ]}
               />
             }

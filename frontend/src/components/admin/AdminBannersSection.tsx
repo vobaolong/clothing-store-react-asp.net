@@ -1,20 +1,17 @@
-import { PlusOutlined } from '@ant-design/icons'
-import { Button, Empty, Switch, Table } from 'antd'
-import type { AdminBanner } from '@/types'
-import { formatDate } from '@/utils/format'
-import { AdminQueryRefreshButton } from '@/components/admin/AdminQueryRefreshButton'
-import { AdminTableEditDeleteActions } from '@/components/admin/AdminTableEditDeleteActions'
-
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import {
   getAdminBanners,
   deleteAdminBanner,
-  updateAdminBanner
+  updateAdminBanner,
+  reorderAdminBanners
 } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { useAdmin } from '@/context/admin/AdminContext'
 import toast from 'react-hot-toast'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import type { AdminBanner } from '@/types'
+import AdminBannersToolbar from './AdminBannersToolbar'
+import AdminBannersTable from './AdminBannersTable'
 
 export default function AdminBannersSection() {
   const { refresh, confirmDelete, modals, editing, editor } = useAdmin()
@@ -25,9 +22,41 @@ export default function AdminBannersSection() {
     queryFn: getAdminBanners
   })
 
-  const data = bannersQuery.data ?? []
-  const loading = bannersQuery.isLoading
-  const refreshQuery = bannersQuery
+  const [localBanners, setLocalBanners] = useState<AdminBanner[]>([])
+  const [hasChanges, setHasChanges] = useState(false)
+  const [prevData, setPrevData] = useState<AdminBanner[] | undefined>(undefined)
+
+  if (bannersQuery.data !== prevData) {
+    setPrevData(bannersQuery.data)
+    setLocalBanners(bannersQuery.data ?? [])
+    setHasChanges(false)
+  }
+
+  const reorderMutation = useMutation({
+    mutationFn: reorderAdminBanners,
+    onSuccess: async () => {
+      toast.success('Đã lưu thứ tự banner mới')
+      setHasChanges(false)
+      await refresh()
+      await bannersQuery.refetch()
+    },
+    onError: () => {
+      toast.error('Lỗi khi cập nhật thứ tự banner')
+    }
+  })
+
+  const handleReorder = (newData: AdminBanner[]) => {
+    setLocalBanners(newData)
+    setHasChanges(true)
+  }
+
+  const handleSaveOrder = () => {
+    const payload = localBanners.map((b, index) => ({
+      id: b.id,
+      displayOrder: index
+    }))
+    reorderMutation.mutate(payload)
+  }
 
   const onCreate = useCallback(() => {
     editing.setBanner(null)
@@ -50,8 +79,9 @@ export default function AdminBannersSection() {
         await deleteAdminBanner(banner.id)
         toast.success('Banner đã được xóa')
         await refresh()
+        await bannersQuery.refetch()
       }),
-    [confirmDelete, refresh]
+    [confirmDelete, refresh, bannersQuery]
   )
 
   const onToggleActive = useCallback(
@@ -61,96 +91,32 @@ export default function AdminBannersSection() {
         ctaLink: banner.ctaLink,
         startsAt: banner.startsAt ?? null,
         endsAt: banner.endsAt ?? null,
+        displayOrder: banner.displayOrder,
         isActive
       })
-      toast.success('Banner đã được cập nhật')
+      toast.success('Trạng thái kích hoạt đã được cập nhật')
       await refresh()
+      await bannersQuery.refetch()
     },
-    [refresh]
+    [refresh, bannersQuery]
   )
+
   return (
     <div className='space-y-3'>
-      <div className='flex gap-2 justify-end w-full'>
-        <AdminQueryRefreshButton query={refreshQuery} />
-        <Button type='primary' icon={<PlusOutlined />} onClick={onCreate}>
-          Thêm banner
-        </Button>
-      </div>
-      <Table
-        rowKey='id'
-        loading={loading}
-        bordered
-        dataSource={data}
-        scroll={{ x: 'max-content' }}
-        pagination={{
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '50', '100'],
-          showTotal: (total) => `Tổng ${total} banners`
-        }}
-        locale={{ emptyText: <Empty description='Không có dữ liệu' /> }}
-        columns={[
-          {
-            title: '#',
-            dataIndex: 'no',
-            align: 'center',
-            width: 60,
-            fixed: 'left',
-            render: (_, row: AdminBanner) => data.indexOf(row) + 1
-          },
-          {
-            title: 'Ảnh banner',
-            dataIndex: 'imageUrl',
-            render: (value: string) => (
-              <img
-                src={value}
-                alt='banner'
-                className='object-cover w-auto rounded-md h-30'
-              />
-            )
-          },
-          {
-            title: 'Liên kết',
-            render: (_, row: AdminBanner) => (
-              <p className='text-xs truncate max-w-60 text-slate-500'>
-                {row.ctaLink}
-              </p>
-            )
-          },
-          {
-            title: 'Kích hoạt',
-            align: 'center',
-            dataIndex: 'isActive',
-            render: (value: boolean, row: AdminBanner) => (
-              <Switch
-                checked={value}
-                onChange={(nextValue) => onToggleActive(row, nextValue)}
-              />
-            )
-          },
-          {
-            title: 'Ngày bắt đầu',
-            dataIndex: 'startsAt',
-            render: (value: string) => formatDate(value)
-          },
-          {
-            title: 'Ngày kết thúc',
-            dataIndex: 'endsAt',
-            render: (value: string) => formatDate(value)
-          },
-          {
-            title: 'Thao tác',
-            align: 'center',
-            fixed: 'right',
-            render: (_, row: AdminBanner) => (
-              <AdminTableEditDeleteActions
-                row={row}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            )
-          }
-        ]}
+      <AdminBannersToolbar
+        query={bannersQuery}
+        onCreate={onCreate}
+        isReordering={reorderMutation.isPending}
+        onSaveOrder={handleSaveOrder}
+        hasOrderChanges={hasChanges}
+      />
+      <AdminBannersTable
+        loading={bannersQuery.isLoading}
+        data={localBanners}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onToggleActive={onToggleActive}
+        onReorder={handleReorder}
       />
     </div>
   )

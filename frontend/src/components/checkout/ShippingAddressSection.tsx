@@ -10,7 +10,7 @@ import { EditOutlined } from '@ant-design/icons'
 
 import type {
   ShippingAddressesQuery,
-  CheckoutFormValues,
+  CheckoutFormValues
 } from '@/types/checkout.type'
 import type { ShippingAddress } from '@/types'
 import type { QueryClient } from '@tanstack/react-query'
@@ -29,7 +29,7 @@ export default function ShippingAddressSection({
   addressesQuery,
   onOpenModal,
   onEditAddress,
-  qc,
+  qc
 }: Props) {
   return (
     <>
@@ -64,11 +64,9 @@ export default function ShippingAddressSection({
                                 {addressItem.phone}
                               </span>
                               <Tag color='blue'>
-                                {
-                                  ShippingAddressType[
-                                    addressItem.label.toUpperCase()
-                                  ]
-                                }
+                                {ShippingAddressType[
+                                  addressItem.label?.toUpperCase() as keyof typeof ShippingAddressType
+                                ] || '—'}
                               </Tag>
                             </p>
                             <p className='mt-0.5 text-slate-500'>
@@ -88,7 +86,7 @@ export default function ShippingAddressSection({
                               onClick={async () => {
                                 await setDefaultShippingAddress(addressItem.id)
                                 await qc.invalidateQueries({
-                                  queryKey: QUERY_KEYS.shippingAddresses,
+                                  queryKey: QUERY_KEYS.shippingAddresses
                                 })
                                 toast.success('Đã đặt làm mặc định')
                               }}

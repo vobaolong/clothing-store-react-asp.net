@@ -67,6 +67,7 @@ export type AdminBanner = {
   imageUrl: string
   ctaLink: string
   isActive: boolean
+  displayOrder: number
   startsAt?: string | null
   endsAt?: string | null
   createdAt: string
@@ -155,6 +156,7 @@ export type AdminBannerUpsertPayload = {
   imageUrl: string
   ctaLink: string
   isActive: boolean
+  displayOrder: number
   startsAt: string | null
   endsAt: string | null
 }
@@ -162,7 +164,6 @@ export type AdminBannerUpsertPayload = {
 export type AdminOrderStatusUpdatePayload = {
   status: string
 }
-
 
 export type CategoryRadarData = {
   categoryName: string
@@ -184,10 +185,15 @@ export type AnalyticsPoint = {
 
 export type Review = {
   id: string
-  userName: string
+  productId: string
   productName: string
+  productImage: string
+  userId: string
+  userEmail: string
+  userFullName: string
   rating: number
-  comment: string
+  comment?: string | null
+  tags?: string[] | null
   createdAt: string
 }
 

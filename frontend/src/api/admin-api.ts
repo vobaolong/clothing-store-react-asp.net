@@ -76,9 +76,13 @@ export const importAdminProducts = async (
 }
 
 export const exportAdminProducts = async (ids: string[]): Promise<Blob> => {
-  const response = await apiClient.post(API_ENDPOINTS.admin.productsExport, { ids }, {
-    responseType: 'blob'
-  })
+  const response = await apiClient.post(
+    API_ENDPOINTS.admin.productsExport,
+    { ids },
+    {
+      responseType: 'blob'
+    }
+  )
   return response.data as Blob
 }
 
@@ -104,7 +108,9 @@ export type AdminBulkPermanentProductsResult = {
   skippedNotInTrash: number
 }
 
-export const bulkDeleteAdminProductsPermanent = async (ids: string[]): Promise<AdminBulkPermanentProductsResult> => {
+export const bulkDeleteAdminProductsPermanent = async (
+  ids: string[]
+): Promise<AdminBulkPermanentProductsResult> => {
   return apiData(
     apiClient.delete(API_ENDPOINTS.admin.productsBulkPermanent, {
       data: ids
@@ -191,9 +197,10 @@ export const updateAdminOrderStatus = async (
   payload: AdminOrderStatusUpdatePayload
 ) => apiVoid(apiClient.put(API_ENDPOINTS.admin.orderStatusById(id), payload))
 
-export const bulkUpdateAdminOrdersStatus = async (
-  payload: { orderIds: string[]; status: string }
-) => apiVoid(apiClient.put(API_ENDPOINTS.admin.ordersBulkStatus, payload))
+export const bulkUpdateAdminOrdersStatus = async (payload: {
+  orderIds: string[]
+  status: string
+}) => apiVoid(apiClient.put(API_ENDPOINTS.admin.ordersBulkStatus, payload))
 
 export const getAdminReviews = async (): Promise<Review[]> =>
   (
@@ -204,6 +211,9 @@ export const getAdminReviews = async (): Promise<Review[]> =>
 
 export const deleteAdminReview = async (id: string) =>
   apiVoid(apiClient.delete(API_ENDPOINTS.admin.reviewById(id)))
+
+export const bulkDeleteAdminReviews = async (ids: string[]) =>
+  apiVoid(apiClient.post(API_ENDPOINTS.admin.reviewsBulkDelete, ids))
 
 export const getAdminCustomers = async (): Promise<Customer[]> =>
   apiData(apiClient.get(API_ENDPOINTS.admin.customers))
@@ -245,6 +255,10 @@ export const updateAdminBanner = async (
 
 export const deleteAdminBanner = async (id: string) =>
   apiVoid(apiClient.delete(API_ENDPOINTS.admin.bannerById(id)))
+
+export const reorderAdminBanners = async (
+  items: { id: string; displayOrder: number }[]
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.bannersReorder, items))
 
 export type {
   AdminCategory,

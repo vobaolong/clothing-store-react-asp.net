@@ -1,4 +1,4 @@
-import { CheckCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { Button, Tag } from 'antd'
 import toast from 'react-hot-toast'
 import { bulkUpdateCategoriesActive } from '@/api/admin-api'
@@ -9,19 +9,19 @@ type Props = {
   onRefresh: () => Promise<void>
 }
 
-export default function AdminCategoriesBulkActions({
+export default function AdminCategoriesSelectionActions({
   selectedIds,
   onClearSelection,
-  onRefresh,
+  onRefresh
 }: Props) {
   const handleBulkActiveChange = async (isActive: boolean) => {
     try {
       await bulkUpdateCategoriesActive({
         ids: selectedIds,
-        isActive,
+        isActive
       })
       toast.success(
-        isActive ? 'Đã kích hoạt danh mục' : 'Đã vô hiệu hóa danh mục',
+        isActive ? 'Đã kích hoạt danh mục' : 'Đã vô hiệu hóa danh mục'
       )
       onClearSelection()
       await onRefresh()
@@ -39,13 +39,20 @@ export default function AdminCategoriesBulkActions({
           color='blue'
           className='font-semibold text-gray-700 text-nowrap h-8! items-center flex!'
         >
-          {selectedIds.length} danh mục được chọn
+          {selectedIds.length} danh mục
         </Tag>
-        <Button onClick={() => void handleBulkActiveChange(true)}>
-          Kích hoạt đã chọn
+        <Button
+          icon={<CheckCircleOutlined />}
+          onClick={() => void handleBulkActiveChange(true)}
+        >
+          <span className='hidden md:block'>Kích hoạt</span>
         </Button>
-        <Button onClick={() => void handleBulkActiveChange(false)}>
-          Vô hiệu hóa đã chọn
+        <Button
+          icon={<CloseCircleOutlined />}
+          danger
+          onClick={() => void handleBulkActiveChange(false)}
+        >
+          <span className='hidden md:block'>Hủy kích hoạt</span>
         </Button>
       </div>
     </div>

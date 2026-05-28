@@ -18,7 +18,7 @@ export function useBulkActivate(onRefresh: () => Promise<void>) {
       onClearSelection()
       await onRefresh()
     } catch {
-      toast.error('Bulk update failed')
+      toast.error(isActive ? 'Kích hoạt thất bại' : 'Huỷ kích hoạt thất bại')
     }
   }
 

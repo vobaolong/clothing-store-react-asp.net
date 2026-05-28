@@ -1,6 +1,7 @@
 import {
   Form,
   Input,
+  InputNumber,
   Modal,
   DatePicker,
   Switch,
@@ -85,6 +86,7 @@ export default function BannerModal({
       form.setFieldsValue({
         imageUrl: editing.imageUrl,
         isActive: editing.isActive,
+        displayOrder: editing.displayOrder,
         startsAt: editing.startsAt ? dayjs(editing.startsAt) : undefined,
         endsAt: editing.endsAt ? dayjs(editing.endsAt) : undefined,
         ctaDestination: parsed.destination,
@@ -96,6 +98,7 @@ export default function BannerModal({
     } else {
       form.setFieldsValue({
         isActive: true,
+        displayOrder: 0,
         ctaDestination: 'category',
         ctaSearchKeyword: '',
         ctaCustomUrl: '/products'
@@ -144,6 +147,7 @@ export default function BannerModal({
       imageUrl: values.imageUrl,
       ctaLink,
       isActive: values.isActive ?? editing?.isActive ?? true,
+      displayOrder: values.displayOrder ?? editing?.displayOrder ?? 0,
       startsAt: values.startsAt ? values.startsAt.toISOString() : null,
       endsAt: values.endsAt ? values.endsAt.toISOString() : null
     }
@@ -287,6 +291,13 @@ export default function BannerModal({
               valuePropName='checked'
             >
               <Switch />
+            </Form.Item>
+            <Form.Item
+              name='displayOrder'
+              label='Thứ tự hiển thị'
+              tooltip='Số nhỏ hơn sẽ hiển thị trước. VD: 0 → 1 → 2…'
+            >
+              <InputNumber min={0} className='w-full' />
             </Form.Item>
           </div>
 

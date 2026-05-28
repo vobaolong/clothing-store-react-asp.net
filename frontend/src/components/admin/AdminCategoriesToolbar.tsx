@@ -1,8 +1,12 @@
-import { PlusOutlined, AppstoreAddOutlined, ReloadOutlined } from '@ant-design/icons'
+import {
+  PlusOutlined,
+  AppstoreAddOutlined,
+  ReloadOutlined
+} from '@ant-design/icons'
 import { Button, FloatButton } from 'antd'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 import { AdminQueryRefreshButton } from '@/components/admin/AdminQueryRefreshButton'
-import AdminCategoriesBulkActions from '@/components/admin/AdminCategoriesBulkActions'
+import AdminCategoriesSelectionActions from '@/components/admin/AdminCategoriesSelectionActions'
 import {
   ADMIN_ACTIVE_FILTER_OPTIONS,
   ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
@@ -51,7 +55,7 @@ export default function AdminCategoriesToolbar({
     <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
       <div className='hidden sm:flex flex-wrap gap-2 justify-end items-center w-full sm:ml-auto sm:w-auto'>
         {hasSelection && (
-          <AdminCategoriesBulkActions
+          <AdminCategoriesSelectionActions
             selectedIds={selectedIds}
             onClearSelection={onClearSelection}
             onRefresh={onRefresh}
@@ -109,15 +113,27 @@ export default function AdminCategoriesToolbar({
         ]}
       />
       <FloatButton.Group
-        trigger="click"
-        type="primary"
+        trigger='click'
+        type='primary'
         style={{ bottom: 24, right: 24 }}
         icon={<PlusOutlined />}
-        className="sm:hidden!"
+        className='sm:hidden!'
       >
-        <FloatButton icon={<PlusOutlined />} onClick={onCreate} tooltip="Thêm danh mục" />
-        <FloatButton icon={<AppstoreAddOutlined />} onClick={onBulkAdd} tooltip="Thêm hàng loạt" />
-        <FloatButton icon={<ReloadOutlined />} onClick={() => refreshQuery.refetch()} tooltip="Tải lại" />
+        <FloatButton
+          icon={<PlusOutlined />}
+          onClick={onCreate}
+          tooltip='Thêm danh mục'
+        />
+        <FloatButton
+          icon={<AppstoreAddOutlined />}
+          onClick={onBulkAdd}
+          tooltip='Thêm hàng loạt'
+        />
+        <FloatButton
+          icon={<ReloadOutlined />}
+          onClick={() => refreshQuery.refetch()}
+          tooltip='Tải lại'
+        />
       </FloatButton.Group>
     </div>
   )

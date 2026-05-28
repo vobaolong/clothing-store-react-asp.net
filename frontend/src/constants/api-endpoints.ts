@@ -82,10 +82,12 @@ export const API_ENDPOINTS = {
     orderStatusById: (id: string) => `/admin/orders/${id}/status`,
     reviews: '/admin/reviews',
     reviewById: (id: string) => `/admin/reviews/${id}`,
+    reviewsBulkDelete: '/admin/reviews/bulk-delete',
     customers: '/admin/customers',
     customerLockById: (id: string) => `/admin/customers/${id}/lock`,
     customerUnlockById: (id: string) => `/admin/customers/${id}/unlock`,
     banners: '/admin/banners',
+    bannersReorder: '/admin/banners/reorder',
     bannerById: (id: string) => `/admin/banners/${id}`
   }
 } as const
