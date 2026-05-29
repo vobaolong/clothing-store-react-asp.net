@@ -6,7 +6,7 @@ import {
   deleteAdminProduct,
   restoreAdminProduct,
   updateAdminProductActive,
-  exportAdminProducts,
+  exportAdminProducts
 } from '@/api/admin-api'
 import { buildAdminProductView } from '@/components/admin/admin-products-utils'
 import type { AdminProduct, ProductView } from '@/types'
@@ -28,60 +28,83 @@ type ProductActionsParams = {
   setSelectionState: React.Dispatch<React.SetStateAction<SelectionState>>
 }
 
-export function useProductActions({ refresh, editing, modals, clearDirty, setSelectionState }: ProductActionsParams) {
+export function useProductActions({
+  refresh,
+  editing,
+  modals,
+  clearDirty,
+  setSelectionState
+}: ProductActionsParams) {
   const onCreate = useCallback(() => {
     editing.setProduct(null)
     clearDirty('product')
     modals.setProduct(true)
   }, [clearDirty, editing, modals])
 
-  const onEdit = useCallback((product: AdminProduct) => {
-    editing.setProduct(product)
-    clearDirty('product')
-    modals.setProduct(true)
-  }, [clearDirty, editing, modals])
+  const onEdit = useCallback(
+    (product: AdminProduct) => {
+      editing.setProduct(product)
+      clearDirty('product')
+      modals.setProduct(true)
+    },
+    [clearDirty, editing, modals]
+  )
 
-  const onDelete = useCallback((product: AdminProduct) => {
-    Modal.confirm({
-      title: `Xóa sản phẩm "${product.name}"?`,
-      content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
-      okText: 'Xác nhận',
-      cancelText: 'Hủy',
-      okButtonProps: { danger: true },
-      onOk: async () => {
-        await deleteAdminProduct(product.id)
-        toast.success('Sản phẩm đã được xóa')
-        await refresh()
-      },
-    })
-  }, [refresh])
+  const onDelete = useCallback(
+    (product: AdminProduct) => {
+      Modal.confirm({
+        title: `Xóa sản phẩm "${product.name}"?`,
+        content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
+        okText: 'Xác nhận',
+        cancelText: 'Hủy',
+        okButtonProps: { danger: true },
+        onOk: async () => {
+          await deleteAdminProduct(product.id)
+          toast.success('Sản phẩm đã được xóa')
+          await refresh()
+        }
+      })
+    },
+    [refresh]
+  )
 
-  const onToggleActive = useCallback(async (product: AdminProduct, isActive: boolean) => {
-    await updateAdminProductActive(product.id, { isActive })
-    toast.success(isActive ? 'Sản phẩm đã được kích hoạt' : 'Sản phẩm đã được vô hiệu hóa')
-    await refresh()
-  }, [refresh])
+  const onToggleActive = useCallback(
+    async (product: AdminProduct, isActive: boolean) => {
+      await updateAdminProductActive(product.id, { isActive })
+      toast.success(
+        isActive ? 'Sản phẩm đã được kích hoạt' : 'Sản phẩm đã được vô hiệu hóa'
+      )
+      await refresh()
+    },
+    [refresh]
+  )
 
-  const onRestore = useCallback(async (product: AdminProduct) => {
-		Modal.confirm({
-      title: `Khôi phục sản phẩm "${product.name}"?`,
-      content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
-      okText: 'Xác nhận',
-      cancelText: 'Hủy',
-      onOk: async () => {
-        await restoreAdminProduct(product.id)
-        toast.success('Sản phẩm đã được khôi phục')
-        await refresh()
-      },
-    })
-  }, [refresh])
+  const onRestore = useCallback(
+    async (product: AdminProduct) => {
+      Modal.confirm({
+        title: `Khôi phục sản phẩm "${product.name}"?`,
+        content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
+        okText: 'Xác nhận',
+        cancelText: 'Hủy',
+        onOk: async () => {
+          await restoreAdminProduct(product.id)
+          toast.success('Sản phẩm đã được khôi phục')
+          await refresh()
+        }
+      })
+    },
+    [refresh]
+  )
 
-  const openProductView = useCallback((product: AdminProduct, updatedAt?: string | null) => {
-    setSelectionState((current) => ({
-      ...current,
-      viewProduct: buildAdminProductView(product, updatedAt),
-    }))
-  }, [setSelectionState])
+  const openProductView = useCallback(
+    (product: AdminProduct, updatedAt?: string | null) => {
+      setSelectionState((current) => ({
+        ...current,
+        viewProduct: buildAdminProductView(product, updatedAt)
+      }))
+    },
+    [setSelectionState]
+  )
 
   const onExportExcel = useCallback(async (filteredData: AdminProduct[]) => {
     if (filteredData.length === 0) {
@@ -107,5 +130,13 @@ export function useProductActions({ refresh, editing, modals, clearDirty, setSel
     }
   }, [])
 
-  return { onCreate, onEdit, onDelete, onToggleActive, onRestore, openProductView, onExportExcel }
+  return {
+    onCreate,
+    onEdit,
+    onDelete,
+    onToggleActive,
+    onRestore,
+    openProductView,
+    onExportExcel
+  }
 }

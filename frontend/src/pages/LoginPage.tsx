@@ -38,73 +38,73 @@ export default function LoginPage() {
         toast.error(
           'Tài khoản chưa xác thực. Vui lòng nhập OTP được gửi qua email.',
           {
-            duration: 4000,
-          },
+            duration: 4000
+          }
         )
         navigate('/verify-otp', { state: { email: emailRef.current } })
         return
       }
 
       toast.error(msg ?? 'Đăng nhập thất bại. Kiểm tra email và mật khẩu.')
-    },
+    }
   })
 
   return (
-    <div className='mx-auto flex min-h-[70vh] items-center justify-center'>
-      <Card className='w-full max-w-md rounded-2xl'>
-        <h1 className='mb-4 text-2xl font-semibold'>Đăng nhập</h1>
+    <div className="mx-auto flex min-h-[70vh] items-center justify-center">
+      <Card className="w-full max-w-md rounded-2xl">
+        <h1 className="mb-4 text-2xl font-semibold">Đăng nhập</h1>
         <Form
-          layout='vertical'
+          layout="vertical"
           onFinish={loginMutation.mutateAsync}
           onValuesChange={(changed) => {
             if (changed.email) emailRef.current = changed.email
           }}
         >
           <Form.Item
-            label='Email'
-            name='email'
+            label="Email"
+            name="email"
             rules={[{ required: true, type: 'email' }]}
           >
-            <Input placeholder='Email' prefix={<UserOutlined />} />
+            <Input placeholder="Email" prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
-            label='Mật khẩu'
-            name='password'
+            label="Mật khẩu"
+            name="password"
             rules={[{ required: true, min: 6 }]}
           >
             <Input.Password prefix={<LockOutlined />} />
           </Form.Item>
-          <div className='flex justify-between items-center mb-4'>
+          <div className="flex justify-between items-center mb-4">
             <Form.Item
-              name='rememberMe'
-              valuePropName='checked'
+              name="rememberMe"
+              valuePropName="checked"
               initialValue={false}
-              className='mb-0!'
+              className="mb-0!"
             >
               <Checkbox>Ghi nhớ đăng nhập</Checkbox>
             </Form.Item>
             <Link
-              to='/forgot-password'
-              className='text-sm text-indigo-600 hover:text-indigo-500'
+              to="/forgot-password"
+              className="text-sm text-indigo-600 hover:text-indigo-500"
             >
               Quên mật khẩu?
             </Link>
           </div>
           <Button
-            type='primary'
-            htmlType='submit'
+            type="primary"
+            htmlType="submit"
             block
-            size='large'
+            size="large"
             loading={loginMutation.isPending}
           >
             Đăng nhập
           </Button>
         </Form>
-        <p className='mt-4! text-center text-sm text-slate-500'>
+        <p className="mt-4! text-center text-sm text-slate-500">
           Bạn chưa có tài khoản?{' '}
           <Link
-            to='/register'
-            className='text-indigo-600 hover:text-indigo-500'
+            to="/register"
+            className="text-indigo-600 hover:text-indigo-500"
           >
             Đăng ký ngay
           </Link>

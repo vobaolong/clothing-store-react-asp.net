@@ -5,7 +5,7 @@ import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   ADMIN_PAGE_BRAND_TITLE,
-  ADMIN_PAGE_HEADER_TITLE,
+  ADMIN_PAGE_HEADER_TITLE
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { isAdmin, removeAuthToken } from '@/state/auth/auth-session'
@@ -40,31 +40,31 @@ export default function AdminShell() {
         removeAuthToken()
         toast.success('Đăng xuất thành công')
         window.location.href = '/'
-      },
+      }
     })
   }
 
-  if (!isAdmin()) return <Navigate to='/' replace />
+  if (!isAdmin()) return <Navigate to="/" replace />
 
   return (
-    <Layout className='flex overflow-hidden bg-white h-dvh'>
+    <Layout className="flex overflow-hidden bg-white h-dvh">
       <AdminPageSidebar
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
         brandTitle={ADMIN_PAGE_BRAND_TITLE}
         onLogout={handleLogout}
       />
-      <Layout className='flex flex-col flex-1 min-w-0 min-h-0'>
+      <Layout className="flex flex-col flex-1 min-w-0 min-h-0">
         {!isOrderDetailPage ? (
-          <Header className='flex! h-auto! shrink-0 items-center! border-b! border-slate-200! bg-white! px-6! py-4! leading-normal!'>
-            <Typography.Title level={4} className='m-0! flex-1'>
+          <Header className="flex! h-auto! shrink-0 items-center! border-b! border-slate-200! bg-white! px-6! py-4! leading-normal!">
+            <Typography.Title level={4} className="m-0! flex-1">
               {headerTitle}
             </Typography.Title>
             <NotificationCenter />
           </Header>
         ) : null}
-        <Content className='min-h-0 flex-1 overflow-auto bg-slate-50/90! p-4 md:p-6'>
-          <div className='min-w-0'>
+        <Content className="min-h-0 flex-1 overflow-auto bg-slate-50/90! p-4 md:p-6">
+          <div className="min-w-0">
             <Outlet />
           </div>
         </Content>

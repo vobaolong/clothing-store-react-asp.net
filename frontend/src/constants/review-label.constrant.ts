@@ -4,5 +4,5 @@ export const tagOptions = [
   'Giao hàng nhanh',
   'Đóng gói kỹ',
   'Giá hợp lý',
-  'Giống mô tả',
+  'Giống mô tả'
 ]

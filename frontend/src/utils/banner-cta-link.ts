@@ -13,7 +13,7 @@ export type ParsedBannerCta = {
 
 export function resolveCategoryIdFromParam(
   param: string,
-  categories: AdminCategory[],
+  categories: AdminCategory[]
 ): string | undefined {
   const decoded = decodeURIComponent(param.trim())
   const found = categories.find(
@@ -22,7 +22,7 @@ export function resolveCategoryIdFromParam(
       c.slug === decoded ||
       c.name === decoded ||
       c.id === param.trim() ||
-      c.slug === param.trim(),
+      c.slug === param.trim()
   )
   return found?.id
 }
@@ -30,7 +30,7 @@ export function resolveCategoryIdFromParam(
 export function parseBannerCta(
   link: string,
   categories: AdminCategory[],
-  products: AdminProduct[],
+  products: AdminProduct[]
 ): ParsedBannerCta {
   const raw = link.trim()
   if (!raw) {
@@ -79,12 +79,12 @@ export function parseBannerCta(
         (p) =>
           p.slug === slug ||
           encodeURIComponent(p.slug) === slug ||
-          p.slug === encodeURIComponent(slug),
+          p.slug === encodeURIComponent(slug)
       )
       return {
         destination: 'product',
         productId: product?.id,
-        customUrl: raw,
+        customUrl: raw
       }
     }
   }
@@ -99,7 +99,7 @@ export function buildBannerCtaLink(
   searchKeyword: string | undefined,
   customUrl: string | undefined,
   categories: AdminCategory[],
-  products: AdminProduct[],
+  products: AdminProduct[]
 ): string {
   switch (destination) {
     case 'category': {

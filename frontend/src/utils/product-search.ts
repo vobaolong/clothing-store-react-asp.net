@@ -12,13 +12,13 @@ const SYNONYM_GROUPS: readonly (readonly string[])[] = [
     'bộ ngủ',
     'sleepwear',
     'nightwear',
-    'loungewear',
+    'loungewear'
   ],
   ['t-shirt', 'tshirt', 'tee', 'áo thun', 'thun', 'polo', 'áo polo'],
   ['jean', 'jeans', 'quần jean', 'quần bò', 'denim'],
   ['hoodie', 'áo hoodie', 'áo nỉ', 'sweatshirt', 'nỉ'],
   ['short', 'shorts', 'quần short', 'quần đùi'],
-  ['jogger', 'joggers', 'quần jogger', 'quần thể thao'],
+  ['jogger', 'joggers', 'quần jogger', 'quần thể thao']
 ]
 
 function stripHtml(html: string): string {
@@ -61,16 +61,16 @@ export function buildProductSearchHaystack(product: Product): string {
     product.category ?? '',
     product.categorySlug ?? '',
     ...(product.categoryBreadcrumbs?.map(
-      (breadcrumb) => `${breadcrumb.name} ${breadcrumb.slug}`,
+      (breadcrumb) => `${breadcrumb.name} ${breadcrumb.slug}`
     ) ?? []),
-    ...product.variants.map((variant) => `${variant.size} ${variant.color}`),
+    ...product.variants.map((variant) => `${variant.size} ${variant.color}`)
   ]
   return parts.join(' ').toLowerCase()
 }
 
 export function productMatchesSearch(
   product: Product,
-  rawQuery: string,
+  rawQuery: string
 ): boolean {
   const query = rawQuery.trim().toLowerCase()
   if (!query) return true

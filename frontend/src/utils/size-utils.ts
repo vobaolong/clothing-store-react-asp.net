@@ -4,7 +4,7 @@ export const normalizeSize = (size: string): string => size.trim().toUpperCase()
 
 export const sizeRank = (
   size: string,
-  defaultSizes: string[] = DEFAULT_SIZES,
+  defaultSizes: string[] = DEFAULT_SIZES
 ): number => {
   const normalized = normalizeSize(size)
   const idx = defaultSizes.indexOf(normalized)

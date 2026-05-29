@@ -12,15 +12,15 @@ export default function ForgotPasswordPage() {
     mutationFn: forgotPassword,
     onSuccess: () => {
       message.success(
-        'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.',
+        'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.'
       )
       form.resetFields()
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.',
+        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
       )
-    },
+    }
   })
 
   const onFinish = (values: { email: string }) => {
@@ -28,13 +28,13 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className='flex min-h-[70vh] items-center justify-center px-4 py-12'>
-      <Card className='w-full max-w-md rounded-3xl shadow-xl border-slate-200'>
-        <div className='mb-8 text-center'>
-          <Typography.Title level={2} className='mb-2!'>
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md rounded-3xl shadow-xl border-slate-200">
+        <div className="mb-8 text-center">
+          <Typography.Title level={2} className="mb-2!">
             Quên mật khẩu?
           </Typography.Title>
-          <Typography.Paragraph type='secondary'>
+          <Typography.Paragraph type="secondary">
             Nhập email của bạn và chúng tôi sẽ gửi cho bạn liên kết để đặt lại
             mật khẩu.
           </Typography.Paragraph>
@@ -42,41 +42,41 @@ export default function ForgotPasswordPage() {
 
         <Form
           form={form}
-          layout='vertical'
+          layout="vertical"
           onFinish={onFinish}
           requiredMark={false}
-          size='large'
+          size="large"
         >
           <Form.Item
-            name='email'
-            label='Email'
+            name="email"
+            label="Email"
             rules={[
               { required: true, message: 'Vui lòng nhập email!' },
-              { type: 'email', message: 'Email không hợp lệ!' },
+              { type: 'email', message: 'Email không hợp lệ!' }
             ]}
           >
             <Input
-              prefix={<MailOutlined className='text-slate-400' />}
-              placeholder='name@example.com'
+              prefix={<MailOutlined className="text-slate-400" />}
+              placeholder="name@example.com"
             />
           </Form.Item>
 
-          <Form.Item className='mb-2!'>
+          <Form.Item className="mb-2!">
             <Button
-              type='primary'
-              htmlType='submit'
+              type="primary"
+              htmlType="submit"
               block
               loading={isPending}
-              className='h-12 font-semibold rounded-xl'
+              className="h-12 font-semibold rounded-xl"
             >
               Gửi yêu cầu
             </Button>
           </Form.Item>
 
-          <div className='text-center'>
+          <div className="text-center">
             <Link
-              to='/login'
-              className='text-sm font-medium text-indigo-600 hover:text-indigo-500'
+              to="/login"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
             >
               Quay lại đăng nhập
             </Link>

@@ -32,9 +32,9 @@ export default function ResetPasswordPage() {
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.',
+        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
       )
-    },
+    }
   })
 
   const onFinish = (values: ResetPasswordFormValues) => {
@@ -42,46 +42,46 @@ export default function ResetPasswordPage() {
       mutate({
         email,
         token,
-        newPassword: values.password,
+        newPassword: values.password
       })
     }
   }
 
   return (
-    <div className='flex min-h-[70vh] items-center justify-center px-4 py-12'>
-      <Card className='w-full max-w-md rounded-3xl shadow-xl border-slate-200'>
-        <div className='mb-8 text-center'>
-          <Typography.Title level={2} className='mb-2!'>
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md rounded-3xl shadow-xl border-slate-200">
+        <div className="mb-8 text-center">
+          <Typography.Title level={2} className="mb-2!">
             Đặt lại mật khẩu
           </Typography.Title>
-          <Typography.Paragraph type='secondary'>
+          <Typography.Paragraph type="secondary">
             Nhập mật khẩu mới cho tài khoản {email}
           </Typography.Paragraph>
         </div>
 
         <Form
-          layout='vertical'
+          layout="vertical"
           onFinish={onFinish}
           requiredMark={false}
-          size='large'
+          size="large"
         >
           <Form.Item
-            name='password'
-            label='Mật khẩu mới'
+            name="password"
+            label="Mật khẩu mới"
             rules={[
               { required: true, message: 'Vui lòng nhập mật khẩu mới!' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-slate-400' />}
-              placeholder='••••••••'
+              prefix={<LockOutlined className="text-slate-400" />}
+              placeholder="••••••••"
             />
           </Form.Item>
 
           <Form.Item
-            name='confirm'
-            label='Xác nhận mật khẩu mới'
+            name="confirm"
+            label="Xác nhận mật khẩu mới"
             dependencies={['password']}
             rules={[
               { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
@@ -91,25 +91,25 @@ export default function ResetPasswordPage() {
                     return Promise.resolve()
                   }
                   return Promise.reject(
-                    new Error('Mật khẩu xác nhận không khớp!'),
+                    new Error('Mật khẩu xác nhận không khớp!')
                   )
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-slate-400' />}
-              placeholder='••••••••'
+              prefix={<LockOutlined className="text-slate-400" />}
+              placeholder="••••••••"
             />
           </Form.Item>
 
-          <Form.Item className='mb-0!'>
+          <Form.Item className="mb-0!">
             <Button
-              type='primary'
-              htmlType='submit'
+              type="primary"
+              htmlType="submit"
               block
               loading={isPending}
-              className='h-12 font-semibold rounded-xl'
+              className="h-12 font-semibold rounded-xl"
             >
               Đặt lại mật khẩu
             </Button>

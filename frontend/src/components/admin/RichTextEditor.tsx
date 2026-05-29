@@ -45,29 +45,29 @@ export default function RichTextEditor({
 
   return (
     <div>
-      <div className='flex flex-wrap gap-2 p-2 rounded-t-md border border-slate-200 bg-slate-50'>
+      <div className="flex flex-wrap gap-2 p-2 rounded-t-md border border-slate-200 bg-slate-50">
         <Button
-          size='small'
+          size="small"
           type={editor.isActive('bold') ? 'primary' : 'default'}
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           Bold
         </Button>
         <Button
-          size='small'
+          size="small"
           type={editor.isActive('italic') ? 'primary' : 'default'}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           Italic
         </Button>
         <Button
-          size='small'
+          size="small"
           type={editor.isActive('bulletList') ? 'primary' : 'default'}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           Bullet
         </Button>
-        <Button size='small' onClick={insertImage}>
+        <Button size="small" onClick={insertImage}>
           Add Image
         </Button>
       </div>

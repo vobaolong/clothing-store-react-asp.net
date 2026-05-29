@@ -26,8 +26,8 @@ export default function WishlistToggleButton({
       }
     >
       <Button
-        type='default'
-        shape='circle'
+        type="default"
+        shape="circle"
         size={compact ? 'small' : 'middle'}
         className={`inline-flex items-center justify-center border-slate-200 ${wishlisted ? 'text-red-600! hover:border-red-300!' : 'text-slate-500! hover:border-slate-400!'}`}
         icon={wishlisted ? <HeartFilled /> : <HeartOutlined />}

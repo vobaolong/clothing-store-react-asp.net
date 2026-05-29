@@ -78,7 +78,7 @@ export default function AdminOrderDetailPage() {
     }
   })
 
-  if (!token || !isAdmin()) return <Navigate to='/' replace />
+  if (!token || !isAdmin()) return <Navigate to="/" replace />
 
   const detail = detailQuery.data
   const subtotal =
@@ -102,28 +102,28 @@ export default function AdminOrderDetailPage() {
   }
 
   return (
-    <div className='space-y-4!'>
-      <div className='flex flex-wrap gap-3 justify-between items-center'>
-        <div className='flex gap-3 items-center min-w-0'>
+    <div className="space-y-4!">
+      <div className="flex flex-wrap gap-3 justify-between items-center">
+        <div className="flex gap-3 items-center min-w-0">
           <Link
-            to='/admin/orders'
-            className='text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 '
+            to="/admin/orders"
+            className="text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 "
           >
             <LeftOutlined />
           </Link>
-          <div className='min-w-0'>
-            <div className='text-2xl font-medium truncate'>
+          <div className="min-w-0">
+            <div className="text-2xl font-medium truncate">
               Order: {detail ? detail.id.slice(0, 8).toUpperCase() : '...'}
             </div>
             {detail ? (
-              <div className='text-xs text-slate-500'>
+              <div className="text-xs text-slate-500">
                 Tạo lúc {formatDate(detail.createdAt)}
               </div>
             ) : null}
           </div>
         </div>
 
-        <div className='flex flex-wrap gap-2 items-center'>
+        <div className="flex flex-wrap gap-2 items-center">
           {detail && (
             <Tag color={STATUS_COLORS[detail.paymentStatus]}>
               {getVietnameseStatusLabel(detail.paymentStatus)}
@@ -151,7 +151,7 @@ export default function AdminOrderDetailPage() {
             detail.status !== OrderStatus.DELIVERED &&
             detail.status !== OrderStatus.CANCELLED && (
               <Button
-                type='primary'
+                type="primary"
                 disabled={detailQuery.isLoading || !detail || !id}
                 loading={updateStatusMutation.isPending}
                 onClick={() => {
@@ -183,65 +183,65 @@ export default function AdminOrderDetailPage() {
         </div>
       </div>
       {detailQuery.isLoading ? (
-        <div className='grid grid-cols-1 gap-4 lg:grid-cols-3'>
-          <Card className='rounded-2xl lg:col-span-2' title='Sản phẩm'>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <Card className="rounded-2xl lg:col-span-2" title="Sản phẩm">
             <Skeleton active paragraph={{ rows: 7 }} />
           </Card>
-          <Card className='rounded-2xl lg:col-span-1' title='Thông tin'>
+          <Card className="rounded-2xl lg:col-span-1" title="Thông tin">
             <Skeleton active paragraph={{ rows: 9 }} />
           </Card>
-          <Card className='rounded-2xl lg:col-span-2' title='Tổng tiền'>
+          <Card className="rounded-2xl lg:col-span-2" title="Tổng tiền">
             <Skeleton active paragraph={{ rows: 5 }} />
           </Card>
         </div>
       ) : !detail ? (
-        <Card className='rounded-2xl'>
-          <p className='m-0 text-slate-600'>Đơn hàng không tồn tại.</p>
+        <Card className="rounded-2xl">
+          <p className="m-0 text-slate-600">Đơn hàng không tồn tại.</p>
         </Card>
       ) : (
-        <div className='grid grid-cols-1 gap-4 lg:grid-cols-3'>
-          <div className='space-y-4! lg:col-span-2'>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="space-y-4! lg:col-span-2">
             <Card
-              className='rounded-2xl'
+              className="rounded-2xl"
               title={`Sản phẩm (${detail.items.length})`}
             >
               {detail.items.length === 0 ? (
-                <Empty description='Đơn hàng chưa có sản phẩm' />
+                <Empty description="Đơn hàng chưa có sản phẩm" />
               ) : (
-                <div className='divide-y divide-slate-100'>
+                <div className="divide-y divide-slate-100">
                   {detail.items.map((row) => {
                     return (
                       <div
                         key={row.id}
-                        className='flex items-center justify-between gap-4 py-3'
+                        className="flex items-center justify-between gap-4 py-3"
                       >
-                        <div className='flex gap-3 items-center min-w-0'>
+                        <div className="flex gap-3 items-center min-w-0">
                           <Image
                             alt={row.productName}
                             src={row.imageUrl}
-                            className='h-20! w-20! rounded-lg object-cover border border-slate-200'
-                            loading='lazy'
+                            className="h-20! w-20! rounded-lg object-cover border border-slate-200"
+                            loading="lazy"
                           />
-                          <div className='min-w-0'>
-                            <div className='font-medium truncate'>
+                          <div className="min-w-0">
+                            <div className="font-medium truncate">
                               {toCapitalize(row.productName)}
                             </div>
-                            <div className='text-xs text-slate-500'>
+                            <div className="text-xs text-slate-500">
                               {toCapitalize(row.variantColor)} /{' '}
                               {toCapitalize(row.variantSize)}
                             </div>
                           </div>
                         </div>
 
-                        <div className='flex items-center gap-8 shrink-0'>
-                          <div className='text-sm text-slate-600'>
+                        <div className="flex items-center gap-8 shrink-0">
+                          <div className="text-sm text-slate-600">
                             SL:{' '}
-                            <span className='font-medium text-slate-800'>
+                            <span className="font-medium text-slate-800">
                               {row.quantity}
                             </span>
                           </div>
-                          <div className='text-right'>
-                            <div className='font-medium'>
+                          <div className="text-right">
+                            <div className="font-medium">
                               {formatCurrency(row.lineTotal)}
                             </div>
                           </div>
@@ -253,28 +253,28 @@ export default function AdminOrderDetailPage() {
               )}
             </Card>
 
-            <Card className='rounded-2xl' title='Tóm tắt đơn hàng'>
-              <div className='space-y-2'>
-                <div className='flex justify-between'>
+            <Card className="rounded-2xl" title="Tóm tắt đơn hàng">
+              <div className="space-y-2">
+                <div className="flex justify-between">
                   <span>Thành tiền</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
-                <div className='flex justify-between'>
+                <div className="flex justify-between">
                   <span>Giảm giá</span>
-                  <span className='text-emerald-600'>
+                  <span className="text-emerald-600">
                     {detail.couponCodeSnapshot && (
-                      <span className='inline-block py-1 px-2 mr-2 text-xs text-emerald-800 bg-emerald-100 rounded'>
+                      <span className="inline-block py-1 px-2 mr-2 text-xs text-emerald-800 bg-emerald-100 rounded">
                         {detail.couponCodeSnapshot}
                       </span>
                     )}
                     -{formatCurrency(detail.discountAmount || 0)}
                   </span>
                 </div>
-                <div className='flex justify-between'>
+                <div className="flex justify-between">
                   <span>Phí vận chuyển</span>
                   <span>{formatCurrency(shippingFee)}</span>
                 </div>
-                <div className='flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200'>
+                <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200">
                   <span>Tổng cộng</span>
                   <span>{formatCurrency(detail.totalAmount)}</span>
                 </div>
@@ -282,53 +282,53 @@ export default function AdminOrderDetailPage() {
             </Card>
           </div>
 
-          <div className='space-y-4! lg:col-span-1'>
-            <Card className='rounded-2xl' title='Địa chỉ giao hàng'>
-              <Descriptions column={1} size='small' layout='horizontal'>
-                <Descriptions.Item label='Họ tên'>
+          <div className="space-y-4! lg:col-span-1">
+            <Card className="rounded-2xl" title="Địa chỉ giao hàng">
+              <Descriptions column={1} size="small" layout="horizontal">
+                <Descriptions.Item label="Họ tên">
                   {detail.shippingName || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label='Điện thoại'>
+                <Descriptions.Item label="Điện thoại">
                   {detail.shippingPhone || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label='Địa chỉ'>
+                <Descriptions.Item label="Địa chỉ">
                   {formatStructuredAddress(detail) || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label='Nhãn'>
+                <Descriptions.Item label="Nhãn">
                   {ShippingAddressType[
                     detail.shippingLabel?.toUpperCase() as keyof typeof ShippingAddressType
                   ] || '—'}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
-            <Card className='rounded-2xl' title='Thông tin khách hàng'>
-              <Descriptions column={1} size='small' layout='horizontal'>
-                <Descriptions.Item label='Tên người dùng'>
+            <Card className="rounded-2xl" title="Thông tin khách hàng">
+              <Descriptions column={1} size="small" layout="horizontal">
+                <Descriptions.Item label="Tên người dùng">
                   {detail.userName || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label='Email'>
-                  <span className='whitespace-nowrap'>
+                <Descriptions.Item label="Email">
+                  <span className="whitespace-nowrap">
                     {detail.userEmail || '—'}
                   </span>
                 </Descriptions.Item>
               </Descriptions>
             </Card>
             {detail.note && (
-              <Card className='rounded-2xl' title='Ghi chú'>
-                <div className='text-slate-700'>{detail.note?.trim()}</div>
+              <Card className="rounded-2xl" title="Ghi chú">
+                <div className="text-slate-700">{detail.note?.trim()}</div>
               </Card>
             )}
-            <Card className='rounded-2xl' title='Lịch sử trạng thái'>
+            <Card className="rounded-2xl" title="Lịch sử trạng thái">
               {statusHistories.length === 0 ? (
-                <p className='m-0 text-slate-600'>—</p>
+                <p className="m-0 text-slate-600">—</p>
               ) : (
-                <div className='space-y-2'>
+                <div className="space-y-2">
                   {statusHistories.map((h, idx) => (
-                    <div key={`${h.changedAt}-${idx}`} className='text-sm'>
-                      <span className='text-slate-500'>
+                    <div key={`${h.changedAt}-${idx}`} className="text-sm">
+                      <span className="text-slate-500">
                         {formatDate(h.changedAt)} -{' '}
                       </span>
-                      <span className='font-medium'>
+                      <span className="font-medium">
                         {getVietnameseStatusLabel(h.status)}
                       </span>
                     </div>

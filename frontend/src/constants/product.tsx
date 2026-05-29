@@ -11,7 +11,7 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '32',
     hip: '49',
     thigh: '32.5',
-    leg: '29',
+    leg: '29'
   },
   {
     size: 'M',
@@ -21,7 +21,7 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '34',
     hip: '51',
     thigh: '33.5',
-    leg: '30',
+    leg: '30'
   },
   {
     size: 'L',
@@ -31,7 +31,7 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '36',
     hip: '53',
     thigh: '34.5',
-    leg: '31',
+    leg: '31'
   },
   {
     size: 'XL',
@@ -41,7 +41,7 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '38',
     hip: '55',
     thigh: '35.5',
-    leg: '32',
+    leg: '32'
   },
   {
     size: '2XL',
@@ -51,7 +51,7 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '40',
     hip: '57',
     thigh: '36',
-    leg: '33',
+    leg: '33'
   },
   {
     size: '3XL',
@@ -61,8 +61,8 @@ export const SIZE_GUIDE: SizeGuideItem[] = [
     waist: '42',
     hip: '59',
     thigh: '37.5',
-    leg: '34',
-  },
+    leg: '34'
+  }
 ]
 
 export const SIZE_COLUMNS: ColumnsType<SizeGuideItem> = [
@@ -70,7 +70,7 @@ export const SIZE_COLUMNS: ColumnsType<SizeGuideItem> = [
     title: 'Size',
     dataIndex: 'size',
     key: 'size',
-    render: (t: string) => <span className='font-bold text-black'>{t}</span>,
+    render: (t: string) => <span className="font-bold text-black">{t}</span>
   },
   { title: 'Cân nặng (kg)', dataIndex: 'weight', key: 'weight' },
   { title: 'Chiều cao (cm)', dataIndex: 'height', key: 'height' },
@@ -78,14 +78,14 @@ export const SIZE_COLUMNS: ColumnsType<SizeGuideItem> = [
   { title: '1/2 ngang lưng', dataIndex: 'waist', key: 'waist' },
   { title: 'Ngang mông', dataIndex: 'hip', key: 'hip' },
   { title: 'Ngang đùi', dataIndex: 'thigh', key: 'thigh' },
-  { title: 'Ngang ống', dataIndex: 'leg', key: 'leg' },
+  { title: 'Ngang ống', dataIndex: 'leg', key: 'leg' }
 ]
 export const COLOR_CONFIG: Record<string, { color: string; border?: boolean }> =
   {
     'Phối màu': {
-      color: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)',
+      color: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)'
     },
-    Trắng: { color: '#ffffff', border: true },
+    Trắng: { color: '#ffffff', border: true }
   }
 
 export const DEFAULT_SIZES = getProductSizes()
@@ -96,7 +96,7 @@ export const DESCRIPTION_SPEC_LABELS = [
   'Kiểu dáng',
   'Phù hợp',
   'Tính năng',
-  'Bảo quản',
+  'Bảo quản'
 ] as const
 
 export type DescriptionSpecLabel = (typeof DESCRIPTION_SPEC_LABELS)[number]
@@ -136,7 +136,7 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Ít xù lông',
     'Giữ form tốt',
     'Màu sắc bền đẹp',
-    'Dễ phối đồ',
+    'Dễ phối đồ'
   ],
   'Chất liệu': [
     'Cotton',
@@ -153,7 +153,7 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Da PU',
     'Voan',
     'Lụa',
-    'Dạ',
+    'Dạ'
   ],
   'Kiểu dáng': [
     'Regular fit',
@@ -175,7 +175,7 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Ống suông',
     'Ống rộng',
     'Chân váy',
-    'Đầm liền',
+    'Đầm liền'
   ],
   'Phù hợp': [
     'Đi học',
@@ -187,7 +187,7 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Đi tiệc nhẹ',
     'Mặc hằng ngày',
     'Mặc đôi / nhóm',
-    'Phối layer',
+    'Phối layer'
   ],
   'Tính năng': [
     'Dễ phối đồ',
@@ -201,7 +201,7 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Dây rút điều chỉnh',
     'Không kén dáng',
     'Che khuyết điểm tốt',
-    'Phù hợp nhiều hoàn cảnh',
+    'Phù hợp nhiều hoàn cảnh'
   ],
   'Bảo quản': [
     'Giặt máy chế độ nhẹ',
@@ -213,8 +213,8 @@ export const DESCRIPTION_SPEC_OPTIONS: Record<
     'Phơi mặt trái sản phẩm',
     'Ủi nhiệt thấp',
     'Không ủi trực tiếp lên hình in / thêu',
-    'Không sấy nhiệt cao',
-  ],
+    'Không sấy nhiệt cao'
+  ]
 }
 
 export const DEFAULT_COLORS = [
@@ -225,5 +225,5 @@ export const DEFAULT_COLORS = [
   { name: 'Đỏ', hex: '#ff0000' },
   { name: 'Xanh lá', hex: '#008000' },
   { name: 'Vàng', hex: '#ffff00' },
-  { name: 'Hồng', hex: '#ffc0cb' },
+  { name: 'Hồng', hex: '#ffc0cb' }
 ]

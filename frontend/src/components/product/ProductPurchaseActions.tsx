@@ -20,24 +20,24 @@ export default function ProductPurchaseActions({
   onBuyNow
 }: Props) {
   return (
-    <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Button
-        type='default'
+        type="default"
         disabled={isOutOfStock}
         onClick={onAddToCart}
         icon={<ShoppingOutlined />}
-        size='large'
-        className='w-full'
+        size="large"
+        className="w-full"
       >
         Thêm vào giỏ
       </Button>
 
       <Button
-        type='primary'
+        type="primary"
         disabled={isOutOfStock || !selectedVariant}
         onClick={onBuyNow}
-        size='large'
-        className='w-full'
+        size="large"
+        className="w-full"
       >
         Mua nhanh
       </Button>

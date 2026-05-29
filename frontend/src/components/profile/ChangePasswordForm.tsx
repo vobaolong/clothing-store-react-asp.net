@@ -21,60 +21,60 @@ export default function ChangePasswordForm() {
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.',
+        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.'
       )
-    },
+    }
   })
 
   const onFinish = (values: ChangePasswordFormValues) => {
     mutate({
       currentPassword: values.currentPassword,
-      newPassword: values.newPassword,
+      newPassword: values.newPassword
     })
   }
 
   return (
-    <div className='pt-8 mt-8 border-t border-slate-100'>
-      <h3 className='mb-6 text-lg font-semibold text-slate-800'>
+    <div className="pt-8 mt-8 border-t border-slate-100">
+      <h3 className="mb-6 text-lg font-semibold text-slate-800">
         Đổi mật khẩu
       </h3>
       <Form
         form={form}
-        layout='vertical'
+        layout="vertical"
         onFinish={onFinish}
         requiredMark={false}
-        className='max-w-md'
+        className="max-w-md"
       >
         <Form.Item
-          name='currentPassword'
-          label='Mật khẩu hiện tại'
+          name="currentPassword"
+          label="Mật khẩu hiện tại"
           rules={[
-            { required: true, message: 'Vui lòng nhập mật khẩu hiện tại!' },
+            { required: true, message: 'Vui lòng nhập mật khẩu hiện tại!' }
           ]}
         >
           <Input.Password
-            prefix={<LockOutlined className='text-slate-400' />}
-            placeholder='••••••••'
+            prefix={<LockOutlined className="text-slate-400" />}
+            placeholder="••••••••"
           />
         </Form.Item>
 
         <Form.Item
-          name='newPassword'
-          label='Mật khẩu mới'
+          name="newPassword"
+          label="Mật khẩu mới"
           rules={[
             { required: true, message: 'Vui lòng nhập mật khẩu mới!' },
-            { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+            { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
           ]}
         >
           <Input.Password
-            prefix={<LockOutlined className='text-slate-400' />}
-            placeholder='••••••••'
+            prefix={<LockOutlined className="text-slate-400" />}
+            placeholder="••••••••"
           />
         </Form.Item>
 
         <Form.Item
-          name='confirm'
-          label='Xác nhận mật khẩu mới'
+          name="confirm"
+          label="Xác nhận mật khẩu mới"
           dependencies={['newPassword']}
           rules={[
             { required: true, message: 'Vui lòng xác nhận mật khẩu mới!' },
@@ -84,24 +84,24 @@ export default function ChangePasswordForm() {
                   return Promise.resolve()
                 }
                 return Promise.reject(
-                  new Error('Mật khẩu xác nhận không khớp!'),
+                  new Error('Mật khẩu xác nhận không khớp!')
                 )
-              },
-            }),
+              }
+            })
           ]}
         >
           <Input.Password
-            prefix={<LockOutlined className='text-slate-400' />}
-            placeholder='••••••••'
+            prefix={<LockOutlined className="text-slate-400" />}
+            placeholder="••••••••"
           />
         </Form.Item>
 
-        <Form.Item className='mb-0!'>
+        <Form.Item className="mb-0!">
           <Button
-            type='primary'
-            htmlType='submit'
+            type="primary"
+            htmlType="submit"
             loading={isPending}
-            className='px-8 h-10 font-medium rounded-lg'
+            className="px-8 h-10 font-medium rounded-lg"
           >
             Cập nhật mật khẩu
           </Button>

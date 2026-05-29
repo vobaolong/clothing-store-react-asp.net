@@ -19,7 +19,7 @@ export function AppProviders({ children }: AppProvidersProps) {
           <BrowserRouter>
             {children}
             <Toaster
-              position='top-center'
+              position="top-center"
               toastOptions={{
                 duration: 3000
               }}

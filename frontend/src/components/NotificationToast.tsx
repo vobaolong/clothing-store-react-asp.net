@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { notification as antdNotification } from 'antd'
 import {
   clearRealtimeNotifications,
-  selectRealtimeNotifications,
+  selectRealtimeNotifications
 } from '@/state/notification-slice'
 import { NotificationType } from '@/types/notification.type'
 import type { RealtimeNotificationDto } from '@/types/notification.type'
@@ -75,7 +75,7 @@ export const NotificationToastManager = () => {
               {n.message}{' '}
               <a
                 href={`/orders/${n.relatedEntityId}`}
-                className='font-medium underline'
+                className="font-medium underline"
               >
                 Xem đơn hàng →
               </a>
@@ -84,7 +84,7 @@ export const NotificationToastManager = () => {
             n.message
           ),
         placement: 'topRight',
-        duration: 6,
+        duration: 6
       })
     })
   }, [queue, dispatch])

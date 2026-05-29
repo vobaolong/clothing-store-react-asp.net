@@ -1,0 +1,154 @@
+import { useMemo } from 'react'
+import { Table, Tag, Select, Button, Tooltip, Empty } from 'antd'
+import { EyeOutlined } from '@ant-design/icons'
+import type { ColumnsType } from 'antd/es/table'
+import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/constants/admin-filter.constant'
+import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { canUpdateToStatus } from '@/utils/order-status-transition'
+import { formatCurrency, formatDate } from '@/utils/format'
+import { OrderStatus } from '@/enums'
+import { STATUS_COLORS, type AdminOrder } from '@/types'
+
+interface AdminOrdersTableProps {
+  dataSource: AdminOrder[]
+  loading: boolean
+  selectedRowKeys: React.Key[]
+  onSelectionChange: (keys: React.Key[]) => void
+  onUpdateStatus: (order: AdminOrder, status: string) => void
+  onView: (order: AdminOrder) => void
+}
+
+export default function AdminOrdersTable({
+  dataSource,
+  loading,
+  selectedRowKeys,
+  onSelectionChange,
+  onUpdateStatus,
+  onView
+}: AdminOrdersTableProps) {
+  const rowSelection = useMemo(
+    () => ({
+      selectedRowKeys,
+      onChange: onSelectionChange,
+      getCheckboxProps: (record: AdminOrder) => ({
+        disabled:
+          record.status === OrderStatus.DELIVERED ||
+          record.status === OrderStatus.CANCELLED
+      })
+    }),
+    [selectedRowKeys, onSelectionChange]
+  )
+
+  const columns = useMemo<ColumnsType<AdminOrder>>(
+    () => [
+      {
+        title: '#',
+        key: 'index',
+        align: 'center',
+        width: 60,
+        fixed: 'left',
+        render: (_, __, index) => index + 1
+      },
+      {
+        title: 'Mã đơn',
+        dataIndex: 'id',
+        key: 'id',
+        render: (value: string) => value.slice(0, 8).toUpperCase()
+      },
+      {
+        title: 'Người dùng',
+        dataIndex: 'userEmail',
+        key: 'userEmail'
+      },
+      {
+        title: 'Tổng tiền',
+        dataIndex: 'totalAmount',
+        key: 'totalAmount',
+        align: 'right',
+        render: (value: number) => formatCurrency(value)
+      },
+      {
+        title: 'Thanh toán',
+        dataIndex: 'paymentStatus',
+        key: 'paymentStatus',
+        align: 'center',
+        render: (value: string) => (
+          <Tag variant="outlined" color={STATUS_COLORS[value]}>
+            {getVietnameseStatusLabel(value)}
+          </Tag>
+        )
+      },
+      {
+        title: 'Trạng thái',
+        key: 'status',
+        align: 'center',
+        render: (_, row) => (
+          <Select
+            value={row.status}
+            style={{ width: 140 }}
+            disabled={
+              row.status === OrderStatus.DELIVERED ||
+              row.status === OrderStatus.CANCELLED
+            }
+            options={ADMIN_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
+              ...option,
+              label: getVietnameseStatusLabel(option.value),
+              disabled: !canUpdateToStatus(row.status, option.value)
+            }))}
+            onChange={(value) => onUpdateStatus(row, value)}
+          />
+        )
+      },
+      {
+        title: 'Ngày tạo',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        className: 'truncate',
+        sorter: (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        render: (value: string) => formatDate(value)
+      },
+      {
+        title: 'Cập nhật lúc',
+        dataIndex: 'updatedAt',
+        key: 'updatedAt',
+        className: 'truncate',
+        sorter: (a, b) =>
+          new Date(a.updatedAt ?? a.createdAt).getTime() -
+          new Date(b.updatedAt ?? b.createdAt).getTime(),
+        render: (value?: string) => (value ? formatDate(value) : '-')
+      },
+      {
+        title: 'Thao tác',
+        key: 'action',
+        align: 'center',
+        fixed: 'right',
+        render: (_, row) => (
+          <Tooltip title="Xem chi tiết">
+            <Button icon={<EyeOutlined />} onClick={() => onView(row)} />
+          </Tooltip>
+        )
+      }
+    ],
+    [onUpdateStatus, onView]
+  )
+
+  return (
+    <Table<AdminOrder>
+      rowKey="id"
+      bordered
+      loading={loading}
+      dataSource={dataSource}
+      rowSelection={rowSelection}
+      columns={columns}
+      scroll={{ x: 'max-content' }}
+      pagination={{
+        defaultPageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        showTotal: (total) => `Tổng ${total} đơn hàng`
+      }}
+      locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+    />
+  )
+}

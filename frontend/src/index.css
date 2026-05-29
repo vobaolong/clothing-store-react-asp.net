@@ -3,69 +3,74 @@
 html,
 body,
 #root {
-	height: 100%;
-	min-height: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 body {
-	margin: 0;
-	font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
-	background: #f8fafc;
-	color: #0f172a;
+  margin: 0;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 .ant-card,
 .ant-input,
 .ant-select-selector,
 .ant-btn {
-	transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .ant-btn-primary {
-	background-color: #990021 !important;
-	opacity: 0.9 !important;
+  background-color: #990021 !important;
+  opacity: 0.9 !important;
 }
 
 .ant-btn-primary:hover {
-	background-color: #740019 !important;
-	opacity: 1 !important;
+  background-color: #740019 !important;
+  opacity: 1 !important;
 }
 
 .cart-qty-input .ant-input-number-input {
-	text-align: center;
+  text-align: center;
 }
 
 .home-category-carousel .slick-prev,
 .home-category-carousel .slick-next,
 .home-product-carousel .slick-prev,
 .home-product-carousel .slick-next {
-	z-index: 20 !important;
-	width: 48px !important;
-	height: 48px !important;
-	transition: opacity 0.2s ease;
+  z-index: 20 !important;
+  width: 48px !important;
+  height: 48px !important;
+  transition: opacity 0.2s ease;
 }
 
 .home-category-carousel .slick-prev:not(.slick-disabled),
 .home-category-carousel .slick-next:not(.slick-disabled),
 .home-product-carousel .slick-prev:not(.slick-disabled),
 .home-product-carousel .slick-next:not(.slick-disabled) {
-	opacity: 0.88 !important;
+  opacity: 0.88 !important;
 }
 
 .home-category-carousel .slick-prev.slick-disabled,
 .home-category-carousel .slick-next.slick-disabled,
 .home-product-carousel .slick-prev.slick-disabled,
 .home-product-carousel .slick-next.slick-disabled {
-	opacity: 0.28 !important;
-	pointer-events: none !important;
-	cursor: not-allowed !important;
+  opacity: 0.28 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
 }
 
 .home-category-carousel .slick-prev.slick-disabled::after,
 .home-category-carousel .slick-next.slick-disabled::after,
 .home-product-carousel .slick-prev.slick-disabled::after,
 .home-product-carousel .slick-next.slick-disabled::after {
-	opacity: 0.4 !important;
+  opacity: 0.4 !important;
 }
 
 .home-category-carousel .slick-prev:hover:not(.slick-disabled),
@@ -76,100 +81,102 @@ body {
 .home-product-carousel .slick-next:hover:not(.slick-disabled),
 .home-product-carousel .slick-prev:focus-visible:not(.slick-disabled),
 .home-product-carousel .slick-next:focus-visible:not(.slick-disabled) {
-	opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .home-category-carousel .slick-prev::after,
 .home-category-carousel .slick-next::after,
 .home-product-carousel .slick-prev::after,
 .home-product-carousel .slick-next::after {
-	top: 40% !important;
-	inset-inline-start: 50% !important;
-	width: 25px !important;
-	height: 25px !important;
-	border-inline-start-width: 3px !important;
-	border-block-start-width: 3px !important;
-	opacity: 1 !important;
+  top: 40% !important;
+  inset-inline-start: 50% !important;
+  width: 25px !important;
+  height: 25px !important;
+  border-inline-start-width: 3px !important;
+  border-block-start-width: 3px !important;
+  opacity: 1 !important;
 }
 
 .home-category-carousel .slick-prev::after,
 .home-product-carousel .slick-prev::after {
-	transform: translate(-50%, -50%) rotate(-45deg) !important;
+  transform: translate(-50%, -50%) rotate(-45deg) !important;
 }
 
 .home-category-carousel .slick-next::after,
 .home-product-carousel .slick-next::after {
-	transform: translate(-50%, -50%) rotate(135deg) !important;
+  transform: translate(-50%, -50%) rotate(135deg) !important;
 }
 
 .home-hero-carousel .slick-prev,
 .home-hero-carousel .slick-next {
-	z-index: 20 !important;
-	width: 52px !important;
-	height: 52px !important;
-	opacity: 0.92 !important;
-	color: #fff !important;
-	background: transparent !important;
-	border-radius: 9999px;
-	transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 20 !important;
+  width: 52px !important;
+  height: 52px !important;
+  opacity: 0.92 !important;
+  color: #fff !important;
+  background: transparent !important;
+  border-radius: 9999px;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .home-hero-carousel .slick-prev:hover:not(.slick-disabled),
 .home-hero-carousel .slick-next:hover:not(.slick-disabled),
 .home-hero-carousel .slick-prev:focus-visible:not(.slick-disabled),
 .home-hero-carousel .slick-next:focus-visible:not(.slick-disabled) {
-	opacity: 1 !important;
-	background: rgb(15 23 42 / 50%) !important;
+  opacity: 1 !important;
+  background: rgb(15 23 42 / 50%) !important;
 }
 
 .home-hero-carousel .slick-prev.slick-disabled,
 .home-hero-carousel .slick-next.slick-disabled {
-	opacity: 0.35 !important;
+  opacity: 0.35 !important;
 }
 
 .home-hero-carousel .slick-prev::after,
 .home-hero-carousel .slick-next::after {
-	top: 50% !important;
-	inset-inline-start: 50% !important;
-	width: 14px !important;
-	height: 14px !important;
-	border-inline-start-width: 3px !important;
-	border-block-start-width: 3px !important;
-	opacity: 1 !important;
-	border-color: #fff !important;
+  top: 50% !important;
+  inset-inline-start: 50% !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-inline-start-width: 3px !important;
+  border-block-start-width: 3px !important;
+  opacity: 1 !important;
+  border-color: #fff !important;
 }
 
 .home-hero-carousel .slick-prev::after {
-	transform: translate(-50%, -50%) rotate(-45deg) !important;
+  transform: translate(-50%, -50%) rotate(-45deg) !important;
 }
 
 .home-hero-carousel .slick-next::after {
-	transform: translate(-50%, -50%) rotate(135deg) !important;
+  transform: translate(-50%, -50%) rotate(135deg) !important;
 }
 
 .order-status-tabs .ant-tabs-nav {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .order-status-tabs .ant-tabs-nav-list {
-	width: 100%;
+  width: 100%;
 }
 
 .order-status-tabs .ant-tabs-tab {
-	flex: 1;
-	justify-content: center;
-	margin: 0;
+  flex: 1;
+  justify-content: center;
+  margin: 0;
 }
 
 .order-status-tabs .ant-tabs-tab-btn {
-	width: 100%;
-	text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .home-category-carousel .slick-track,
 .home-product-carousel .slick-track {
-	display: flex !important;
-	justify-content: flex-start !important;
-	margin-left: 0 !important;
-	margin-right: auto !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
 }

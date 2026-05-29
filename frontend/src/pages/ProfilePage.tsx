@@ -3,7 +3,7 @@ import {
   Navigate,
   useLocation,
   useNavigate,
-  useSearchParams,
+  useSearchParams
 } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
@@ -45,7 +45,7 @@ export default function ProfilePage() {
   const { data: profile, isLoading } = useQuery({
     queryKey: QUERY_KEYS.myProfile,
     queryFn: getMyProfile,
-    enabled: Boolean(token),
+    enabled: Boolean(token)
   })
 
   const handleSectionChange = (nextSection: Section) => {
@@ -68,54 +68,54 @@ export default function ProfilePage() {
     setSearchParams({ tab: nextSection })
   }
 
-  if (!token) return <Navigate to='/login' replace />
+  if (!token) return <Navigate to="/login" replace />
 
   return (
     <div>
       <FloatButton
         icon={<MenuOutlined />}
-        type='primary'
+        type="primary"
         style={{ bottom: 24, right: 24 }}
         onClick={() => setIsMobileSectionDrawerOpen(true)}
-        className='sm:hidden!'
+        className="sm:hidden!"
       />
 
       <Drawer
-        title='Trang cá nhân'
-        placement='bottom'
+        title="Trang cá nhân"
+        placement="bottom"
         onClose={() => setIsMobileSectionDrawerOpen(false)}
         open={isMobileSectionDrawerOpen}
-        size='auto'
-        className='sm:hidden'
+        size="auto"
+        className="sm:hidden"
       >
         <ProfileSidebar value={section} onChange={handleSectionChange} />
       </Drawer>
 
-      <div className='flex flex-col gap-6 sm:flex-row sm:items-start'>
-        <div className='hidden sm:block sm:w-48 md:w-54 shrink-0'>
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+        <div className="hidden sm:block sm:w-48 md:w-54 shrink-0">
           <ProfileSidebar value={section} onChange={handleSectionChange} />
         </div>
 
-        <div className='flex-1 min-w-0'>
+        <div className="flex-1 min-w-0">
           {section === 'profile' && (
             <Card>
-              <h1 className='text-2xl font-semibold text-slate-900'>
+              <h1 className="text-2xl font-semibold text-slate-900">
                 Cài đặt tài khoản
               </h1>
 
-              <div className='mt-4 border-t divide-y divide-slate-200 border-slate-200'>
-                <section className='grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start'>
+              <div className="mt-4 border-t divide-y divide-slate-200 border-slate-200">
+                <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className='text-xl font-semibold text-slate-900'>
+                    <h2 className="text-xl font-semibold text-slate-900">
                       Hồ sơ
                     </h2>
-                    <p className='mt-2 text-sm text-slate-600'>
+                    <p className="mt-2 text-sm text-slate-600">
                       Cài đặt thông tin cá nhân
                     </p>
                   </div>
 
                   <div>
-                    <label className='block mb-1 text-sm font-medium text-slate-900'>
+                    <label className="block mb-1 text-sm font-medium text-slate-900">
                       Họ và tên
                     </label>
                     {isLoading ? (
@@ -125,41 +125,41 @@ export default function ProfilePage() {
                         value={profile?.fullName ?? '-'}
                         readOnly
                         disabled
-                        className='h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700'
+                        className="h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700"
                       />
                     )}
                   </div>
                 </section>
 
-                <section className='grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start'>
+                <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className='text-xl font-semibold text-slate-900'>
+                    <h2 className="text-xl font-semibold text-slate-900">
                       Bảo mật tài khoản
                     </h2>
-                    <p className='mt-2 text-sm text-slate-600'>
+                    <p className="mt-2 text-sm text-slate-600">
                       Thông tin để đăng nhập vào tài khoản của bạn
                     </p>
                   </div>
 
-                  <div className='space-y-6'>
+                  <div className="space-y-6">
                     <div>
-                      <label className='block mb-1 text-sm font-medium text-slate-900'>
+                      <label className="block mb-1 text-sm font-medium text-slate-900">
                         Email
                       </label>
                       <Input
                         value={profile?.email ?? '-'}
                         readOnly
                         disabled
-                        className='h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700'
+                        className="h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700"
                       />
                     </div>
 
                     <div>
-                      <label className='block mb-1 text-sm font-medium text-slate-900'>
+                      <label className="block mb-1 text-sm font-medium text-slate-900">
                         Mật khẩu
                       </label>
                       <Button
-                        className='h-10 px-5 rounded-md border-slate-300 text-slate-900'
+                        className="h-10 px-5 rounded-md border-slate-300 text-slate-900"
                         onClick={() => setShowPasswordDialog(true)}
                       >
                         Đổi mật khẩu

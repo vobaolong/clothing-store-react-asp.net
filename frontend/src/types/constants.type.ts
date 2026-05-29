@@ -46,6 +46,6 @@ export const STATUS_COLORS: Record<string, string> = {
   Shipping: 'cyan',
   Delivered: 'green',
   Cancelled: 'red',
-	Paid:'green',
-	Unpaid:'red'
+  Paid: 'green',
+  Unpaid: 'red'
 }

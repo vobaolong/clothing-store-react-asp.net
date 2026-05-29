@@ -29,13 +29,13 @@ function RouteSuspense({ children }: { children: ReactNode }) {
 
 function AdminOnly({ children }: { children: ReactNode }) {
   const token = getAuthToken()
-  if (!token) return <Navigate to='/login' replace />
-  if (!isAdmin()) return <Navigate to='/' replace />
+  if (!token) return <Navigate to="/login" replace />
+  if (!isAdmin()) return <Navigate to="/" replace />
   return children
 }
 
 function CustomerOnly({ children }: { children: ReactNode }) {
-  if (isAdmin()) return <Navigate to='/admin' replace />
+  if (isAdmin()) return <Navigate to="/admin" replace />
   return children
 }
 
@@ -46,7 +46,7 @@ export function AppRouter() {
       <Routes>
         <Route element={<AdminShell />}>
           <Route
-            path='/admin/orders/:id'
+            path="/admin/orders/:id"
             element={
               <AdminOnly>
                 <RouteSuspense>
@@ -56,11 +56,11 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/admin'
-            element={<Navigate to='/admin/dashboard' replace />}
+            path="/admin"
+            element={<Navigate to="/admin/dashboard" replace />}
           />
           <Route
-            path='/admin/:section'
+            path="/admin/:section"
             element={
               <AdminOnly>
                 <RouteSuspense>
@@ -72,7 +72,7 @@ export function AppRouter() {
         </Route>
         <Route element={<AppShell />}>
           <Route
-            path='/'
+            path="/"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -82,7 +82,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/products'
+            path="/products"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -92,7 +92,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/about'
+            path="/about"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -102,7 +102,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/products/:slug'
+            path="/products/:slug"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -112,7 +112,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/cart'
+            path="/cart"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -122,7 +122,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/checkout'
+            path="/checkout"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -132,7 +132,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/profile'
+            path="/profile"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -142,7 +142,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/profile/notifications'
+            path="/profile/notifications"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -152,7 +152,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/orders/:id'
+            path="/orders/:id"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -162,7 +162,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/payment-return'
+            path="/payment-return"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -172,7 +172,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/login'
+            path="/login"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -182,7 +182,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/register'
+            path="/register"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -192,7 +192,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/forgot-password'
+            path="/forgot-password"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -202,7 +202,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/reset-password'
+            path="/reset-password"
             element={
               <CustomerOnly>
                 <RouteSuspense>
@@ -212,7 +212,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='/verify-otp'
+            path="/verify-otp"
             element={
               <RouteSuspense>
                 <VerifyOtpPage />
@@ -220,7 +220,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path='*'
+            path="*"
             element={
               <RouteSuspense>
                 <NotFoundPage />

@@ -21,7 +21,7 @@ const calculateFinalTotal = (subtotal: number, discountAmount: number) =>
     subtotal -
       discountAmount +
       (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE),
-    0,
+    0
   )
 
 export {
@@ -29,5 +29,5 @@ export {
   FREE_SHIPPING_THRESHOLD,
   formatShippingAddress,
   normalizeCouponCode,
-  calculateFinalTotal,
+  calculateFinalTotal
 }

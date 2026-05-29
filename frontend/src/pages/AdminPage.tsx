@@ -1,6 +1,6 @@
 import { Navigate, useParams } from 'react-router-dom'
-import AdminPageModals from '@/components/admin/AdminPageModals'
-import AdminPageSections from '@/components/admin/AdminPageSections'
+import AdminPageModals from '@/components/admin/admin-modal/AdminPageModals'
+import AdminPageSections from '@/components/admin/admin-section/AdminPageSections'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '@/state/auth'
@@ -16,7 +16,7 @@ export default function AdminPage() {
       'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
     ] === 'Admin'
 
-  if (!isAdminUser) return <Navigate to='/' replace />
+  if (!isAdminUser) return <Navigate to="/" replace />
   if (!section || !isAdminNavKey(section)) {
     return <Navigate to={`/admin/${AdminNavKey.DASHBOARD}`} replace />
   }
@@ -25,7 +25,7 @@ export default function AdminPage() {
 
   return (
     <AdminProvider>
-      <div className='min-h-0'>
+      <div className="min-h-0">
         <AdminPageSections activeNav={activeNav} />
         <AdminPageModals />
       </div>

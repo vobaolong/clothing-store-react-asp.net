@@ -9,20 +9,20 @@ const LOAD_MORE_COUNT = 4
 
 export default function ProductReviewsSection({
   productId,
-  productName,
+  productName
 }: {
   productId: string
   productName: string
 }) {
   const [starFilter, setStarFilter] = useState<number | 'all'>('all')
   const [sortOrder, setSortOrder] = useState<'low-to-high' | 'high-to-low'>(
-    'high-to-low',
+    'high-to-low'
   )
   const [loadedCount, setLoadedCount] = useState(LOAD_MORE_COUNT)
 
   const reviewsQuery = useQuery({
     queryKey: QUERY_KEYS.productReviews(productId),
-    queryFn: () => getProductReviews(productId),
+    queryFn: () => getProductReviews(productId)
   })
 
   const summary = reviewsQuery.data
@@ -35,7 +35,7 @@ export default function ProductReviewsSection({
       [2, 0],
       [3, 0],
       [4, 0],
-      [5, 0],
+      [5, 0]
     ])
     for (const review of summary?.reviews ?? []) {
       const rating = Math.max(1, Math.min(5, Math.round(review.rating)))
@@ -46,7 +46,7 @@ export default function ProductReviewsSection({
       return {
         rating,
         count,
-        percent: totalReviews > 0 ? (count / totalReviews) * 100 : 0,
+        percent: totalReviews > 0 ? (count / totalReviews) * 100 : 0
       }
     })
   }, [summary?.reviews, totalReviews])
@@ -73,7 +73,7 @@ export default function ProductReviewsSection({
         ? reviews
         : reviews.filter((review) => review.rating === starFilter)
     const sorted = [...filtered].sort((a, b) =>
-      sortOrder === 'low-to-high' ? a.rating - b.rating : b.rating - a.rating,
+      sortOrder === 'low-to-high' ? a.rating - b.rating : b.rating - a.rating
     )
     return sorted.slice(0, loadedCount)
   }, [summary?.reviews, starFilter, sortOrder, loadedCount])
@@ -82,49 +82,52 @@ export default function ProductReviewsSection({
 
   // Reset loadedCount when filters change
   const prevFilterRef = useRef([starFilter, sortOrder])
-  if (prevFilterRef.current[0] !== starFilter || prevFilterRef.current[1] !== sortOrder) {
+  if (
+    prevFilterRef.current[0] !== starFilter ||
+    prevFilterRef.current[1] !== sortOrder
+  ) {
     prevFilterRef.current = [starFilter, sortOrder]
     setLoadedCount(LOAD_MORE_COUNT)
   }
 
   return (
-    <Card className='p-6 mt-8 bg-white rounded-lg border border-stone-200'>
-      <div className='mb-4 text-xl font-semibold'>Đánh giá {productName}</div>
-      <div className='mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]'>
-        <div className='flex flex-col gap-1 items-start'>
-          <div className='flex gap-1 items-end leading-none'>
-            <span className='text-5xl font-bold text-slate-900'>
+    <Card className="p-6 mt-8 bg-white rounded-lg border border-stone-200">
+      <div className="mb-4 text-xl font-semibold">Đánh giá {productName}</div>
+      <div className="mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]">
+        <div className="flex flex-col gap-1 items-start">
+          <div className="flex gap-1 items-end leading-none">
+            <span className="text-5xl font-bold text-slate-900">
               {averageRating.toFixed(1)}
             </span>
-            <span className='pb-1 text-3xl text-slate-400'>/5</span>
+            <span className="pb-1 text-3xl text-slate-400">/5</span>
           </div>
           <Rate
             disabled
             allowHalf
             value={averageRating}
-            className='text-amber-500'
+            className="text-amber-500"
           />
-          <span className='text-sm text-slate-500'>
+          <span className="text-sm text-slate-500">
             {totalReviews} lượt đánh giá
           </span>
         </div>
 
-        <div className='px-4 space-y-2 border-x border-slate-100'>
+        <div className="px-4 space-y-2 border-x border-slate-100">
           {ratingBreakdown.map((row) => (
             <div
               key={row.rating}
-              className='grid grid-cols-[20px_1fr_70px] items-center gap-3'
+              className="grid grid-cols-[20px_1fr_70px] items-center gap-3"
             >
-              <span className='text-sm font-medium text-slate-600'>
+              <span className="text-sm font-medium text-slate-600">
                 {row.rating}
               </span>
-              <div className='overflow-hidden h-2 rounded-full bg-slate-100'>
+              <div className="overflow-hidden h-2 rounded-full bg-slate-100">
                 <div
-                  className='h-full bg-red-500 rounded-full'
+                  className="h-full bg-red-500 rounded-full"
                   style={{ width: `${row.percent}%` }}
                 />
               </div>
-              <span className='text-xs text-slate-500'>
+              <span className="text-xs text-slate-500">
                 {row.count} đánh giá
               </span>
             </div>
@@ -132,25 +135,25 @@ export default function ProductReviewsSection({
         </div>
 
         <div>
-          <div className='mb-2 text-lg font-semibold text-slate-800'>
+          <div className="mb-2 text-lg font-semibold text-slate-800">
             Đánh giá theo trải nghiệm
           </div>
           {topExperienceTags.length > 0 ? (
-            <div className='space-y-2'>
+            <div className="space-y-2">
               {topExperienceTags.map((item) => (
                 <div
                   key={item.tag}
-                  className='flex gap-3 justify-between items-center'
+                  className="flex gap-3 justify-between items-center"
                 >
-                  <span className='text-sm text-slate-700'>{item.tag}</span>
-                  <span className='text-sm font-medium text-slate-600'>
+                  <span className="text-sm text-slate-700">{item.tag}</span>
+                  <span className="text-sm font-medium text-slate-600">
                     ({item.count} đánh giá)
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className='text-sm text-slate-400'>
+            <div className="text-sm text-slate-400">
               Chưa có dữ liệu trải nghiệm.
             </div>
           )}
@@ -158,16 +161,16 @@ export default function ProductReviewsSection({
       </div>
       <Divider />
       {!reviewsQuery.isLoading ? (
-        <div className='flex flex-col gap-3 mb-4 md:flex-row md:items-center'>
-          <div className='flex flex-wrap gap-3 items-center'>
-            <span className='text-sm text-slate-500'>Lọc đánh giá theo:</span>
-            <div className='flex flex-wrap gap-3'>
+        <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center">
+          <div className="flex flex-wrap gap-3 items-center">
+            <span className="text-sm text-slate-500">Lọc đánh giá theo:</span>
+            <div className="flex flex-wrap gap-3">
               {(['all', 5, 4, 3, 2, 1] as const).map((rating) => {
                 const isActive = starFilter === rating
                 return (
                   <Button
                     key={rating}
-                    type='default'
+                    type="default"
                     onClick={() => setStarFilter(rating)}
                     className={`rounded-full! border px-5 py-2 text-[20px] leading-none transition-colors ${
                       isActive
@@ -181,15 +184,15 @@ export default function ProductReviewsSection({
               })}
             </div>
           </div>
-          <div className='flex gap-2 items-center'>
-            <span className='text-sm text-slate-500'>Sắp xếp:</span>
+          <div className="flex gap-2 items-center">
+            <span className="text-sm text-slate-500">Sắp xếp:</span>
             <Select<'low-to-high' | 'high-to-low'>
               value={sortOrder}
               onChange={(value) => setSortOrder(value)}
-              className='w-40'
+              className="w-40"
               options={[
                 { value: 'high-to-low', label: 'Cao đến thấp' },
-                { value: 'low-to-high', label: 'Thấp đến cao' },
+                { value: 'low-to-high', label: 'Thấp đến cao' }
               ]}
             />
           </div>
@@ -201,12 +204,12 @@ export default function ProductReviewsSection({
       ) : null}
 
       {!reviewsQuery.isLoading ? (
-        <div className='mt-6'>
+        <div className="mt-6">
           <ReviewList reviews={visibleReviews} />
           {hasMore && (
-            <div className='flex justify-center pt-4'>
+            <div className="flex justify-center pt-4">
               <Button
-                size='large'
+                size="large"
                 onClick={() => setLoadedCount((c) => c + LOAD_MORE_COUNT)}
               >
                 Xem thêm

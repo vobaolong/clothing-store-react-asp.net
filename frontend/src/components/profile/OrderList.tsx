@@ -8,7 +8,7 @@ import {
   Table,
   Tag,
   Tabs,
-  Tooltip,
+  Tooltip
 } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -29,7 +29,7 @@ const matchesSearch = (needle: string, order: MyOrder) => {
     order.status,
     order.paymentStatus,
     String(order.totalAmount),
-    String(order.itemCount),
+    String(order.itemCount)
   ].some((value) => value.toLowerCase().includes(normalized))
 }
 
@@ -40,7 +40,7 @@ export default function OrderList() {
 
   const { data, isLoading } = useQuery({
     queryKey: QUERY_KEYS.myOrders(),
-    queryFn: ({ queryKey }) => getMyOrders(queryKey[1]),
+    queryFn: ({ queryKey }) => getMyOrders(queryKey[1])
   })
 
   const orders = useMemo(() => data?.orders ?? [], [data])
@@ -51,9 +51,9 @@ export default function OrderList() {
         (order) =>
           (activeStatus === FilterStatus.ALL ||
             order.status === activeStatus) &&
-          matchesSearch(search, order),
+          matchesSearch(search, order)
       ),
-    [orders, search, activeStatus],
+    [orders, search, activeStatus]
   )
 
   const tabItems = useMemo(
@@ -66,18 +66,18 @@ export default function OrderList() {
         return {
           key: status,
           label: (
-            <div className='flex gap-2 justify-center items-center'>
-              <span className='truncate'>
+            <div className="flex gap-2 justify-center items-center">
+              <span className="truncate">
                 {status === FilterStatus.ALL
                   ? 'Tất cả'
                   : getVietnameseStatusLabel(status)}
               </span>
               <Badge count={count} />
             </div>
-          ),
+          )
         }
       }),
-    [orders],
+    [orders]
   )
 
   const emptyText =
@@ -85,7 +85,7 @@ export default function OrderList() {
       ? 'Bạn chưa đặt đơn hàng nào.'
       : 'Không tìm thấy đơn hàng nào khớp với từ khóa tìm kiếm của bạn.'
 
-  const columns: ColumnsType<MyOrder> = useMemo(
+  const columns = useMemo<ColumnsType<MyOrder>>(
     () => [
       {
         title: '#',
@@ -94,42 +94,42 @@ export default function OrderList() {
         width: 60,
         fixed: 'left',
         render: (_: unknown, row: MyOrder) => (
-          <span className='font-semibold'>
+          <span className="font-semibold">
             {filteredOrders.indexOf(row) + 1}
           </span>
-        ),
+        )
       },
       {
         title: 'Mã đơn hàng',
         dataIndex: 'id',
         width: 150,
-        render: (_, row) => row.id.slice(0, 8).toUpperCase(),
+        render: (_, row) => row.id.slice(0, 8).toUpperCase()
       },
       {
         title: 'Tổng cộng',
         dataIndex: 'totalAmount',
         align: 'right',
-        render: (_, row) => formatCurrency(row.totalAmount),
+        render: (_, row) => formatCurrency(row.totalAmount)
       },
       {
         title: 'Thanh toán',
         dataIndex: 'paymentStatus',
         width: 120,
         render: (_, row) => (
-          <Tag variant='outlined' color={STATUS_COLORS[row.paymentStatus]}>
+          <Tag variant="outlined" color={STATUS_COLORS[row.paymentStatus]}>
             {getVietnameseStatusLabel(row.paymentStatus)}
           </Tag>
-        ),
+        )
       },
       {
         title: 'Trạng thái',
         dataIndex: 'status',
         width: 120,
         render: (_, row) => (
-          <Tag variant='outlined' color={STATUS_COLORS[row.status]}>
+          <Tag variant="outlined" color={STATUS_COLORS[row.status]}>
             {getVietnameseStatusLabel(row.status)}
           </Tag>
-        ),
+        )
       },
       {
         title: 'Ngày mua',
@@ -138,7 +138,7 @@ export default function OrderList() {
         sorter: (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         defaultSortOrder: 'descend',
-        render: (_, row) => formatDate(row.createdAt),
+        render: (_, row) => formatDate(row.createdAt)
       },
       {
         title: 'Thao tác',
@@ -146,24 +146,24 @@ export default function OrderList() {
         width: 100,
         fixed: 'right',
         render: (_, row) => (
-          <Tooltip title='Xem chi tiết'>
+          <Tooltip title="Xem chi tiết">
             <Button
               icon={<EyeOutlined />}
               onClick={() => navigate(`/orders/${row.id}`)}
             />
           </Tooltip>
-        ),
-      },
+        )
+      }
     ],
-    [filteredOrders, navigate],
+    [filteredOrders, navigate]
   )
 
   return (
     <Card>
-      <div className='space-y-3'>
+      <div className="space-y-3">
         <Input.Search
           allowClear
-          placeholder='Tìm kiếm theo ID đơn hàng, trạng thái, thanh toán...'
+          placeholder="Tìm kiếm theo ID đơn hàng, trạng thái, thanh toán..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -171,13 +171,13 @@ export default function OrderList() {
           activeKey={activeStatus}
           onChange={setActiveStatus}
           items={tabItems}
-          className='w-full order-status-tabs'
+          className="w-full order-status-tabs"
           tabBarStyle={{ marginBottom: 0 }}
         />
       </div>
       <Table
-        className='mt-4'
-        rowKey='id'
+        className="mt-4"
+        rowKey="id"
         loading={isLoading}
         dataSource={filteredOrders}
         columns={columns}

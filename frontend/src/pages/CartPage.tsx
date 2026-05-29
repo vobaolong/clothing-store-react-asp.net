@@ -52,23 +52,23 @@ export default function CartPage() {
 
   if (!items.length)
     return (
-      <Card className='rounded-lg border border-slate-200'>
-        <Empty description='Giỏ hàng của bạn trống' className='py-12' />
-        <div className='flex justify-center'>
-          <Link to='/products'>
-            <Button type='primary'>Tiếp tục mua sắm</Button>
+      <Card className="rounded-lg border border-slate-200">
+        <Empty description="Giỏ hàng của bạn trống" className="py-12" />
+        <div className="flex justify-center">
+          <Link to="/products">
+            <Button type="primary">Tiếp tục mua sắm</Button>
           </Link>
         </div>
       </Card>
     )
 
   return (
-    <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]'>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <Card
-        className='rounded-lg border border-slate-200'
-        title={<span className='text-xl font-semibold'>Giỏ hàng</span>}
+        className="rounded-lg border border-slate-200"
+        title={<span className="text-xl font-semibold">Giỏ hàng</span>}
       >
-        <div className='flex justify-between items-center p-3 mb-4 rounded-xl border border-slate-200 bg-slate-50'>
+        <div className="flex justify-between items-center p-3 mb-4 rounded-xl border border-slate-200 bg-slate-50">
           <Checkbox
             checked={allSelected}
             onChange={(event) =>
@@ -77,27 +77,27 @@ export default function CartPage() {
           >
             Chọn tất cả
           </Checkbox>
-          <div className='flex gap-3 items-center'>
-            <span className='text-sm text-slate-500'>
+          <div className="flex gap-3 items-center">
+            <span className="text-sm text-slate-500">
               Đã chọn: {selectedItems.length}/{items.length}
             </span>
             {selectedItems.length > 0 ? (
-              <Button danger type='text' onClick={confirmClearCart}>
+              <Button danger type="text" onClick={confirmClearCart}>
                 Xóa tất cả
               </Button>
             ) : null}
           </div>
         </div>
-        <div className='divide-y divide-slate-100'>
+        <div className="divide-y divide-slate-100">
           {items.map((item) => {
             const lineImage = getCartLineImage(item)
 
             return (
-              <div key={`${item.id}-${item.productVariantId}`} className='py-5'>
-                <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-                  <div className='flex flex-1 gap-3 items-center'>
+              <div key={`${item.id}-${item.productVariantId}`} className="py-5">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="flex flex-1 gap-3 items-center">
                     <Checkbox
-                      className='mt-1'
+                      className="mt-1"
                       checked={item.isSelected}
                       onChange={(event) =>
                         dispatch(
@@ -113,27 +113,27 @@ export default function CartPage() {
                       <img
                         src={lineImage}
                         alt={item.name}
-                        className='object-cover rounded-xl border size-24 border-slate-200 bg-slate-100'
+                        className="object-cover rounded-xl border size-24 border-slate-200 bg-slate-100"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none'
                         }}
                       />
                     ) : (
                       <div
-                        className='flex size-24 shrink-0 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-[10px] text-slate-400'
+                        className="flex size-24 shrink-0 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-[10px] text-slate-400"
                         aria-hidden
                       >
                         No img
                       </div>
                     )}
-                    <div className='space-y-2'>
-                      <h3 className='text-base font-semibold text-slate-900'>
+                    <div className="space-y-2">
+                      <h3 className="text-base font-semibold text-slate-900">
                         {item.name}
                       </h3>
-                      <span className='text-sm text-slate-500'>
+                      <span className="text-sm text-slate-500">
                         {item.selectedColor} / {item.selectedSize}
                       </span>
-                      <div className='flex flex-wrap gap-2 mt-2'>
+                      <div className="flex flex-wrap gap-2 mt-2">
                         <Select
                           value={item.selectedColor}
                           style={{ width: 180 }}
@@ -201,7 +201,7 @@ export default function CartPage() {
                       </div>
                     </div>
                   </div>
-                  <div className='flex gap-3 items-center'>
+                  <div className="flex gap-3 items-center">
                     <CartQuantityControl
                       value={item.quantity}
                       min={1}
@@ -220,7 +220,7 @@ export default function CartPage() {
                         )
                       }
                     />
-                    <div className='font-semibold text-right min-w-30 text-slate-900'>
+                    <div className="font-semibold text-right min-w-30 text-slate-900">
                       {formatCurrency(
                         getCartLineEffectivePrice(item) * item.quantity
                       )}
@@ -240,35 +240,35 @@ export default function CartPage() {
         </div>
       </Card>
 
-      <aside className='sticky top-24 self-start p-5 bg-white rounded-lg border border-slate-200'>
-        <h2 className='mb-4 text-xl font-semibold'>Chi tiết thanh toán</h2>
-        <div className='space-y-3 text-sm'>
-          <div className='flex justify-between text-slate-600'>
+      <aside className="sticky top-24 self-start p-5 bg-white rounded-lg border border-slate-200">
+        <h2 className="mb-4 text-xl font-semibold">Chi tiết thanh toán</h2>
+        <div className="space-y-3 text-sm">
+          <div className="flex justify-between text-slate-600">
             <span>Tạm tính</span>
             <span>{formatCurrency(total)}</span>
           </div>
-          <div className='flex justify-between text-slate-600'>
+          <div className="flex justify-between text-slate-600">
             <span>Phí giao hàng</span>
             <span>{formatCurrency(shippingFee)}</span>
           </div>
-          <div className='flex justify-between pt-3 mt-3 text-base font-semibold border-t border-slate-200'>
+          <div className="flex justify-between pt-3 mt-3 text-base font-semibold border-t border-slate-200">
             <span>Thành tiền</span>
-            <span className='text-slate-900'>{formatCurrency(grandTotal)}</span>
+            <span className="text-slate-900">{formatCurrency(grandTotal)}</span>
           </div>
         </div>
-        <div className='grid gap-2 mt-5'>
-          <Link to='/checkout'>
+        <div className="grid gap-2 mt-5">
+          <Link to="/checkout">
             <Button
-              type='primary'
+              type="primary"
               block
-              size='large'
+              size="large"
               disabled={selectedItems.length === 0}
             >
               Tiến hành đặt hàng
             </Button>
           </Link>
-          <Link to='/products'>
-            <Button block size='large'>
+          <Link to="/products">
+            <Button block size="large">
               Tiếp tục mua sắm
             </Button>
           </Link>

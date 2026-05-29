@@ -11,20 +11,20 @@ import { z } from 'zod'
 import { PaymentMethod } from '@/enums'
 import {
   removePurchasedCartItems,
-  selectSelectedCartItems,
+  selectSelectedCartItems
 } from '@/state/cart-slice'
 import { getAuthToken } from '@/state/auth/auth-session'
 import { placeOrder } from '@/api/orders-api'
 import { getAvailableCoupons, validateCoupon } from '@/api/coupons-api'
 import {
   getShippingAddresses,
-  getShippingAddressPrefill,
+  getShippingAddressPrefill
 } from '@/api/addresses-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   calculateFinalTotal,
-  normalizeCouponCode,
+  normalizeCouponCode
 } from '@/utils/checkout-utils'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
@@ -36,7 +36,7 @@ import OrderSummary from '@/components/checkout/OrderSummary'
 import type {
   CheckoutFormValues,
   SelectOption,
-  CheckoutWardOption,
+  CheckoutWardOption
 } from '@/types/checkout.type'
 import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
 
@@ -73,25 +73,25 @@ const checkoutUiInitialState: CheckoutUiState = {
   coupon: {
     isApplying: false,
     appliedCode: '',
-    discountAmount: 0,
+    discountAmount: 0
   },
   address: {
     showNewForm: false,
     provinceOptions: [],
-    wardOptions: [],
+    wardOptions: []
   },
-  isSubmitting: false,
+  isSubmitting: false
 }
 
 function checkoutUiReducer(
   state: CheckoutUiState,
-  action: CheckoutUiAction,
+  action: CheckoutUiAction
 ): CheckoutUiState {
   switch (action.type) {
     case 'coupon/applying':
       return {
         ...state,
-        coupon: { ...state.coupon, isApplying: action.value },
+        coupon: { ...state.coupon, isApplying: action.value }
       }
     case 'coupon/set':
       return {
@@ -99,8 +99,8 @@ function checkoutUiReducer(
         coupon: {
           isApplying: false,
           appliedCode: action.appliedCode,
-          discountAmount: action.discountAmount,
-        },
+          discountAmount: action.discountAmount
+        }
       }
     case 'coupon/clear':
       return {
@@ -108,8 +108,8 @@ function checkoutUiReducer(
         coupon: {
           isApplying: false,
           appliedCode: '',
-          discountAmount: 0,
-        },
+          discountAmount: 0
+        }
       }
     case 'coupon/code-input':
       return state
@@ -118,37 +118,37 @@ function checkoutUiReducer(
         ...state,
         address: {
           ...state.address,
-          showNewForm: !state.address.showNewForm,
-        },
+          showNewForm: !state.address.showNewForm
+        }
       }
     case 'address/set-province-options':
       return {
         ...state,
         address: {
           ...state.address,
-          provinceOptions: action.options,
-        },
+          provinceOptions: action.options
+        }
       }
     case 'address/set-ward-options':
       return {
         ...state,
         address: {
           ...state.address,
-          wardOptions: action.options,
-        },
+          wardOptions: action.options
+        }
       }
     case 'address/hide-new-form':
       return {
         ...state,
         address: {
           ...state.address,
-          showNewForm: false,
-        },
+          showNewForm: false
+        }
       }
     case 'submitting/set':
       return {
         ...state,
-        isSubmitting: action.value,
+        isSubmitting: action.value
       }
     default:
       return state
@@ -168,7 +168,7 @@ const checkoutSchema = z.object({
   paymentMethod: z.enum(PaymentMethod),
   shippingAddressId: z.string().optional(),
   couponCode: z.string().optional(),
-  note: z.string().max(2000).optional(),
+  note: z.string().max(2000).optional()
 })
 
 export default function CheckoutPage() {
@@ -186,18 +186,18 @@ export default function CheckoutPage() {
     })
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ['style'],
+      attributeFilter: ['style']
     })
     return () => observer.disconnect()
   }, [])
   const [uiState, uiDispatch] = useReducer(
     checkoutUiReducer,
-    checkoutUiInitialState,
+    checkoutUiInitialState
   )
   const total = items.reduce((sum, item) => {
     const effective = getEffectivePriceAt(
       item as unknown as import('@/types').Product,
-      nowMs,
+      nowMs
     )
     return sum + effective * item.quantity
   }, 0)
@@ -212,16 +212,16 @@ export default function CheckoutPage() {
   const addressesQuery = useQuery({
     queryKey: QUERY_KEYS.shippingAddresses,
     queryFn: getShippingAddresses,
-    enabled: Boolean(getAuthToken()),
+    enabled: Boolean(getAuthToken())
   })
   const prefillQuery = useQuery({
     queryKey: QUERY_KEYS.shippingAddressPrefill,
     queryFn: getShippingAddressPrefill,
-    enabled: Boolean(getAuthToken()),
+    enabled: Boolean(getAuthToken())
   })
   const availableCouponsQuery = useQuery({
     queryKey: QUERY_KEYS.availableCoupons,
-    queryFn: getAvailableCoupons,
+    queryFn: getAvailableCoupons
   })
 
   const { control, handleSubmit, reset, setValue, getValues } =
@@ -239,28 +239,30 @@ export default function CheckoutPage() {
         setAsDefault: false,
         paymentMethod: PaymentMethod.COD,
         couponCode: '',
-        note: '',
-      },
+        note: ''
+      }
     })
 
   const watchedCouponCode = useWatch({ control, name: 'couponCode' })
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0,
+    0
   )
   const coupon = uiState.coupon
   const isSubmitting = uiState.isSubmitting
 
   const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
   const appliedCouponDetails = availableCouponsQuery.data?.find(
-    (c) => c.code.toUpperCase() === coupon.appliedCode,
+    (c) => c.code.toUpperCase() === coupon.appliedCode
   )
   const isAppliedCouponEligible = appliedCouponDetails
     ? subtotal >= appliedCouponDetails.minOrderSubtotal
     : true
 
-  const [editingAddress, setEditingAddress] = useState<import('@/types').ShippingAddress | null>(null)
+  const [editingAddress, setEditingAddress] = useState<
+    import('@/types').ShippingAddress | null
+  >(null)
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
 
   const handleOpenAddAddress = () => {
@@ -290,7 +292,7 @@ export default function CheckoutPage() {
         shippingAddressId: defaultAddress.id,
         fullName: defaultAddress.fullName,
         phone: defaultAddress.phone,
-        fullAddress: defaultAddress.fullAddress,
+        fullAddress: defaultAddress.fullAddress
       })
     }
   }, [addressesQuery.data, getValues, reset])
@@ -319,13 +321,13 @@ export default function CheckoutPage() {
       uiDispatch({ type: 'coupon/applying', value: true })
       const result = await validateCoupon({
         code: rawCode,
-        orderTotal: subtotal,
+        orderTotal: subtotal
       })
       const finalCode = normalizeCouponCode(result.code)
       uiDispatch({
         type: 'coupon/set',
         appliedCode: finalCode,
-        discountAmount: result.discountAmount,
+        discountAmount: result.discountAmount
       })
       setValue('couponCode', finalCode)
       toast.success('Đã áp dụng mã giảm giá')
@@ -381,13 +383,13 @@ export default function CheckoutPage() {
         items: items.map((item) => ({
           productId: item.id,
           productVariantId: item.productVariantId,
-          quantity: item.quantity,
+          quantity: item.quantity
         })),
         couponCode: coupon.appliedCode || undefined,
         shippingAddressId: values.shippingAddressId,
         paymentMethod: values.paymentMethod,
         note: noteTrimmed ? noteTrimmed : undefined,
-        idempotencyKey,
+        idempotencyKey
       })
       if (values.paymentMethod === 'VNPAY') {
         const data = await createVnPayUrl(orderId)
@@ -398,9 +400,9 @@ export default function CheckoutPage() {
         removePurchasedCartItems(
           items.map((item) => ({
             id: item.id,
-            productVariantId: item.productVariantId,
-          })),
-        ),
+            productVariantId: item.productVariantId
+          }))
+        )
       )
       const shortOrderId = orderId.slice(0, 8).toUpperCase()
       toast.custom(
@@ -412,58 +414,58 @@ export default function CheckoutPage() {
                 : 'animate-out slide-out-to-right'
             }`}
           >
-            <div className='flex gap-3 items-start'>
-              <div className='flex justify-center items-center bg-green-100 rounded-full size-10'>
+            <div className="flex gap-3 items-start">
+              <div className="flex justify-center items-center bg-green-100 rounded-full size-10">
                 <svg
-                  className='w-5 h-5 text-green-600'
-                  fill='none'
-                  stroke='currentColor'
+                  className="w-5 h-5 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
                   strokeWidth={2}
-                  viewBox='0 0 24 24'
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M5 13l4 4L19 7'
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
                   />
                 </svg>
               </div>
-              <div className='flex-1'>
-                <p className='text-sm font-semibold text-slate-900'>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-slate-900">
                   Xác nhận đặt hàng
                 </p>
-                <p className='mt-1 text-sm text-slate-600'>
+                <p className="mt-1 text-sm text-slate-600">
                   Đặt hàng thành công 🎉
                 </p>
-                <p className='mt-1 text-xs text-slate-400'>
-                  Mã đơn: <span className='font-medium'>{shortOrderId}</span>
+                <p className="mt-1 text-xs text-slate-400">
+                  Mã đơn: <span className="font-medium">{shortOrderId}</span>
                 </p>
               </div>
               <button
                 onClick={() => toast.dismiss(t.id)}
-                className='text-slate-400 hover:text-slate-600'
+                className="text-slate-400 hover:text-slate-600"
               >
                 ✕
               </button>
             </div>
-            <div className='flex gap-2 justify-end items-center mt-4'>
-              <Button onClick={() => toast.dismiss(t.id)} className='text-sm'>
+            <div className="flex gap-2 justify-end items-center mt-4">
+              <Button onClick={() => toast.dismiss(t.id)} className="text-sm">
                 Đóng
               </Button>
               <Button
-                type='primary'
+                type="primary"
                 onClick={() => {
                   toast.dismiss(t.id)
                   navigate(`/orders/${orderId}`)
                 }}
-                className='rounded-lg px-3 py-1.5 text-sm font-medium'
+                className="rounded-lg px-3 py-1.5 text-sm font-medium"
               >
                 Xem đơn
               </Button>
             </div>
           </div>
         ),
-        { duration: 50000 },
+        { duration: 50000 }
       )
       navigate('/')
     } catch (error: unknown) {
@@ -486,16 +488,16 @@ export default function CheckoutPage() {
   return (
     <div>
       <LoadingOverlay isSubmitting={isSubmitting} />
-      <div className='mb-8'>
-        <h1 className='text-3xl font-bold text-slate-900'>Thanh toán</h1>
-        <p className='mt-1 text-sm text-slate-500'>
-          <InfoCircleOutlined className='mr-1 text-slate-500' />
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">Thanh toán</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          <InfoCircleOutlined className="mr-1 text-slate-500" />
           Hoàn thành thông tin đặt hàng để tiếp tục.
         </p>
       </div>
 
-      <div className='grid gap-6 lg:grid-cols-[1fr_500px] items-start'>
-        <div className='space-y-4!'>
+      <div className="grid gap-6 lg:grid-cols-[1fr_500px] items-start">
+        <div className="space-y-4!">
           <ShippingAddressSection
             control={control}
             addressesQuery={addressesQuery}

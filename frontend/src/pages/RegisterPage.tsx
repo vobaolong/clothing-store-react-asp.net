@@ -38,7 +38,7 @@ function validatePasswordStrength(value: string): string | null {
 function PasswordStrengthChecklist({ password }: { password: string }) {
   if (!password) return null
   return (
-    <ul className='mt-2 space-y-1 text-xs'>
+    <ul className="mt-2 space-y-1 text-xs">
       {PASSWORD_RULES.map((rule) => {
         const passed = rule.test(password)
         return (
@@ -47,9 +47,9 @@ function PasswordStrengthChecklist({ password }: { password: string }) {
             className={`flex items-center gap-1.5 ${passed ? 'text-green-600' : 'text-slate-400'}`}
           >
             {passed ? (
-              <CheckOutlined className='text-green-500' />
+              <CheckOutlined className="text-green-500" />
             ) : (
-              <CloseOutlined className='text-slate-300' />
+              <CloseOutlined className="text-slate-300" />
             )}
             {rule.label}
           </li>
@@ -87,13 +87,13 @@ export default function RegisterPage() {
   })
 
   return (
-    <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center'>
-      <Card className='w-full rounded-3xl border shadow-sm border-slate-200'>
-        <div className='mb-6'>
-          <Title level={3} className='mb-1!'>
+    <section className="mx-auto flex min-h-[72vh] w-full max-w-md items-center">
+      <Card className="w-full rounded-3xl border shadow-sm border-slate-200">
+        <div className="mb-6">
+          <Title level={3} className="mb-1!">
             Tạo tài khoản mới
           </Title>
-          <Paragraph className='mb-0! text-slate-500!'>
+          <Paragraph className="mb-0! text-slate-500!">
             Đăng ký Wearly để lưu các sản phẩm yêu thích và thanh toán nhanh
             hơn.
           </Paragraph>
@@ -101,52 +101,52 @@ export default function RegisterPage() {
 
         <Form
           form={form}
-          layout='vertical'
+          layout="vertical"
           onFinish={registerMutation.mutateAsync}
           requiredMark={false}
         >
           <Form.Item
-            label='Họ và tên'
-            name='fullName'
+            label="Họ và tên"
+            name="fullName"
             rules={[
               { required: true, message: 'Vui lòng nhập đầy đủ họ và tên' },
               { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự' }
             ]}
           >
             <Input
-              placeholder='Nguyễn Văn A'
-              prefix={<UserOutlined className='text-slate-400' />}
+              placeholder="Nguyễn Văn A"
+              prefix={<UserOutlined className="text-slate-400" />}
             />
           </Form.Item>
 
           <Form.Item
-            label='Email'
-            name='email'
+            label="Email"
+            name="email"
             rules={[
               { required: true, message: 'Vui lòng nhập email' },
               { type: 'email', message: 'Định dạng email không hợp lệ' }
             ]}
           >
             <Input
-              placeholder='example@gmail.com'
-              prefix={<MailOutlined className='text-slate-400' />}
+              placeholder="example@gmail.com"
+              prefix={<MailOutlined className="text-slate-400" />}
             />
           </Form.Item>
 
           <Form.Item
-            label='Số điện thoại'
-            name='phone'
+            label="Số điện thoại"
+            name="phone"
             rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
           >
             <Input
-              placeholder='0901234567'
-              prefix={<PhoneOutlined className='text-slate-400' />}
+              placeholder="0901234567"
+              prefix={<PhoneOutlined className="text-slate-400" />}
             />
           </Form.Item>
 
           <Form.Item
-            label='Mật khẩu'
-            name='password'
+            label="Mật khẩu"
+            name="password"
             rules={[
               { required: true, message: 'Vui lòng nhập mật khẩu' },
               {
@@ -161,17 +161,17 @@ export default function RegisterPage() {
             ]}
           >
             <Input.Password
-              placeholder='Tạo mật khẩu mạnh'
-              prefix={<LockOutlined className='text-slate-400' />}
+              placeholder="Tạo mật khẩu mạnh"
+              prefix={<LockOutlined className="text-slate-400" />}
             />
           </Form.Item>
 
           <PasswordStrengthChecklist password={passwordValue} />
 
           <Form.Item
-            className='mt-4'
-            label='Xác nhận mật khẩu'
-            name='confirmPassword'
+            className="mt-4"
+            label="Xác nhận mật khẩu"
+            name="confirmPassword"
             dependencies={['password']}
             rules={[
               { required: true, message: 'Vui lòng xác nhận mật khẩu' },
@@ -188,14 +188,14 @@ export default function RegisterPage() {
             ]}
           >
             <Input.Password
-              placeholder='Nhập lại mật khẩu'
-              prefix={<LockOutlined className='text-slate-400' />}
+              placeholder="Nhập lại mật khẩu"
+              prefix={<LockOutlined className="text-slate-400" />}
             />
           </Form.Item>
 
           <Button
-            type='primary'
-            htmlType='submit'
+            type="primary"
+            htmlType="submit"
             block
             loading={registerMutation.isPending}
           >
@@ -203,11 +203,11 @@ export default function RegisterPage() {
           </Button>
         </Form>
 
-        <div className='mt-5 text-sm text-center text-slate-500'>
+        <div className="mt-5 text-sm text-center text-slate-500">
           Đã có tài khoản?{' '}
           <Link
-            to='/login'
-            className='font-medium text-indigo-600 hover:text-indigo-500'
+            to="/login"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Đăng nhập
           </Link>

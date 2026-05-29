@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from '@/constants/api-endpoints'
 import type { ProductReviews } from '@/types'
 
 export const getProductReviews = async (
-  productId: string,
+  productId: string
 ): Promise<ProductReviews> => {
   return apiData(apiClient.get(API_ENDPOINTS.reviews.byProduct(productId)))
 }

@@ -4,13 +4,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import {
   createShippingAddress,
-  updateShippingAddress,
+  updateShippingAddress
 } from '@/api/addresses-api'
 import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   SHIPPING_ADDRESS_LABEL_OPTIONS,
-  ShippingAddressLabel,
+  ShippingAddressLabel
 } from '@/enums/shipping-address.enum'
 import type { CreateShippingAddressPayload, ShippingAddress } from '@/types'
 
@@ -35,7 +35,7 @@ export default function ShippingAddressFormModal({
   open,
   onCancel,
   address,
-  onSaved,
+  onSaved
 }: Props) {
   const [form] = Form.useForm<ShippingAddressFormValues>()
   const queryClient = useQueryClient()
@@ -45,7 +45,7 @@ export default function ShippingAddressFormModal({
   const provincesQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutProvinces,
     queryFn: () => getProvinces(),
-    enabled: open,
+    enabled: open
   })
 
   const selectedProvinceId = Form.useWatch('province', form)
@@ -54,7 +54,7 @@ export default function ShippingAddressFormModal({
   const wardsQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutWardsByProvince(selectedProvinceId),
     queryFn: () => getWardsByProvinceId(String(selectedProvinceId)),
-    enabled: Boolean(open && selectedProvinceId),
+    enabled: Boolean(open && selectedProvinceId)
   })
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function ShippingAddressFormModal({
         ward: address.wardCode,
         street: address.street,
         label: address.label ?? undefined,
-        isDefault: address.isDefault,
+        isDefault: address.isDefault
       })
     } else {
       form.setFieldsValue({ label: 'Home' })
@@ -103,18 +103,18 @@ export default function ShippingAddressFormModal({
     onSuccess: async (addressId) => {
       toast.success('Đã thêm địa chỉ mới')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.shippingAddresses,
+        queryKey: QUERY_KEYS.shippingAddresses
       })
       form.resetFields()
       await onSaved?.(addressId)
       onCancel()
-    },
+    }
   })
 
   const updateAddressMutation = useMutation({
     mutationFn: async ({
       id,
-      payload,
+      payload
     }: {
       id: string
       payload: CreateShippingAddressPayload
@@ -122,12 +122,12 @@ export default function ShippingAddressFormModal({
     onSuccess: async (_, variables) => {
       toast.success('Đã cập nhật địa chỉ')
       await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.shippingAddresses,
+        queryKey: QUERY_KEYS.shippingAddresses
       })
       form.resetFields()
       await onSaved?.(variables.id)
       onCancel()
-    },
+    }
   })
 
   const handleFinish = async (values: ShippingAddressFormValues) => {
@@ -141,7 +141,7 @@ export default function ShippingAddressFormModal({
       provincesQuery.data?.find((x) => x.code === provinceId)?.name ?? ''
     const wardName =
       wardsQuery.data?.find(
-        (x: { name: string; code: string }) => x.code === wardCode,
+        (x: { name: string; code: string }) => x.code === wardCode
       )?.name ?? ''
     const fullAddress = [street, wardName, provinceName]
       .filter(Boolean)
@@ -162,7 +162,7 @@ export default function ShippingAddressFormModal({
       wardCode,
       street,
       label: values.label,
-      isDefault: Boolean(values.isDefault),
+      isDefault: Boolean(values.isDefault)
     }
 
     if (address) {
@@ -183,39 +183,39 @@ export default function ShippingAddressFormModal({
         createAddressMutation.isPending || updateAddressMutation.isPending
       }
       okText={isEditMode ? 'Cập nhật địa chỉ' : 'Lưu địa chỉ'}
-      cancelText='Hủy'
+      cancelText="Hủy"
       destroyOnHidden
     >
-      <Form form={form} layout='vertical' onFinish={handleFinish}>
+      <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
-          name='fullName'
-          label='Họ và tên'
+          name="fullName"
+          label="Họ và tên"
           rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
         >
-          <Input placeholder='Nhập họ và tên' />
+          <Input placeholder="Nhập họ và tên" />
         </Form.Item>
 
         <Form.Item
-          name='phone'
-          label='Số điện thoại'
+          name="phone"
+          label="Số điện thoại"
           rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
         >
-          <Input placeholder='Nhập số điện thoại' />
+          <Input placeholder="Nhập số điện thoại" />
         </Form.Item>
 
         <Form.Item
-          name='province'
-          label='Tỉnh / Thành phố'
+          name="province"
+          label="Tỉnh / Thành phố"
           rules={[
-            { required: true, message: 'Vui lòng chọn tỉnh / thành phố' },
+            { required: true, message: 'Vui lòng chọn tỉnh / thành phố' }
           ]}
         >
           <Select
             showSearch
-            placeholder='Chọn tỉnh / thành phố'
+            placeholder="Chọn tỉnh / thành phố"
             options={(provincesQuery.data ?? []).map((item) => ({
               label: item.name,
-              value: item.code,
+              value: item.code
             }))}
             filterOption={(input, option) =>
               String(option?.label ?? '')
@@ -226,19 +226,19 @@ export default function ShippingAddressFormModal({
         </Form.Item>
 
         <Form.Item
-          name='ward'
-          label='Phường / Xã'
+          name="ward"
+          label="Phường / Xã"
           rules={[{ required: true, message: 'Vui lòng chọn phường / xã' }]}
         >
           <Select
             showSearch
             disabled={!selectedProvinceId}
-            placeholder='Chọn phường / xã'
+            placeholder="Chọn phường / xã"
             options={(wardsQuery.data ?? []).map(
               (item: { name: string; code: string }) => ({
                 label: item.name,
-                value: item.code,
-              }),
+                value: item.code
+              })
             )}
             filterOption={(input, option) =>
               String(option?.label ?? '')
@@ -249,16 +249,16 @@ export default function ShippingAddressFormModal({
         </Form.Item>
 
         <Form.Item
-          name='street'
-          label='Địa chỉ'
+          name="street"
+          label="Địa chỉ"
           required
           rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
         >
-          <Input placeholder='Số nhà, tên đường...' />
+          <Input placeholder="Số nhà, tên đường..." />
         </Form.Item>
 
-        <Form.Item name='label' label='Nhãn địa chỉ'>
-          <div className='flex flex-wrap gap-2'>
+        <Form.Item name="label" label="Nhãn địa chỉ">
+          <div className="flex flex-wrap gap-2">
             {SHIPPING_ADDRESS_LABEL_OPTIONS.map((item) => (
               <Tag.CheckableTag
                 key={item.value}
@@ -266,10 +266,10 @@ export default function ShippingAddressFormModal({
                 onChange={(checked) => {
                   form.setFieldValue(
                     'label',
-                    checked ? item.value : SHIPPING_ADDRESS_LABEL_OPTIONS[0],
+                    checked ? item.value : SHIPPING_ADDRESS_LABEL_OPTIONS[0]
                   )
                 }}
-                className='flex! items-center! justify-center! px-3 py-1.5 h-8! text-sm leading-none border cursor-pointer border-slate-300!'
+                className="flex! items-center! justify-center! px-3 py-1.5 h-8! text-sm leading-none border cursor-pointer border-slate-300!"
               >
                 {item.label}
               </Tag.CheckableTag>
@@ -277,12 +277,12 @@ export default function ShippingAddressFormModal({
           </div>
         </Form.Item>
 
-        <Form.Item name='isDefault' valuePropName='checked'>
+        <Form.Item name="isDefault" valuePropName="checked">
           <Checkbox>Đặt làm địa chỉ mặc định</Checkbox>
         </Form.Item>
 
-        <div className='hidden'>
-          <Button htmlType='submit'>Submit</Button>
+        <div className="hidden">
+          <Button htmlType="submit">Submit</Button>
         </div>
       </Form>
     </Modal>

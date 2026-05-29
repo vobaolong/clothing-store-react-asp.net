@@ -38,11 +38,6 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
     refetchOnWindowFocus: false
   })
 
-  // Note: unread count is available from the notifications response
-  // and other parts of the app can use `useUnreadCount` hook which
-  // polls on an interval. Here we avoid running a second unread-count
-  // query to reduce duplication.
-
   const markAsReadMutation = useMutation({
     mutationFn: markNotificationAsRead,
     onSuccess: (_data, notificationId) => {

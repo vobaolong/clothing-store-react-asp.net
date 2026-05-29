@@ -17,7 +17,7 @@ type ReviewFormProps = {
 export default function ReviewForm({
   loading,
   onSubmit,
-  onCancel,
+  onCancel
 }: ReviewFormProps) {
   const [form] = Form.useForm<ReviewFormValues>()
 
@@ -25,44 +25,44 @@ export default function ReviewForm({
     form.setFieldsValue({
       rating: 5,
       comment: '',
-      tags: [],
+      tags: []
     })
   }, [form])
 
   return (
-    <Form form={form} layout='vertical' onFinish={onSubmit}>
-      <Form.Item name='rating' label='Chấm điểm đơn hàng của bạn'>
+    <Form form={form} layout="vertical" onFinish={onSubmit}>
+      <Form.Item name="rating" label="Chấm điểm đơn hàng của bạn">
         <Rate />
       </Form.Item>
-      <Form.Item name='tags' label='Đặc điểm sản phẩm'>
+      <Form.Item name="tags" label="Đặc điểm sản phẩm">
         <Select
-          mode='tags'
-          placeholder='Chọn hoặc nhập các đặc điểm (VD: Chất vải đẹp, Đúng size...)'
+          mode="tags"
+          placeholder="Chọn hoặc nhập các đặc điểm (VD: Chất vải đẹp, Đúng size...)"
           options={tagOptions.map((tag) => ({ label: tag, value: tag }))}
-          className='w-full'
+          className="w-full"
         />
       </Form.Item>
       <Form.Item
-        name='comment'
-        label='Chất lượng sản phẩm'
+        name="comment"
+        label="Chất lượng sản phẩm"
         rules={[{ max: 300, message: 'Nội dung quá dài' }]}
       >
         <Input.TextArea
           rows={4}
-          placeholder='Bạn thích hoặc không thích điều gì về sản phẩm này?'
+          placeholder="Bạn thích hoặc không thích điều gì về sản phẩm này?"
         />
       </Form.Item>
-      <div className='flex gap-2 justify-end items-center'>
+      <div className="flex gap-2 justify-end items-center">
         {onCancel ? (
           <Button onClick={onCancel} disabled={loading}>
             Hủy
           </Button>
         ) : null}
         <Button
-          type='primary'
-          htmlType='submit'
+          type="primary"
+          htmlType="submit"
           loading={loading}
-          className='px-6 h-10 rounded-xl'
+          className="px-6 h-10 rounded-xl"
         >
           Gửi đánh giá
         </Button>

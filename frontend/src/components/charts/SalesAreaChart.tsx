@@ -5,9 +5,9 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts'
-import type { RevenueLineChartPoint } from '@/components/charts/chart-types'
+import type { RevenueLineChartPoint } from '@/types/chart-types'
 
 type SalesAreaChartProps = {
   data: RevenueLineChartPoint[]
@@ -25,13 +25,13 @@ export default function SalesAreaChart({
   height = 300,
   strokeColor = DEFAULT_STROKE_COLOR,
   fillColor = DEFAULT_FILL_COLOR,
-  valueFormatter,
+  valueFormatter
 }: SalesAreaChartProps) {
   return (
-    <ResponsiveContainer width='100%' height={height}>
+    <ResponsiveContainer width="100%" height={height}>
       <AreaChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
-        <CartesianGrid stroke='#e2e8f0' strokeDasharray='3 3' />
-        <XAxis dataKey='period' tick={{ fill: '#64748b', fontSize: 12 }} />
+        <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+        <XAxis dataKey="period" tick={{ fill: '#64748b', fontSize: 12 }} />
         <YAxis
           tick={{ fill: '#64748b', fontSize: 12 }}
           tickFormatter={(value) =>
@@ -42,18 +42,19 @@ export default function SalesAreaChart({
         />
         <Tooltip
           formatter={(value) => {
-            const numericValue = typeof value === 'number' ? value : Number(value ?? 0)
+            const numericValue =
+              typeof value === 'number' ? value : Number(value ?? 0)
             return [
               valueFormatter
                 ? valueFormatter(numericValue)
                 : numericValue.toLocaleString('vi-VN'),
-              'Doanh thu',
+              'Doanh thu'
             ] as [string, string]
           }}
         />
         <Area
-          type='monotone'
-          dataKey='revenue'
+          type="monotone"
+          dataKey="revenue"
           stroke={strokeColor}
           fill={fillColor}
           strokeWidth={2}

@@ -319,11 +319,11 @@ export default forwardRef<
   )
 
   return (
-    <div className='space-y-4'>
-      <div className='p-4 border rounded-xl border-slate-200 bg-slate-50/30'>
-        <p className='mb-3 text-sm font-semibold text-slate-800'>Màu sắc</p>
+    <div className="space-y-4">
+      <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
+        <p className="mb-3 text-sm font-semibold text-slate-800">Màu sắc</p>
 
-        <div className='flex flex-wrap gap-2 mb-4'>
+        <div className="flex flex-wrap gap-2 mb-4">
           {DEFAULT_COLORS.map((colorOption) => (
             <CheckableTag
               key={colorOption.hex}
@@ -331,14 +331,14 @@ export default forwardRef<
                 (c) => c.name === colorOption.name
               )}
               onChange={() => toggleColor(colorOption)}
-              className='m-0! items-center! justify-center! gap-1.5! h-7! leading-3! p-0! px-2.5! rounded-full border border-slate-300! bg-white text-xs transition-all'
+              className="m-0! items-center! justify-center! gap-1.5! h-7! leading-3! p-0! px-2.5! rounded-full border border-slate-300! bg-white text-xs transition-all"
               style={{ display: 'flex' }}
             >
               <span
-                className='inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300'
+                className="inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300"
                 style={{ backgroundColor: colorOption.hex }}
               />
-              <span className='inline-block leading-none align-middle'>
+              <span className="inline-block leading-none align-middle">
                 {colorOption.name}
               </span>
             </CheckableTag>
@@ -349,10 +349,10 @@ export default forwardRef<
               key={color.name}
               closable
               onClose={() => toggleColor(color)}
-              className='flex items-center! gap-2 px-3 text-sm text-white! rounded-full border-blue-200! border! bg-[#1677ff]! h-7!'
+              className="flex items-center! gap-2 px-3 text-sm text-white! rounded-full border-blue-200! border! bg-[#1677ff]! h-7!"
             >
               <span
-                className='inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300'
+                className="inline-block mr-1 w-3 h-3 align-middle rounded-full border shrink-0 border-slate-300"
                 style={{ backgroundColor: color.hex }}
               />
               <span>{color.name}</span>
@@ -360,38 +360,38 @@ export default forwardRef<
           ))}
 
           <Button
-            type='default'
-            size='small'
-            variant='outlined'
+            type="default"
+            size="small"
+            variant="outlined"
             danger
             icon={<PlusOutlined />}
             onClick={() => setUiState((p) => ({ ...p, showCustomColor: true }))}
-            className='rounded-full h-7!'
+            className="rounded-full h-7!"
           >
             Thêm
           </Button>
         </div>
 
         {uiState.showCustomColor && (
-          <div className='flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100! shadow-sm'>
+          <div className="flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100! shadow-sm">
             <Input
-              placeholder='Tên màu sắc (ví dụ: Xanh olive)'
+              placeholder="Tên màu sắc (ví dụ: Xanh olive)"
               value={formInputs.newColorName}
               onChange={(e) =>
                 setFormInputs((p) => ({ ...p, newColorName: e.target.value }))
               }
               onPressEnter={addColor}
-              className='max-w-50'
+              className="max-w-50"
             />
             <input
-              type='color'
+              type="color"
               value={formInputs.newColorHex}
               onChange={(e) =>
                 setFormInputs((p) => ({ ...p, newColorHex: e.target.value }))
               }
-              className='p-0 w-10 h-8 bg-white rounded border cursor-pointer border-slate-300'
+              className="p-0 w-10 h-8 bg-white rounded border cursor-pointer border-slate-300"
             />
-            <Button type='primary' onClick={addColor}>
+            <Button type="primary" onClick={addColor}>
               Xác nhận
             </Button>
             <Button
@@ -406,25 +406,25 @@ export default forwardRef<
       </div>
 
       {matrixData.colors.length > 0 && (
-        <div className='p-4 border rounded-xl border-slate-200 bg-slate-50/30'>
-          <div className='space-y-5!'>
+        <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
+          <div className="space-y-5!">
             {matrixData.colors.map((color) => (
-              <div key={color.name} className='space-y-2'>
-                <div className='flex gap-2 items-center min-w-40'>
+              <div key={color.name} className="space-y-2">
+                <div className="flex gap-2 items-center min-w-40">
                   <span
-                    className='w-3 h-3 rounded-full border shrink-0 border-slate-300'
+                    className="w-3 h-3 rounded-full border shrink-0 border-slate-300"
                     style={{ backgroundColor: color.hex }}
                   />
-                  <span className='text-sm font-medium text-slate-800'>
+                  <span className="text-sm font-medium text-slate-800">
                     {color.name}
                   </span>
                 </div>
 
-                <div className='pl-0 sm:pl-5 space-y-2!'>
+                <div className="pl-0 sm:pl-5 space-y-2!">
                   <Upload
                     multiple
-                    listType='picture-card'
-                    accept='image/*'
+                    listType="picture-card"
+                    accept="image/*"
                     fileList={matrixData.galleryFiles[color.name] ?? []}
                     beforeUpload={() => false}
                     onChange={({ fileList }) =>
@@ -434,10 +434,10 @@ export default forwardRef<
                     + Upload
                   </Upload>
 
-                  <div className='flex flex-wrap gap-2 items-end max-w-2xl'>
+                  <div className="flex flex-wrap gap-2 items-end max-w-2xl">
                     <Input
-                      className='flex-1 min-w-50'
-                      placeholder='Thêm ảnh bằng URL…'
+                      className="flex-1 min-w-50"
+                      placeholder="Thêm ảnh bằng URL…"
                       value={matrixData.urlDrafts[color.name] ?? ''}
                       onChange={(e) =>
                         setMatrixData((prev) => ({
@@ -461,16 +461,16 @@ export default forwardRef<
         </div>
       )}
 
-      <div className='p-4 border rounded-xl border-slate-200 bg-slate-50/30'>
-        <p className='mb-3 text-sm font-semibold text-slate-800'>Kích thước</p>
+      <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
+        <p className="mb-3 text-sm font-semibold text-slate-800">Kích thước</p>
 
-        <div className='flex flex-wrap gap-2 mb-4'>
+        <div className="flex flex-wrap gap-2 mb-4">
           {DEFAULT_SIZES.map((size) => (
             <CheckableTag
               key={size}
               checked={matrixData.sizes.includes(size)}
               onChange={() => toggleSize(size)}
-              className='px-4 py-1 text-sm font-medium bg-white rounded-md border transition-all border-slate-200! hover:border-blue-400'
+              className="px-4 py-1 text-sm font-medium bg-white rounded-md border transition-all border-slate-200! hover:border-blue-400"
             >
               {size}
             </CheckableTag>
@@ -481,37 +481,37 @@ export default forwardRef<
               key={size}
               closable
               onClose={() => toggleSize(size)}
-              className='py-1 px-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-md border-blue-200'
+              className="py-1 px-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-md border-blue-200"
             >
               {size}
             </Tag>
           ))}
 
           <Button
-            type='default'
-            size='small'
-            variant='outlined'
+            type="default"
+            size="small"
+            variant="outlined"
             danger
             icon={<PlusOutlined />}
             onClick={() => setUiState((p) => ({ ...p, showCustomSize: true }))}
-            className='rounded-md'
+            className="rounded-md"
           >
             Thêm
           </Button>
         </div>
 
         {uiState.showCustomSize && (
-          <div className='flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100 shadow-sm'>
+          <div className="flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
             <Input
-              placeholder='Size mới (VD: XL)'
+              placeholder="Size mới (VD: XL)"
               value={formInputs.newSize}
               onChange={(e) =>
                 setFormInputs((p) => ({ ...p, newSize: e.target.value }))
               }
               onPressEnter={addSize}
-              className='max-w-37.5'
+              className="max-w-37.5"
             />
-            <Button type='primary' onClick={addSize}>
+            <Button type="primary" onClick={addSize}>
               Xác nhận
             </Button>
             <Button
@@ -525,9 +525,9 @@ export default forwardRef<
         )}
       </div>
 
-      <div className='p-3 rounded-md border border-slate-200'>
-        <div className='flex gap-2 items-center mb-2'>
-          <span className='text-sm font-semibold text-slate-600'>
+      <div className="p-3 rounded-md border border-slate-200">
+        <div className="flex gap-2 items-center mb-2">
+          <span className="text-sm font-semibold text-slate-600">
             Cấp số lượng tất cả:
           </span>
           <InputNumber
@@ -536,23 +536,23 @@ export default forwardRef<
             onChange={(value) =>
               setFormInputs((p) => ({ ...p, bulkQuantity: Number(value) || 0 }))
             }
-            className='w-16!'
+            className="w-16!"
           />
           <Button onClick={applyBulkQuantity}>Áp dụng</Button>
         </div>
 
         {matrixData.colors.length > 0 && matrixData.sizes.length > 0 && (
-          <div className='overflow-x-auto'>
-            <table className='w-full text-sm border-collapse'>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
               <thead>
                 <tr>
-                  <th className='p-2 text-left border-b border-slate-200'>
+                  <th className="p-2 text-left border-b border-slate-200">
                     Màu sắc
                   </th>
                   {matrixData.sizes.map((size) => (
                     <th
                       key={size}
-                      className='p-2 text-left border-b border-slate-200'
+                      className="p-2 text-left border-b border-slate-200"
                     >
                       {size}
                     </th>
@@ -562,10 +562,10 @@ export default forwardRef<
               <tbody>
                 {matrixData.colors.map((color) => (
                   <tr key={color.name}>
-                    <td className='p-2 border-b border-slate-100'>
-                      <div className='inline-flex gap-2 items-center'>
+                    <td className="p-2 border-b border-slate-100">
+                      <div className="inline-flex gap-2 items-center">
                         <span
-                          className='w-3 h-3 rounded-full border border-slate-300'
+                          className="w-3 h-3 rounded-full border border-slate-300"
                           style={{ backgroundColor: color.hex }}
                         />
                         {color.name}
@@ -574,7 +574,7 @@ export default forwardRef<
                     {matrixData.sizes.map((size) => {
                       const key = variantKey(color.name, size)
                       return (
-                        <td key={key} className='p-2 border-b border-slate-100'>
+                        <td key={key} className="p-2 border-b border-slate-100">
                           <InputNumber
                             min={0}
                             value={matrixData.quantities[key] ?? 0}
@@ -587,7 +587,7 @@ export default forwardRef<
                                 }
                               }))
                             }
-                            className='w-16!'
+                            className="w-16!"
                           />
                         </td>
                       )

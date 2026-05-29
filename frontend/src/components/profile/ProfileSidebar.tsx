@@ -23,11 +23,11 @@ export default function ProfileSidebar({ value, onChange }: Props) {
 
   return (
     <Menu
-      className='sticky top-6 rounded-lg border border-slate-200'
+      className="sticky top-6 rounded-lg border border-slate-200"
       items={menuItems}
       selectedKeys={[value]}
       onClick={({ key }) => onChange(key as Props['value'])}
-      mode='vertical'
+      mode="vertical"
     />
   )
 }

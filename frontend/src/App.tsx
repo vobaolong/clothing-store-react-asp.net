@@ -3,13 +3,13 @@ import { useSignalR } from '@/hooks/useSignalR'
 import NotificationToastManager from '@/components/NotificationToast'
 
 export default function App() {
-	// Initialize SignalR connection
-	useSignalR()
+  // Initialize SignalR connection
+  useSignalR()
 
-	return (
-		<>
-			<AppRouter />
-			<NotificationToastManager />
-		</>
-	)
+  return (
+    <>
+      <AppRouter />
+      <NotificationToastManager />
+    </>
+  )
 }

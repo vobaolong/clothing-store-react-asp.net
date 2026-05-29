@@ -50,7 +50,7 @@ export default function ProductsFilter({
     {
       key: 'category',
       label: (
-        <span className='font-bold text-stone-500 uppercase text-[11px] tracking-wider'>
+        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
           Danh mục
         </span>
       ),
@@ -58,13 +58,13 @@ export default function ProductsFilter({
         <Checkbox.Group
           value={selectedCategories}
           onChange={(values) => onCategoryChange(values as string[])}
-          className='flex flex-col gap-3 w-full'
+          className="flex flex-col gap-3 w-full"
         >
           {categoryOptions.map((option) => (
             <Checkbox
               key={`category-${option.value}`}
               value={option.value}
-              className='w-full text-[14px] font-medium text-stone-700'
+              className="w-full text-[14px] font-medium text-stone-700"
               style={{
                 paddingLeft: (option.depth ?? 0) * 18
               }}
@@ -78,16 +78,16 @@ export default function ProductsFilter({
     {
       key: 'size',
       label: (
-        <span className='font-bold text-stone-500 uppercase text-[11px] tracking-wider'>
+        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
           Kích thước
         </span>
       ),
       children: (
-        <div className='grid grid-cols-4 gap-2'>
+        <div className="grid grid-cols-4 gap-2">
           {sizeOptions.map((size) => (
             <button
               key={size}
-              type='button'
+              type="button"
               onClick={() => {
                 const next = selectedSizes.includes(size)
                   ? selectedSizes.filter((s) => s !== size)
@@ -109,25 +109,25 @@ export default function ProductsFilter({
     {
       key: 'color',
       label: (
-        <span className='font-bold text-stone-500 uppercase text-[11px] tracking-wider'>
+        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
           Màu sắc
         </span>
       ),
       children: (
-        <div className='grid grid-cols-4 gap-x-2 gap-y-4'>
+        <div className="grid grid-cols-4 gap-x-2 gap-y-4">
           {colorOptions.map(({ label, hex }) => {
             const config = COLOR_CONFIG[label] || { color: hex }
             return (
               <button
                 key={label}
-                type='button'
+                type="button"
                 onClick={() => {
                   const next = selectedColors.includes(label)
                     ? selectedColors.filter((v) => v !== label)
                     : [...selectedColors, label]
                   onColorChange(next)
                 }}
-                className='flex flex-col gap-1 items-center cursor-pointer group'
+                className="flex flex-col gap-1 items-center cursor-pointer group"
               >
                 <div
                   className={`relative h-9 w-9 rounded-full transition-transform group-hover:scale-105 ${
@@ -138,14 +138,14 @@ export default function ProductsFilter({
                   style={{ background: config.color }}
                 >
                   {selectedColors.includes(label) && (
-                    <div className='flex absolute inset-0 justify-center items-center'>
+                    <div className="flex absolute inset-0 justify-center items-center">
                       <div
                         className={`h-1.5 w-1.5 rounded-full ${label === 'Trắng' ? 'bg-black' : 'bg-white'}`}
                       />
                     </div>
                   )}
                 </div>
-                <span className='text-center text-[10px] leading-tight text-stone-500 transition-colors group-hover:text-black'>
+                <span className="text-center text-[10px] leading-tight text-stone-500 transition-colors group-hover:text-black">
                   {label}
                 </span>
               </button>
@@ -157,24 +157,24 @@ export default function ProductsFilter({
     {
       key: 'price',
       label: (
-        <span className='font-bold text-stone-500 uppercase text-[11px] tracking-wider'>
+        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
           Giá
         </span>
       ),
       children: (
-        <div className='space-y-3'>
+        <div className="space-y-3">
           <Checkbox.Group
             value={PRICE_RANGES.filter(
               (r) =>
                 r.value[0] === priceRange[0] && r.value[1] === priceRange[1]
             ).map((r) => r.label)}
-            className='flex flex-col gap-3 w-full'
+            className="flex flex-col gap-3 w-full"
           >
             {PRICE_RANGES.map((range) => (
               <Checkbox
                 key={range.label}
                 value={range.label}
-                className='text-[14px] font-medium text-stone-700'
+                className="text-[14px] font-medium text-stone-700"
                 onChange={(e) => {
                   if (e.target.checked) {
                     onPriceRangeChange(range.value as [number, number])
@@ -209,10 +209,10 @@ export default function ProductsFilter({
         }
       }}
     >
-      <aside className='w-full'>
-        <div className='flex justify-between items-center py-4 border-b border-stone-200'>
-          <h2 className='text-lg font-bold text-black'>Bộ lọc</h2>
-          <span className='text-sm font-medium text-stone-400'>
+      <aside className="w-full">
+        <div className="flex justify-between items-center py-4 border-b border-stone-200">
+          <h2 className="text-lg font-bold text-black">Bộ lọc</h2>
+          <span className="text-sm font-medium text-stone-400">
             {totalResults} kết quả
           </span>
         </div>
@@ -220,14 +220,14 @@ export default function ProductsFilter({
         <Collapse
           ghost
           defaultActiveKey={['category', 'size', 'color', 'price']}
-          expandIconPlacement='end'
+          expandIconPlacement="end"
           expandIcon={({ isActive }) => (
             <UpOutlined
               rotate={isActive ? 0 : 180}
-              className='text-[10px] text-stone-400'
+              className="text-[10px] text-stone-400"
             />
           )}
-          className='products-filter-collapse'
+          className="products-filter-collapse"
           items={collapseItems}
         />
       </aside>

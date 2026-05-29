@@ -6,7 +6,7 @@ import type {
   AdminCategory,
   AdminProduct,
   AdminProductListMode,
-  Coupon,
+  Coupon
 } from '@/types'
 
 export interface AdminContextType {
@@ -65,7 +65,7 @@ export interface AdminContextType {
 }
 
 export const AdminContext = createContext<AdminContextType | undefined>(
-  undefined,
+  undefined
 )
 
 export function useAdmin() {

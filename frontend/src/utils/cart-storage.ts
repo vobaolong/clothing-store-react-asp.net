@@ -12,7 +12,7 @@ function compactCartItem(item: CartItem): CartItem {
     ...item,
     description: '',
     descriptionData: '',
-    categoryBreadcrumbs: undefined,
+    categoryBreadcrumbs: undefined
   }
 }
 
@@ -35,11 +35,11 @@ export function saveCartItemsToStorage(items: CartItem[]) {
             Array.isArray(v.imageUrls) && v.imageUrls.length > 0
               ? [
                   ...new Set(
-                    v.imageUrls.map((u) => String(u).trim()).filter(Boolean),
-                  ),
+                    v.imageUrls.map((u) => String(u).trim()).filter(Boolean)
+                  )
                 ]
-              : undefined,
-        })),
+              : undefined
+        }))
       }))
       localStorage.setItem('cart_items', JSON.stringify(minimal))
     } catch {

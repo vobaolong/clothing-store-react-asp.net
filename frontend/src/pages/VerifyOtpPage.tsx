@@ -3,7 +3,7 @@ import { Button, Card, Typography } from 'antd'
 import {
   MailOutlined,
   ReloadOutlined,
-  LoadingOutlined,
+  LoadingOutlined
 } from '@ant-design/icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -27,7 +27,7 @@ export default function VerifyOtpPage() {
     expiryLeft,
     setExpiryLeft,
     inputRefs,
-    expiryRef,
+    expiryRef
   } = useOtp()
 
   const verifyMutation = useMutation({
@@ -41,7 +41,7 @@ export default function VerifyOtpPage() {
       toast.error('Mã OTP không đúng. Vui lòng thử lại.')
       setOtp(Array(6).fill(''))
       inputRefs.current[0]?.focus()
-    },
+    }
   })
 
   const resendMutation = useMutation({
@@ -53,7 +53,7 @@ export default function VerifyOtpPage() {
       startDown()
       inputRefs.current[0]?.focus()
     },
-    onError: () => toast.error('Không thể gửi lại OTP. Vui lòng thử lại.'),
+    onError: () => toast.error('Không thể gửi lại OTP. Vui lòng thử lại.')
   })
 
   const handleManualSubmit = () => {
@@ -66,17 +66,17 @@ export default function VerifyOtpPage() {
   }
 
   return (
-    <section className='mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4'>
-      <Card className='w-full rounded-3xl border shadow-sm border-slate-200'>
-        <div className='mb-6 text-center'>
-          <div className='flex justify-center items-center mx-auto mb-4 w-14 h-14 bg-indigo-50 rounded-full'>
-            <MailOutlined className='text-2xl text-indigo-600' />
+    <section className="mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4">
+      <Card className="w-full rounded-3xl border shadow-sm border-slate-200">
+        <div className="mb-6 text-center">
+          <div className="flex justify-center items-center mx-auto mb-4 w-14 h-14 bg-indigo-50 rounded-full">
+            <MailOutlined className="text-2xl text-indigo-600" />
           </div>
           <Title level={3}>Xác thực email</Title>
-          <Paragraph className='text-slate-500'>
+          <Paragraph className="text-slate-500">
             Chúng tôi đã gửi mã OTP 6 chữ số đến
           </Paragraph>
-          <Text strong className='text-indigo-600'>
+          <Text strong className="text-indigo-600">
             {email}
           </Text>
         </div>
@@ -94,8 +94,8 @@ export default function VerifyOtpPage() {
         />
 
         <Button
-          type='primary'
-          size='large'
+          type="primary"
+          size="large"
           block
           disabled={expiryLeft === 0}
           loading={verifyMutation.isPending}
@@ -105,16 +105,16 @@ export default function VerifyOtpPage() {
           {verifyMutation.isPending ? 'Đang xác thực...' : 'Xác thực OTP'}
         </Button>
 
-        <div className='text-sm text-center text-slate-500 mt-4'>
+        <div className="text-sm text-center text-slate-500 mt-4">
           Không nhận được mã?{' '}
           {resendDown > 0 ? (
-            <span className='text-slate-400'>Gửi lại sau {resendDown}s</span>
+            <span className="text-slate-400">Gửi lại sau {resendDown}s</span>
           ) : (
             <button
-              type='button'
+              type="button"
               disabled={resendMutation.isPending}
               onClick={() => resendMutation.mutate({ email })}
-              className='inline-flex gap-1 items-center font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50'
+              className="inline-flex gap-1 items-center font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
             >
               <ReloadOutlined spin={resendMutation.isPending} /> Gửi lại mã
             </button>

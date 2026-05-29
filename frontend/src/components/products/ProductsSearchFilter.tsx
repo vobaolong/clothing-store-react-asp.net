@@ -24,40 +24,40 @@ export default function ProductsSearchFilter({
   }
 
   return (
-    <div className='p-4 space-y-3 bg-white rounded-xl border border-slate-200'>
-      <div className='flex gap-2'>
+    <div className="p-4 space-y-3 bg-white rounded-xl border border-slate-200">
+      <div className="flex gap-2">
         <Input
           key={value}
           allowClear
-          size='large'
+          size="large"
           defaultValue={value}
           onChange={(event) => {
             draftKeywordRef.current = event.target.value
           }}
           onPressEnter={handleSubmitSearch}
-          placeholder='Tìm kiếm sản phẩm'
-          suffix={<SearchOutlined className='text-slate-400' />}
+          placeholder="Tìm kiếm sản phẩm"
+          suffix={<SearchOutlined className="text-slate-400" />}
         />
-        <Button type='primary' size='large' onClick={handleSubmitSearch}>
+        <Button type="primary" size="large" onClick={handleSubmitSearch}>
           Tìm kiếm
         </Button>
       </div>
-      <div className='flex flex-wrap gap-3 justify-between items-center pt-1'>
-        <p className='text-base font-semibold text-slate-900'>
-          <span className='text-xl font-bold'>
+      <div className="flex flex-wrap gap-3 justify-between items-center pt-1">
+        <p className="text-base font-semibold text-slate-900">
+          <span className="text-xl font-bold">
             {value && `Kết quả tìm kiếm cho từ khóa "${value}"`}
           </span>{' '}
           Có {total} mặt hàng
         </p>
-        <div className='flex flex-wrap gap-3 items-center'>
-          <span className='text-sm font-medium text-slate-700'>
+        <div className="flex flex-wrap gap-3 items-center">
+          <span className="text-sm font-medium text-slate-700">
             Sắp xếp theo:
           </span>
           <Select
-            size='medium'
+            size="medium"
             value={sortBy}
             onChange={onSortChange}
-            className='w-40'
+            className="w-40"
             options={[
               { label: 'Mới nhất', value: 'newest' },
               { label: 'Bán chạy', value: 'best-selling' },

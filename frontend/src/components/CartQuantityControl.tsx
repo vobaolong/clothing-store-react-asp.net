@@ -14,18 +14,18 @@ export default function CartQuantityControl({
   min = 1,
   max,
   onChange,
-  showButtons = true,
+  showButtons = true
 }: CartQuantityControlProps) {
   const canDecrease = value > min
   const canIncrease = typeof max === 'number' ? value < max : true
 
   return (
-    <div className='inline-flex overflow-hidden items-center rounded-lg border w-fit border-slate-300'>
+    <div className="inline-flex overflow-hidden items-center rounded-lg border w-fit border-slate-300">
       {showButtons && (
         <Button
-          type='text'
+          type="text"
           icon={<MinusOutlined />}
-          className='rounded-none!'
+          className="rounded-none!"
           disabled={!canDecrease}
           onClick={() => onChange(value - 1)}
         />
@@ -35,7 +35,7 @@ export default function CartQuantityControl({
         min={min}
         max={max}
         value={value}
-        className='cart-qty-input w-10! h-8 border-x border-y-0! border-slate-300 rounded-none!'
+        className="cart-qty-input w-10! h-8 border-x border-y-0! border-slate-300 rounded-none!"
         style={{ width: 44 }}
         onChange={(nextValue) => {
           const next = Number(nextValue)
@@ -45,9 +45,9 @@ export default function CartQuantityControl({
       />
       {showButtons && (
         <Button
-          type='text'
+          type="text"
           icon={<PlusOutlined />}
-          className='rounded-none!'
+          className="rounded-none!"
           disabled={!canIncrease}
           onClick={() => onChange(value + 1)}
         />

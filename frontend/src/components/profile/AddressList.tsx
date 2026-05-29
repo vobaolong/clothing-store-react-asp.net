@@ -48,10 +48,10 @@ export default function AddressList() {
 
   return (
     <Card>
-      <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-medium'>Sổ Địa Chỉ</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-medium">Sổ Địa Chỉ</h1>
         <Button
-          type='primary'
+          type="primary"
           onClick={() => {
             setEditingAddress(null)
             setOpen(true)
@@ -60,12 +60,12 @@ export default function AddressList() {
           Thêm địa chỉ mới
         </Button>
       </div>
-      <div className='py-6 divide-y divide-slate-200'>
+      <div className="py-6 divide-y divide-slate-200">
         {(!data || data.length === 0) && !isLoading ? (
-          <Empty description='Không có địa chỉ nào' />
+          <Empty description="Không có địa chỉ nào" />
         ) : (
           <Table
-            rowKey='id'
+            rowKey="id"
             loading={isLoading}
             dataSource={data ?? []}
             bordered
@@ -76,8 +76,8 @@ export default function AddressList() {
                 title: 'Địa chỉ',
                 dataIndex: 'fullAddress',
                 render: (_, row: ShippingAddress) => (
-                  <div className='flex flex-col w-full gap-2'>
-                    <span className='flex items-center gap-2'>
+                  <div className="flex flex-col w-full gap-2">
+                    <span className="flex items-center gap-2">
                       <strong>
                         {
                           SHIPPING_ADDRESS_LABEL_OPTIONS.find(
@@ -87,13 +87,13 @@ export default function AddressList() {
                       </strong>
                       -
                       {row.isDefault ? (
-                        <span className='px-1 font-medium text-green-500 border border-green-500 rounded-md w-fit'>
+                        <span className="px-1 font-medium text-green-500 border border-green-500 rounded-md w-fit">
                           Mặc định
                         </span>
                       ) : (
                         <Button
-                          type='primary'
-                          className='p-0 w-fit!'
+                          type="primary"
+                          className="p-0 w-fit!"
                           loading={setDefaultAddressMutation.isPending}
                           onClick={async () => {
                             await setDefaultAddressMutation.mutateAsync(row.id)
@@ -119,8 +119,8 @@ export default function AddressList() {
                 fixed: 'right',
                 width: 100,
                 render: (_value, row: ShippingAddress) => (
-                  <div className='flex items-center justify-center gap-2'>
-                    <Tooltip title='Chỉnh sửa địa chỉ'>
+                  <div className="flex items-center justify-center gap-2">
+                    <Tooltip title="Chỉnh sửa địa chỉ">
                       <Button
                         onClick={() => {
                           setEditingAddress(row)
@@ -129,7 +129,7 @@ export default function AddressList() {
                         icon={<EditOutlined />}
                       />
                     </Tooltip>
-                    <Tooltip title='Xóa địa chỉ'>
+                    <Tooltip title="Xóa địa chỉ">
                       <Button
                         danger
                         loading={deleteAddressMutation.isPending}

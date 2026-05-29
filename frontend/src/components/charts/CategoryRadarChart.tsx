@@ -5,9 +5,9 @@ import {
   Radar,
   RadarChart,
   ResponsiveContainer,
-  Tooltip,
+  Tooltip
 } from 'recharts'
-import type { ChartDataPoint } from '@/components/charts/chart-types'
+import type { ChartDataPoint } from '@/types/chart-types'
 
 type CategoryRadarChartProps = {
   data: ChartDataPoint[]
@@ -23,13 +23,16 @@ export default function CategoryRadarChart({
   data,
   height = 300,
   strokeColor = DEFAULT_STROKE_COLOR,
-  fillColor = DEFAULT_FILL_COLOR,
+  fillColor = DEFAULT_FILL_COLOR
 }: CategoryRadarChartProps) {
   return (
-    <ResponsiveContainer width='100%' height={height}>
+    <ResponsiveContainer width="100%" height={height}>
       <RadarChart data={data}>
         <PolarGrid />
-        <PolarAngleAxis dataKey='name' tick={{ fill: '#64748b', fontSize: 12 }} />
+        <PolarAngleAxis
+          dataKey="name"
+          tick={{ fill: '#64748b', fontSize: 12 }}
+        />
         <PolarRadiusAxis
           angle={30}
           tick={{ fill: '#64748b', fontSize: 11 }}
@@ -37,12 +40,16 @@ export default function CategoryRadarChart({
         />
         <Tooltip
           formatter={(value) => {
-            const numericValue = typeof value === 'number' ? value : Number(value ?? 0)
-            return [numericValue.toLocaleString('vi-VN'), 'Đã bán'] as [string, string]
+            const numericValue =
+              typeof value === 'number' ? value : Number(value ?? 0)
+            return [numericValue.toLocaleString('vi-VN'), 'Đã bán'] as [
+              string,
+              string
+            ]
           }}
         />
         <Radar
-          dataKey='value'
+          dataKey="value"
           stroke={strokeColor}
           fill={fillColor}
           fillOpacity={0.8}

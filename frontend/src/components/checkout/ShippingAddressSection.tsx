@@ -33,20 +33,20 @@ export default function ShippingAddressSection({
 }: Props) {
   return (
     <>
-      <Card className='rounded-2xl border-slate-200'>
-        <CheckoutSectionTitle step={1} title='Địa chỉ giao hàng' />
-        <Form layout='vertical'>
-          <Form.Item className='mb-3!'>
+      <Card className="rounded-2xl border-slate-200">
+        <CheckoutSectionTitle step={1} title="Địa chỉ giao hàng" />
+        <Form layout="vertical" className="max-h-60 overflow-y-auto">
+          <Form.Item className="mb-3!">
             <Controller
-              name='shippingAddressId'
+              name="shippingAddressId"
               control={control}
               render={({ field }) => (
                 <Radio.Group
                   {...field}
-                  className='w-full'
+                  className="w-full"
                   onChange={(e) => field.onChange(e.target.value)}
                 >
-                  <div className='space-y-2'>
+                  <div className="space-y-2">
                     {(addressesQuery.data ?? []).map((addressItem) => (
                       <div
                         key={addressItem.id}
@@ -57,32 +57,32 @@ export default function ShippingAddressSection({
                         }`}
                       >
                         <Radio value={addressItem.id}>
-                          <div className='ml-1 text-sm'>
-                            <p className='flex gap-2 font-medium text-slate-900'>
+                          <div className="ml-1 text-sm">
+                            <p className="flex gap-2 font-medium text-slate-900">
                               {addressItem.fullName}
-                              <span className='font-normal text-slate-700'>
+                              <span className="font-normal text-slate-700">
                                 {addressItem.phone}
                               </span>
-                              <Tag color='blue'>
+                              <Tag color="blue">
                                 {ShippingAddressType[
                                   addressItem.label?.toUpperCase() as keyof typeof ShippingAddressType
                                 ] || '—'}
                               </Tag>
                             </p>
-                            <p className='mt-0.5 text-slate-500'>
+                            <p className="mt-0.5 text-slate-500">
                               {formatShippingAddress(addressItem)}
                             </p>
                           </div>
                         </Radio>
-                        <div className='gap-3 flex flex-col items-end!'>
+                        <div className="gap-3 flex flex-col items-end!">
                           {addressItem.isDefault ? (
-                            <Tag color='green' className='shrink-0'>
+                            <Tag color="green" className="shrink-0">
                               Mặc định
                             </Tag>
                           ) : (
                             <Button
-                              size='small'
-                              className='shrink-0'
+                              size="small"
+                              className="shrink-0"
                               onClick={async () => {
                                 await setDefaultShippingAddress(addressItem.id)
                                 await qc.invalidateQueries({
@@ -95,8 +95,8 @@ export default function ShippingAddressSection({
                             </Button>
                           )}
                           <Button
-                            size='small'
-                            type='text'
+                            size="small"
+                            type="text"
                             icon={<EditOutlined />}
                             onClick={() => onEditAddress(addressItem)}
                           />
@@ -108,7 +108,6 @@ export default function ShippingAddressSection({
               )}
             />
           </Form.Item>
-
           <Button onClick={onOpenModal}>+ Thêm địa chỉ mới</Button>
         </Form>
       </Card>

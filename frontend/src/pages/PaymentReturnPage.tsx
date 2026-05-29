@@ -72,12 +72,12 @@ function DetailRow({
   badge?: string
 }) {
   return (
-    <div className='flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0'>
-      <span className='text-[13px] text-gray-400'>{label}</span>
+    <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-[13px] text-gray-400">{label}</span>
       {badge ? (
         <StatusBadge status={badge} />
       ) : (
-        <span className='text-[13px] font-medium tabular-nums text-gray-800'>
+        <span className="text-[13px] font-medium tabular-nums text-gray-800">
           {value}
         </span>
       )}
@@ -270,58 +270,58 @@ export default function PaymentReturnPage() {
   const config = getViewConfig(state, errorMessage)
 
   return (
-    <div className='mx-auto flex min-h-[70vh] w-full max-w-lg items-center px-4 py-10'>
-      <div className='overflow-hidden w-full bg-white rounded-2xl border border-gray-100 shadow-sm'>
-        <div className='py-8 px-8 text-center border-b border-gray-100'>
+    <div className="mx-auto flex min-h-[70vh] w-full max-w-lg items-center px-4 py-10">
+      <div className="overflow-hidden w-full bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div className="py-8 px-8 text-center border-b border-gray-100">
           <div
             className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full ${config.iconBg}`}
           >
             {config.icon}
           </div>
 
-          <h1 className='mb-2 text-2xl font-normal tracking-tight leading-tight text-gray-900'>
+          <h1 className="mb-2 text-2xl font-normal tracking-tight leading-tight text-gray-900">
             {config.title}
           </h1>
-          <p className='text-sm font-light leading-relaxed text-gray-700'>
+          <p className="text-sm font-light leading-relaxed text-gray-700">
             {config.subtitle}
           </p>
         </div>
 
         {query.data && (
-          <div className='py-4 px-8'>
+          <div className="py-4 px-8">
             <DetailRow
-              label='Mã đơn hàng'
+              label="Mã đơn hàng"
               value={`#${query.data.orderId.slice(0, 8).toUpperCase()}`}
             />
             <DetailRow
-              label='Trạng thái thanh toán'
+              label="Trạng thái thanh toán"
               badge={query.data.paymentStatus}
             />
             <DetailRow
-              label='Giá trị đơn hàng'
+              label="Giá trị đơn hàng"
               value={formatTotalAmount(
                 orderDetailQuery.data?.totalAmount ?? query.data.totalAmount
               )}
             />
-            {txnRef && <DetailRow label='Mã giao dịch' value={txnRef} />}
+            {txnRef && <DetailRow label="Mã giao dịch" value={txnRef} />}
           </div>
         )}
 
-        <div className='flex gap-2.5 px-8 pb-8'>
-          <Link to='/profile?tab=orders' className='flex-1'>
+        <div className="flex gap-2.5 px-8 pb-8">
+          <Link to="/profile?tab=orders" className="flex-1">
             <Button
-              type='primary'
+              type="primary"
               block
-              size='large'
+              size="large"
               style={{ borderRadius: 10, fontWeight: 500 }}
             >
               Xem đơn hàng
             </Button>
           </Link>
-          <Link to='/' className='flex-1'>
+          <Link to="/" className="flex-1">
             <Button
               block
-              size='large'
+              size="large"
               style={{ borderRadius: 10, fontWeight: 500 }}
             >
               Tiếp tục mua sắm

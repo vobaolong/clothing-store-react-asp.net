@@ -66,7 +66,7 @@ export function getDiscountPercentage(product: Product): number {
 
 export function getCartLineEffectivePrice(
   line: CartItem,
-  nowMs?: number,
+  nowMs?: number
 ): number {
   return getEffectivePriceAt(line, nowMs ?? Date.now())
 }

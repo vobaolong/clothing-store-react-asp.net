@@ -13,7 +13,7 @@ export const formatCouponDiscount = (coupon: CouponDiscountLike) =>
 
 export const calculateCouponDiscountAmount = (
   coupon: CouponDiscountLike,
-  subtotal: number,
+  subtotal: number
 ) => {
   const rawAmount =
     coupon.discountType === CouponDiscountType.PERCENT

@@ -1,5 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { getAuthToken, getCurrentUser, removeAuthToken, setAuthToken } from '@/state/auth/auth-session'
+import {
+  getAuthToken,
+  getCurrentUser,
+  removeAuthToken,
+  setAuthToken
+} from '@/state/auth/auth-session'
 import type { JwtPayload } from '@/types'
 
 type AuthState = {

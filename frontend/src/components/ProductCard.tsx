@@ -67,23 +67,23 @@ export default function ProductCard({
       }
       onClick={() => navigate(`/products/${product.slug}`)}
       cover={
-        <div className='overflow-hidden relative w-full aspect-square bg-slate-100'>
+        <div className="overflow-hidden relative w-full aspect-square bg-slate-100">
           {showNewBadge ? (
-            <span className='absolute left-2 top-2 z-10 rounded bg-red-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white'>
+            <span className="absolute left-2 top-2 z-10 rounded bg-red-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
               NEW
             </span>
           ) : null}
           <img
-            loading='lazy'
+            loading="lazy"
             src={imageSrc}
             alt={product.name}
-            className='object-cover absolute inset-0 w-full h-full transition-opacity duration-300 group-hover:opacity-0'
+            className="object-cover absolute inset-0 w-full h-full transition-opacity duration-300 group-hover:opacity-0"
           />
           <img
-            loading='lazy'
+            loading="lazy"
             src={imageSrc2}
             alt={product.name}
-            className='object-cover absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+            className="object-cover absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           />
         </div>
       }
@@ -92,7 +92,7 @@ export default function ProductCard({
         <ProductColorSwatches
           variants={product.variants}
           maxColors={3}
-          size='compact'
+          size="compact"
           onPreviewColor={setPreviewColor}
         />
       </div>
@@ -132,8 +132,8 @@ export default function ProductCard({
         <Button
           block
           size={isCatalog ? 'middle' : 'large'}
-          type='primary'
-          className='rounded-md!'
+          type="primary"
+          className="rounded-md!"
           disabled={!firstVariant}
           onClick={(e) => {
             e.stopPropagation()
@@ -142,15 +142,15 @@ export default function ProductCard({
         >
           Mua hàng
         </Button>
-        <div className='flex justify-between items-center mt-2'>
+        <div className="flex justify-between items-center mt-2">
           {averageRating > 0 ? (
-            <span className='inline-flex gap-1 items-center text-sm text-slate-600'>
+            <span className="inline-flex gap-1 items-center text-sm text-slate-600">
               <Rate
                 disabled
                 allowHalf
                 count={1}
                 value={singleStarValue}
-                className='text-sm! leading-none text-amber-500'
+                className="text-sm! leading-none text-amber-500"
               />
               {averageRating.toFixed(1)}
             </span>
@@ -164,7 +164,7 @@ export default function ProductCard({
   )
 
   return discountPercent > 0 ? (
-    <Badge.Ribbon text={`-${discountPercent}%`} color='red' placement='end'>
+    <Badge.Ribbon text={`-${discountPercent}%`} color="red" placement="end">
       {cardContent}
     </Badge.Ribbon>
   ) : (

@@ -10,6 +10,6 @@ export function adminRowMatches(
   return values.some((v) =>
     String(v ?? '')
       .toLowerCase()
-      .includes(needle),
+      .includes(needle)
   )
 }

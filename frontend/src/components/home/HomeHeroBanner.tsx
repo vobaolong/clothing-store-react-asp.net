@@ -4,7 +4,7 @@ import { Carousel } from 'antd'
 import { Link } from 'react-router-dom'
 
 const HomeHeroBanner = ({ banners }: { banners: HomepageBanner[] }) => (
-  <section className='relative w-screen -translate-x-1/2 left-1/2'>
+  <section className="relative w-screen -translate-x-1/2 left-1/2">
     <Carousel
       autoplay
       autoplaySpeed={4000}
@@ -14,19 +14,19 @@ const HomeHeroBanner = ({ banners }: { banners: HomepageBanner[] }) => (
       slidesToScroll={1}
       dots={banners.length > 1}
       infinite={banners.length > 1}
-      className='home-hero-carousel'
+      className="home-hero-carousel"
     >
       {banners.map((banner) => (
         <div key={banner.id}>
           <Link
             to={banner.ctaLink || '/products'}
-            className='block overflow-hidden relative group'
+            className="block overflow-hidden relative group"
           >
-            <div className='relative w-full overflow-hidden aspect-14/5 '>
+            <div className="relative w-full overflow-hidden aspect-14/5 ">
               <img
                 src={banner.imageUrl}
-                alt='Hero banner'
-                className='object-cover w-full h-full'
+                alt="Hero banner"
+                className="object-cover w-full h-full"
                 onError={(event) => {
                   event.currentTarget.src = FALLBACK_IMG
                 }}

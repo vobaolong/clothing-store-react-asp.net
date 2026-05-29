@@ -9,7 +9,7 @@ import { isAdmin } from '@/state/auth/auth-session'
 
 const formatRelativeTime = (dateString: string): string => {
   const diffSec = Math.floor(
-    (Date.now() - new Date(dateString).getTime()) / 1_000,
+    (Date.now() - new Date(dateString).getTime()) / 1_000
   )
   if (diffSec < 60) return 'Vừa xong'
   if (diffSec < 3_600) return `${Math.floor(diffSec / 60)} phút trước`
@@ -42,7 +42,7 @@ const NotificationItem = ({
   notification,
   onMarkAsRead,
   onOpenNotifications,
-  onNavigateToOrderDetail,
+  onNavigateToOrderDetail
 }: {
   notification: NotificationDto
   onMarkAsRead: (id: string) => void
@@ -65,29 +65,29 @@ const NotificationItem = ({
 
   return (
     <div
-      role='button'
+      role="button"
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       className={[
         'p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors',
-        !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : '',
+        !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
       ].join(' ')}
     >
-      <div className='flex gap-3 items-start'>
-        <span className='text-lg shrink-0'>{getIcon(notification.type)}</span>
-        <div className='flex-1 min-w-0'>
-          <div className='flex gap-2 justify-between items-start'>
+      <div className="flex gap-3 items-start">
+        <span className="text-lg shrink-0">{getIcon(notification.type)}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-2 justify-between items-start">
             <h4
               className={`text-sm text-gray-900 ${!notification.isRead ? 'font-semibold' : 'font-medium'}`}
             >
               {notification.title}
             </h4>
-            <span className='text-xs text-gray-500 shrink-0'>
+            <span className="text-xs text-gray-500 shrink-0">
               {formatRelativeTime(notification.createdAt)}
             </span>
           </div>
-          <p className='mt-1 text-sm text-gray-600'>{notification.message}</p>
+          <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
           {/* {notification.relatedEntityType === 'Order' &&
             notification.relatedEntityId && (
               <span className='inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
@@ -97,7 +97,7 @@ const NotificationItem = ({
             )} */}
         </div>
         {!notification.isRead && (
-          <div className='w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-1.5' />
+          <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-1.5" />
         )}
       </div>
     </div>
@@ -109,7 +109,7 @@ interface NotificationCenterProps {
 }
 
 export const NotificationCenter = ({
-  className = '',
+  className = ''
 }: NotificationCenterProps) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
@@ -121,7 +121,7 @@ export const NotificationCenter = ({
     isLoading,
     markAsRead,
     markAllAsRead,
-    refetch,
+    refetch
   } = useNotifications({ page: 1, pageSize: 20 })
 
   // Close on outside click
@@ -168,13 +168,13 @@ export const NotificationCenter = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Button
         onClick={handleToggle}
-        className='relative p-2 text-gray-600 rounded-lg transition-colors hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-        aria-label='Thông báo'
+        className="relative p-2 text-gray-600 rounded-lg transition-colors hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        aria-label="Thông báo"
         aria-expanded={isOpen}
         icon={<BellOutlined />}
       >
         {unreadCount > 0 && (
-          <span className='flex absolute -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full'>
+          <span className="flex absolute -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -182,26 +182,26 @@ export const NotificationCenter = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className='overflow-hidden absolute right-0 z-50 mt-2 w-80 bg-white rounded-lg border border-gray-200 shadow-lg sm:w-96'>
+        <div className="overflow-hidden absolute right-0 z-50 mt-2 w-80 bg-white rounded-lg border border-gray-200 shadow-lg sm:w-96">
           {/* Header */}
-          <div className='flex justify-between items-center py-3 px-4 bg-gray-50 border-b border-gray-200'>
-            <h3 className='text-base font-semibold text-gray-900'>Thông báo</h3>
+          <div className="flex justify-between items-center py-3 px-4 bg-gray-50 border-b border-gray-200">
+            <h3 className="text-base font-semibold text-gray-900">Thông báo</h3>
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead()}
-                className='text-sm font-medium cursor-pointer'
+                className="text-sm font-medium cursor-pointer"
               >
                 Đánh dấu tất cả đã đọc
               </button>
             )}
           </div>
 
-          <div className='h-72! overflow-y-auto overscroll-contain'>
+          <div className="h-72! overflow-y-auto overscroll-contain">
             {isLoading ? (
-              <Spin description='Loading'>Đang tải</Spin>
+              <Spin description="Loading">Đang tải</Spin>
             ) : notifications.length === 0 ? (
-              <div className='p-8 text-center text-gray-400'>
-                <p className='text-sm'>Không có thông báo nào</p>
+              <div className="p-8 text-center text-gray-400">
+                <p className="text-sm">Không có thông báo nào</p>
               </div>
             ) : (
               notifications.map((n) => (
@@ -218,10 +218,10 @@ export const NotificationCenter = ({
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className='py-3 px-4 text-center bg-gray-50 border-t border-gray-200'>
+            <div className="py-3 px-4 text-center bg-gray-50 border-t border-gray-200">
               <button
                 onClick={openNotificationsPage}
-                className='text-sm font-medium cursor-pointer'
+                className="text-sm font-medium cursor-pointer"
               >
                 Xem tất cả thông báo
               </button>

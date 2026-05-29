@@ -10,7 +10,8 @@ interface ApiError {
 export const getApiErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as ApiError | undefined
-    if (typeof data === 'string' && (data as string).trim()) return (data as string).trim()
+    if (typeof data === 'string' && (data as string).trim())
+      return (data as string).trim()
     if (data && typeof data === 'object') {
       const message = data.message || data.Message
       if (typeof message === 'string' && message.trim()) return message.trim()
@@ -35,5 +36,5 @@ export const handleApiError = (error: unknown, defaultMessage?: string) => {
   return message
 }
 
-
-export const FALLBACK_IMG = 'https://www.mangobeds.com/images/image-fallback.jpg'
+export const FALLBACK_IMG =
+  'https://www.mangobeds.com/images/image-fallback.jpg'

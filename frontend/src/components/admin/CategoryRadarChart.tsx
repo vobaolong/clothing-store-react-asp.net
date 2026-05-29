@@ -5,7 +5,7 @@ import {
   Radar,
   RadarChart,
   ResponsiveContainer,
-  Tooltip,
+  Tooltip
 } from 'recharts'
 import type { CategoryRadarData } from '@/types'
 
@@ -25,14 +25,14 @@ type CustomTickProps = {
 export default function CategoryRadarChart({
   data,
   height = 300,
-  onCategoryClick,
+  onCategoryClick
 }: CategoryRadarChartProps) {
   return (
-    <ResponsiveContainer width='100%' height={height}>
+    <ResponsiveContainer width="100%" height={height}>
       <RadarChart data={data}>
         <PolarGrid />
         <PolarAngleAxis
-          dataKey='categoryName'
+          dataKey="categoryName"
           tick={({ payload, x, y, textAnchor }: CustomTickProps) => {
             return (
               <text
@@ -41,7 +41,7 @@ export default function CategoryRadarChart({
                 textAnchor={
                   textAnchor as 'start' | 'middle' | 'end' | 'inherit'
                 }
-                fill='#64748b'
+                fill="#64748b"
                 fontSize={12}
                 className={
                   onCategoryClick
@@ -52,7 +52,7 @@ export default function CategoryRadarChart({
                   onCategoryClick && onCategoryClick(payload.value)
                 }
               >
-                <tspan x={x} dy='0em'>
+                <tspan x={x} dy="0em">
                   {payload.value}
                 </tspan>
               </text>
@@ -66,15 +66,15 @@ export default function CategoryRadarChart({
               typeof value === 'number' ? value : Number(value ?? 0)
             return [numericValue.toLocaleString('vi-VN'), 'Lượt bán'] as [
               string,
-              string,
+              string
             ]
           }}
         />
         <Radar
-          name='Lượt bán'
-          dataKey='value'
-          stroke='#0ea5e9'
-          fill='#0ea5e94d'
+          name="Lượt bán"
+          dataKey="value"
+          stroke="#0ea5e9"
+          fill="#0ea5e94d"
           fillOpacity={0.8}
         />
       </RadarChart>

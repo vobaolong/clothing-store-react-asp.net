@@ -11,7 +11,8 @@ export const getAdminCoupons = async (
 
 export const createCoupon = async (
   payload: CouponUpsertPayload
-): Promise<void> => apiVoid(apiClient.post(API_ENDPOINTS.coupons.admin, payload))
+): Promise<void> =>
+  apiVoid(apiClient.post(API_ENDPOINTS.coupons.admin, payload))
 
 export const updateCoupon = async (
   id: string,

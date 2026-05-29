@@ -13,7 +13,7 @@ type ProductDrawerProps = {
 export default function ProductDrawer({
   open,
   product,
-  onClose,
+  onClose
 }: ProductDrawerProps) {
   const [fallbackShown, setFallbackShown] = useState(false)
 
@@ -30,31 +30,31 @@ export default function ProductDrawer({
     <Drawer
       open={open}
       onClose={onClose}
-      title='Thông tin sản phẩm'
-      placement='right'
+      title="Thông tin sản phẩm"
+      placement="right"
       size={500}
       destroyOnHidden
     >
       {product && (
-        <div className='flex flex-col gap-5'>
+        <div className="flex flex-col gap-5">
           <Image
             src={displaySrc}
             alt={product.name}
-            className='object-cover rounded-xl border! border-slate-200!'
+            className="object-cover rounded-xl border! border-slate-200!"
             preview={false}
             onError={handleImgError}
           />
 
           <div>
-            <Typography.Title level={5} className='mb-1!'>
+            <Typography.Title level={5} className="mb-1!">
               Tên sản phẩm:{' '}
-              <span className='text-sm text-slate-600'>{product.name}</span>
+              <span className="text-sm text-slate-600">{product.name}</span>
             </Typography.Title>
             {product.description && (
               <Typography.Title level={5}>
                 Mô tả:{' '}
                 <p
-                  className='text-sm font-medium text-slate-600'
+                  className="text-sm font-medium text-slate-600"
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               </Typography.Title>
@@ -63,7 +63,7 @@ export default function ProductDrawer({
 
           <Descriptions
             bordered
-            size='small'
+            size="small"
             column={1}
             items={[
               {
@@ -73,36 +73,36 @@ export default function ProductDrawer({
                   <Typography.Paragraph
                     code
                     copyable
-                    className='text-nowrap m-0!'
+                    className="text-nowrap m-0!"
                   >
                     {product.id}
                   </Typography.Paragraph>
-                ),
+                )
               },
               {
                 key: 'price',
                 label: 'Giá tiền',
                 children: (
-                  <Typography.Paragraph strong className='m-0!'>
+                  <Typography.Paragraph strong className="m-0!">
                     {formatCurrency(product.price)}
                   </Typography.Paragraph>
-                ),
+                )
               },
               {
                 key: 'category',
                 label: 'Phân loại',
-                children: product.category,
+                children: product.category
               },
               {
                 key: 'createdAt',
                 label: 'Ngày thêm',
-                children: formatDate(product.createdAt),
+                children: formatDate(product.createdAt)
               },
               {
                 key: 'updatedAt',
                 label: 'Cập nhật',
-                children: formatDate(product.updatedAt),
-              },
+                children: formatDate(product.updatedAt)
+              }
             ]}
           />
         </div>

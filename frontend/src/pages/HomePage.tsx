@@ -7,31 +7,31 @@ import {
   HomeHeroBanner,
   HomeProductRail,
   CategoryBrowser,
-  CategoryGrid,
+  CategoryGrid
 } from '@/components/home'
 
 const HomePage = () => {
   const { data: products = [] } = useQuery({
     queryKey: QUERY_KEYS.products,
-    queryFn: getProducts,
+    queryFn: getProducts
   })
   const { data: activeBanners = [] } = useQuery({
     queryKey: QUERY_KEYS.homepageBanners,
-    queryFn: getActiveBanners,
+    queryFn: getActiveBanners
   })
   const { data: categories = [] } = useQuery({
     queryKey: QUERY_KEYS.categories,
-    queryFn: getCategories,
+    queryFn: getCategories
   })
 
   const rootCategories = useMemo(
     () => categories.filter((c) => !c.parentId),
-    [categories],
+    [categories]
   )
 
   const featuredProducts = useMemo(
     () => [...products].sort((a, b) => b.soldCount - a.soldCount).slice(0, 18),
-    [products],
+    [products]
   )
 
   const newProducts = useMemo(
@@ -39,14 +39,14 @@ const HomePage = () => {
       [...products]
         .sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
         .slice(0, 18),
-    [products],
+    [products]
   )
 
   return (
-    <main className='pb-10 space-y-8 min-h-screen'>
+    <main className="pb-10 space-y-8 min-h-screen">
       <HomeHeroBanner banners={activeBanners} />
 
       <CategoryBrowser
@@ -55,13 +55,13 @@ const HomePage = () => {
       />
 
       <HomeProductRail
-        title='Sản phẩm nổi bật'
-        seeMoreTo='/products?sort=best-selling'
+        title="Sản phẩm nổi bật"
+        seeMoreTo="/products?sort=best-selling"
         products={featuredProducts}
       />
       <HomeProductRail
-        title='Sản phẩm mới'
-        seeMoreTo='/products?sort=newest'
+        title="Sản phẩm mới"
+        seeMoreTo="/products?sort=newest"
         products={newProducts}
       />
 

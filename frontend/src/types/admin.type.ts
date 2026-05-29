@@ -1,4 +1,5 @@
 import type { CategoryGender, CategoryProductType } from '@/enums'
+import type dayjs from 'dayjs'
 
 export type AdminCategory = {
   id: string
@@ -130,7 +131,7 @@ export type AdminProductVariantPayload = {
 
 export type AdminProductUpsertPayload = {
   name: string
-  productCode: string
+  productCode?: string
   description: string
   descriptionData: string
   price: number
@@ -155,10 +156,10 @@ export type AdminCategoryUpsertPayload = {
 export type AdminBannerUpsertPayload = {
   imageUrl: string
   ctaLink: string
-  isActive: boolean
-  displayOrder: number
   startsAt: string | null
   endsAt: string | null
+  displayOrder: number
+  isActive: boolean
 }
 
 export type AdminOrderStatusUpdatePayload = {
@@ -218,3 +219,4 @@ export type ProductView = {
 }
 
 export type AdminProductListMode = 'active' | 'deleted'
+export type DateRangeType = [dayjs.Dayjs | null, dayjs.Dayjs | null] | null

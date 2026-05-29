@@ -30,7 +30,7 @@ export function getCartLineImage(
     productVariantId: string
     selectedColor: string
     selectedSize?: string
-  },
+  }
 ): string {
   const variants = Array.isArray(item.variants) ? item.variants : []
   const vid = String(item.productVariantId ?? '').toLowerCase()
@@ -44,7 +44,7 @@ export function getCartLineImage(
           (x) =>
             (x.color ?? '').trim() === item.selectedColor.trim() &&
             normalizeSize(String(x.size ?? '')) ===
-              normalizeSize(String(item.selectedSize ?? '')),
+              normalizeSize(String(item.selectedSize ?? ''))
         )
       : undefined)
 
@@ -72,7 +72,7 @@ export function getCartLineImage(
 
 export function getGalleryUrlsForColor(
   product: Product,
-  color: string | undefined | null,
+  color: string | undefined | null
 ): string[] {
   const trimmedColor = color?.trim()
   if (!trimmedColor) return productFallbackGallery()
@@ -96,7 +96,7 @@ export function getGalleryUrlsForColor(
 
 export function getPrimaryImageForColor(
   product: Product,
-  color: string | undefined | null,
+  color: string | undefined | null
 ): string {
   const galleryUrls = getGalleryUrlsForColor(product, color)
   return galleryUrls[0] ?? ''

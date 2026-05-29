@@ -119,69 +119,69 @@ const contactAddresses: ContactAddress[] = [
 
 export default function AppFooter() {
   return (
-    <footer id='footer' className='text-white bg-black/90'>
-      <div className='px-4! md:px-8! py-6 mx-auto w-full max-w-7xl md:py-10'>
-        <div className='flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row'>
-          <div className='max-w-xl space-y-6'>
-            <h2 className='font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl'>
+    <footer id="footer" className="text-white bg-black/90">
+      <div className="px-4! md:px-8! py-6 mx-auto w-full max-w-7xl md:py-10">
+        <div className="flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row">
+          <div className="max-w-xl space-y-6">
+            <h2 className="font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl">
               Wearly lắng nghe bạn!
             </h2>
-            <p className='text-sm leading-relaxed text-stone-400'>
+            <p className="text-sm leading-relaxed text-stone-400">
               Chúng tôi luôn trân trọng và mong đợi nhận được mọi ý kiến đóng
               góp từ khách hàng để có thể nâng cấp trải nghiệm dịch vụ và sản
               phẩm tốt hơn nữa.
             </p>
             <Button
-              type='primary'
-              className='font-semibold text-black bg-white border-none rounded-full'
+              type="primary"
+              className="font-semibold text-black bg-white border-none rounded-full"
             >
               ĐÓNG GÓP Ý KIẾN &rarr;
             </Button>
           </div>
 
-          <div className='flex flex-col gap-8 md:flex-row lg:gap-16'>
+          <div className="flex flex-col gap-8 md:flex-row lg:gap-16">
             {contactItems.map(({ label, value, icon: Icon }) => (
-              <div key={label} className='flex gap-4 items-start'>
-                <div className='flex justify-center items-center w-12 h-12 rounded-full bg-stone-900'>
-                  <Icon className='text-xl' />
+              <div key={label} className="flex gap-4 items-start">
+                <div className="flex justify-center items-center w-12 h-12 rounded-full bg-stone-900">
+                  <Icon className="text-xl" />
                 </div>
                 <div>
-                  <p className='text-xs font-semibold tracking-wider uppercase text-stone-500'>
+                  <p className="text-xs font-semibold tracking-wider uppercase text-stone-500">
                     {label}
                   </p>
-                  <p className='font-semibold text-md'>{value}</p>
+                  <p className="font-semibold text-md">{value}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className='flex gap-4 py-12'>
+        <div className="flex gap-4 py-12">
           {socialIcons.map((Icon) => (
             <a
               key={Icon.displayName ?? Icon.name}
-              href='#'
-              className='flex items-center justify-center transition-colors border rounded-lg size-10 border-stone-800 hover:bg-stone-900'
+              href="#"
+              className="flex items-center justify-center transition-colors border rounded-lg size-10 border-stone-800 hover:bg-stone-900"
             >
-              <span className='text-xl'>
+              <span className="text-xl">
                 <Icon />
               </span>
             </a>
           ))}
         </div>
 
-        <div className='grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-5'>
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-5">
           {footerColumns.map((column, columnIndex) => (
-            <div key={columnIndex} className='space-y-8'>
+            <div key={columnIndex} className="space-y-8">
               {column.groups.map((group) => (
-                <div key={group.title} className='space-y-4'>
-                  <h3 className='text-sm font-bold tracking-wider uppercase'>
+                <div key={group.title} className="space-y-4">
+                  <h3 className="text-sm font-bold tracking-wider uppercase">
                     {group.title}
                   </h3>
-                  <ul className='space-y-2 text-sm text-stone-400'>
+                  <ul className="space-y-2 text-sm text-stone-400">
                     {group.links.map((link) => (
                       <li key={link}>
-                        <a href='#'>{link}</a>
+                        <a href="#">{link}</a>
                       </li>
                     ))}
                   </ul>
@@ -190,14 +190,14 @@ export default function AppFooter() {
             </div>
           ))}
 
-          <div className='space-y-4'>
-            <h3 className='text-sm font-bold tracking-wider uppercase'>
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold tracking-wider uppercase">
               ĐỊA CHỈ LIÊN HỆ
             </h3>
-            <ul className='space-y-4 text-[13px] leading-relaxed text-stone-400'>
+            <ul className="space-y-4 text-[13px] leading-relaxed text-stone-400">
               {contactAddresses.map((item) => (
                 <li key={item.label}>
-                  <span className='block font-semibold text-white underline'>
+                  <span className="block font-semibold text-white underline">
                     {item.label}
                   </span>
                   {item.value}
@@ -207,8 +207,8 @@ export default function AppFooter() {
           </div>
         </div>
 
-        <div className='pt-8 mt-16 border-t border-stone-800'>
-          <p className='text-xs text-center text-stone-500'>
+        <div className="pt-8 mt-16 border-t border-stone-800">
+          <p className="text-xs text-center text-stone-500">
             &copy; {new Date().getFullYear()} Wearly. All rights reserved.
           </p>
         </div>

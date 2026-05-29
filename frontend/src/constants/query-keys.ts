@@ -6,8 +6,10 @@ export const QUERY_KEYS = {
   shippingAddresses: ['shipping-addresses'],
   shippingAddressPrefill: ['shipping-address-prefill'],
   checkoutProvinces: ['checkout-provinces'],
-  checkoutWardsByProvince: (provinceId?: string) =>
-    ['checkout-wards-by-province', provinceId],
+  checkoutWardsByProvince: (provinceId?: string) => [
+    'checkout-wards-by-province',
+    provinceId
+  ],
   myProfile: ['my-profile'],
   myOrders: (status?: string) => ['my-orders', status],
   myOrderDetail: (id?: string) => ['my-order-detail', id],
@@ -15,8 +17,7 @@ export const QUERY_KEYS = {
   notifications: ['notifications'],
   notificationsList: (params?: unknown) => ['notifications', params],
   notificationsUnreadCount: ['notifications', 'unread-count'],
-  productReviews: (productId?: string) =>
-    ['product-reviews', productId],
+  productReviews: (productId?: string) => ['product-reviews', productId],
   adminProducts: ['admin-products'],
   adminProductsDeleted: ['admin-products', 'deleted'],
   adminCategories: ['admin-categories'],
@@ -27,6 +28,9 @@ export const QUERY_KEYS = {
   adminCoupons: ['admin-coupons'],
   adminBanners: ['admin-banners'],
   adminOrderDetail: (id?: string) => ['admin-order-detail', id],
-  vnpayReturn: (txnRef?: string | null, responseCode?: string | null) =>
-    ['vnpay-return', txnRef, responseCode],
+  vnpayReturn: (txnRef?: string | null, responseCode?: string | null) => [
+    'vnpay-return',
+    txnRef,
+    responseCode
+  ]
 } as const

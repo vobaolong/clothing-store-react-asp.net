@@ -20,19 +20,19 @@ export default function AnalyticsAreaChart({
   height = 320
 }: AnalyticsAreaChartProps) {
   return (
-    <ResponsiveContainer width='100%' height={height}>
+    <ResponsiveContainer width="100%" height={height}>
       <AreaChart
         data={data}
         margin={{ top: 8, right: 16, bottom: 8, left: 40 }}
       >
         <defs>
-          <linearGradient id='revenueGradient' x1='0' y1='0' x2='0' y2='1'>
-            <stop offset='5%' stopColor='#10b981' stopOpacity={0.3} />
-            <stop offset='95%' stopColor='#10b981' stopOpacity={0.04} />
+          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="#10b981" stopOpacity={0.04} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke='#e2e8f0' strokeDasharray='3 3' />
-        <XAxis dataKey='date' tick={{ fill: '#64748b', fontSize: 12 }} />
+        <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+        <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 12 }} />
         <YAxis
           allowDecimals={false}
           width={10}
@@ -45,11 +45,11 @@ export default function AnalyticsAreaChart({
         />
         <Tooltip formatter={(val) => formatCurrency(Number(val ?? 0))} />
         <Area
-          type='monotone'
-          dataKey='revenue'
-          name='Doanh thu'
-          stroke='#10b981'
-          fill='url(#revenueGradient)'
+          type="monotone"
+          dataKey="revenue"
+          name="Doanh thu"
+          stroke="#10b981"
+          fill="url(#revenueGradient)"
           strokeWidth={2}
         />
       </AreaChart>

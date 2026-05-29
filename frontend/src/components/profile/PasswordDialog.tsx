@@ -16,14 +16,14 @@ const passwordRules = [
   'Chứa ít nhất 1 chữ cái in hoa.',
   'Chứa ít nhất 1 chữ cái in thường.',
   'Chứa ít nhất 1 chữ số.',
-  'Chứa ít nhất 1 ký tự đặc biệt.',
+  'Chứa ít nhất 1 ký tự đặc biệt.'
 ]
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/
 
 export default function PasswordDialog({
   open,
-  onClose,
+  onClose
 }: {
   open: boolean
   onClose: () => void
@@ -39,9 +39,9 @@ export default function PasswordDialog({
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.',
+        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.'
       )
-    },
+    }
   })
 
   const handleSubmit = () => {
@@ -51,7 +51,7 @@ export default function PasswordDialog({
   const onFinish = (values: PasswordFormValues) => {
     mutate({
       currentPassword: values.currentPassword,
-      newPassword: values.newPassword,
+      newPassword: values.newPassword
     })
   }
 
@@ -64,30 +64,30 @@ export default function PasswordDialog({
   return (
     <Modal
       open={open}
-      title='Đổi mật khẩu'
+      title="Đổi mật khẩu"
       onCancel={onClose}
       footer={[
-        <Button key='cancel' onClick={onClose}>
+        <Button key="cancel" onClick={onClose}>
           Hủy
         </Button>,
         <Button
-          key='submit'
-          type='primary'
+          key="submit"
+          type="primary"
           loading={isPending}
           onClick={handleSubmit}
         >
           Đổi mật khẩu
-        </Button>,
+        </Button>
       ]}
       destroyOnHidden
       centered
     >
-      <div className='space-y-4'>
+      <div className="space-y-4">
         <div>
-          <p className='text-sm font-medium text-slate-700'>
+          <p className="text-sm font-medium text-slate-700">
             Sử dụng mật khẩu dạng:
           </p>
-          <ul className='mt-2 space-y-1 text-sm text-slate-500'>
+          <ul className="mt-2 space-y-1 text-sm text-slate-500">
             {passwordRules.map((rule) => (
               <li key={rule}>- {rule}</li>
             ))}
@@ -96,26 +96,26 @@ export default function PasswordDialog({
 
         <Form
           form={form}
-          layout='vertical'
+          layout="vertical"
           onFinish={onFinish}
           requiredMark={false}
         >
           <Form.Item
-            name='currentPassword'
-            label='Mật khẩu hiện tại'
+            name="currentPassword"
+            label="Mật khẩu hiện tại"
             rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu hiện tại.' },
+              { required: true, message: 'Vui lòng nhập mật khẩu hiện tại.' }
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-slate-400' />}
-              placeholder='Nhập mật khẩu hiện tại'
+              prefix={<LockOutlined className="text-slate-400" />}
+              placeholder="Nhập mật khẩu hiện tại"
             />
           </Form.Item>
 
           <Form.Item
-            name='newPassword'
-            label='Mật khẩu mới'
+            name="newPassword"
+            label="Mật khẩu mới"
             rules={[
               { required: true, message: 'Vui lòng nhập mật khẩu mới.' },
               () => ({
@@ -126,22 +126,22 @@ export default function PasswordDialog({
 
                   return Promise.reject(
                     new Error(
-                      'Mật khẩu mới chưa đáp ứng đủ các quy tắc bảo mật.',
-                    ),
+                      'Mật khẩu mới chưa đáp ứng đủ các quy tắc bảo mật.'
+                    )
                   )
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-slate-400' />}
-              placeholder='Nhập mật khẩu mới'
+              prefix={<LockOutlined className="text-slate-400" />}
+              placeholder="Nhập mật khẩu mới"
             />
           </Form.Item>
 
           <Form.Item
-            name='confirmNewPassword'
-            label='Xác nhận mật khẩu mới'
+            name="confirmNewPassword"
+            label="Xác nhận mật khẩu mới"
             dependencies={['newPassword']}
             rules={[
               { required: true, message: 'Vui lòng xác nhận mật khẩu mới.' },
@@ -152,15 +152,15 @@ export default function PasswordDialog({
                   }
 
                   return Promise.reject(
-                    new Error('Mật khẩu xác nhận không khớp.'),
+                    new Error('Mật khẩu xác nhận không khớp.')
                   )
-                },
-              }),
+                }
+              })
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-slate-400' />}
-              placeholder='Xác nhận mật khẩu mới'
+              prefix={<LockOutlined className="text-slate-400" />}
+              placeholder="Xác nhận mật khẩu mới"
             />
           </Form.Item>
         </Form>

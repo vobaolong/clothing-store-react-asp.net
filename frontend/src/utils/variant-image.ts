@@ -2,7 +2,7 @@ import { uploadImage } from '@/api/uploads-api'
 import type { UploadFile } from 'antd'
 
 export async function resolveFilesToUrls(
-  files: UploadFile[],
+  files: UploadFile[]
 ): Promise<string[]> {
   const urls: string[] = []
   for (const f of files) {
@@ -18,7 +18,7 @@ export async function resolveFilesToUrls(
 }
 
 export async function uploadAllVariantImages(
-  colorGalleryFiles: Record<string, UploadFile[]>,
+  colorGalleryFiles: Record<string, UploadFile[]>
 ): Promise<Record<string, string[]>> {
   const result: Record<string, string[]> = {}
   for (const [colorName, files] of Object.entries(colorGalleryFiles)) {

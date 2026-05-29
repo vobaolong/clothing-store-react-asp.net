@@ -7,16 +7,16 @@ export function useTableSelection<T extends { id?: string | number }>() {
   const rowSelection: TableRowSelection<T> = useMemo(
     () => ({
       selectedRowKeys,
-      onChange: (keys) => setSelectedRowKeys(keys),
+      onChange: (keys) => setSelectedRowKeys(keys)
     }),
-    [selectedRowKeys],
+    [selectedRowKeys]
   )
 
   const clearSelection = () => setSelectedRowKeys([])
   const hasSelection = selectedRowKeys.length > 0
   const selectedIds = useMemo(
     () => selectedRowKeys.map(String),
-    [selectedRowKeys],
+    [selectedRowKeys]
   )
 
   return {
@@ -25,6 +25,6 @@ export function useTableSelection<T extends { id?: string | number }>() {
     rowSelection,
     clearSelection,
     hasSelection,
-    selectedIds,
+    selectedIds
   }
 }

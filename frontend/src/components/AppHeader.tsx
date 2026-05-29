@@ -107,22 +107,22 @@ function MegaMenuContent({
   categoryGroups: CategoryGroup[]
 }) {
   return (
-    <div className='p-6 bg-white rounded-xl border shadow-xl border-slate-200'>
-      <div className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3'>
+    <div className="p-6 bg-white rounded-xl border shadow-xl border-slate-200">
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {categoryGroups.map(({ parent, children }) => (
           <div key={parent.id}>
             <Link
               to={toProductsCategorySearchUrl(parent)}
-              className='text-sm font-semibold text-slate-900! hover:underline! hover:text-slate-600!'
+              className="text-sm font-semibold text-slate-900! hover:underline! hover:text-slate-600!"
             >
               {parent.name}
             </Link>
-            <div className='flex flex-col gap-2 mt-3 text-sm text-slate-600'>
+            <div className="flex flex-col gap-2 mt-3 text-sm text-slate-600">
               {children.map((child) => (
                 <Link
                   key={child.id}
                   to={toProductsCategorySearchUrl(child)}
-                  className='transition-colors hover:text-slate-900 text-slate-900! hover:underline! underline-offset-4'
+                  className="transition-colors hover:text-slate-900 text-slate-900! hover:underline! underline-offset-4"
                 >
                   {child.name}
                 </Link>
@@ -149,8 +149,8 @@ function DesktopNav({
   onSearch: () => void
 }) {
   return (
-    <div className='hidden flex-1 justify-evenly items-center md:flex'>
-      <div className='flex gap-5 items-center'>
+    <div className="hidden flex-1 justify-evenly items-center md:flex">
+      <div className="flex gap-5 items-center">
         {NAV_ITEMS.map((item) => {
           const isActive = selectedRootPath === item.key
           const showMegaMenu =
@@ -161,7 +161,7 @@ function DesktopNav({
               {showMegaMenu ? (
                 <Dropdown
                   trigger={['hover']}
-                  placement='bottomLeft'
+                  placement="bottomLeft"
                   popupRender={() => (
                     <MegaMenuContent categoryGroups={categoryGroups} />
                   )}
@@ -183,8 +183,8 @@ function DesktopNav({
         value={searchKeyword}
         onChange={(e) => onSearchChange(e.target.value)}
         onSearch={onSearch}
-        placeholder='Tìm sản phẩm...'
-        className='w-56! justify-end items-end'
+        placeholder="Tìm sản phẩm..."
+        className="w-56! justify-end items-end"
         allowClear
       />
     </div>
@@ -201,37 +201,37 @@ function MobileNavDrawer({
   onClose: () => void
 }) {
   return (
-    <Drawer title='Menu' placement='left' onClose={onClose} open={open}>
-      <div className='flex flex-col gap-4'>
+    <Drawer title="Menu" placement="left" onClose={onClose} open={open}>
+      <div className="flex flex-col gap-4">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.key}
             to={item.key}
-            className='text-base font-medium text-slate-900 hover:text-slate-600'
+            className="text-base font-medium text-slate-900 hover:text-slate-600"
             onClick={onClose}
           >
             {item.label}
           </Link>
         ))}
 
-        <div className='pt-4 border-t border-slate-200'>
-          <p className='mb-3 text-sm font-semibold text-slate-600'>Danh mục</p>
-          <div className='flex flex-col gap-2'>
+        <div className="pt-4 border-t border-slate-200">
+          <p className="mb-3 text-sm font-semibold text-slate-600">Danh mục</p>
+          <div className="flex flex-col gap-2">
             {categoryGroups.map(({ parent, children }) => (
               <div key={parent.id}>
                 <Link
                   to={toProductsCategorySearchUrl(parent)}
-                  className='text-sm font-medium text-slate-900 hover:text-slate-600'
+                  className="text-sm font-medium text-slate-900 hover:text-slate-600"
                   onClick={onClose}
                 >
                   {parent.name}
                 </Link>
-                <div className='flex flex-col gap-1 mt-1 ml-3'>
+                <div className="flex flex-col gap-1 mt-1 ml-3">
                   {children.map((child) => (
                     <Link
                       key={child.id}
                       to={toProductsCategorySearchUrl(child)}
-                      className='text-xs text-slate-600 hover:text-slate-900'
+                      className="text-xs text-slate-600 hover:text-slate-900"
                       onClick={onClose}
                     >
                       {child.name}
@@ -285,11 +285,11 @@ export default function AppHeader({
       }`}
     >
       {!isAdminUser && <AnnouncementBar />}
-      <Header className='bg-white! border-b border-slate-200 px-4! md:px-8!'>
-        <div className='flex items-center w-full gap-4 mx-auto h-18 max-w-7xl'>
+      <Header className="bg-white! border-b border-slate-200 px-4! md:px-8!">
+        <div className="flex items-center w-full gap-4 mx-auto h-18 max-w-7xl">
           <Link
             to={isAdminUser ? '/admin' : '/'}
-            className='hidden md:block text-2xl font-semibold tracking-tight text-slate-900!'
+            className="hidden md:block text-2xl font-semibold tracking-tight text-slate-900!"
           >
             Wearly
           </Link>
@@ -297,9 +297,9 @@ export default function AppHeader({
           {!isAdminUser && (
             <>
               <Button
-                type='text'
+                type="text"
                 icon={<MenuOutlined style={{ fontSize: '20px' }} />}
-                className='inline-flex md:hidden!'
+                className="inline-flex md:hidden!"
                 onClick={() => setIsDrawerOpen(true)}
               />
               <DesktopNav
@@ -317,13 +317,13 @@ export default function AppHeader({
             </>
           )}
 
-          <div className='flex gap-2 items-center ml-auto shrink-0'>
+          <div className="flex gap-2 items-center ml-auto shrink-0">
             {!isAdminUser && (
               <Button
-                type='default'
-                className='h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900'
+                type="default"
+                className="h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900"
                 icon={
-                  <Badge count={itemCount} size='small' offset={[3, -2]}>
+                  <Badge count={itemCount} size="small" offset={[3, -2]}>
                     <ShoppingOutlined />
                   </Badge>
                 }
@@ -340,14 +340,14 @@ export default function AppHeader({
                 destroyOnHidden
               >
                 <Button
-                  className='h-9 rounded-md! border-slate-300 px-3 text-slate-700 hover:border-slate-400 hover:text-slate-900'
+                  className="h-9 rounded-md! border-slate-300 px-3 text-slate-700 hover:border-slate-400 hover:text-slate-900"
                   icon={<UserOutlined />}
                 />
               </Dropdown>
             ) : (
               <Button
-                type='default'
-                className='h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900'
+                type="default"
+                className="h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900"
                 icon={<UserOutlined />}
                 onClick={() => navigate('/login')}
               />

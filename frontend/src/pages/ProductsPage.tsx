@@ -219,7 +219,7 @@ export default function ProductsPage() {
     <>
       <Row gutter={[24, 24]}>
         <Col xs={0} sm={0} md={7} lg={6} xl={5}>
-          <div className='sticky top-24 h-fit'>
+          <div className="sticky top-24 h-fit">
             <ProductsFilter
               selectedCategories={categoryCheckboxSelection}
               categoryOptions={categoryOptions}
@@ -241,7 +241,7 @@ export default function ProductsPage() {
         </Col>
 
         <Col xs={24} sm={24} md={17} lg={18} xl={19}>
-          <div className='space-y-6'>
+          <div className="space-y-6">
             <ProductsSearchFilter
               value={searchKeyword}
               total={filtered.length}
@@ -263,8 +263,8 @@ export default function ProductsPage() {
             />
 
             {activeFilters.length > 0 && (
-              <div className='flex flex-wrap gap-3 items-center'>
-                <div className='flex flex-wrap gap-2 items-center'>
+              <div className="flex flex-wrap gap-3 items-center">
+                <div className="flex flex-wrap gap-2 items-center">
                   {activeFilters.map((filter) => (
                     <Tag
                       key={`${filter.key}-${filter.value}`}
@@ -278,7 +278,7 @@ export default function ProductsPage() {
                           removeFilter(filter.key, filter.value)
                         }
                       }}
-                      className='flex items-center px-3 m-0 h-6 text-sm font-medium bg-white rounded-md shadow-sm border-stone-200 text-stone-600'
+                      className="flex items-center px-3 m-0 h-6 text-sm font-medium bg-white rounded-md shadow-sm border-stone-200 text-stone-600"
                     >
                       {filter.label}
                     </Tag>
@@ -286,7 +286,7 @@ export default function ProductsPage() {
                 </div>
                 <button
                   onClick={clearAllFilters}
-                  className='text-sm! font-semibold text-red-700! hover:text-red-800! transition-colors underline! cursor-pointer'
+                  className="text-sm! font-semibold text-red-700! hover:text-red-800! transition-colors underline! cursor-pointer"
                 >
                   Xoá lọc
                 </button>
@@ -296,12 +296,12 @@ export default function ProductsPage() {
             <Row gutter={[16, 16]}>
               {paged.map((item) => (
                 <Col key={item.id} xs={12} sm={12} md={8} lg={6} xl={6}>
-                  <ProductCard mode='featured' product={item} />
+                  <ProductCard mode="featured" product={item} />
                 </Col>
               ))}
             </Row>
 
-            <div className='flex justify-end'>
+            <div className="flex justify-end">
               <Pagination
                 current={page}
                 total={filtered.length}
@@ -315,15 +315,15 @@ export default function ProductsPage() {
 
       <FloatButton
         icon={<FilterOutlined />}
-        type='primary'
+        type="primary"
         style={{ bottom: 24 }}
         onClick={() => setIsFilterDrawerOpen(true)}
-        className='md:hidden!'
+        className="md:hidden!"
       />
 
       <Drawer
-        title='Bộ lọc'
-        placement='left'
+        title="Bộ lọc"
+        placement="left"
         onClose={() => setIsFilterDrawerOpen(false)}
         open={isFilterDrawerOpen}
         size={400}

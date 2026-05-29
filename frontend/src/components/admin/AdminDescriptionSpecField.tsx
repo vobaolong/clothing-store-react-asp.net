@@ -32,17 +32,17 @@ export default function AdminDescriptionSpecField({
 
   return (
     <Form.Item
-      className='flex-1 mb-0'
+      className="flex-1 mb-0"
       name={['descriptionSpecs', index, 'value']}
     >
       <Select
-        mode='multiple'
+        mode="multiple"
         allowClear
-        placeholder='Chọn một hoặc nhiều mục'
+        placeholder="Chọn một hoặc nhiều mục"
         options={options}
-        maxTagCount='responsive'
+        maxTagCount="responsive"
         showSearch
-        optionFilterProp='label'
+        optionFilterProp="label"
       />
     </Form.Item>
   )

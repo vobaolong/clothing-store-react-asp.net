@@ -135,24 +135,24 @@ export default function AdminProductFormFields({
   }, [watchedValues?.variants])
 
   return (
-    <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]'>
-      <div className='relative z-30 min-w-0 isolate'>
-        <Form form={form} layout='vertical' onValuesChange={onFormValuesChange}>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="relative z-30 min-w-0 isolate">
+        <Form form={form} layout="vertical" onValuesChange={onFormValuesChange}>
           <Form.Item
-            name='name'
-            label='Tên sản phẩm'
+            name="name"
+            label="Tên sản phẩm"
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name='categoryId'
-            label='Danh mục'
+            name="categoryId"
+            label="Danh mục"
             rules={[{ required: true }]}
           >
             <TreeSelect
-              className='w-full!'
-              placeholder='Chọn danh mục'
+              className="w-full!"
+              placeholder="Chọn danh mục"
               allowClear
               showSearch={{ treeNodeFilterProp: 'title' }}
               treeDefaultExpandAll
@@ -162,48 +162,48 @@ export default function AdminProductFormFields({
             />
           </Form.Item>
           <Form.Item
-            name='description'
-            label='Mô tả'
+            name="description"
+            label="Mô tả"
             rules={[{ required: true }]}
           >
             <RichTextEditor />
           </Form.Item>
           <Form.Item
-            name='measurementProfile'
-            label='Bảng thông số'
+            name="measurementProfile"
+            label="Bảng thông số"
             rules={[{ required: true, message: 'Vui lòng chọn bảng thông số' }]}
           >
             <Select
-              placeholder='Chọn loại thông số'
+              placeholder="Chọn loại thông số"
               options={MEASUREMENT_PRESET_OPTIONS}
             />
           </Form.Item>
           {measurementProfile ? (
-            <div className='mb-4'>
+            <div className="mb-4">
               {measurementProfile === 'tops' ? (
                 <>
-                  <div className='mb-2 text-sm font-medium text-slate-900'>
+                  <div className="mb-2 text-sm font-medium text-slate-900">
                     {MEASUREMENT_PRESETS.tops.label}
                   </div>
                   <Table
-                    size='small'
+                    size="small"
                     bordered
                     pagination={false}
-                    rowKey='size'
+                    rowKey="size"
                     dataSource={MEASUREMENT_PRESETS.tops.data}
                     columns={MEASUREMENT_PRESETS.tops.columns}
                   />
                 </>
               ) : (
                 <>
-                  <div className='mb-2 text-sm font-medium text-slate-900'>
+                  <div className="mb-2 text-sm font-medium text-slate-900">
                     {MEASUREMENT_PRESETS.bottoms.label}
                   </div>
                   <Table
-                    size='small'
+                    size="small"
                     bordered
                     pagination={false}
-                    rowKey='size'
+                    rowKey="size"
                     dataSource={MEASUREMENT_PRESETS.bottoms.data}
                     columns={MEASUREMENT_PRESETS.bottoms.columns}
                   />
@@ -212,9 +212,9 @@ export default function AdminProductFormFields({
             </div>
           ) : null}
 
-          <div className='mb-4'>
-            <div className='flex justify-between items-center mb-2'>
-              <span className='text-sm font-medium text-slate-900'>
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-slate-900">
                 Thông số
               </span>
               <Switch
@@ -252,22 +252,22 @@ export default function AdminProductFormFields({
                     })
                   }
                 }}
-                checkedChildren='Có'
-                unCheckedChildren='Không'
+                checkedChildren="Có"
+                unCheckedChildren="Không"
               />
             </div>
             {hasSpecs && (
-              <div className='p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30'>
+              <div className="p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30">
                 {DESCRIPTION_SPEC_LABELS.map((label, index) => (
-                  <div key={label} className='flex gap-2 items-start'>
+                  <div key={label} className="flex gap-2 items-start">
                     <Form.Item
-                      className='hidden mb-0'
+                      className="hidden mb-0"
                       name={['descriptionSpecs', index, 'label']}
                       initialValue={label}
                     >
                       <Input />
                     </Form.Item>
-                    <div className='flex items-center px-3 w-36 h-8 text-sm font-medium rounded-lg border border-slate-200 bg-slate-50 text-slate-700'>
+                    <div className="flex items-center px-3 w-36 h-8 text-sm font-medium rounded-lg border border-slate-200 bg-slate-50 text-slate-700">
                       {label}
                     </div>
                     <AdminDescriptionSpecField
@@ -281,9 +281,9 @@ export default function AdminProductFormFields({
             )}
           </div>
 
-          <div className='mb-4'>
-            <div className='mb-2 text-sm font-medium text-slate-900'>
-              Biến thể<span className='text-red-500'> *</span>
+          <div className="mb-4">
+            <div className="mb-2 text-sm font-medium text-slate-900">
+              Phân loại<span className="text-red-500"> *</span>
             </div>
             <AdminVariantsMatrixField
               ref={variantsMatrixRef}
@@ -293,7 +293,7 @@ export default function AdminProductFormFields({
             />
           </div>
           <Form.Item
-            name='variants'
+            name="variants"
             hidden
             rules={[
               {
@@ -325,17 +325,17 @@ export default function AdminProductFormFields({
             <Input />
           </Form.Item>
 
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Form.Item
-              name='price'
-              label='Giá gốc (VND)'
+              name="price"
+              label="Giá gốc (VND)"
               rules={[{ required: true }]}
             >
-              <InputNumber min={0} className='w-full!' />
+              <InputNumber min={0} className="w-full!" />
             </Form.Item>
             <Form.Item
-              name='salePrice'
-              label='Giá sale (VND) — Tùy chọn'
+              name="salePrice"
+              label="Giá sale (VND) — Tùy chọn"
               dependencies={['price']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -361,13 +361,13 @@ export default function AdminProductFormFields({
                 })
               ]}
             >
-              <InputNumber min={0} className='w-full!' />
+              <InputNumber min={0} className="w-full!" />
             </Form.Item>
           </div>
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Form.Item
-              name='salePriceStartDate'
-              label='Ngày bắt đầu giảm giá (Tùy chọn)'
+              name="salePriceStartDate"
+              label="Ngày bắt đầu giảm giá (Tùy chọn)"
               dependencies={['salePriceEndDate']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -387,14 +387,14 @@ export default function AdminProductFormFields({
               ]}
             >
               <DatePicker
-                className='w-full!'
+                className="w-full!"
                 showTime
                 format={'DD/MM/YYYY HH:mm:ss'}
               />
             </Form.Item>
             <Form.Item
-              name='salePriceEndDate'
-              label='Ngày kết thúc giảm giá (Tùy chọn)'
+              name="salePriceEndDate"
+              label="Ngày kết thúc giảm giá (Tùy chọn)"
               dependencies={['salePriceStartDate']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -414,14 +414,14 @@ export default function AdminProductFormFields({
               ]}
             >
               <DatePicker
-                className='w-full!'
+                className="w-full!"
                 showTime
                 format={'DD/MM/YYYY HH:mm:ss'}
               />
             </Form.Item>
           </div>
-          <Form.Item name='isActive' label='Trạng thái' valuePropName='checked'>
-            <Switch checkedChildren='Hiển thị' unCheckedChildren='Ẩn' />
+          <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
+            <Switch checkedChildren="Hiển thị" unCheckedChildren="Ẩn" />
           </Form.Item>
         </Form>
       </div>

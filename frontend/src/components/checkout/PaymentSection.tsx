@@ -14,24 +14,24 @@ type Props = {
 export default function PaymentSection({
   control,
   onSubmit,
-  isSubmitting,
+  isSubmitting
 }: Props) {
   return (
     <Card>
-      <CheckoutSectionTitle step={3} title='Phương thức thanh toán & ghi chú' />
-      <Form layout='vertical' onFinish={onSubmit}>
-        <Form.Item label='Phương thức thanh toán' className='mb-4!'>
+      <CheckoutSectionTitle step={3} title="Phương thức thanh toán & ghi chú" />
+      <Form layout="vertical" onFinish={onSubmit}>
+        <Form.Item label="Phương thức thanh toán" className="mb-4!">
           <Controller
-            name='paymentMethod'
+            name="paymentMethod"
             control={control}
             render={({ field }) => (
-              <Radio.Group {...field} className='flex flex-col space-y-3'>
+              <Radio.Group {...field} className="flex flex-col space-y-3">
                 {[
                   {
                     value: PaymentMethod.COD,
-                    label: 'COD — Thanh toán khi nhận hàng',
+                    label: 'COD — Thanh toán khi nhận hàng'
                   },
-                  { value: PaymentMethod.VNPAY, label: 'VNPay' },
+                  { value: PaymentMethod.VNPAY, label: 'VNPay' }
                 ].map((option) => (
                   <label
                     key={option.value}
@@ -42,7 +42,7 @@ export default function PaymentSection({
                     }`}
                   >
                     <Radio value={option.value} />
-                    <span className='text-sm font-medium text-slate-700'>
+                    <span className="text-sm font-medium text-slate-700">
                       {option.label}
                     </span>
                   </label>
@@ -52,15 +52,15 @@ export default function PaymentSection({
           />
         </Form.Item>
 
-        <Form.Item label='Ghi chú đơn hàng (tùy chọn)' className='mb-5!'>
+        <Form.Item label="Ghi chú đơn hàng (tùy chọn)" className="mb-5!">
           <Controller
-            name='note'
+            name="note"
             control={control}
             render={({ field }) => (
               <Input.TextArea
                 {...field}
                 rows={3}
-                placeholder='Hướng dẫn giao hàng hoặc ghi chú khác'
+                placeholder="Hướng dẫn giao hàng hoặc ghi chú khác"
                 maxLength={2000}
                 showCount
               />
@@ -69,10 +69,10 @@ export default function PaymentSection({
         </Form.Item>
 
         <Button
-          type='primary'
-          htmlType='submit'
+          type="primary"
+          htmlType="submit"
           block
-          className='rounded-lg h-12! text-base font-semibold'
+          className="rounded-lg h-12! text-base font-semibold"
           loading={isSubmitting}
           disabled={isSubmitting}
         >

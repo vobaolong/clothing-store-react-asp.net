@@ -22,13 +22,13 @@ export default function HomeProductRail({
 
   return (
     <section>
-      <div className='flex gap-4 justify-between items-end mb-4'>
-        <h2 className='text-xl font-bold tracking-tight text-stone-900 md:text-2xl'>
+      <div className="flex gap-4 justify-between items-end mb-4">
+        <h2 className="text-xl font-bold tracking-tight text-stone-900 md:text-2xl">
           {title}
         </h2>
         <Link
           to={seeMoreTo}
-          className='text-sm font-semibold shrink-0 hover:underline'
+          className="text-sm font-semibold shrink-0 hover:underline"
           style={{ color: SEE_MORE }}
         >
           Xem Thêm
@@ -78,11 +78,11 @@ export default function HomeProductRail({
             }
           }
         ]}
-        className='pb-1 home-product-carousel'
+        className="pb-1 home-product-carousel"
       >
         {products.map((product) => (
-          <div key={product.id} className='px-2 h-full'>
-            <ProductCard product={product} mode='catalog' />
+          <div key={product.id} className="px-2 h-full">
+            <ProductCard product={product} mode="catalog" />
           </div>
         ))}
       </Carousel>
