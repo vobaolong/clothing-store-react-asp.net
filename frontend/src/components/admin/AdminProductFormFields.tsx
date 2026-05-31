@@ -9,13 +9,17 @@ import {
   TreeSelect
 } from 'antd'
 import type { FormInstance } from 'antd'
-import { useMemo } from 'react'
+import type { NamePath } from 'antd/es/form/interface'
+import { useEffect, useMemo, useState } from 'react'
 import type { Ref } from 'react'
 import { DESCRIPTION_SPEC_LABELS } from '@/constants/product'
 import {
   MEASUREMENT_PRESET_OPTIONS,
-  MEASUREMENT_PRESETS,
-  type MeasurementProfile
+  type MeasurementPresetRow,
+  type MeasurementProfile,
+  normalizeMeasurementGender,
+  getMeasurementPresetLabel,
+  getMeasurementPresetRows
 } from '@/constants/measurement-presets'
 import type { AdminCategory, ProductFormValues } from '@/types'
 import {
@@ -48,6 +52,8 @@ function previewUrlFromVariants(
     ?.trim()
 }
 
+const BOTTOMS_CATEGORY_PATTERN = /quần|váy|đầm|dress/i
+
 export default function AdminProductFormFields({
   form,
   categories,
@@ -65,13 +71,64 @@ export default function AdminProductFormFields({
   const measurementProfile = Form.useWatch('measurementProfile', form) as
     | MeasurementProfile
     | undefined
+  const sizeGuideGender = Form.useWatch('sizeGuideGender', form) as
+    | 'male'
+    | 'female'
+    | 'unisex'
+    | undefined
+  const sizeGuideRows = Form.useWatch('sizeGuideRows', form) as
+    | ProductFormValues['sizeGuideRows']
+    | undefined
+  const sizeGuidePresetProfile = Form.useWatch(
+    'sizeGuidePresetProfile',
+    form
+  ) as MeasurementProfile | undefined
+  const [showSizeGuide, setShowSizeGuide] = useState(false)
+
   const descriptionSpecs = Form.useWatch('descriptionSpecs', form) as
     | Array<{ label: string; value?: string[] }>
     | undefined
 
-  const hasSpecs =
-    descriptionSpecs?.some((spec) => spec.value && spec.value.length > 0) ??
-    false
+  const [showSpecs, setShowSpecs] = useState(
+    () => descriptionSpecs?.some((s) => s.value && s.value.length > 0) ?? false
+  )
+
+  const selectedCategory = useMemo(
+    () => categories.find((c) => c.id === watchedValues?.categoryId),
+    [categories, watchedValues?.categoryId]
+  )
+
+  const categoryName = selectedCategory?.name ?? ''
+  const productType = selectedCategory?.productType?.toLowerCase() as
+    | 'clothing'
+    | 'shoes'
+    | 'accessories'
+    | undefined
+  const resolvedProductType =
+    productType === 'shoes'
+      ? 'shoes'
+      : productType === 'clothing' ||
+          BOTTOMS_CATEGORY_PATTERN.test(categoryName)
+        ? 'clothing'
+        : undefined
+
+  const derivedMeasurementProfile = useMemo(() => {
+    if (resolvedProductType !== 'clothing') return undefined
+    return BOTTOMS_CATEGORY_PATTERN.test(categoryName) ? 'bottoms' : 'tops'
+  }, [categoryName, resolvedProductType])
+
+  const derivedMeasurementGender = useMemo(
+    () => normalizeMeasurementGender(selectedCategory?.gender),
+    [selectedCategory?.gender]
+  )
+
+  const sizeGuideOptions = useMemo(() => {
+    if (resolvedProductType !== 'clothing') return []
+    return MEASUREMENT_PRESET_OPTIONS
+  }, [resolvedProductType]) as Array<{
+    label: string
+    value: MeasurementProfile
+  }>
 
   const categoryTreeData = useMemo(
     () => buildCategoryTreeSelectData(categories),
@@ -86,6 +143,81 @@ export default function AdminProductFormFields({
     () => previewUrlFromVariants(variantsWatch),
     [variantsWatch]
   )
+
+  useEffect(() => {
+    if (!derivedMeasurementProfile) return
+
+    if (
+      measurementProfile !== derivedMeasurementProfile ||
+      sizeGuidePresetProfile !== derivedMeasurementProfile ||
+      sizeGuideGender !== derivedMeasurementGender
+    ) {
+      form.setFieldsValue({
+        measurementProfile: derivedMeasurementProfile,
+        sizeGuidePresetProfile: derivedMeasurementProfile,
+        sizeGuideGender: derivedMeasurementGender,
+        sizeGuideRows: getMeasurementPresetRows(
+          derivedMeasurementProfile,
+          derivedMeasurementGender
+        )
+      })
+    }
+  }, [
+    derivedMeasurementProfile,
+    derivedMeasurementGender,
+    form,
+    measurementProfile,
+    sizeGuideGender,
+    sizeGuidePresetProfile
+  ])
+
+  const sizeGuideColumns = useMemo(() => {
+    const renderCell =
+      (field: keyof MeasurementPresetRow) =>
+      (_value: unknown, _record: MeasurementPresetRow, index: number) => (
+        <Form.Item
+          className="mb-0"
+          name={['sizeGuideRows', index, field] as NamePath}
+          rules={
+            field === 'size'
+              ? [{ required: true, message: 'Vui lòng nhập size' }]
+              : undefined
+          }
+        >
+          <Input size="small" />
+        </Form.Item>
+      )
+
+    if (measurementProfile === 'bottoms') {
+      return [
+        { title: 'Size', key: 'size', width: 120, render: renderCell('size') },
+        {
+          title: 'Chiều cao (cm)',
+          key: 'height',
+          render: renderCell('height')
+        },
+        { title: 'Cân nặng (kg)', key: 'weight', render: renderCell('weight') },
+        { title: 'Vòng eo (cm)', key: 'waist', render: renderCell('waist') }
+      ]
+    }
+
+    return [
+      { title: 'Size', key: 'size', width: 120, render: renderCell('size') },
+      { title: 'Chiều cao (cm)', key: 'height', render: renderCell('height') },
+      { title: 'Cân nặng (kg)', key: 'weight', render: renderCell('weight') },
+      { title: 'Vòng ngực (cm)', key: 'chest', render: renderCell('chest') }
+    ]
+  }, [measurementProfile])
+
+  const editableSizeGuideRows =
+    Array.isArray(sizeGuideRows) && sizeGuideRows.length > 0
+      ? sizeGuideRows
+      : measurementProfile
+        ? getMeasurementPresetRows(
+            measurementProfile,
+            sizeGuideGender ?? derivedMeasurementGender
+          )
+        : []
 
   const previewName = watchedValues?.name?.trim() || 'Tên sản phẩm'
   const previewBasePrice =
@@ -168,58 +300,73 @@ export default function AdminProductFormFields({
           >
             <RichTextEditor />
           </Form.Item>
-          <Form.Item
-            name="measurementProfile"
-            label="Bảng thông số"
-            rules={[{ required: true, message: 'Vui lòng chọn bảng thông số' }]}
-          >
-            <Select
-              placeholder="Chọn loại thông số"
-              options={MEASUREMENT_PRESET_OPTIONS}
-            />
-          </Form.Item>
-          {measurementProfile ? (
-            <div className="mb-4">
-              {measurementProfile === 'tops' ? (
-                <>
-                  <div className="mb-2 text-sm font-medium text-slate-900">
-                    {MEASUREMENT_PRESETS.tops.label}
-                  </div>
-                  <Table
-                    size="small"
-                    bordered
-                    pagination={false}
-                    rowKey="size"
-                    dataSource={MEASUREMENT_PRESETS.tops.data}
-                    columns={MEASUREMENT_PRESETS.tops.columns}
-                  />
-                </>
-              ) : (
-                <>
-                  <div className="mb-2 text-sm font-medium text-slate-900">
-                    {MEASUREMENT_PRESETS.bottoms.label}
-                  </div>
-                  <Table
-                    size="small"
-                    bordered
-                    pagination={false}
-                    rowKey="size"
-                    dataSource={MEASUREMENT_PRESETS.bottoms.data}
-                    columns={MEASUREMENT_PRESETS.bottoms.columns}
-                  />
-                </>
-              )}
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-slate-900">
+                Bảng thông số (Size Guide)
+              </span>
+              <Switch
+                checked={showSizeGuide || !!measurementProfile}
+                onChange={(checked) => {
+                  setShowSizeGuide(checked)
+                  if (!checked) {
+                    form.setFieldsValue({
+                      measurementProfile: undefined,
+                      sizeGuidePresetProfile: undefined,
+                      sizeGuideRows: []
+                    })
+                  }
+                }}
+                checkedChildren="Có"
+                unCheckedChildren="Không"
+              />
             </div>
-          ) : null}
+            {(showSizeGuide || !!measurementProfile) && (
+              <>
+                <Form.Item
+                  name="measurementProfile"
+                  label="Chọn loại thông số"
+                  rules={[
+                    { required: true, message: 'Vui lòng chọn bảng thông số' }
+                  ]}
+                >
+                  <Select
+                    placeholder="Chọn loại thông số"
+                    options={sizeGuideOptions}
+                  />
+                </Form.Item>
+                {measurementProfile ? (
+                  <div className="mt-2">
+                    <div className="mb-2 text-xs font-medium tracking-wider uppercase text-slate-500">
+                      {getMeasurementPresetLabel(
+                        measurementProfile,
+                        sizeGuideGender ?? derivedMeasurementGender
+                      )}
+                    </div>
+                    <Table<MeasurementPresetRow>
+                      size="small"
+                      bordered
+                      pagination={false}
+                      rowKey="size"
+                      dataSource={editableSizeGuideRows}
+                      columns={sizeGuideColumns}
+                      className="bg-white"
+                    />
+                  </div>
+                ) : null}
+              </>
+            )}
+          </div>
 
           <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-slate-900">
                 Thông số
               </span>
               <Switch
-                checked={hasSpecs}
+                checked={showSpecs}
                 onChange={(checked) => {
+                  setShowSpecs(checked)
                   if (!checked) {
                     if (descriptionSpecs) {
                       form.setFieldsValue({
@@ -256,10 +403,10 @@ export default function AdminProductFormFields({
                 unCheckedChildren="Không"
               />
             </div>
-            {hasSpecs && (
-              <div className="p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30">
+            {showSpecs && (
+              <div className="p-4 space-y-2 border rounded-xl border-slate-200 bg-slate-50/30">
                 {DESCRIPTION_SPEC_LABELS.map((label, index) => (
-                  <div key={label} className="flex gap-2 items-start">
+                  <div key={label} className="flex items-start gap-2">
                     <Form.Item
                       className="hidden mb-0"
                       name={['descriptionSpecs', index, 'label']}
@@ -267,7 +414,7 @@ export default function AdminProductFormFields({
                     >
                       <Input />
                     </Form.Item>
-                    <div className="flex items-center px-3 w-36 h-8 text-sm font-medium rounded-lg border border-slate-200 bg-slate-50 text-slate-700">
+                    <div className="flex items-center h-8 px-3 text-sm font-medium border rounded-lg w-36 border-slate-200 bg-slate-50 text-slate-700">
                       {label}
                     </div>
                     <AdminDescriptionSpecField

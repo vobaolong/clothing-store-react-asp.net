@@ -16,6 +16,7 @@ import {
   transformProductToFormValues,
   prepareDescriptionData
 } from '@/utils/product-form.utils'
+import { getMeasurementPresetRows } from '@/constants/measurement-presets'
 
 type Props = {
   open: boolean
@@ -47,6 +48,10 @@ export default function ProductModal({
     } else {
       form.setFieldsValue({
         measurementProfile: 'tops',
+        sizeGuideGender: 'unisex',
+        sizeGuidePresetProfile: 'tops',
+        sizeGuideRows: getMeasurementPresetRows('tops', 'unisex'),
+        isActive: true,
         descriptionSpecs: buildDefaultDescriptionSpecs(),
         description: '<p></p>'
       })
@@ -143,12 +148,17 @@ export default function ProductModal({
       const payload = {
         name: values.name,
         description: values.description,
-        descriptionData: prepareDescriptionData(values.descriptionSpecs),
+        descriptionData: prepareDescriptionData(values.descriptionSpecs, {
+          profile: values.sizeGuidePresetProfile ?? values.measurementProfile,
+          gender: values.sizeGuideGender,
+          rows: values.sizeGuideRows
+        }),
         price: values.price,
         salePrice: Number.isFinite(values.salePrice) ? values.salePrice : null,
         salePriceStartDate: values.salePriceStartDate?.toISOString() ?? null,
         salePriceEndDate: values.salePriceEndDate?.toISOString() ?? null,
         categoryId: values.categoryId,
+        isActive: values.isActive ?? true,
         variants
       }
 

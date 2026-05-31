@@ -25,7 +25,7 @@ public class ProductService : IProductService
         {
             Name = dto.Name,
             Slug = slug,
-            IsActive = true,
+            IsActive = dto.IsActive,
             Description = dto.Description,
             DescriptionHtml = dto.Description,
             DescriptionJson = dto.DescriptionData,
@@ -193,6 +193,7 @@ public class ProductService : IProductService
         product.SalePriceStartDate = dto.SalePriceStartDate;
         product.SalePriceEndDate = dto.SalePriceEndDate;
         product.CategoryId = dto.CategoryId;
+        product.IsActive = dto.IsActive;
 
         var oldVariants = await _context
             .ProductVariants.Where(variant => variant.ProductId == product.Id)

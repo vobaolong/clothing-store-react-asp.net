@@ -4,7 +4,29 @@ import {
   parseDescriptionSpecStoredValue,
   serializeDescriptionSpecValues
 } from '@/constants/product'
+
 import type { DescriptionLayout, AdminProduct } from '@/types'
+import {
+  getMeasurementPresetRows,
+  normalizeMeasurementGender,
+  type MeasurementGender,
+  type MeasurementPresetRow,
+  type MeasurementProfile
+} from '@/constants/measurement-presets'
+
+const normalizeMeasurementRows = (
+  rows: Array<Partial<MeasurementPresetRow>>
+): MeasurementPresetRow[] =>
+  rows
+    .map((row) => ({
+      size: row.size?.trim() ?? '',
+      height: row.height?.trim(),
+      weight: row.weight?.trim(),
+      chest: row.chest?.trim(),
+      waist: row.waist?.trim(),
+      footLength: row.footLength?.trim()
+    }))
+    .filter((row) => row.size.length > 0)
 
 const DEFAULT_DESCRIPTION_SPECS = DESCRIPTION_SPEC_LABELS.map((label) => ({
   label,
@@ -55,6 +77,20 @@ export const buildDefaultDescriptionSpecs = (
 
 export const transformProductToFormValues = (editing: AdminProduct) => {
   const parsed = parseDescriptionLayout(editing.descriptionData)
+  const measurementProfile: MeasurementProfile = /quần|váy|đầm|dress/i.test(
+    editing.categoryName
+  )
+    ? 'bottoms'
+    : 'tops'
+  const sizeGuideGender = normalizeMeasurementGender(parsed?.sizeGuide?.gender)
+  const sizeGuidePresetProfile =
+    parsed?.sizeGuide?.profile === 'bottoms' ||
+    parsed?.sizeGuide?.profile === 'tops'
+      ? parsed.sizeGuide.profile
+      : measurementProfile
+  const sizeGuideRows = parsed?.sizeGuide?.rows?.length
+    ? normalizeMeasurementRows(parsed.sizeGuide.rows)
+    : getMeasurementPresetRows(sizeGuidePresetProfile, sizeGuideGender)
   const variants = (
     Array.isArray(editing.variants) ? editing.variants : []
   ).map((variant) => {
@@ -77,7 +113,11 @@ export const transformProductToFormValues = (editing: AdminProduct) => {
   })
 
   return {
-    measurementProfile: /quần/i.test(editing.categoryName) ? 'bottoms' : 'tops',
+    measurementProfile,
+    sizeGuideGender,
+    sizeGuidePresetProfile,
+    sizeGuideRows,
+    isActive: editing.isActive,
     name: editing.name,
     productCode: editing.productCode,
     description: editing.description,
@@ -96,8 +136,16 @@ export const transformProductToFormValues = (editing: AdminProduct) => {
 }
 
 export const prepareDescriptionData = (
-  descriptionSpecs: Array<{ label: string; value: string | string[] }>
+  descriptionSpecs: Array<{ label: string; value: string | string[] }>,
+  sizeGuide?: {
+    profile?: MeasurementProfile
+    gender?: MeasurementGender
+    rows?: Array<Partial<MeasurementPresetRow>>
+  }
 ) => {
+  const normalizedRows = sizeGuide?.rows
+    ? normalizeMeasurementRows(sizeGuide.rows)
+    : []
   return JSON.stringify({
     specs: (descriptionSpecs ?? [])
       .map((item: { label?: string; value?: string | string[] }) => ({
@@ -109,6 +157,14 @@ export const prepareDescriptionData = (
       .filter(
         (item: { label?: string; value?: string }) =>
           item.label && item.value && item.value.length > 0
-      )
+      ),
+    sizeGuide:
+      sizeGuide?.profile && normalizedRows.length > 0
+        ? {
+            profile: sizeGuide.profile,
+            gender: normalizeMeasurementGender(sizeGuide.gender),
+            rows: normalizedRows
+          }
+        : undefined
   })
 }

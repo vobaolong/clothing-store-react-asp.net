@@ -1,0 +1,8 @@
+[
+  { "size": "XS", "height": "155~163", "weight": "45~55", "chest": "76~84" },
+  { "size": "S", "height": "160~168", "weight": "53~63", "chest": "80~88" },
+  { "size": "M", "height": "166~174", "weight": "60~72", "chest": "88~96" },
+  { "size": "L", "height": "172~180", "weight": "68~80", "chest": "96~104" },
+  { "size": "XL", "height": "178~186", "weight": "78~90", "chest": "104~112" },
+  { "size": "2XL", "height": "184~190", "weight": "88~100", "chest": "112~120" }
+]

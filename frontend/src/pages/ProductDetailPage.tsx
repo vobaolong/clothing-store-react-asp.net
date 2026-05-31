@@ -1,28 +1,27 @@
-import { Modal, Statistic, Table, Tabs } from 'antd'
+import type { ColumnType } from 'antd/es/table'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Fragment,
-  Suspense,
-  lazy,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
-import type { DescriptionLayout, ProductSelection } from '@/types/product.type'
+import type {
+  Category,
+  DescriptionLayout,
+  Product,
+  ProductSelection
+} from '@/types/product.type'
 import { formatDescriptionSpecDisplayValue } from '@/constants/product'
-import { MEASUREMENT_PRESETS } from '@/constants/measurement-presets'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import ProductCard from '@/components/ProductCard'
-import ProductGallery from '@/components/product/ProductGallery'
+import ProductDetailsTable from '@/components/product/ProductDetailsTable'
+import ProductSaleCountdown from '@/components/product/ProductSaleCountdown'
 import ProductPurchaseActions from '@/components/product/ProductPurchaseActions'
+import ProductVariantSelectors from '@/components/product/ProductVariantSelectors'
+import ProductTabs from '@/components/product/ProductTabs'
+import SizeGuideModal from '@/components/product/SizeGuideModal'
 import {
   getCategoryAncestorChain,
   toProductsCategorySearchUrl
@@ -32,12 +31,134 @@ import { getStatisticTimerFormatForSaleEnd } from '@/utils/countdown-statistic-f
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import { compareSizes, normalizeSize } from '@/utils/size-utils'
 import { toCapitalize } from '@/utils/table.lib'
+import {
+  getMeasurementPresetRows,
+  normalizeMeasurementGender,
+  type MeasurementPresetRow,
+  type MeasurementProfile
+} from '@/constants/measurement-presets'
+import ProductGallery from '@/components/product/ProductGallery'
+import { Button, Result } from 'antd'
+import { ShoppingOutlined } from '@ant-design/icons'
 
-const { Timer } = Statistic
+const BOTTOMS_CATEGORY_PATTERN = /quần|váy|đầm|dress/i
 
-const ProductReviewsSection = lazy(
-  () => import('@/components/reviews/ProductReviewsSection')
-)
+function parseDescriptionLayout(raw?: string | null): DescriptionLayout | null {
+  if (!raw?.trim()) return null
+  try {
+    return JSON.parse(raw) as DescriptionLayout
+  } catch {
+    return null
+  }
+}
+
+function resolveSizeGuideProfile(
+  product: Product | undefined,
+  category: Category | undefined
+): MeasurementProfile {
+  const categoryProductType = category?.productType?.toLowerCase() ?? ''
+  const categoryText = `${product?.categoryName ?? ''} ${category?.name ?? ''}`
+
+  if (categoryProductType === 'shoes') {
+    return 'shoes'
+  }
+
+  if (
+    categoryProductType === 'clothing' &&
+    BOTTOMS_CATEGORY_PATTERN.test(categoryText)
+  ) {
+    return 'bottoms'
+  }
+
+  return 'tops'
+}
+
+function buildSizeGuideColumns(
+  profile: MeasurementProfile
+): ColumnType<MeasurementPresetRow>[] {
+  if (profile === 'shoes') {
+    return [
+      { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
+      {
+        title: 'Độ dài (cm)',
+        dataIndex: 'footLength',
+        key: 'footLength',
+        align: 'center'
+      }
+    ]
+  }
+
+  if (profile === 'bottoms') {
+    return [
+      { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
+      {
+        title: 'Chiều cao (cm)',
+        dataIndex: 'height',
+        key: 'height',
+        align: 'center'
+      },
+      {
+        title: 'Cân nặng (kg)',
+        dataIndex: 'weight',
+        key: 'weight',
+        align: 'center'
+      },
+      {
+        title: 'Vòng eo (cm)',
+        dataIndex: 'waist',
+        key: 'waist',
+        align: 'center'
+      }
+    ]
+  }
+
+  return [
+    { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
+    {
+      title: 'Chiều cao (cm)',
+      dataIndex: 'height',
+      key: 'height',
+      align: 'center'
+    },
+    {
+      title: 'Cân nặng (kg)',
+      dataIndex: 'weight',
+      key: 'weight',
+      align: 'center'
+    },
+    {
+      title: 'Vòng ngực (cm)',
+      dataIndex: 'chest',
+      key: 'chest',
+      align: 'center'
+    }
+  ]
+}
+
+function buildProductDetails(
+  product: Product,
+  descriptionLayout: DescriptionLayout | null
+): Array<{ label: string; value: string }> {
+  if (!descriptionLayout?.specs?.length) {
+    return [
+      {
+        label: 'Mã sản phẩm',
+        value: product.productCode.toUpperCase()
+      }
+    ]
+  }
+
+  return [
+    {
+      label: 'Mã sản phẩm',
+      value: product.productCode.toUpperCase()
+    },
+    ...descriptionLayout.specs.map((spec) => ({
+      label: String(spec.label ?? ''),
+      value: formatDescriptionSpecDisplayValue(String(spec.value ?? ''))
+    }))
+  ]
+}
 
 export default function ProductDetailPage() {
   const { slug } = useParams()
@@ -49,15 +170,8 @@ export default function ProductDetailPage() {
     quantity: 1,
     image: ''
   })
-
-  const [ui, setUi] = useState({
-    isSizeGuideOpen: false,
-    thumbScrollEdges: { atTop: true, atBottom: true }
-  })
-
-  const [timer, setTimer] = useState(() => ({
-    now: Date.now()
-  }))
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false)
+  const [timer, setTimer] = useState(() => ({ now: Date.now() }))
 
   const refreshSaleTimer = useCallback(() => {
     setTimer({ now: Date.now() })
@@ -74,9 +188,21 @@ export default function ProductDetailPage() {
   })
 
   const cartItems = useSelector(selectCartItems)
-
   const product = products.find((item) => item.slug === slug)
+  const listCategory = categories.find(
+    (item) => item.id === product?.categoryId
+  )
+
+  const descriptionLayout = useMemo(
+    () => parseDescriptionLayout(product?.descriptionData),
+    [product?.descriptionData]
+  )
+
   const saleEndDate = product?.salePriceEndDate ?? null
+  const saleEndTimestamp = useMemo(
+    () => (saleEndDate ? new Date(saleEndDate).getTime() : null),
+    [saleEndDate]
+  )
   const hasDiscount = product
     ? product.salePrice != null && product.salePrice < product.price
     : false
@@ -95,10 +221,10 @@ export default function ProductDetailPage() {
     if (!showSaleCountdown || !saleEndDate) return
     const refreshNow = () => setTimer({ now: Date.now() })
     const immediate = window.setTimeout(refreshNow, 0)
-    const id = window.setInterval(refreshNow, 1000)
+    const intervalId = window.setInterval(refreshNow, 1000)
     return () => {
       window.clearTimeout(immediate)
-      window.clearInterval(id)
+      window.clearInterval(intervalId)
     }
   }, [saleEndDate, showSaleCountdown])
 
@@ -111,22 +237,13 @@ export default function ProductDetailPage() {
   )
 
   const similarProducts = useMemo(() => {
-    const cid = product?.categoryId
-    const pid = product?.id
-    if (!cid || !pid) return []
+    const categoryId = product?.categoryId
+    const productId = product?.id
+    if (!categoryId || !productId) return []
     return products
-      .filter((p) => p.categoryId === cid && p.id !== pid)
+      .filter((item) => item.categoryId === categoryId && item.id !== productId)
       .slice(0, 8)
   }, [products, product?.categoryId, product?.id])
-
-  const descriptionLayout = useMemo<DescriptionLayout | null>(() => {
-    if (!product?.descriptionData) return null
-    try {
-      return JSON.parse(product.descriptionData) as DescriptionLayout
-    } catch {
-      return null
-    }
-  }, [product])
 
   const categoryBreadcrumbs = useMemo(() => {
     const apiTrail = product?.categoryBreadcrumbs
@@ -138,12 +255,21 @@ export default function ProductDetailPage() {
       }))
     }
     return getCategoryAncestorChain(categories, product?.categoryId)
-  }, [product?.categoryBreadcrumbs, product?.categoryId, categories])
+  }, [categories, product?.categoryBreadcrumbs, product?.categoryId])
 
   const variants = useMemo(() => product?.variants ?? [], [product?.variants])
-  const colorOptions = [...new Set(variants.map((v) => v.color))]
-  const firstAvailableColor = colorOptions.find((color) =>
-    variants.some((v) => v.color === color && v.quantity > 0)
+  const colorOptions = useMemo(
+    () => [...new Set(variants.map((variant) => variant.color))],
+    [variants]
+  )
+  const firstAvailableColor = useMemo(
+    () =>
+      colorOptions.find((color) =>
+        variants.some(
+          (variant) => variant.color === color && variant.quantity > 0
+        )
+      ),
+    [colorOptions, variants]
   )
 
   const resolvedColor =
@@ -154,87 +280,42 @@ export default function ProductDetailPage() {
     return getGalleryUrlsForColor(product, resolvedColor)
   }, [product, resolvedColor])
 
-  const currentImage = useMemo(() => {
-    if (!galleryImages.length) return ''
-    return galleryImages.includes(selection.image)
-      ? selection.image
-      : galleryImages[0]
-  }, [galleryImages, selection.image])
-
-  const thumbListRef = useRef<HTMLDivElement>(null)
-  const thumbStripClamped = galleryImages.length > 6
-
-  const refreshThumbScrollEdges = useCallback(() => {
-    const el = thumbListRef.current
-    if (!el) return
-    const { scrollTop, scrollHeight, clientHeight } = el
-    setUi((prev) => ({
-      ...prev,
-      thumbScrollEdges: {
-        atTop: scrollTop <= 1,
-        atBottom: scrollTop + clientHeight >= scrollHeight - 1
-      }
-    }))
-  }, [])
-
-  useEffect(() => {
-    refreshThumbScrollEdges()
-  }, [galleryImages.length, resolvedColor, refreshThumbScrollEdges])
-
-  useEffect(() => {
-    const el = thumbListRef.current
-    if (!el || !thumbStripClamped) return
-    el.addEventListener('scroll', refreshThumbScrollEdges, { passive: true })
-    const ro = new ResizeObserver(refreshThumbScrollEdges)
-    ro.observe(el)
-    return () => {
-      el.removeEventListener('scroll', refreshThumbScrollEdges)
-      ro.disconnect()
-    }
-  }, [thumbStripClamped, refreshThumbScrollEdges])
-
-  useEffect(() => {
-    if (!thumbStripClamped || !currentImage) return
-    const el = thumbListRef.current
-    if (!el) return
-    const idx = galleryImages.indexOf(currentImage)
-    if (idx < 0) return
-    el.querySelectorAll('button')[idx]?.scrollIntoView({
-      block: 'nearest',
-      behavior: 'smooth'
-    })
-  }, [thumbStripClamped, currentImage, galleryImages])
-
   const sizeOptions = useMemo(
     () =>
       Array.from(
         new Set(
           variants
-            .filter((v) => v.color === resolvedColor)
-            .map((v) => normalizeSize(v.size))
+            .filter((variant) => variant.color === resolvedColor)
+            .map((variant) => normalizeSize(variant.size))
         )
       ).toSorted(compareSizes),
     [variants, resolvedColor]
   )
 
-  const firstAvailableSize = sizeOptions.find((size) =>
-    variants.some(
-      (v) =>
-        v.color === resolvedColor &&
-        normalizeSize(v.size) === size &&
-        v.quantity > 0
-    )
+  const firstAvailableSize = useMemo(
+    () =>
+      sizeOptions.find((size) =>
+        variants.some(
+          (variant) =>
+            variant.color === resolvedColor &&
+            normalizeSize(variant.size) === size &&
+            variant.quantity > 0
+        )
+      ),
+    [resolvedColor, sizeOptions, variants]
   )
 
   const resolvedSize = selection.size ?? firstAvailableSize ?? sizeOptions[0]
 
-  const listPrice = product?.price ?? 0
-
-  const selectedVariant = variants.find(
-    (v) =>
-      v.color === resolvedColor &&
-      normalizeSize(v.size) === resolvedSize &&
-      v.quantity > 0
+  const selectedVariant = useMemo(
+    () =>
+      variants.find(
+        (variant) =>
+          variant.color === resolvedColor &&
+          normalizeSize(variant.size) === resolvedSize &&
+          variant.quantity > 0
+      ),
+    [resolvedColor, resolvedSize, variants]
   )
 
   const cartQuantityForSelectedVariant = useMemo(() => {
@@ -253,26 +334,65 @@ export default function ProductDetailPage() {
   )
   const isOutOfStock = !selectedVariant || remainingStock <= 0
 
+  const handleAddToCart = useCallback(() => {
+    if (!product || isOutOfStock) return
+    dispatch(
+      addToCart({
+        product,
+        productVariantId: selectedVariant?.id,
+        selectedSize: selectedVariant?.size,
+        selectedColor: selectedVariant?.color,
+        quantity: selection.quantity
+      })
+    )
+    dispatch(openDrawer())
+  }, [dispatch, isOutOfStock, product, selection.quantity, selectedVariant])
+
+  const handleBuyNow = useCallback(() => {
+    if (!product || isOutOfStock) return
+    dispatch(
+      addToCart({
+        product,
+        productVariantId: selectedVariant?.id,
+        selectedSize: selectedVariant?.size,
+        selectedColor: selectedVariant?.color,
+        quantity: selection.quantity
+      })
+    )
+    navigate('/checkout')
+  }, [
+    dispatch,
+    isOutOfStock,
+    navigate,
+    product,
+    selection.quantity,
+    selectedVariant
+  ])
+
   const productDetails = useMemo(() => {
-    if (!descriptionLayout?.specs?.length || !product) return []
-    return [
-      {
-        label: 'Mã sản phẩm',
-        value: product.productCode.toUpperCase()
-      },
-      ...descriptionLayout.specs.map((spec) => ({
-        label: String(spec.label ?? ''),
-        value: formatDescriptionSpecDisplayValue(String(spec.value ?? ''))
-      }))
-    ]
+    if (!product) return []
+    return buildProductDetails(product, descriptionLayout)
   }, [descriptionLayout, product])
 
-  const listCategory = categories.find((c) => c.id === product?.categoryId)
-  const sizeGuideProfile =
-    /quần/i.test(product?.categoryName ?? '') ||
-    /quần/i.test(listCategory?.name ?? '')
-      ? 'bottoms'
-      : 'tops'
+  const sizeGuideProfile = resolveSizeGuideProfile(product, listCategory)
+  const sizeGuideProfileForDisplay =
+    descriptionLayout?.sizeGuide?.profile ?? sizeGuideProfile
+  const sizeGuideGenderForDisplay = normalizeMeasurementGender(
+    descriptionLayout?.sizeGuide?.gender ?? listCategory?.gender
+  )
+  const sizeGuideColumns = buildSizeGuideColumns(sizeGuideProfileForDisplay)
+  const sizeGuideRows = useMemo(() => {
+    const rows = descriptionLayout?.sizeGuide?.rows
+    return Array.isArray(rows) ? rows : []
+  }, [descriptionLayout?.sizeGuide?.rows])
+  const sizeGuideTableData =
+    sizeGuideRows.length > 0
+      ? sizeGuideRows
+      : getMeasurementPresetRows(
+          sizeGuideProfileForDisplay,
+          sizeGuideGenderForDisplay
+        )
+
   const productCategoryListHref = listCategory
     ? toProductsCategorySearchUrl(listCategory)
     : `/products?category=${encodeURIComponent(
@@ -283,7 +403,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-80">
+      <div className="flex items-center justify-center min-h-80">
         <p className="text-sm uppercase tracking-[0.2em] text-stone-400">
           Loading…
         </p>
@@ -293,17 +413,35 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="flex justify-center items-center min-h-80">
-        <p className="text-sm uppercase tracking-[0.2em] text-stone-400">
-          Product not found
-        </p>
+      <div className="flex min-h-[60vh] items-center justify-center bg-stone-50/50 rounded-2xl border border-stone-100 my-4 px-4">
+        <Result
+          status="404"
+          title={
+            <span className="text-xl font-medium text-stone-800">
+              Sản phẩm không tồn tại
+            </span>
+          }
+          subTitle={
+            <p className="max-w-md mx-auto mt-1 text-sm leading-relaxed text-stone-500">
+              Có vẻ như liên kết đã bị hỏng, sản phẩm đã ngừng kinh doanh hoặc
+              danh mục vừa được cập nhật lại.
+            </p>
+          }
+          extra={
+            <Link to="/products">
+              <Button type="primary" size="large" icon={<ShoppingOutlined />}>
+                Tiếp tục mua sắm
+              </Button>
+            </Link>
+          }
+        />
       </div>
     )
   }
 
   return (
     <section>
-      <nav className="flex flex-wrap gap-2 items-center mb-8 text-xs font-medium text-stone-400">
+      <nav className="flex flex-wrap items-center gap-2 mb-8 text-xs font-medium text-stone-400">
         <Link
           to="/"
           className="text-stone-400! hover:text-stone-600 hover:underline!"
@@ -345,93 +483,51 @@ export default function ProductDetailPage() {
             setSelection={setSelection}
             productName={product.name}
           />
-          {productDetails.length > 0 && (
-            <div className="p-6 bg-white rounded-lg border border-stone-200">
-              <p className="mb-4 text-base font-semibold text-black">
-                Thông số kỹ thuật
-              </p>
-              <dl className="divide-y divide-stone-100">
-                {productDetails.map(({ label, value }, idx) => (
-                  <div
-                    key={`${label}-${idx}`}
-                    className="flex gap-4 justify-between items-start py-3"
-                  >
-                    <dt className="text-xs! uppercase text-stone-600 shrink-0">
-                      {label}
-                    </dt>
-                    <dd className="text-sm font-medium text-stone-700 text-right max-w-[65%]">
-                      {label === 'SKU'
-                        ? value
-                        : value.split('\n').map((line, lineIdx) => (
-                            <span
-                              key={`${idx}-${lineIdx}`}
-                              className="block leading-relaxed"
-                            >
-                              {line}
-                            </span>
-                          ))}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          )}
+          <ProductDetailsTable productDetails={productDetails} />
         </div>
 
-        <aside className="space-y-8 w-full lg:sticky lg:top-8 lg:h-fit">
+        <aside className="w-full space-y-8 lg:sticky lg:top-8 lg:h-fit">
           <div className="pb-4 space-y-3 border-b border-stone-200">
             <h1 className="mt-3! text-3xl font-normal leading-snug tracking-tight text-stone-900">
               {toCapitalize(product.name)}
             </h1>
-            {selectedVariant?.sku && (
+            {selectedVariant?.sku ? (
               <p className="text-sm text-stone-500">
                 SKU: {selectedVariant.sku}
               </p>
-            )}
+            ) : null}
           </div>
 
           <div className="space-y-1">
             {showSaleCountdown && saleEndDate ? (
-              <div className="flex flex-wrap gap-4 justify-between items-center w-full">
+              <div className="flex flex-wrap items-center justify-between w-full gap-4">
                 <span className="text-3xl font-semibold tabular-nums text-rose-700">
                   {formatCurrency(product.salePrice ?? 0)}
                 </span>
-                <div className="flex flex-col flex-1 items-center p-2 bg-red-100 rounded-2xl min-w-40 shrink-0">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-stone-500">
-                    Kết thúc sau
-                  </span>
-                  <Timer
-                    key={saleStatisticCountdownFormat}
-                    type="countdown"
-                    value={saleEndDate}
-                    format={saleStatisticCountdownFormat}
-                    onFinish={refreshSaleTimer}
-                    classNames={{
-                      root: '!m-0 !p-0 leading-tight',
-                      content:
-                        '!text-xl !font-semibold tabular-nums text-rose-600'
-                    }}
-                  />
-                </div>
-                <span className="text-lg font-medium tabular-nums line-through text-stone-400">
-                  {formatCurrency(listPrice)}
+                <ProductSaleCountdown
+                  saleEndDate={saleEndTimestamp}
+                  saleStatisticCountdownFormat={saleStatisticCountdownFormat}
+                  refreshSaleTimer={refreshSaleTimer}
+                />
+                <span className="text-lg font-medium line-through tabular-nums text-stone-400">
+                  {formatCurrency(product.price)}
                 </span>
               </div>
             ) : (
-              <div className="flex gap-3 items-baseline">
+              <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-semibold text-stone-900">
-                  {effectiveDisplayPrice !== listPrice
+                  {effectiveDisplayPrice !== product.price
                     ? formatCurrency(effectiveDisplayPrice)
-                    : formatCurrency(listPrice)}
+                    : formatCurrency(product.price)}
                 </span>
-                {effectiveDisplayPrice !== listPrice && (
+                {effectiveDisplayPrice !== product.price ? (
                   <span className="text-sm line-through text-stone-400">
-                    {formatCurrency(listPrice)}
+                    {formatCurrency(product.price)}
                   </span>
-                )}
+                ) : null}
               </div>
             )}
-            <div className="flex gap-3 items-baseline">
+            <div className="flex items-baseline gap-3">
               <img
                 src="https://n7media.coolmate.me/uploads/2026/04/15/icon4.png"
                 alt="Freeship"
@@ -443,111 +539,15 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <p className="text-sm font-semibold text-black">
-              Màu sắc:{' '}
-              <span className="text-base font-medium tracking-normal normal-case text-stone-700">
-                {toCapitalize(resolvedColor ?? '-')}
-              </span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {colorOptions.map((color) => {
-                const variant = variants.find((v) => v.color === color)
-                const colorQty = variants
-                  .filter((v) => v.color === color)
-                  .reduce((sum, v) => sum + v.quantity, 0)
-                const isDisabled = colorQty <= 0
-                const isSelected = resolvedColor === color
-
-                return (
-                  <button
-                    key={color}
-                    type="button"
-                    disabled={isDisabled}
-                    onClick={() => {
-                      setSelection((p) => ({
-                        ...p,
-                        color,
-                        size: undefined,
-                        quantity: 1,
-                        image: ''
-                      }))
-                    }}
-                    style={{ backgroundColor: variant?.hex ?? '#e5e7eb' }}
-                    className={`relative h-7 w-12 rounded-full transition-all duration-150 border-2 ${
-                      isSelected
-                        ? 'border-blue-600 shadow-sm scale-110'
-                        : 'border-stone-200'
-                    } ${
-                      isDisabled
-                        ? 'opacity-30 cursor-not-allowed'
-                        : 'cursor-pointer hover:border-stone-400'
-                    }`}
-                  >
-                    {isDisabled && (
-                      <span className="flex absolute inset-0 justify-center items-center pointer-events-none">
-                        <span className="block h-px w-[80%] -rotate-12 bg-white mix-blend-difference" />
-                      </span>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <p className="text-sm font-semibold text-black m-0!">
-                Kích thước:{' '}
-                <span className="text-base font-medium tracking-normal normal-case text-stone-700">
-                  {toCapitalize(resolvedSize ?? '-')}
-                </span>
-              </p>
-              <button
-                type="button"
-                onClick={() => setUi((p) => ({ ...p, isSizeGuideOpen: true }))}
-                className="text-xs! cursor-pointer text-blue-700! underline underline-offset-2 transition-colors hover:text-stone-600"
-              >
-                Hướng dẫn chọn size
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {sizeOptions.map((size) => {
-                const sizeVariant = variants.find(
-                  (v) =>
-                    v.color === resolvedColor && normalizeSize(v.size) === size
-                )
-                const isDisabled = (sizeVariant?.quantity ?? 0) <= 0
-
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    disabled={isDisabled}
-                    onClick={() => {
-                      setSelection((p) => ({ ...p, size, quantity: 1 }))
-                    }}
-                    className={`rounded-xl relative min-w-12 px-3 py-2 text-xs! font-semibold tracking-wider transition-all duration-150 ${
-                      resolvedSize === size
-                        ? 'bg-black text-white!'
-                        : 'bg-stone-200 text-stone-600!'
-                    } ${
-                      isDisabled
-                        ? 'cursor-not-allowed line-through opacity-45'
-                        : 'cursor-pointer'
-                    }`}
-                  >
-                    {size}
-                    {isDisabled && (
-                      <span className="flex absolute inset-0 justify-center items-center pointer-events-none">
-                        <span className="block h-px w-[75%] -rotate-12 bg-stone-500" />
-                      </span>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+          <ProductVariantSelectors
+            colorOptions={colorOptions}
+            resolvedColor={resolvedColor}
+            variants={variants}
+            sizeOptions={sizeOptions}
+            resolvedSize={resolvedSize}
+            setSelection={setSelection}
+            onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+          />
 
           <div className="space-y-3">
             <CartQuantityControl
@@ -555,7 +555,7 @@ export default function ProductDetailPage() {
               min={1}
               max={Math.max(1, remainingStock)}
               onChange={(next) =>
-                setSelection((p) => ({ ...p, quantity: next }))
+                setSelection((prev) => ({ ...prev, quantity: next }))
               }
             />
             <p className="text-[11px] text-stone-400">
@@ -566,32 +566,8 @@ export default function ProductDetailPage() {
           <ProductPurchaseActions
             isOutOfStock={isOutOfStock}
             selectedVariant={selectedVariant}
-            onAddToCart={() => {
-              if (isOutOfStock) return
-              dispatch(
-                addToCart({
-                  product,
-                  productVariantId: selectedVariant?.id,
-                  selectedSize: selectedVariant?.size,
-                  selectedColor: selectedVariant?.color,
-                  quantity: selection.quantity
-                })
-              )
-              dispatch(openDrawer())
-            }}
-            onBuyNow={() => {
-              if (isOutOfStock) return
-              dispatch(
-                addToCart({
-                  product,
-                  productVariantId: selectedVariant?.id,
-                  selectedSize: selectedVariant?.size,
-                  selectedColor: selectedVariant?.color,
-                  quantity: selection.quantity
-                })
-              )
-              navigate('/checkout')
-            }}
+            onAddToCart={handleAddToCart}
+            onBuyNow={handleBuyNow}
           />
 
           <div className="grid grid-cols-2 mt-4 rounded-lg bg-stone-200">
@@ -615,10 +591,10 @@ export default function ProductDetailPage() {
             ].map(({ title, sub }) => (
               <div
                 key={title}
-                className="flex gap-2 items-center p-4 text-start"
+                className="flex items-center gap-2 p-4 text-start"
               >
                 <img src={title} alt={title} className="size-9" />
-                <p className="whitespace-pre-line text-xs text-stone-700 m-0!">
+                <p className="m-0! whitespace-pre-line text-xs text-stone-700">
                   {sub}
                 </p>
               </div>
@@ -627,50 +603,21 @@ export default function ProductDetailPage() {
         </aside>
       </div>
 
-      <div className="mt-8 w-full bg-white rounded-lg border border-stone-100">
-        <Tabs
-          className="[&_.ant-tabs-nav]:mb-6 [&_.ant-tabs-nav-wrap]:w-full [&_.ant-tabs-nav-list]:flex [&_.ant-tabs-nav-list]:w-full [&_.ant-tabs-tab]:m-0 [&_.ant-tabs-tab]:flex-1 [&_.ant-tabs-tab]:justify-center [&_.ant-tabs-tab-btn]:w-full [&_.ant-tabs-tab-btn]:text-center [&_.ant-tabs-tab]:py-3 [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-ink-bar]:h-0.5"
-          defaultActiveKey="description"
-          items={[
-            {
-              key: 'description',
-              label: 'Mô tả sản phẩm',
-              children: (
-                <div className="px-4 py-3 md:px-6 md:py-4">
-                  <div
-                    className="prose prose-sm max-w-none text-stone-600 [&_img]:h-auto [&_img]:max-w-full"
-                    dangerouslySetInnerHTML={{ __html: product.description }}
-                  />
-                </div>
-              )
-            },
-            {
-              key: 'reviews',
-              label: 'Đánh giá sản phẩm',
-              children: (
-                <div className="px-4 py-3 md:px-6 md:py-4">
-                  <Suspense fallback={null}>
-                    <ProductReviewsSection
-                      productId={product.id}
-                      productName={toCapitalize(product.name)}
-                    />
-                  </Suspense>
-                </div>
-              )
-            }
-          ]}
-        />
-      </div>
+      <ProductTabs
+        description={product.description}
+        productId={product.id}
+        productName={product.name}
+      />
 
       {similarProducts.length > 0 ? (
         <div className="mt-12">
-          <div className="flex flex-wrap gap-4 justify-between items-end mb-6">
+          <div className="flex items-end justify-between gap-4 mb-6">
             <h2 className="text-xl font-semibold tracking-tight text-stone-900 md:text-2xl">
               Sản phẩm tương tự
             </h2>
             <Link
               to={productCategoryListHref}
-              className="text-sm font-semibold shrink-0 hover:underline text-[#8B2332]"
+              className="shrink-0 text-sm font-semibold text-[#8B2332] hover:underline"
             >
               Xem thêm trong danh mục
             </Link>
@@ -683,38 +630,12 @@ export default function ProductDetailPage() {
         </div>
       ) : null}
 
-      <Modal
-        title="Hướng dẫn chọn size"
-        open={ui.isSizeGuideOpen}
-        onCancel={() => setUi((p) => ({ ...p, isSizeGuideOpen: false }))}
-        footer={null}
-        width={850}
-      >
-        <p className="mb-4 text-sm text-slate-600">
-          Dựa trên cân nặng và chiều cao của bạn để chọn size phù hợp nhất.
-        </p>
-        {sizeGuideProfile === 'tops' ? (
-          <Table
-            columns={MEASUREMENT_PRESETS.tops.columns}
-            dataSource={MEASUREMENT_PRESETS.tops.data}
-            pagination={false}
-            size="small"
-            rowKey="size"
-            bordered
-            className="overflow-hidden rounded-xl border border-slate-200"
-          />
-        ) : (
-          <Table
-            columns={MEASUREMENT_PRESETS.bottoms.columns}
-            dataSource={MEASUREMENT_PRESETS.bottoms.data}
-            pagination={false}
-            size="small"
-            rowKey="size"
-            bordered
-            className="overflow-hidden rounded-xl border border-slate-200"
-          />
-        )}
-      </Modal>
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onCancel={() => setIsSizeGuideOpen(false)}
+        columns={sizeGuideColumns}
+        dataSource={sizeGuideTableData}
+      />
     </section>
   )
 }

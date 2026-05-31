@@ -27,7 +27,7 @@ export default function ProductPurchaseActions({
         onClick={onAddToCart}
         icon={<ShoppingOutlined />}
         size="large"
-        className="w-full"
+        className="w-full px-4 py-3 text-sm font-medium text-white transition-colors rounded-lg bg-stone-900 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Thêm vào giỏ
       </Button>
@@ -37,7 +37,7 @@ export default function ProductPurchaseActions({
         disabled={isOutOfStock || !selectedVariant}
         onClick={onBuyNow}
         size="large"
-        className="w-full"
+        className="w-full px-4 py-3 text-sm font-medium text-white transition-colors rounded-lg bg-blue-600 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Mua nhanh
       </Button>

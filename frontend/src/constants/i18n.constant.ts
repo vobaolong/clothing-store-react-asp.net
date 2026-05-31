@@ -45,6 +45,9 @@ export const VI_LABELS: Record<string, string> = {
   [CategoryProductType.SHOES]: 'Giày dép',
   [CategoryProductType.ACCESSORIES]: 'Phụ kiện',
 
+  // Customer Status
+  active: 'Kích hoạt',
+  locked: 'Bị khóa',
   // General
   all: 'Tất cả'
 }

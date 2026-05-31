@@ -1,0 +1,7 @@
+[
+  { "size": "S", "height": "160~168", "weight": "50~60", "waist": "68~76" },
+  { "size": "M", "height": "166~174", "weight": "58~70", "waist": "76~84" },
+  { "size": "L", "height": "172~180", "weight": "68~80", "waist": "84~92" },
+  { "size": "XL", "height": "178~186", "weight": "78~90", "waist": "92~100" },
+  { "size": "2XL", "height": "184~190", "weight": "88~100", "waist": "100~108" }
+]

@@ -139,6 +139,7 @@ export type AdminProductUpsertPayload = {
   salePriceStartDate?: string | null
   salePriceEndDate?: string | null
   categoryId: string
+  isActive?: boolean
   variants: AdminProductVariantPayload[]
 }
 

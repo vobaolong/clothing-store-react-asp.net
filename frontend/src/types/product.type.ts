@@ -52,6 +52,18 @@ export type Category = {
 
 export type DescriptionLayout = {
   specs?: Array<{ label: string; value: string }>
+  sizeGuide?: {
+    profile?: 'tops' | 'bottoms'
+    gender?: 'male' | 'female' | 'unisex'
+    rows?: Array<{
+      size: string
+      height?: string
+      weight?: string
+      chest?: string
+      waist?: string
+      footLength?: string
+    }>
+  }
 }
 
 export type ProductSelection = {
@@ -77,6 +89,17 @@ export type ProductFormValues = {
   productCode: string
   description: string
   measurementProfile?: 'tops' | 'bottoms'
+  sizeGuideGender?: 'male' | 'female' | 'unisex'
+  sizeGuidePresetProfile?: 'tops' | 'bottoms'
+  sizeGuideRows: Array<{
+    size: string
+    height?: string
+    weight?: string
+    chest?: string
+    waist?: string
+    footLength?: string
+  }>
+  isActive?: boolean
   descriptionSpecs: Array<{ label: string; value: string[] }>
   categoryId: string
   price: number

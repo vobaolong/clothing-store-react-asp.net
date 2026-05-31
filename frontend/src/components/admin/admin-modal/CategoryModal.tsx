@@ -16,7 +16,10 @@ import {
   collectDescendantCategoryIds,
   type CategoryTreeNode
 } from '@/utils/category-tree'
-import { toCapitalize } from '@/utils/table.lib'
+import {
+  ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
+  ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
+} from '@/constants/admin-filter.constant'
 
 type Props = {
   open: boolean
@@ -25,18 +28,6 @@ type Props = {
   onClose: () => void
   onSaved: () => void
 }
-
-const GENDER_OPTIONS = Object.values(CategoryGender).map((value) => ({
-  label: toCapitalize(value),
-  value
-}))
-
-const PRODUCT_TYPE_OPTIONS = Object.values(CategoryProductType).map(
-  (value) => ({
-    label: toCapitalize(value),
-    value
-  })
-)
 
 export default function CategoryModal({
   open,
@@ -169,7 +160,7 @@ export default function CategoryModal({
 
   return (
     <Modal
-      title={editing ? 'Edit Category' : 'Create Category'}
+      title={editing ? 'Chỉnh sửa danh mục' : 'Thêm danh mục'}
       open={open}
       onOk={save}
       onCancel={onClose}
@@ -180,17 +171,17 @@ export default function CategoryModal({
       <Form form={form} layout="vertical" onValuesChange={onDirty}>
         <Form.Item
           name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Please input name' }]}
+          label="Tên danh mục"
+          rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="description" label="Description">
+        <Form.Item name="description" label="Mô tả">
           <Input.TextArea rows={3} />
         </Form.Item>
 
-        <Form.Item name="parentId" label="Parent Category">
+        <Form.Item name="parentId" label="Danh mục cha">
           <TreeSelect
             className="w-full"
             allowClear
@@ -204,15 +195,15 @@ export default function CategoryModal({
           />
         </Form.Item>
 
-        <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-          <Select options={GENDER_OPTIONS} />
+        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+          <Select options={ADMIN_CATEGORY_GENDER_FILTER_OPTIONS} />
         </Form.Item>
 
-        <Form.Item name="productType" label="Product Type">
-          <Select allowClear options={PRODUCT_TYPE_OPTIONS} />
+        <Form.Item name="productType" label="Loại sản phẩm">
+          <Select allowClear options={ADMIN_CATEGORY_TYPE_FILTER_OPTIONS} />
         </Form.Item>
 
-        <Form.Item label="Image" required>
+        <Form.Item label="Hình ảnh" required>
           <div className="space-y-3">
             <Form.Item
               name="imageUpload"
@@ -223,24 +214,21 @@ export default function CategoryModal({
               <Upload.Dragger
                 accept="image/*"
                 maxCount={1}
-                beforeUpload={() => false} // Chặn việc tự động đẩy lên server vô tội vạ
+                beforeUpload={() => false}
               >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
-                <p className="ant-upload-text">
-                  Click or drag image to this area to upload
-                </p>
+                <p className="ant-upload-text">Chọn hoặc kéo thả ảnh vào đây</p>
                 <p className="ant-upload-hint">
-                  Support for a single upload. You can also enter an image URL
-                  below.
+                  Hỗ trợ tải lên một ảnh. Bạn cũng có thể nhập URL ảnh bên dưới.
                 </p>
               </Upload.Dragger>
             </Form.Item>
 
             <Form.Item
               name="imageUrlInput"
-              label="Or enter image URL"
+              label="Nhập URL ảnh"
               style={{ marginBottom: 0 }}
             >
               <Input placeholder="https://example.com/image.jpg" allowClear />
@@ -250,7 +238,7 @@ export default function CategoryModal({
 
         <Form.Item
           name="isActive"
-          label="Is Active"
+          label="Kích hoạt"
           valuePropName="checked"
           initialValue={true}
         >

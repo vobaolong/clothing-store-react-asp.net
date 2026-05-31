@@ -1,163 +1,42 @@
+import { InfoCircleOutlined } from '@ant-design/icons'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from 'antd'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { useEffect, useReducer, useState } from 'react'
-import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { z } from 'zod'
+import toast from 'react-hot-toast'
+import LoadingOverlay from '@/components/checkout/LoadingOverlay'
+import ShippingAddressSection from '@/components/checkout/ShippingAddressSection'
+import CouponSection from '@/components/checkout/CouponSection'
+import PaymentSection from '@/components/checkout/PaymentSection'
+import OrderSummary from '@/components/checkout/OrderSummary'
+import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
 import { PaymentMethod } from '@/enums'
-import {
-  removePurchasedCartItems,
-  selectSelectedCartItems
-} from '@/state/cart-slice'
-import { getAuthToken } from '@/state/auth/auth-session'
-import { placeOrder } from '@/api/orders-api'
 import { getAvailableCoupons, validateCoupon } from '@/api/coupons-api'
 import {
   getShippingAddresses,
   getShippingAddressPrefill
 } from '@/api/addresses-api'
+import { placeOrder } from '@/api/orders-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import {
   calculateFinalTotal,
   normalizeCouponCode
 } from '@/utils/checkout-utils'
-import { InfoCircleOutlined } from '@ant-design/icons'
-import { getEffectivePriceAt } from '@/utils/product-pricing'
-import LoadingOverlay from '@/components/checkout/LoadingOverlay'
-import ShippingAddressSection from '@/components/checkout/ShippingAddressSection'
-import CouponSection from '@/components/checkout/CouponSection'
-import PaymentSection from '@/components/checkout/PaymentSection'
-import OrderSummary from '@/components/checkout/OrderSummary'
-import type {
-  CheckoutFormValues,
-  SelectOption,
-  CheckoutWardOption
-} from '@/types/checkout.type'
-import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
-
-type CouponState = {
-  isApplying: boolean
-  appliedCode: string
-  discountAmount: number
-}
-
-type AddressState = {
-  showNewForm: boolean
-  provinceOptions: SelectOption[]
-  wardOptions: CheckoutWardOption[]
-}
-
-type CheckoutUiState = {
-  coupon: CouponState
-  address: AddressState
-  isSubmitting: boolean
-}
-
-type CheckoutUiAction =
-  | { type: 'coupon/applying'; value: boolean }
-  | { type: 'coupon/set'; appliedCode: string; discountAmount: number }
-  | { type: 'coupon/clear' }
-  | { type: 'coupon/code-input' }
-  | { type: 'address/toggle-new-form' }
-  | { type: 'address/set-province-options'; options: SelectOption[] }
-  | { type: 'address/set-ward-options'; options: CheckoutWardOption[] }
-  | { type: 'address/hide-new-form' }
-  | { type: 'submitting/set'; value: boolean }
-
-const checkoutUiInitialState: CheckoutUiState = {
-  coupon: {
-    isApplying: false,
-    appliedCode: '',
-    discountAmount: 0
-  },
-  address: {
-    showNewForm: false,
-    provinceOptions: [],
-    wardOptions: []
-  },
-  isSubmitting: false
-}
-
-function checkoutUiReducer(
-  state: CheckoutUiState,
-  action: CheckoutUiAction
-): CheckoutUiState {
-  switch (action.type) {
-    case 'coupon/applying':
-      return {
-        ...state,
-        coupon: { ...state.coupon, isApplying: action.value }
-      }
-    case 'coupon/set':
-      return {
-        ...state,
-        coupon: {
-          isApplying: false,
-          appliedCode: action.appliedCode,
-          discountAmount: action.discountAmount
-        }
-      }
-    case 'coupon/clear':
-      return {
-        ...state,
-        coupon: {
-          isApplying: false,
-          appliedCode: '',
-          discountAmount: 0
-        }
-      }
-    case 'coupon/code-input':
-      return state
-    case 'address/toggle-new-form':
-      return {
-        ...state,
-        address: {
-          ...state.address,
-          showNewForm: !state.address.showNewForm
-        }
-      }
-    case 'address/set-province-options':
-      return {
-        ...state,
-        address: {
-          ...state.address,
-          provinceOptions: action.options
-        }
-      }
-    case 'address/set-ward-options':
-      return {
-        ...state,
-        address: {
-          ...state.address,
-          wardOptions: action.options
-        }
-      }
-    case 'address/hide-new-form':
-      return {
-        ...state,
-        address: {
-          ...state.address,
-          showNewForm: false
-        }
-      }
-    case 'submitting/set':
-      return {
-        ...state,
-        isSubmitting: action.value
-      }
-    default:
-      return state
-  }
-}
+import { getAuthToken } from '@/state/auth/auth-session'
+import {
+  removePurchasedCartItems,
+  selectSelectedCartItems
+} from '@/state/cart-slice'
+import type { CheckoutFormValues } from '@/types/checkout.type'
+import { useCheckoutAddressModalState } from '@/hooks/useCheckoutAddressModalState'
 
 const checkoutSchema = z.object({
   fullName: z.string().optional(),
-  email: z.email('Invalid email').or(z.literal('')).optional(),
+  email: z.string().email('Invalid email').optional().or(z.literal('')),
   phone: z.string().optional(),
   address: z.string().optional(),
   province: z.string().optional(),
@@ -165,7 +44,7 @@ const checkoutSchema = z.object({
   street: z.string().optional(),
   label: z.enum(['Home', 'Office']).optional(),
   setAsDefault: z.boolean().optional(),
-  paymentMethod: z.enum(PaymentMethod),
+  paymentMethod: z.nativeEnum(PaymentMethod),
   shippingAddressId: z.string().optional(),
   couponCode: z.string().optional(),
   note: z.string().max(2000).optional()
@@ -174,9 +53,15 @@ const checkoutSchema = z.object({
 export default function CheckoutPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const qc = useQueryClient()
+  const queryClient = useQueryClient()
   const items = useSelector(selectSelectedCartItems)
   const [nowMs] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (items.length === 0) {
+      navigate('/cart', { replace: true })
+    }
+  }, [items.length, navigate])
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -190,17 +75,7 @@ export default function CheckoutPage() {
     })
     return () => observer.disconnect()
   }, [])
-  const [uiState, uiDispatch] = useReducer(
-    checkoutUiReducer,
-    checkoutUiInitialState
-  )
-  const total = items.reduce((sum, item) => {
-    const effective = getEffectivePriceAt(
-      item as unknown as import('@/types').Product,
-      nowMs
-    )
-    return sum + effective * item.quantity
-  }, 0)
+
   const [idempotencyKey] = useState(() => {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
       return crypto.randomUUID()
@@ -244,41 +119,9 @@ export default function CheckoutPage() {
     })
 
   const watchedCouponCode = useWatch({ control, name: 'couponCode' })
-
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  )
-  const coupon = uiState.coupon
-  const isSubmitting = uiState.isSubmitting
-
-  const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
-  const appliedCouponDetails = availableCouponsQuery.data?.find(
-    (c) => c.code.toUpperCase() === coupon.appliedCode
-  )
-  const isAppliedCouponEligible = appliedCouponDetails
-    ? subtotal >= appliedCouponDetails.minOrderSubtotal
-    : true
-
-  const [editingAddress, setEditingAddress] = useState<
-    import('@/types').ShippingAddress | null
-  >(null)
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
-
-  const handleOpenAddAddress = () => {
-    setEditingAddress(null)
-    setIsAddressModalOpen(true)
-  }
-
-  const handleEditAddress = (address: import('@/types').ShippingAddress) => {
-    setEditingAddress(address)
-    setIsAddressModalOpen(true)
-  }
-
-  const handleCloseAddressModal = () => {
-    setEditingAddress(null)
-    setIsAddressModalOpen(false)
-  }
+  const [couponIsApplying, setCouponIsApplying] = useState(false)
+  const [appliedCouponCode, setAppliedCouponCode] = useState('')
+  const [couponDiscountAmount, setCouponDiscountAmount] = useState(0)
 
   useEffect(() => {
     if (prefillQuery.data) setValue('fullName', prefillQuery.data.fullName)
@@ -297,14 +140,21 @@ export default function CheckoutPage() {
     }
   }, [addressesQuery.data, getValues, reset])
 
+  const coupon = {
+    isApplying: couponIsApplying,
+    appliedCode: appliedCouponCode,
+    discountAmount: couponDiscountAmount
+  }
+
   const handleCouponCodeChange = (nextCode: string) => {
     setValue('couponCode', nextCode)
     const normalized = normalizeCouponCode(nextCode)
     if (
       !normalized ||
-      (coupon.appliedCode && normalized !== coupon.appliedCode)
+      (appliedCouponCode && normalized !== appliedCouponCode)
     ) {
-      uiDispatch({ type: 'coupon/clear' })
+      setAppliedCouponCode('')
+      setCouponDiscountAmount(0)
     }
   }
 
@@ -314,39 +164,62 @@ export default function CheckoutPage() {
       toast.error('Vui lòng nhập mã giảm giá')
       return
     }
+
     const normalizedCode = normalizeCouponCode(rawCode)
-    if (coupon.isApplying) return
-    if (coupon.appliedCode && coupon.appliedCode === normalizedCode) return
+    if (couponIsApplying) return
+    if (appliedCouponCode && appliedCouponCode === normalizedCode) return
+
     try {
-      uiDispatch({ type: 'coupon/applying', value: true })
+      setCouponIsApplying(true)
       const result = await validateCoupon({
         code: rawCode,
         orderTotal: subtotal
       })
       const finalCode = normalizeCouponCode(result.code)
-      uiDispatch({
-        type: 'coupon/set',
-        appliedCode: finalCode,
-        discountAmount: result.discountAmount
-      })
+      setAppliedCouponCode(finalCode)
+      setCouponDiscountAmount(result.discountAmount)
       setValue('couponCode', finalCode)
       toast.success('Đã áp dụng mã giảm giá')
     } catch {
-      uiDispatch({ type: 'coupon/clear' })
+      setAppliedCouponCode('')
+      setCouponDiscountAmount(0)
       toast.error('Mã giảm giá không hợp lệ')
+    } finally {
+      setCouponIsApplying(false)
     }
   }
 
   const handleRemoveCoupon = () => {
-    uiDispatch({ type: 'coupon/clear' })
+    setAppliedCouponCode('')
+    setCouponDiscountAmount(0)
     setValue('couponCode', '')
   }
 
-  const handleAddressModalSaved = async (addressId: string) => {
-    setValue('shippingAddressId', addressId)
-    await qc.invalidateQueries({ queryKey: QUERY_KEYS.shippingAddresses })
-    handleCloseAddressModal()
-  }
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  )
+  const appliedCouponDetails = availableCouponsQuery.data?.find(
+    (c) => c.code.toUpperCase() === coupon.appliedCode
+  )
+  const isAppliedCouponEligible = appliedCouponDetails
+    ? subtotal >= appliedCouponDetails.minOrderSubtotal
+    : true
+  const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
+  const total = subtotal
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const {
+    editingAddress,
+    isAddressModalOpen,
+    handleOpenAddAddress,
+    handleEditAddress,
+    handleCloseAddressModal,
+    handleAddressModalSaved
+  } = useCheckoutAddressModalState({
+    queryClient,
+    setValue
+  })
 
   const submitOrder = async () => {
     if (isSubmitting) return
@@ -361,7 +234,7 @@ export default function CheckoutPage() {
     }
 
     try {
-      uiDispatch({ type: 'submitting/set', value: true })
+      setIsSubmitting(true)
       if (
         watchedCouponCode?.trim() &&
         normalizeCouponCode(watchedCouponCode) !== coupon.appliedCode
@@ -373,113 +246,65 @@ export default function CheckoutPage() {
         toast.error('Tổng tiền hiện tại không đủ để áp dụng mã giảm giá')
         return
       }
+
       const values = getValues()
       if (!values.shippingAddressId) {
         toast.error('Vui lòng chọn địa chỉ giao hàng')
         return
       }
+
+      const orderItems = items.map((item) => {
+        const productVariantId =
+          item.productVariantId || item.selectedVariant?.id
+        if (!productVariantId) {
+          throw new Error(
+            `Giỏ hàng có sản phẩm không hợp lệ: ${item.name ?? item.id}`
+          )
+        }
+
+        return {
+          productId: item.id,
+          productVariantId,
+          quantity: item.quantity
+        }
+      })
+
       const noteTrimmed = values.note?.trim()
       const orderId = await placeOrder({
-        items: items.map((item) => ({
-          productId: item.id,
-          productVariantId: item.productVariantId,
-          quantity: item.quantity
-        })),
+        items: orderItems,
         couponCode: coupon.appliedCode || undefined,
         shippingAddressId: values.shippingAddressId,
         paymentMethod: values.paymentMethod,
         note: noteTrimmed ? noteTrimmed : undefined,
         idempotencyKey
       })
-      if (values.paymentMethod === 'VNPAY') {
+
+      if (values.paymentMethod === PaymentMethod.VNPAY) {
         const data = await createVnPayUrl(orderId)
         window.location.assign(data.paymentUrl)
         return
       }
+
       dispatch(
         removePurchasedCartItems(
-          items.map((item) => ({
-            id: item.id,
+          orderItems.map((item) => ({
+            id: item.productId,
             productVariantId: item.productVariantId
           }))
         )
       )
-      const shortOrderId = orderId.slice(0, 8).toUpperCase()
-      toast.custom(
-        (t) => (
-          <div
-            className={`max-w-sm w-full rounded-2xl bg-white px-4 py-4 shadow-2xl border border-slate-200 transition-all duration-300 ${
-              t.visible
-                ? 'animate-in slide-in-from-right'
-                : 'animate-out slide-out-to-right'
-            }`}
-          >
-            <div className="flex gap-3 items-start">
-              <div className="flex justify-center items-center bg-green-100 rounded-full size-10">
-                <svg
-                  className="w-5 h-5 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-slate-900">
-                  Xác nhận đặt hàng
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  Đặt hàng thành công 🎉
-                </p>
-                <p className="mt-1 text-xs text-slate-400">
-                  Mã đơn: <span className="font-medium">{shortOrderId}</span>
-                </p>
-              </div>
-              <button
-                onClick={() => toast.dismiss(t.id)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex gap-2 justify-end items-center mt-4">
-              <Button onClick={() => toast.dismiss(t.id)} className="text-sm">
-                Đóng
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => {
-                  toast.dismiss(t.id)
-                  navigate(`/orders/${orderId}`)
-                }}
-                className="rounded-lg px-3 py-1.5 text-sm font-medium"
-              >
-                Xem đơn
-              </Button>
-            </div>
-          </div>
-        ),
-        { duration: 50000 }
+      toast.success(
+        `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
       )
       navigate('/')
     } catch (error: unknown) {
       const msg =
-        axios.isAxiosError(error) &&
-        error.response?.data &&
-        typeof error.response.data === 'object' &&
-        error.response.data !== null &&
-        'message' in error.response.data
-          ? String((error.response.data as { message: unknown }).message)
+        error instanceof Error
+          ? error.message
           : 'Không thể đặt hàng. Vui lòng thử lại sau'
       toast.error(msg)
     } finally {
-      uiDispatch({ type: 'submitting/set', value: false })
+      setIsSubmitting(false)
     }
   }
 
@@ -503,7 +328,7 @@ export default function CheckoutPage() {
             addressesQuery={addressesQuery}
             onOpenModal={handleOpenAddAddress}
             onEditAddress={handleEditAddress}
-            qc={qc}
+            qc={queryClient}
           />
 
           <CouponSection

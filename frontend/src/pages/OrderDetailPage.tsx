@@ -279,76 +279,74 @@ export default function OrderDetailPage() {
           )}
         </Descriptions>
       </Card>
-      <Card className="rounded-2xl" title="Sản phẩm">
-        <Table
-          rowKey="id"
-          pagination={false}
-          dataSource={detail.items}
-          bordered
-          locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
-          columns={[
-            {
-              title: 'Sản phẩm',
-              dataIndex: 'productName',
-              render: (_, row) => (
-                <Link
-                  to={`/products/${row.productSlug}`}
-                  className="flex gap-2 items-center text-black! line-clamp-2 max-w-56"
+      <Table
+        rowKey="id"
+        pagination={false}
+        dataSource={detail.items}
+        bordered
+        locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+        columns={[
+          {
+            title: 'Sản phẩm',
+            dataIndex: 'productName',
+            render: (_, row) => (
+              <Link
+                to={`/products/${row.productSlug}`}
+                className="flex gap-2 items-center text-black! line-clamp-2 max-w-56"
+              >
+                <img
+                  src={row.imageUrl}
+                  alt="Product"
+                  className="object-cover rounded size-16"
+                  onError={(event) => {
+                    event.currentTarget.style.display = 'none'
+                  }}
+                />
+                {row.productName}
+              </Link>
+            )
+          },
+          {
+            title: 'Màu sắc',
+            render: (_, row) => `${row.variantColor} / ${row.variantSize}`
+          },
+          { title: 'Số lượng', dataIndex: 'quantity', align: 'right' },
+          {
+            title: 'Đơn giá',
+            dataIndex: 'unitPrice',
+            align: 'right',
+            render: (value: number) => formatCurrency(value)
+          },
+          {
+            title: 'Thành tiền',
+            dataIndex: 'lineTotal',
+            align: 'right',
+            render: (value: number) => formatCurrency(value)
+          },
+          {
+            title: 'Đánh giá',
+            align: 'center',
+            render: (_, row) =>
+              row.hasReviewed ? (
+                <span className="text-xs font-medium text-emerald-600">
+                  Đã đánh giá
+                </span>
+              ) : row.canReview ? (
+                <Button
+                  size="small"
+                  className="rounded-lg"
+                  onClick={() => setReviewingItemId(row.id)}
                 >
-                  <img
-                    src={row.imageUrl}
-                    alt="Product"
-                    className="object-cover rounded size-16"
-                    onError={(event) => {
-                      event.currentTarget.style.display = 'none'
-                    }}
-                  />
-                  {row.productName}
-                </Link>
+                  Đánh giá
+                </Button>
+              ) : (
+                <span className="text-xs text-slate-400">
+                  Chưa thể đánh giá
+                </span>
               )
-            },
-            {
-              title: 'Màu sắc',
-              render: (_, row) => `${row.variantColor} / ${row.variantSize}`
-            },
-            { title: 'Số lượng', dataIndex: 'quantity', align: 'right' },
-            {
-              title: 'Đơn giá',
-              dataIndex: 'unitPrice',
-              align: 'right',
-              render: (value: number) => formatCurrency(value)
-            },
-            {
-              title: 'Thành tiền',
-              dataIndex: 'lineTotal',
-              align: 'right',
-              render: (value: number) => formatCurrency(value)
-            },
-            {
-              title: 'Đánh giá',
-              align: 'center',
-              render: (_, row) =>
-                row.hasReviewed ? (
-                  <span className="text-xs font-medium text-emerald-600">
-                    Đã đánh giá
-                  </span>
-                ) : row.canReview ? (
-                  <Button
-                    size="small"
-                    className="rounded-lg"
-                    onClick={() => setReviewingItemId(row.id)}
-                  >
-                    Đánh giá
-                  </Button>
-                ) : (
-                  <span className="text-xs text-slate-400">
-                    Chưa thể đánh giá
-                  </span>
-                )
-            }
-          ]}
-        />
-      </Card>
+          }
+        ]}
+      />
       <div className="grid grid-cols-2 gap-4">
         <Card className="rounded-2xl" title="Trạng thái đơn hàng">
           <Timeline items={timelineItems} />
