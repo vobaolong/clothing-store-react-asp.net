@@ -62,7 +62,9 @@ export default function ProductsPage() {
         new Set(
           products.flatMap((p) => p.variants.map((v) => normalizeSize(v.size)))
         )
-      ).sort(compareSizes),
+      )
+        .filter(Boolean)
+        .sort(compareSizes),
     [products]
   )
 

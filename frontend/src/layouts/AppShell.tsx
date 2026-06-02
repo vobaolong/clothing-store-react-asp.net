@@ -123,7 +123,10 @@ export default function AppShell() {
                           {item.name}
                         </div>
                         <div className="mt-1 text-sm text-slate-500">
-                          {item.selectedColor} / {item.selectedSize} —{' '}
+                          {item.selectedColor}
+                          {item.selectedSize
+                            ? ` / ${item.selectedSize}`
+                            : ''} —{' '}
                           {formatCurrency(getCartLineEffectivePrice(item))}
                         </div>
                       </div>

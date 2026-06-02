@@ -11,7 +11,7 @@ interface ProductVariantSelectorsProps {
   resolvedColor: string
   variants: ProductVariant[]
   sizeOptions: string[]
-  resolvedSize: string
+  resolvedSize: string | undefined
   setSelection: Dispatch<SetStateAction<ProductSelection>>
   onOpenSizeGuide: () => void
 }
@@ -79,60 +79,63 @@ export default function ProductVariantSelectors({
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <p className="m-0! text-sm font-semibold text-black">
-            Kích thước:{' '}
-            <span className="text-base font-medium tracking-normal normal-case text-stone-700">
-              {toCapitalize(resolvedSize ?? '-')}
-            </span>
-          </p>
-          <button
-            type="button"
-            onClick={onOpenSizeGuide}
-            className="cursor-pointer text-xs! text-blue-700! underline underline-offset-2 transition-colors hover:text-stone-600"
-          >
-            Hướng dẫn chọn size
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {sizeOptions.map((size) => {
-            const sizeVariant = variants.find(
-              (item) =>
-                item.color === resolvedColor &&
-                normalizeSize(item.size) === size
-            )
-            const isDisabled = (sizeVariant?.quantity ?? 0) <= 0
-
-            return (
+      {sizeOptions.length > 0 &&
+        sizeOptions.some((s) => s.trim().length > 0) && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="m-0! text-sm font-semibold text-black">
+                Kích thước:{' '}
+                <span className="text-base font-medium tracking-normal normal-case text-stone-700">
+                  {toCapitalize(resolvedSize ?? '-')}
+                </span>
+              </p>
               <button
-                key={size}
                 type="button"
-                disabled={isDisabled}
-                onClick={() => {
-                  setSelection((prev) => ({ ...prev, size, quantity: 1 }))
-                }}
-                className={`relative min-w-12 rounded-xl px-3 py-2 text-xs! font-semibold tracking-wider transition-all duration-150 ${
-                  resolvedSize === size
-                    ? 'bg-black text-white!'
-                    : 'bg-stone-200 text-stone-600!'
-                } ${
-                  isDisabled
-                    ? 'cursor-not-allowed opacity-45 line-through'
-                    : 'cursor-pointer'
-                }`}
+                onClick={onOpenSizeGuide}
+                className="cursor-pointer text-xs! text-blue-700! underline underline-offset-2 transition-colors hover:text-stone-600"
               >
-                {size}
-                {isDisabled ? (
-                  <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="block h-px w-[75%] -rotate-12 bg-stone-500" />
-                  </span>
-                ) : null}
+                Hướng dẫn chọn size
               </button>
-            )
-          })}
-        </div>
-      </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {sizeOptions.map((size) => {
+                const sizeVariant = variants.find(
+                  (item) =>
+                    item.color === resolvedColor &&
+                    normalizeSize(item.size) === size
+                )
+                const isDisabled = (sizeVariant?.quantity ?? 0) <= 0
+
+                return (
+                  <button
+                    key={size}
+                    type="button"
+                    disabled={isDisabled}
+                    onClick={() => {
+                      setSelection((prev) => ({ ...prev, size, quantity: 1 }))
+                    }}
+                    className={`relative min-w-12 rounded-xl px-3 py-2 text-xs! font-semibold tracking-wider transition-all duration-150 ${
+                      resolvedSize === size
+                        ? 'bg-black text-white!'
+                        : 'bg-stone-200 text-stone-600!'
+                    } ${
+                      isDisabled
+                        ? 'cursor-not-allowed opacity-45 line-through'
+                        : 'cursor-pointer'
+                    }`}
+                  >
+                    {size}
+                    {isDisabled ? (
+                      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span className="block h-px w-[75%] -rotate-12 bg-stone-500" />
+                      </span>
+                    ) : null}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
     </>
   )
 }

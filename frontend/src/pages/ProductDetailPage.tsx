@@ -305,17 +305,20 @@ export default function ProductDetailPage() {
     [resolvedColor, sizeOptions, variants]
   )
 
-  const resolvedSize = selection.size ?? firstAvailableSize ?? sizeOptions[0]
+  const hasSizes = sizeOptions.some((s) => s.trim().length > 0)
+  const resolvedSize = hasSizes
+    ? (selection.size ?? firstAvailableSize ?? sizeOptions[0])
+    : undefined
 
   const selectedVariant = useMemo(
     () =>
       variants.find(
         (variant) =>
           variant.color === resolvedColor &&
-          normalizeSize(variant.size) === resolvedSize &&
+          (!hasSizes || normalizeSize(variant.size) === resolvedSize) &&
           variant.quantity > 0
       ),
-    [resolvedColor, resolvedSize, variants]
+    [resolvedColor, resolvedSize, hasSizes, variants]
   )
 
   const cartQuantityForSelectedVariant = useMemo(() => {

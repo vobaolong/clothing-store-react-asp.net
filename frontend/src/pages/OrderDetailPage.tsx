@@ -308,7 +308,8 @@ export default function OrderDetailPage() {
           },
           {
             title: 'Màu sắc',
-            render: (_, row) => `${row.variantColor} / ${row.variantSize}`
+            render: (_, row) =>
+              `${row.variantColor}${row.variantSize ? ` / ${row.variantSize}` : ''}`
           },
           { title: 'Số lượng', dataIndex: 'quantity', align: 'right' },
           {

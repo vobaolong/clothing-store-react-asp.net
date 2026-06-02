@@ -227,8 +227,10 @@ export default function AdminOrderDetailPage() {
                               {toCapitalize(row.productName)}
                             </div>
                             <div className="text-xs text-slate-500">
-                              {toCapitalize(row.variantColor)} /{' '}
-                              {toCapitalize(row.variantSize)}
+                              {toCapitalize(row.variantColor)}
+                              {row.variantSize
+                                ? ` / ${toCapitalize(row.variantSize)}`
+                                : ''}
                             </div>
                           </div>
                         </div>

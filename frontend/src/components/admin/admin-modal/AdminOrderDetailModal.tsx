@@ -86,7 +86,9 @@ export default function AdminOrderDetailModal({
         key: 'variant',
         align: 'right',
         render: (_, row) =>
-          `${toCapitalize(row.variantSize)} / ${toCapitalize(row.variantColor)}`
+          row.variantSize
+            ? `${toCapitalize(row.variantSize)} / ${toCapitalize(row.variantColor)}`
+            : toCapitalize(row.variantColor)
       },
       {
         title: 'Số lượng',

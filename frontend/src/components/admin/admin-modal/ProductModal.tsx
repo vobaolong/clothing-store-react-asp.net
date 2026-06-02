@@ -110,7 +110,7 @@ export default function ProductModal({
         })
         .filter(
           (variant: AdminProductVariantPayload) =>
-            variant.size &&
+            variant.size != null &&
             variant.color &&
             /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(variant.hex) &&
             Number.isFinite(variant.quantity) &&

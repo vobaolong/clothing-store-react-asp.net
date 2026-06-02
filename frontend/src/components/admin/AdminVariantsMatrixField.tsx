@@ -24,6 +24,7 @@ export type AdminVariantsMatrixFieldHandle = {
 
 type AdminVariantsMatrixFieldProps = {
   form: FormInstance<ProductFormValues>
+  productType?: 'clothing' | 'shoes' | 'accessories'
   modalOpen?: boolean
   editingProductId?: string
 }
@@ -40,7 +41,10 @@ function urlsToUploadFiles(colorName: string, urls: string[]): UploadFile[] {
   }))
 }
 
-function buildFromVariants(variants: ProductFormValues['variants']) {
+function buildFromVariants(
+  variants: ProductFormValues['variants'],
+  isAccessories = false
+) {
   const colors: ColorOption[] = []
   const colorSet = new Set<string>()
   const sizes: string[] = []
@@ -56,11 +60,11 @@ function buildFromVariants(variants: ProductFormValues['variants']) {
       colors.push({ name: color, hex })
       colorSet.add(color)
     }
-    if (size && !sizeSet.has(size)) {
+    if (!isAccessories && size && !sizeSet.has(size)) {
       sizes.push(size)
       sizeSet.add(size)
     }
-    if (color && size) {
+    if (color && (isAccessories || size)) {
       quantities[variantKey(color, size)] = Number(variant.quantity) || 0
     }
   }
@@ -106,7 +110,7 @@ const normalizeVariants = (
     .map((variant) => {
       const urls = mergeVariantImageUrls(variant)
       return {
-        size: variant.size.trim(),
+        size: variant.size?.trim() ?? '',
         color: variant.color.trim(),
         hex: variant.hex.trim(),
         quantity: Number(variant.quantity) || 0,
@@ -137,9 +141,15 @@ export default forwardRef<
   AdminVariantsMatrixFieldHandle,
   AdminVariantsMatrixFieldProps
 >(function AdminVariantsMatrixField(
-  { form, modalOpen, editingProductId }: AdminVariantsMatrixFieldProps,
+  {
+    form,
+    productType,
+    modalOpen,
+    editingProductId
+  }: AdminVariantsMatrixFieldProps,
   ref
 ) {
+  const isAccessories = productType === 'accessories'
   const initialVariants: ProductFormValues['variants'] =
     form.getFieldValue('variants') ?? []
 
@@ -147,7 +157,7 @@ export default forwardRef<
     const built = buildFromVariants(initialVariants)
     return {
       colors: built.colors,
-      sizes: built.sizes,
+      sizes: isAccessories ? [] : built.sizes,
       quantities: built.quantities,
       galleryFiles: initGalleryFiles(initialVariants),
       urlDrafts: {} as Record<string, string>
@@ -175,25 +185,41 @@ export default forwardRef<
     const timer = window.setTimeout(() => {
       const raw = form.getFieldValue('variants') ?? []
       if (!raw.length) return
-      const built = buildFromVariants(raw)
+      const built = buildFromVariants(raw, isAccessories)
       setMatrixData({
         colors: built.colors,
-        sizes: built.sizes,
+        sizes: isAccessories ? [] : built.sizes,
         quantities: built.quantities,
         galleryFiles: initGalleryFiles(raw),
         urlDrafts: {}
       })
     }, 0)
     return () => window.clearTimeout(timer)
-  }, [modalOpen, editingProductId, form])
+  }, [modalOpen, editingProductId, form, isAccessories])
 
   const matrixVariants = useMemo<ProductFormValues['variants']>(() => {
-    if (!matrixData.colors.length || !matrixData.sizes.length) return []
+    if (!matrixData.colors.length) return []
+    if (!isAccessories && !matrixData.sizes.length) return []
+
     return matrixData.colors.flatMap((color) => {
       const previewUrls = (matrixData.galleryFiles[color.name] ?? [])
         .filter((f) => f.status !== 'removed')
         .map((f) => f.thumbUrl ?? f.url ?? '')
         .filter(Boolean)
+
+      if (isAccessories) {
+        return [
+          {
+            color: color.name,
+            hex: color.hex,
+            size: '',
+            quantity: matrixData.quantities[variantKey(color.name, '')] ?? 0,
+            ...(previewUrls.length
+              ? { imageUrl: previewUrls[0], imageUrls: previewUrls }
+              : {})
+          }
+        ]
+      }
 
       return matrixData.sizes.map((size) => ({
         color: color.name,
@@ -205,7 +231,7 @@ export default forwardRef<
           : {})
       }))
     })
-  }, [matrixData])
+  }, [matrixData, isAccessories])
 
   useEffect(() => {
     form.setFieldsValue({ variants: normalizeVariants(matrixVariants) })
@@ -541,63 +567,100 @@ export default forwardRef<
           <Button onClick={applyBulkQuantity}>Áp dụng</Button>
         </div>
 
-        {matrixData.colors.length > 0 && matrixData.sizes.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr>
-                  <th className="p-2 text-left border-b border-slate-200">
-                    Màu sắc
-                  </th>
-                  {matrixData.sizes.map((size) => (
-                    <th
-                      key={size}
-                      className="p-2 text-left border-b border-slate-200"
-                    >
-                      {size}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {matrixData.colors.map((color) => (
-                  <tr key={color.name}>
-                    <td className="p-2 border-b border-slate-100">
-                      <div className="inline-flex gap-2 items-center">
+        {isAccessories
+          ? matrixData.colors.length > 0 && (
+              <div className="space-y-3">
+                {matrixData.colors.map((color) => {
+                  const key = variantKey(color.name, '')
+                  return (
+                    <div key={color.name} className="flex items-center gap-3">
+                      <div className="inline-flex gap-2 items-center min-w-28">
                         <span
-                          className="w-3 h-3 rounded-full border border-slate-300"
+                          className="w-3 h-3 rounded-full border shrink-0 border-slate-300"
                           style={{ backgroundColor: color.hex }}
                         />
                         {color.name}
                       </div>
-                    </td>
-                    {matrixData.sizes.map((size) => {
-                      const key = variantKey(color.name, size)
-                      return (
-                        <td key={key} className="p-2 border-b border-slate-100">
-                          <InputNumber
-                            min={0}
-                            value={matrixData.quantities[key] ?? 0}
-                            onChange={(value) =>
-                              setMatrixData((prev) => ({
-                                ...prev,
-                                quantities: {
-                                  ...prev.quantities,
-                                  [key]: Number(value) || 0
-                                }
-                              }))
+                      <InputNumber
+                        min={0}
+                        value={matrixData.quantities[key] ?? 0}
+                        onChange={(value) =>
+                          setMatrixData((prev) => ({
+                            ...prev,
+                            quantities: {
+                              ...prev.quantities,
+                              [key]: Number(value) || 0
                             }
-                            className="w-16!"
-                          />
+                          }))
+                        }
+                        className="w-16!"
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          : matrixData.colors.length > 0 &&
+            matrixData.sizes.length > 0 && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="p-2 text-left border-b border-slate-200">
+                        Màu sắc
+                      </th>
+                      {matrixData.sizes.map((size) => (
+                        <th
+                          key={size}
+                          className="p-2 text-left border-b border-slate-200"
+                        >
+                          {size}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matrixData.colors.map((color) => (
+                      <tr key={color.name}>
+                        <td className="p-2 border-b border-slate-100">
+                          <div className="inline-flex gap-2 items-center">
+                            <span
+                              className="w-3 h-3 rounded-full border border-slate-300"
+                              style={{ backgroundColor: color.hex }}
+                            />
+                            {color.name}
+                          </div>
                         </td>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                        {matrixData.sizes.map((size) => {
+                          const key = variantKey(color.name, size)
+                          return (
+                            <td
+                              key={key}
+                              className="p-2 border-b border-slate-100"
+                            >
+                              <InputNumber
+                                min={0}
+                                value={matrixData.quantities[key] ?? 0}
+                                onChange={(value) =>
+                                  setMatrixData((prev) => ({
+                                    ...prev,
+                                    quantities: {
+                                      ...prev.quantities,
+                                      [key]: Number(value) || 0
+                                    }
+                                  }))
+                                }
+                                className="w-16!"
+                              />
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
       </div>
     </div>
   )

@@ -36,7 +36,8 @@ export default function OrderSummary({
             >
               <span className="text-slate-600">
                 <span className="font-medium line-clamp-2">{item.name}</span>
-                {item.selectedSize} / {item.selectedColor}
+                {item.selectedColor}
+                {item.selectedSize ? ` / ${item.selectedSize}` : ''}
               </span>
               <span className="text-slate-400">×{item.quantity}</span>
               <span className="text-slate-800 shrink-0">

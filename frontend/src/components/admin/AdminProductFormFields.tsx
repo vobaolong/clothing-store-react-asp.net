@@ -107,10 +107,12 @@ export default function AdminProductFormFields({
   const resolvedProductType =
     productType === 'shoes'
       ? 'shoes'
-      : productType === 'clothing' ||
-          BOTTOMS_CATEGORY_PATTERN.test(categoryName)
-        ? 'clothing'
-        : undefined
+      : productType === 'accessories'
+        ? 'accessories'
+        : productType === 'clothing' ||
+            BOTTOMS_CATEGORY_PATTERN.test(categoryName)
+          ? 'clothing'
+          : undefined
 
   const derivedMeasurementProfile = useMemo(() => {
     if (resolvedProductType !== 'clothing') return undefined
@@ -435,6 +437,7 @@ export default function AdminProductFormFields({
             <AdminVariantsMatrixField
               ref={variantsMatrixRef}
               form={form}
+              productType={resolvedProductType}
               modalOpen={productModalOpen}
               editingProductId={editingProductId}
             />
@@ -450,13 +453,14 @@ export default function AdminProductFormFields({
                       new Error('Please add at least one variant')
                     )
                   }
+                  const isAccessories = resolvedProductType === 'accessories'
                   const hasInvalid = value.some(
                     (variant: {
                       size?: string
                       color?: string
                       hex?: string
                     }) =>
-                      !variant?.size?.trim() ||
+                      (!isAccessories && !variant?.size?.trim()) ||
                       !variant?.color?.trim() ||
                       !/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(
                         variant?.hex?.trim() ?? ''
