@@ -91,6 +91,8 @@ public class PlaceOrderCommandHandler(
                     $"Insufficient stock for product {product.Name} (Size: {variant.Size}, Color: {variant.Color})."
                 );
 
+            variant.Quantity -= item.Quantity;
+
             var unitPrice =
                 product.SalePrice != null
                 && product.SalePrice < product.Price
@@ -175,9 +177,39 @@ public class PlaceOrderCommandHandler(
             order.Id = Guid.NewGuid();
             order.MarkAsCreated();
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
-                TimeSpan.FromMinutes(30)
-            );
+            // Khi cache VNPAY hết hạn mà chưa thanh toán, cộng lại tồn kho
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+                .RegisterPostEvictionCallback(
+                    (key, value, reason, state) =>
+                    {
+                        if (
+                            reason != EvictionReason.Removed
+                            && value is Order evictedOrder
+                            && evictedOrder.PaymentStatus != PaymentStatus.Paid
+                        )
+                        {
+                            var variantQuantities = evictedOrder
+                                .Items.GroupBy(i => i.ProductVariantId)
+                                .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
+
+                            var dbContext = (IApplicationDbContext)state!;
+                            var variantIds = variantQuantities.Keys.ToList();
+                            var variantsToRestore = dbContext
+                                .ProductVariants.Where(v => variantIds.Contains(v.Id))
+                                .ToList();
+
+                            foreach (var v in variantsToRestore)
+                            {
+                                if (variantQuantities.TryGetValue(v.Id, out var qty))
+                                    v.Quantity += qty;
+                            }
+
+                            dbContext.SaveChangesAsync(CancellationToken.None).GetAwaiter().GetResult();
+                        }
+                    },
+                    context
+                );
 
             memoryCache.Set($"vnpay_order_{order.Id}", order, cacheEntryOptions);
 

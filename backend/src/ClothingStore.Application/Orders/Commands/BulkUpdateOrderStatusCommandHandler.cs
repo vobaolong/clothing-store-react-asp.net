@@ -64,8 +64,6 @@ public class BulkUpdateOrderStatusCommandHandler(
             {
                 foreach (var item in order.Items)
                 {
-                    if (variantsMap.TryGetValue(item.ProductVariantId, out var variant))
-                        variant.Quantity -= item.Quantity;
                     if (productsMap.TryGetValue(item.ProductId, out var product))
                         product.SoldCount += item.Quantity;
                 }
@@ -80,8 +78,6 @@ public class BulkUpdateOrderStatusCommandHandler(
             {
                 foreach (var item in order.Items)
                 {
-                    if (variantsMap.TryGetValue(item.ProductVariantId, out var variant))
-                        variant.Quantity += item.Quantity;
                     if (productsMap.TryGetValue(item.ProductId, out var product))
                         product.SoldCount -= item.Quantity;
                 }
@@ -90,6 +86,20 @@ public class BulkUpdateOrderStatusCommandHandler(
                 {
                     order.PaymentStatus = PaymentStatus.Unpaid;
                     order.PaidAt = null;
+                }
+            }
+
+            // Khi admin hủy đơn (chưa Delivered), cộng lại tồn kho
+            if (
+                request.Status == OrderStatus.Cancelled
+                && order.Status != OrderStatus.Cancelled
+                && order.Status != OrderStatus.Delivered
+            )
+            {
+                foreach (var item in order.Items)
+                {
+                    if (variantsMap.TryGetValue(item.ProductVariantId, out var variant))
+                        variant.Quantity += item.Quantity;
                 }
             }
 

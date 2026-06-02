@@ -29,17 +29,12 @@ public class UpdateOrderStatusCommandHandler(
         {
             foreach (var item in order.Items)
             {
-                var variant = await context.ProductVariants.FirstOrDefaultAsync(
-                    v => v.Id == item.ProductVariantId,
-                    cancellationToken
-                );
-                variant?.Quantity -= item.Quantity;
-
                 var product = await context.Products.FirstOrDefaultAsync(
                     p => p.Id == item.ProductId,
                     cancellationToken
                 );
-                product?.SoldCount += item.Quantity;
+                if (product != null)
+                    product.SoldCount += item.Quantity;
             }
 
             order.PaymentStatus = PaymentStatus.Paid;
@@ -49,17 +44,12 @@ public class UpdateOrderStatusCommandHandler(
         {
             foreach (var item in order.Items)
             {
-                var variant = await context.ProductVariants.FirstOrDefaultAsync(
-                    v => v.Id == item.ProductVariantId,
-                    cancellationToken
-                );
-                variant?.Quantity += item.Quantity;
-
                 var product = await context.Products.FirstOrDefaultAsync(
                     p => p.Id == item.ProductId,
                     cancellationToken
                 );
-                product?.SoldCount -= item.Quantity;
+                if (product != null)
+                    product.SoldCount -= item.Quantity;
             }
 
             if (order.PaymentMethod == PaymentMethod.COD)
@@ -67,7 +57,23 @@ public class UpdateOrderStatusCommandHandler(
                 order.PaymentStatus = PaymentStatus.Unpaid;
                 order.PaidAt = null;
             }
+        }
 
+        // Khi admin hủy đơn (chưa Delivered), cộng lại tồn kho
+        if (
+            request.Status == OrderStatus.Cancelled
+            && order.Status != OrderStatus.Cancelled
+            && order.Status != OrderStatus.Delivered
+        )
+        {
+            foreach (var item in order.Items)
+            {
+                var variant = await context.ProductVariants.FirstOrDefaultAsync(
+                    v => v.Id == item.ProductVariantId,
+                    cancellationToken
+                );
+                variant?.Quantity += item.Quantity;
+            }
         }
 
         // ChangeStatus will validate the transition and throw if invalid

@@ -16,6 +16,7 @@ public class CancelMyOrderCommandHandler(IApplicationDbContext context)
     {
         var order = await context
             .Orders.Include(x => x.StatusHistories)
+            .Include(x => x.Items)
             .FirstOrDefaultAsync(
                 x => x.UserId == request.UserId && x.Id == request.OrderId,
                 cancellationToken
@@ -32,6 +33,18 @@ public class CancelMyOrderCommandHandler(IApplicationDbContext context)
                 false,
                 "You can only cancel orders before shipping starts."
             );
+        }
+
+        // Cộng lại tồn kho khi hủy đơn
+        var variantIds = order.Items.Select(i => i.ProductVariantId).ToList();
+        var variants = await context
+            .ProductVariants.Where(v => variantIds.Contains(v.Id))
+            .ToDictionaryAsync(v => v.Id, cancellationToken);
+
+        foreach (var item in order.Items)
+        {
+            if (variants.TryGetValue(item.ProductVariantId, out var variant))
+                variant.Quantity += item.Quantity;
         }
 
         order.Status = OrderStatus.Cancelled;
