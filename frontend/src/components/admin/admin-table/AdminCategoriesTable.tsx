@@ -118,9 +118,9 @@ export default function AdminCategoriesTable({
             className="min-w-32"
             value={value}
             options={GENDER_OPTIONS}
-            onChange={async (gender) => {
+            onChange={async (gender: CategoryGender) => {
               await onQuickUpdate(row, {
-                gender
+                gender: gender
               })
             }}
           />
@@ -138,9 +138,9 @@ export default function AdminCategoriesTable({
             value={value}
             options={PRODUCT_TYPE_OPTIONS}
             placeholder="None"
-            onChange={async (productType) => {
+            onChange={async (productType: CategoryType) => {
               await onQuickUpdate(row, {
-                productType
+                productType: productType
               })
             }}
           />
@@ -215,3 +215,5 @@ export default function AdminCategoriesTable({
     />
   )
 }
+// UPDATE public."Categories"
+// SET "Gender" = initcap("Gender");

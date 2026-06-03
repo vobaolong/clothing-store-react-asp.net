@@ -93,11 +93,6 @@ export default function AdminCategoriesSection() {
     [confirmDelete, deleteCategoryAsync]
   )
 
-  const onBulkAdd = useCallback(() => {
-    clearDirty('categoryBulk')
-    modals.setBulkCategory(true)
-  }, [clearDirty, modals])
-
   const onQuickUpdate = useCallback(
     async (
       category: AdminCategory,
@@ -137,7 +132,6 @@ export default function AdminCategoriesSection() {
         hasSelection={hasSelection}
         refreshQuery={categoriesQuery}
         onFiltersChange={setFilters}
-        onBulkAdd={onBulkAdd}
         onCreate={onCreate}
         onRefresh={refresh}
         onClearSelection={clearSelection}

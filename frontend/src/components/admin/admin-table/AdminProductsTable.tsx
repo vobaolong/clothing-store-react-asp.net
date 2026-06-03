@@ -1,4 +1,4 @@
-import { Button, Switch, Table, Tooltip, Typography } from 'antd'
+import { Button, Image, Switch, Table, Tooltip, Typography } from 'antd'
 import type { ColumnsType, TableRowSelection } from 'antd/es/table/interface'
 import toast from 'react-hot-toast'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
@@ -33,12 +33,12 @@ export default function AdminProductsTable({
   onRestore,
   onToggleActive
 }: AdminProductsTableProps) {
-  const renderProductImage = (row: AdminProduct, sizeClass: string) => {
+  const renderProductImage = (row: AdminProduct) => {
     const src = getAdminProductThumbnail(row)
     if (!src) {
       return (
         <div
-          className={`flex justify-center items-center rounded-md ${sizeClass} bg-slate-100`}
+          className={`flex justify-center items-center rounded-md size-16! bg-slate-100`}
         >
           <Typography.Text type="secondary" style={{ fontSize: 10 }}>
             No image
@@ -46,11 +46,13 @@ export default function AdminProductsTable({
         </div>
       )
     }
+
     return (
-      <img
+      <Image
         src={src}
         alt="Product"
-        className={`object-cover rounded-md ${sizeClass}`}
+        className="object-cover rounded-md size-16!"
+        preview
         onError={(event) => {
           event.currentTarget.style.display = 'none'
         }}
@@ -87,7 +89,7 @@ export default function AdminProductsTable({
           title: 'Ảnh',
           dataIndex: 'imageUrl',
           key: 'imageUrl',
-          render: (_, row) => renderProductImage(row, 'size-20')
+          render: (_, row) => renderProductImage(row)
         },
         {
           title: 'Thao tác',
@@ -114,13 +116,14 @@ export default function AdminProductsTable({
         dataIndex: 'imageUrl',
         key: 'imageUrl',
         align: 'center',
-        render: (_, row) => renderProductImage(row, 'size-16')
+        render: (_, row) => renderProductImage(row)
       },
       { title: 'Mã SP', dataIndex: 'productCode', key: 'productCode' },
       { title: 'Danh mục', dataIndex: 'categoryName', key: 'categoryName' },
       {
         title: 'Giá gốc',
         dataIndex: 'price',
+        width: 120,
         key: 'price',
         align: 'right',
         render: (value: number) => formatCurrency(value)
@@ -128,6 +131,7 @@ export default function AdminProductsTable({
       {
         title: 'Giá sale',
         dataIndex: 'salePrice',
+        width: 120,
         key: 'salePrice',
         align: 'right',
         render: (value: number) => formatCurrency(value)

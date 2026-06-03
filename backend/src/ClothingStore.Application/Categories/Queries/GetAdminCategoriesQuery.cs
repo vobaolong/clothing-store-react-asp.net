@@ -24,8 +24,8 @@ public class GetAdminCategoriesQueryHandler(IApplicationDbContext context)
                 x.Description,
                 x.ParentId,
                 x.Level,
-                x.Gender.ToString().ToLowerInvariant(),
-                x.ProductType.HasValue ? x.ProductType.Value.ToString().ToLowerInvariant() : null,
+                x.Gender.ToString(),
+                x.ProductType.HasValue ? x.ProductType.Value.ToString() : null,
                 x.IsActive,
                 x.CreatedAt,
                 x.UpdatedAt

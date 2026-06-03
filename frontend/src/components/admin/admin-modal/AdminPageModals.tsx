@@ -11,9 +11,6 @@ const AdminOrderDetailModal = lazy(
 const BannerModal = lazy(
   () => import('@/components/admin/admin-modal/BannerModal')
 )
-const BulkCategoriesModal = lazy(
-  () => import('@/components/admin/admin-modal/BulkCategoriesModal')
-)
 const CategoryModal = lazy(
   () => import('@/components/admin/admin-modal/CategoryModal')
 )
@@ -67,18 +64,6 @@ export default function AdminPageModals() {
           editor.requestClose('category', () => modals.setCategory(false))
         }
         onSaved={onSaved.category}
-      />
-
-      <BulkCategoriesModal
-        open={modals.bulkCategory}
-        categories={categories ?? []}
-        onDirty={() => editor.markDirty('categoryBulk')}
-        onClose={() =>
-          editor.requestClose('categoryBulk', () =>
-            modals.setBulkCategory(false)
-          )
-        }
-        onSaved={onSaved.bulkCategory}
       />
 
       <CouponModal

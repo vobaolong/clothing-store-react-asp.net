@@ -63,7 +63,7 @@ export default function CategoryModal({
       }
 
       if (!imageUrl) {
-        toast.error('Please select or enter a category image')
+        toast.error('Vui lòng chọn hoặc nhập URL ảnh cho danh mục')
         return
       }
 
@@ -84,11 +84,15 @@ export default function CategoryModal({
         await createAdminCategory(payload)
       }
 
-      toast.success(editing ? 'Category updated' : 'Category created')
+      toast.success(
+        editing ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công'
+      )
       onSaved()
     } catch (error) {
-      if (error && typeof error === 'object' && 'errorFields' in error) return // Form validation fail
-      toast.error((error as Error).message || 'An error occurred while saving')
+      if (error && typeof error === 'object' && 'errorFields' in error) return
+      toast.error(
+        (error as Error).message || 'Có lỗi xảy ra trong quá trình lưu'
+      )
     } finally {
       setIsSaving(false)
     }
@@ -164,6 +168,8 @@ export default function CategoryModal({
       open={open}
       onOk={save}
       onCancel={onClose}
+      okText={editing ? 'Cập nhật' : 'Thêm'}
+      cancelText="Hủy"
       confirmLoading={isSaving}
       styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
       afterOpenChange={handleAfterOpenChange}

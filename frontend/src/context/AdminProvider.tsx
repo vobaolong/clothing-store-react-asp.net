@@ -26,7 +26,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [modals, setModals] = useState({
     product: false,
     category: false,
-    bulkCategory: false,
     coupon: false,
     banner: false,
     orderDetailId: null as string | null
@@ -90,8 +89,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       ...modals,
       setProduct: (open) => setModals((prev) => ({ ...prev, product: open })),
       setCategory: (open) => setModals((prev) => ({ ...prev, category: open })),
-      setBulkCategory: (open) =>
-        setModals((prev) => ({ ...prev, bulkCategory: open })),
       setCoupon: (open) => setModals((prev) => ({ ...prev, coupon: open })),
       setBanner: (open) => setModals((prev) => ({ ...prev, banner: open })),
       setOrderDetailId: (id) =>
@@ -99,7 +96,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     },
     editing: {
       ...editing,
-      setProduct: (p) => setEditing((prev) => ({ ...prev, product: p })),
+      setProduct: (product) =>
+        setEditing((prev) => ({ ...prev, product: product })),
       setCategory: (c) => setEditing((prev) => ({ ...prev, category: c })),
       setCoupon: (c) => setEditing((prev) => ({ ...prev, coupon: c })),
       setBanner: (b) => setEditing((prev) => ({ ...prev, banner: b }))
@@ -107,7 +105,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     onSaved: {
       product: () => handleSuccess('product', 'product'),
       category: () => handleSuccess('category', 'category'),
-      bulkCategory: () => handleSuccess('bulkCategory', 'categoryBulk'),
       coupon: () => handleSuccess('coupon', 'coupon'),
       banner: () => handleSuccess('banner', 'banner')
     }

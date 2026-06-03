@@ -8,25 +8,25 @@ import { store } from '@/app/store'
 import { queryClient } from '@/app/providers/query-client'
 
 type AppProvidersProps = {
-	children: ReactNode
+  children: ReactNode
 }
 
 export function AppProviders({ children }: AppProvidersProps) {
-	return (
-		<Provider store={store}>
-			<QueryClientProvider client={queryClient}>
-				<ConfigProvider>
-					<BrowserRouter>
-						{children}
-						<Toaster
-							position="top-center"
-							toastOptions={{
-								duration: 3000
-							}}
-						/>
-					</BrowserRouter>
-				</ConfigProvider>
-			</QueryClientProvider>
-		</Provider>
-	)
+  return (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ConfigProvider>
+          <BrowserRouter>
+            {children}
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                duration: 3000
+              }}
+            />
+          </BrowserRouter>
+        </ConfigProvider>
+      </QueryClientProvider>
+    </Provider>
+  )
 }
