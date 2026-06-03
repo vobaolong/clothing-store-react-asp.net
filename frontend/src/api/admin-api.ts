@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { apiClient, apiData, apiVoid } from '@/api/api-client'
-import { API_ENDPOINTS } from '@/constants/api-endpoints'
+import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type {
   AdminCategory,
   AdminProduct,
@@ -16,7 +16,7 @@ import type {
   Review,
   Customer
 } from '@/types'
-import { CategoryGender, CategoryProductType } from '@/enums'
+import { CategoryGender, CategoryType } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 
 export const getAdminProducts = async (): Promise<AdminProduct[]> => {
@@ -150,7 +150,7 @@ export const getAdminCategories = async (): Promise<AdminCategory[]> =>
       : CategoryGender.UNISEX,
     productType: item.productType
       ? String(item.productType).toLowerCase()
-      : CategoryProductType.CLOTHING,
+      : CategoryType.CLOTHING,
     isActive: typeof item.isActive === 'boolean' ? item.isActive : true,
     createdAt: String(item.createdAt ?? new Date().toISOString()),
     updatedAt: String(

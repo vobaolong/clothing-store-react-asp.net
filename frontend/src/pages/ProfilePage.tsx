@@ -8,7 +8,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
 import { MenuOutlined } from '@ant-design/icons'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getMyProfile } from '@/api/profile-api'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import NotificationsSection from '@/components/profile/NotificationsSection'

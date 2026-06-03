@@ -19,7 +19,7 @@ import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { bulkCreateAdminCategories } from '@/api/admin-api'
 import { uploadImage } from '@/api/uploads-api'
-import { CategoryGender, CategoryProductType } from '@/enums'
+import { CategoryGender, CategoryType } from '@/enums'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 import type { AdminCategory } from '@/types'
 import { toCapitalize } from '@/utils/table.lib'
@@ -107,7 +107,7 @@ export default function BulkCategoriesModal({
       items: [{ name: '', image: '', description: '' }],
       parentId: undefined,
       gender: CategoryGender.UNISEX,
-      productType: CategoryProductType.CLOTHING,
+      productType: CategoryType.CLOTHING,
       isActive: true
     })
   }, [open, form])
@@ -195,7 +195,7 @@ export default function BulkCategoriesModal({
         <Form.Item name="productType" label="Product type">
           <Select
             allowClear
-            options={Object.values(CategoryProductType).map((value) => ({
+            options={Object.values(CategoryType).map((value) => ({
               label: toCapitalize(value),
               value
             }))}

@@ -1,5 +1,5 @@
 import { apiClient, apiData, apiResponse } from '@/api/api-client'
-import { API_ENDPOINTS } from '@/constants/api-endpoints'
+import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type { ApiResponse } from '@/types/common.type'
 
 export interface LoginResult {

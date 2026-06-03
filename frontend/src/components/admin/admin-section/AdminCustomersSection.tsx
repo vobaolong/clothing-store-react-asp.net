@@ -8,8 +8,8 @@ import {
   lockAdminCustomer,
   unlockAdminCustomer
 } from '@/api/admin-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { useAdmin } from '@/context/AdminContext'
 import type { Customer, DateRangeType } from '@/types'
 
 import { useFilteredCustomers } from '@/hooks/useFilteredCustomers'

@@ -1,10 +1,11 @@
 import { Button, Empty, Table, Tag, Tooltip } from 'antd'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { getOrderStatusLabel, STATUS_COLORS, type OrderOverview } from '@/types'
+import { getOrderStatusLabel, STATUS_COLORS } from '@/constants/labels.constant'
 import { EyeOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useMemo } from 'react'
 import type { ColumnsType } from 'antd/es/table'
+import type { OrderOverview } from '@/types'
 
 type OrdersTableProps = {
   data: OrderOverview[]

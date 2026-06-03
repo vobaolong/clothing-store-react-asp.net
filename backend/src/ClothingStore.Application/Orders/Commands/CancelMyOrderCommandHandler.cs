@@ -35,7 +35,6 @@ public class CancelMyOrderCommandHandler(IApplicationDbContext context)
             );
         }
 
-        // Cộng lại tồn kho khi hủy đơn
         var variantIds = order.Items.Select(i => i.ProductVariantId).ToList();
         var variants = await context
             .ProductVariants.Where(v => variantIds.Contains(v.Id))

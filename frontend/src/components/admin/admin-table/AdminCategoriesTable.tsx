@@ -3,10 +3,10 @@ import { useMemo } from 'react'
 import type { TableProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { AdminCategory } from '@/types'
-import { CategoryGender, CategoryProductType } from '@/enums'
+import { CategoryGender, CategoryType } from '@/enums'
 import type {
   CategoryGender as CategoryGenderType,
-  CategoryProductType as CategoryProductTypeType
+  CategoryType as CategoryTypeType
 } from '@/enums'
 import { formatDate } from '@/utils/format'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
@@ -35,7 +35,7 @@ const GENDER_OPTIONS = Object.values(CategoryGender).map((item) => ({
   value: item
 }))
 
-const PRODUCT_TYPE_OPTIONS = Object.values(CategoryProductType).map((item) => ({
+const PRODUCT_TYPE_OPTIONS = Object.values(CategoryType).map((item) => ({
   label: getVietnameseStatusLabel(item),
   value: item
 }))
@@ -131,7 +131,7 @@ export default function AdminCategoriesTable({
         dataIndex: 'productType',
         key: 'productType',
         align: 'center',
-        render: (value: CategoryProductTypeType | undefined, row) => (
+        render: (value: CategoryTypeType | undefined, row) => (
           <Select
             allowClear
             className="min-w-36"

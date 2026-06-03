@@ -10,14 +10,14 @@ import {
   bulkUpdateAdminOrdersStatus,
   getAdminApiErrorMessage
 } from '@/api/admin-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { useAdmin } from '@/context/AdminContext'
 import { OrderStatus } from '@/enums'
+import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import {
-  ADMIN_FILTER_ALL_VALUE,
   ADMIN_ORDER_STATUS_FILTER_OPTIONS,
   ADMIN_PAYMENT_STATUS_FILTER_OPTIONS
-} from '@/constants/admin-filter.constant'
+} from '@/options/admin-filter.options'
 import type { AdminOrder } from '@/types'
 
 import { useFilteredOrders } from '@/hooks/useFilteredOrders'

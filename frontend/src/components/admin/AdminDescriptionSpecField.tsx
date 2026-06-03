@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import {
   DESCRIPTION_SPEC_OPTIONS,
   type DescriptionSpecLabel
-} from '@/constants/product'
+} from '@/constants/product.constant'
 import type { ProductFormValues } from '@/types'
 
 type AdminDescriptionSpecFieldProps = {

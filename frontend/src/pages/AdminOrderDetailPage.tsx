@@ -15,7 +15,11 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { getAdminOrderDetail, updateAdminOrderStatus } from '@/api/admin-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import {
+  SHIPPING_ADDRESS_LABELS,
+  STATUS_COLORS
+} from '@/constants/labels.constant'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 import {
@@ -26,8 +30,7 @@ import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { toCapitalize } from '@/utils/table.lib'
 import { openBillPrintWindow } from '@/utils/bill-export'
-import { OrderStatus, ShippingAddressType } from '@/enums'
-import { STATUS_COLORS } from '@/types'
+import { OrderStatus } from '@/enums'
 
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
@@ -297,9 +300,11 @@ export default function AdminOrderDetailPage() {
                   {formatStructuredAddress(detail) || '—'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Nhãn">
-                  {ShippingAddressType[
-                    detail.shippingLabel?.toUpperCase() as keyof typeof ShippingAddressType
-                  ] || '—'}
+                  {detail.shippingLabel
+                    ? SHIPPING_ADDRESS_LABELS[
+                        detail.shippingLabel.toUpperCase() as keyof typeof SHIPPING_ADDRESS_LABELS
+                      ] || '—'
+                    : '—'}
                 </Descriptions.Item>
               </Descriptions>
             </Card>

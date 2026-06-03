@@ -26,9 +26,7 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
             ?? throw new KeyNotFoundException("Order not found.");
 
         var effectivePaymentStatus =
-            order.Status == OrderStatus.Delivered
-                ? PaymentStatus.Paid
-                : order.PaymentStatus;
+            order.Status == OrderStatus.Delivered ? PaymentStatus.Paid : order.PaymentStatus;
 
         var items = order
             .Items.Select(item => new OrderDetailItemDto(

@@ -1,4 +1,4 @@
-import { DEFAULT_SIZES } from '@/constants/product'
+import { DEFAULT_SIZES } from '@/constants/product.constant'
 
 export const normalizeSize = (size: string): string => size.trim().toUpperCase()
 

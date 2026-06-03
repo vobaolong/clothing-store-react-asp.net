@@ -2,7 +2,7 @@ import { Checkbox, Collapse, ConfigProvider } from 'antd'
 import type { CollapseProps } from 'antd'
 import { UpOutlined } from '@ant-design/icons'
 
-import { COLOR_CONFIG } from '@/constants/product'
+import { COLOR_CONFIG } from '@/constants/product.constant'
 
 type Option = {
   label: string

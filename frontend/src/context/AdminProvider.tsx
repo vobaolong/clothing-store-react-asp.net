@@ -10,10 +10,7 @@ import type {
   AdminProductListMode,
   Coupon
 } from '@/types'
-import {
-  AdminContext,
-  type AdminContextType
-} from '@/context/admin/AdminContext'
+import { AdminContext, type AdminContextType } from '@/context/AdminContext'
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
@@ -21,7 +18,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const editor = useAdminEditor()
   const { clearDirty } = editor
 
-  // Grouped States
   const [filters, setFilters] = useState({
     productListMode: 'active' as AdminProductListMode,
     orderStatusFilter: 'all' as string

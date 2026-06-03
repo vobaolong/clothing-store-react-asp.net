@@ -2,10 +2,7 @@ import { PlusOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Segmented, FloatButton } from 'antd'
 import dayjs from 'dayjs'
 import type { ReactNode } from 'react'
-import {
-  ADMIN_ACTIVE_FILTER_OPTIONS,
-  ADMIN_FILTER_ALL_VALUE
-} from '@/constants/admin-filter.constant'
+import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 
 import type { AdminProduct, AdminProductListMode } from '@/types'
@@ -14,6 +11,7 @@ import {
   AdminRefreshButtonAction,
   type AdminRefreshQuery
 } from '../AdminRefreshButtonAction'
+import { ADMIN_ACTIVE_FILTER_OPTIONS } from '@/options'
 
 type AdminProductsToolbarProps = {
   listMode: AdminProductListMode

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import type { UseFormSetValue } from 'react-hook-form'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import type { ShippingAddress } from '@/types'
 import type { CheckoutFormValues } from '@/types/checkout.type'
 

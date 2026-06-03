@@ -102,9 +102,11 @@ export default function AdminBannersTable({
         dataIndex: 'ctaLink',
         key: 'ctaLink',
         render: (value: string) => (
-          <p className="text-xs truncate max-w-60 text-slate-500 font-mono">
-            {value}
-          </p>
+          <Tooltip title={value}>
+            <p className="text-xs truncate max-w-60 text-slate-500 font-mono">
+              {value}
+            </p>
+          </Tooltip>
         )
       },
       {

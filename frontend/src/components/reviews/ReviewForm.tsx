@@ -1,6 +1,6 @@
 import { Button, Form, Input, Rate, Select } from 'antd'
 import { useEffect } from 'react'
-import { tagOptions } from '@/constants/review-label.constrant'
+import { REVIEW_TAG_OPTIONS } from '@/options/review.options'
 
 type ReviewFormValues = {
   rating: number
@@ -38,7 +38,10 @@ export default function ReviewForm({
         <Select
           mode="tags"
           placeholder="Chọn hoặc nhập các đặc điểm (VD: Chất vải đẹp, Đúng size...)"
-          options={tagOptions.map((tag) => ({ label: tag, value: tag }))}
+          options={REVIEW_TAG_OPTIONS.map((tag) => ({
+            label: tag,
+            value: tag
+          }))}
           className="w-full"
         />
       </Form.Item>

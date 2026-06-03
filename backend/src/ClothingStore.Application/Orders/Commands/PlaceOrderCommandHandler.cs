@@ -205,7 +205,10 @@ public class PlaceOrderCommandHandler(
                                     v.Quantity += qty;
                             }
 
-                            dbContext.SaveChangesAsync(CancellationToken.None).GetAwaiter().GetResult();
+                            dbContext
+                                .SaveChangesAsync(CancellationToken.None)
+                                .GetAwaiter()
+                                .GetResult();
                         }
                     },
                     context

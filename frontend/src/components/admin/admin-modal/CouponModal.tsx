@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { createCoupon, updateCoupon } from '@/api/coupons-api'
 import { CouponDiscountType, CouponStatus } from '@/enums'
+import {
+  COUPON_DISCOUNT_TYPE_OPTIONS,
+  COUPON_STATUS_OPTIONS
+} from '@/options/coupon.options'
 import type { Coupon } from '@/types'
 import axios from 'axios'
 
@@ -122,10 +126,9 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
           rules={[{ required: true }]}
         >
           <Select
-            options={[
-              { label: 'Số tiền cố định', value: CouponDiscountType.FLAT },
-              { label: 'Phần trăm', value: CouponDiscountType.PERCENT }
-            ]}
+            options={COUPON_DISCOUNT_TYPE_OPTIONS.map((option) => ({
+              ...option
+            }))}
           />
         </Form.Item>
 
@@ -200,11 +203,7 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
           rules={[{ required: true }]}
         >
           <Select
-            options={[
-              { label: 'Hoạt động', value: CouponStatus.ACTIVE },
-              { label: 'Không hoạt động', value: CouponStatus.INACTIVE },
-              { label: 'Lưu trữ (Archived)', value: CouponStatus.ARCHIVED }
-            ]}
+            options={COUPON_STATUS_OPTIONS.map((option) => ({ ...option }))}
           />
         </Form.Item>
       </Form>

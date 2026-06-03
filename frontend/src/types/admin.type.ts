@@ -1,4 +1,4 @@
-import type { CategoryGender, CategoryProductType } from '@/enums'
+import type { CategoryGender, CategoryType } from '@/enums'
 import type dayjs from 'dayjs'
 
 export type AdminCategory = {
@@ -10,7 +10,7 @@ export type AdminCategory = {
   parentId: string | null
   level: 0 | 1
   gender: CategoryGender
-  productType?: CategoryProductType
+  productType?: CategoryType
   isActive: boolean
   createdAt: string
   updatedAt: string
@@ -150,7 +150,7 @@ export type AdminCategoryUpsertPayload = {
   parentId?: string | null
   level?: number
   gender?: CategoryGender
-  productType?: CategoryProductType
+  productType?: CategoryType
   isActive?: boolean
 }
 

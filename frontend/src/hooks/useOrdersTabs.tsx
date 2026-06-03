@@ -1,9 +1,7 @@
 import { useMemo } from 'react'
 import { Badge } from 'antd'
-import {
-  ADMIN_FILTER_ALL_VALUE,
-  ADMIN_ORDER_STATUS_FILTER_OPTIONS
-} from '@/constants/admin-filter.constant'
+import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
+import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
 
 interface CountItem {
   status: string

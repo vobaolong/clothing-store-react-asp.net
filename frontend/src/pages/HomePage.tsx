@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { getActiveBanners } from '@/api/banners-api'
 import { getCategories, getProducts } from '@/api/products-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import {
   HomeHeroBanner,
   HomeProductRail,

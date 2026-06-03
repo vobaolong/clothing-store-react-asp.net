@@ -1,6 +1,6 @@
 import { Modal, Table } from 'antd'
 import type { ColumnType } from 'antd/es/table'
-import type { MeasurementPresetRow } from '@/constants/measurement-presets'
+import type { MeasurementPresetRow } from '@/constants/measurement-presets.constant'
 
 interface SizeGuideModalProps {
   isOpen: boolean

@@ -1,5 +1,5 @@
 import { apiClient, apiData } from '@/api/api-client'
-import { API_ENDPOINTS } from '@/constants/api-endpoints'
+import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type { Product, Category } from '@/types'
 import { withDerivedProductImages } from '@/utils/product-color-images'
 

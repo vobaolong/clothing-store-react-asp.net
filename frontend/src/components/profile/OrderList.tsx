@@ -14,12 +14,17 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import {
+  ORDER_FILTER_ALL_LABEL,
+  ORDER_FILTER_ALL_VALUE
+} from '@/constants/order.constant'
 import { getMyOrders } from '@/api/orders-api'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { FilterStatus, ORDER_FILTER_STATUSES } from '@/enums'
+import { ORDER_FILTER_STATUSES } from '@/options/order.options'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
-import { STATUS_COLORS, type MyOrder } from '@/types'
+import { STATUS_COLORS } from '@/constants/labels.constant'
+import type { MyOrder } from '@/types'
 
 const matchesSearch = (needle: string, order: MyOrder) => {
   const normalized = needle.trim().toLowerCase()
@@ -36,7 +41,9 @@ const matchesSearch = (needle: string, order: MyOrder) => {
 export default function OrderList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const [activeStatus, setActiveStatus] = useState<string>(FilterStatus.ALL)
+  const [activeStatus, setActiveStatus] = useState<string>(
+    ORDER_FILTER_ALL_VALUE
+  )
 
   const { data, isLoading } = useQuery({
     queryKey: QUERY_KEYS.myOrders(),
@@ -49,7 +56,7 @@ export default function OrderList() {
     () =>
       orders.filter(
         (order) =>
-          (activeStatus === FilterStatus.ALL ||
+          (activeStatus === ORDER_FILTER_ALL_VALUE ||
             order.status === activeStatus) &&
           matchesSearch(search, order)
       ),
@@ -60,7 +67,7 @@ export default function OrderList() {
     () =>
       ORDER_FILTER_STATUSES.map((status) => {
         const count =
-          status === FilterStatus.ALL
+          status === ORDER_FILTER_ALL_VALUE
             ? orders.length
             : orders.filter((o) => o.status === status).length
         return {
@@ -68,8 +75,8 @@ export default function OrderList() {
           label: (
             <div className="flex gap-2 justify-center items-center">
               <span className="truncate">
-                {status === FilterStatus.ALL
-                  ? 'Tất cả'
+                {status === ORDER_FILTER_ALL_VALUE
+                  ? ORDER_FILTER_ALL_LABEL
                   : getVietnameseStatusLabel(status)}
               </span>
               <Badge count={count} />

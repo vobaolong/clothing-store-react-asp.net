@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 import { CheckoutSectionTitle } from '@/components/checkout/CheckoutSectionTitle'
 import { formatShippingAddress } from '@/utils/checkout-utils'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import toast from 'react-hot-toast'
 import { setDefaultShippingAddress } from '@/api/addresses-api'
 import { EditOutlined } from '@ant-design/icons'
@@ -14,7 +14,7 @@ import type {
 } from '@/types/checkout.type'
 import type { ShippingAddress } from '@/types'
 import type { QueryClient } from '@tanstack/react-query'
-import { ShippingAddressType } from '@/enums'
+import { SHIPPING_ADDRESS_LABELS } from '@/constants/labels.constant'
 
 type Props = {
   control: Control<CheckoutFormValues>
@@ -64,9 +64,11 @@ export default function ShippingAddressSection({
                                 {addressItem.phone}
                               </span>
                               <Tag color="blue">
-                                {ShippingAddressType[
-                                  addressItem.label?.toUpperCase() as keyof typeof ShippingAddressType
-                                ] || '—'}
+                                {addressItem.label
+                                  ? SHIPPING_ADDRESS_LABELS[
+                                      addressItem.label.toUpperCase() as keyof typeof SHIPPING_ADDRESS_LABELS
+                                    ] || '—'
+                                  : '—'}
                               </Tag>
                             </p>
                             <p className="mt-0.5 text-slate-500">

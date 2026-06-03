@@ -7,12 +7,12 @@ import { Button, FloatButton } from 'antd'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 import { AdminRefreshButtonAction } from '@/components/admin/AdminRefreshButtonAction'
 import AdminCategoriesSelectionActions from '@/components/admin/admin-selection-action/AdminCategoriesSelectionActions'
+import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import {
   ADMIN_ACTIVE_FILTER_OPTIONS,
   ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
-  ADMIN_CATEGORY_TYPE_FILTER_OPTIONS,
-  ADMIN_FILTER_ALL_VALUE
-} from '@/constants/admin-filter.constant'
+  ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
+} from '@/options/admin-filter.options'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 

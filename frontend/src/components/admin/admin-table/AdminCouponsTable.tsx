@@ -4,11 +4,11 @@ import type { ColumnsType } from 'antd/es/table'
 import { CouponStatus } from '@/enums'
 import type { Coupon } from '@/types'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import { ADMIN_COUPON_STATUS_FILTER_OPTIONS } from '@/constants/admin-coupon.constant'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { formatCouponDiscount } from '@/utils/coupon-discount'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
+import { ADMIN_COUPON_STATUS_FILTER_OPTIONS } from '@/options'
 
 interface AdminCouponsTableProps {
   loading: boolean
@@ -90,7 +90,7 @@ export default function AdminCouponsTable({
             style={{ width: 110 }}
             onChange={(newStatus) => onStatusChange(row, newStatus)}
             options={ADMIN_COUPON_STATUS_FILTER_OPTIONS.filter(
-              (o) => o.value !== ADMIN_FILTER_ALL_VALUE
+              (o: { value: string }) => o.value !== ADMIN_FILTER_ALL_VALUE
             )}
           />
         )

@@ -5,52 +5,48 @@ import {
   CouponDiscountType,
   CouponStatus,
   CategoryGender,
-  CategoryProductType
+  CategoryType
 } from '@/enums'
 
 export const VI_LABELS: Record<string, string> = {
   // Order Status
-  [OrderStatus.PENDING.toLowerCase()]: 'Chờ xác nhận',
-  [OrderStatus.CONFIRMED.toLowerCase()]: 'Đã xác nhận',
-  [OrderStatus.SHIPPING.toLowerCase()]: 'Đang giao',
-  [OrderStatus.DELIVERED.toLowerCase()]: 'Đã giao',
-  [OrderStatus.CANCELLED.toLowerCase()]: 'Đã hủy',
+  [OrderStatus.PENDING]: 'Chờ xác nhận',
+  [OrderStatus.CONFIRMED]: 'Đã xác nhận',
+  [OrderStatus.SHIPPING]: 'Đang giao',
+  [OrderStatus.DELIVERED]: 'Đã giao',
+  [OrderStatus.CANCELLED]: 'Đã hủy',
 
   // Payment Status
-  [PaymentStatus.UNPAID.toLowerCase()]: 'Chưa thanh toán',
-  [PaymentStatus.PAID.toLowerCase()]: 'Đã thanh toán',
-  [PaymentStatus.REFUNDED.toLowerCase()]: 'Đã hoàn tiền',
+  [PaymentStatus.UNPAID]: 'Chưa thanh toán',
+  [PaymentStatus.PAID]: 'Đã thanh toán',
+  [PaymentStatus.REFUNDED]: 'Đã hoàn tiền',
 
   // Payment Method
-  [PaymentMethod.COD.toLowerCase()]: 'COD (Thanh toán khi nhận hàng)',
-  [PaymentMethod.VNPAY.toLowerCase()]: 'VNPay',
+  [PaymentMethod.COD]: 'COD (Thanh toán khi nhận hàng)',
+  [PaymentMethod.VNPAY]: 'VNPay',
 
   // Coupon Discount Type
-  [CouponDiscountType.PERCENT.toLowerCase()]: 'Phần trăm',
-  [CouponDiscountType.FLAT.toLowerCase()]: 'Số tiền',
+  [CouponDiscountType.PERCENT]: 'Phần trăm',
+  [CouponDiscountType.FLAT]: 'Số tiền',
 
   // Coupon Status
-  [CouponStatus.ACTIVE.toLowerCase()]: 'Kích hoạt',
-  [CouponStatus.INACTIVE.toLowerCase()]: 'Ngưng',
-  [CouponStatus.ARCHIVED.toLowerCase()]: 'Lưu trữ',
+  [CouponStatus.ACTIVE]: 'Kích hoạt',
+  [CouponStatus.INACTIVE]: 'Ngưng',
+  [CouponStatus.ARCHIVED]: 'Lưu trữ',
 
   // Category Gender
   [CategoryGender.MALE]: 'Nam',
   [CategoryGender.FEMALE]: 'Nữ',
   [CategoryGender.UNISEX]: 'Unisex',
-  [CategoryGender.KID]: 'Trẻ em',
 
   // Category Type
-  [CategoryProductType.CLOTHING]: 'Quần áo',
-  [CategoryProductType.SHOES]: 'Giày dép',
-  [CategoryProductType.ACCESSORIES]: 'Phụ kiện',
+  [CategoryType.CLOTHING]: 'Quần áo',
+  [CategoryType.SHOES]: 'Giày dép',
+  [CategoryType.ACCESSORIES]: 'Phụ kiện',
 
-  // Customer Status
   active: 'Kích hoạt',
   locked: 'Bị khóa',
-  // General
   all: 'Tất cả'
 }
 
-export const getVietnameseLabel = (key: string) =>
-  VI_LABELS[key.toLowerCase()] ?? key
+export const getVietnameseLabel = (key: string) => VI_LABELS[key] ?? key

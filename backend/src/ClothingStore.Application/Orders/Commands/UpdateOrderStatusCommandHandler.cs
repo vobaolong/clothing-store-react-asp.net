@@ -21,7 +21,6 @@ public class UpdateOrderStatusCommandHandler(
                 .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
             ?? throw new InvalidOperationException("Order not found.");
 
-        // Validation is handled inside order.ChangeStatus()
         bool justDelivered =
             request.Status == OrderStatus.Delivered && order.Status != OrderStatus.Delivered;
 
@@ -59,7 +58,6 @@ public class UpdateOrderStatusCommandHandler(
             }
         }
 
-        // Khi admin hủy đơn (chưa Delivered), cộng lại tồn kho
         if (
             request.Status == OrderStatus.Cancelled
             && order.Status != OrderStatus.Cancelled
@@ -72,11 +70,11 @@ public class UpdateOrderStatusCommandHandler(
                     v => v.Id == item.ProductVariantId,
                     cancellationToken
                 );
-                variant?.Quantity += item.Quantity;
+                if (variant is not null)
+                    variant.Quantity += item.Quantity;
             }
         }
 
-        // ChangeStatus will validate the transition and throw if invalid
         order.ChangeStatus(request.Status);
 
         await context.OrderStatusHistories.AddAsync(

@@ -12,7 +12,7 @@ import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
-import { ADMIN_NAV_LABELS } from '@/types/constants.type'
+import { ADMIN_NAV_LABELS } from '@/constants/labels.constant'
 
 type AdminNavbarProps = {
   inlineCollapsed: boolean

@@ -1,18 +1,16 @@
 export const CategoryGender = {
-  MALE: 'male',
-  FEMALE: 'female',
-  UNISEX: 'unisex',
-  KID: 'kid'
+  MALE: 'Male',
+  FEMALE: 'Female',
+  UNISEX: 'Unisex'
 } as const
 
 export type CategoryGender =
   (typeof CategoryGender)[keyof typeof CategoryGender]
 
-export const CategoryProductType = {
-  CLOTHING: 'clothing',
-  SHOES: 'shoes',
-  ACCESSORIES: 'accessories'
+export const CategoryType = {
+  CLOTHING: 'Clothing',
+  SHOES: 'Shoes',
+  ACCESSORIES: 'Accessories'
 } as const
 
-export type CategoryProductType =
-  (typeof CategoryProductType)[keyof typeof CategoryProductType]
+export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType]

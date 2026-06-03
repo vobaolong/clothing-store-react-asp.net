@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useQueryClient } from '@tanstack/react-query'
 import { getSignalRService } from '@/utils/signalr-service'
 import { addRealtimeNotification } from '@/state/notification-slice'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { selectAuthToken } from '@/state/auth'
 import type {
   RealtimeNotificationDto,
@@ -32,6 +32,12 @@ export const useSignalR = () => {
 
       service.onNotification((notification: RealtimeNotificationDto) => {
         dispatch(addRealtimeNotification(notification))
+        void queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.notifications
+        })
+        void queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.notificationsUnreadCount
+        })
       })
 
       service.onOrderUpdate((raw: unknown) => {

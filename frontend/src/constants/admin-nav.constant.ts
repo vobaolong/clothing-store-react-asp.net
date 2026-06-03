@@ -1,5 +1,5 @@
 import { AdminNavKey } from '@/enums'
-import { ADMIN_NAV_LABELS } from '@/types/constants.type'
+import { ADMIN_NAV_LABELS } from '@/constants/labels.constant'
 
 export const ADMIN_PAGE_HEADER_TITLE: Record<AdminNavKey, string> = {
   [AdminNavKey.DASHBOARD]: ADMIN_NAV_LABELS.DASHBOARD,

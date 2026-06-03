@@ -10,7 +10,7 @@ import {
 } from '@/api/admin-api'
 import { uploadImage } from '@/api/uploads-api'
 import type { AdminCategory } from '@/types'
-import { CategoryGender, CategoryProductType } from '@/enums'
+import { CategoryGender, CategoryType } from '@/enums'
 import {
   buildCategoryTreeSelectData,
   collectDescendantCategoryIds,
@@ -19,7 +19,7 @@ import {
 import {
   ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
   ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
-} from '@/constants/admin-filter.constant'
+} from '@/options/admin-filter.options'
 
 type Props = {
   open: boolean
@@ -104,7 +104,7 @@ export default function CategoryModal({
         description: editing.description ?? '',
         parentId: editing.parentId ?? undefined,
         gender: editing.gender ?? CategoryGender.UNISEX,
-        productType: editing.productType ?? CategoryProductType.CLOTHING,
+        productType: editing.productType ?? CategoryType.CLOTHING,
         isActive: editing.isActive,
         imageUrlInput: editing.image,
         imageUpload: editing.image
@@ -122,7 +122,7 @@ export default function CategoryModal({
       form.setFieldsValue({
         parentId: undefined,
         gender: CategoryGender.UNISEX,
-        productType: CategoryProductType.CLOTHING,
+        productType: CategoryType.CLOTHING,
         isActive: true,
         imageUpload: []
       })

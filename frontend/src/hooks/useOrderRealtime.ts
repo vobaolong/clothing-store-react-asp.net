@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { notification as antdNotification } from 'antd'
 import { getSignalRService } from '@/utils/signalr-service'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { NotificationType } from '@/types/notification.type'
 import type {
   RealtimeNotificationDto,

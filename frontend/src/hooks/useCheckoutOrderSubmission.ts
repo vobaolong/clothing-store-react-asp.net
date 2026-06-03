@@ -107,12 +107,7 @@ export function useCheckoutOrderSubmission({
         )
       )
       toast.success(
-        <div>
-          <div className="font-semibold">Đặt hàng thành công!</div>
-          <div className="text-sm opacity-80">
-            Mã đơn: {orderId.slice(0, 8).toUpperCase()}
-          </div>
-        </div>
+        `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
       )
       navigate('/')
     } catch (error: unknown) {

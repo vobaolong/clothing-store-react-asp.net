@@ -2,9 +2,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { getAdminProducts, getAdminDeletedProducts } from '@/api/admin-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import { adminRowMatches, adminSearchNeedle } from '@/utils/admin-list-filter'
+import { ProductStatus } from '@/enums'
 
 export function useAdminProducts(listMode: 'active' | 'deleted') {
   const productsQuery = useQuery({
@@ -26,7 +27,9 @@ export function useAdminProducts(listMode: 'active' | 'deleted') {
   })
 
   const data =
-    listMode === 'active' ? productsQuery.data : deletedProductsQuery.data
+    listMode === 'active'
+      ? productsQuery.data
+      : deletedProductsQuery.data
   const loading =
     listMode === 'active'
       ? productsQuery.isLoading
@@ -58,7 +61,7 @@ export function useAdminProducts(listMode: 'active' | 'deleted') {
       const activeMatch =
         filters.active === ADMIN_FILTER_ALL_VALUE
           ? true
-          : filters.active === 'active'
+          : filters.active === ProductStatus.ACTIVE
             ? product.isActive
             : !product.isActive
       const createdAt = dayjs(product.createdAt)

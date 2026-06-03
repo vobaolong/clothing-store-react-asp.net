@@ -16,7 +16,11 @@ import {
   transformProductToFormValues,
   prepareDescriptionData
 } from '@/utils/product-form.utils'
-import { getMeasurementPresetRows } from '@/constants/measurement-presets'
+import { getMeasurementPresetRows } from '@/constants/measurement-presets.constant'
+import {
+  DEFAULT_MEASUREMENT_PROFILE,
+  DEFAULT_MEASUREMENT_GENDER
+} from '@/constants/product-defaults.constant'
 
 type Props = {
   open: boolean
@@ -47,10 +51,13 @@ export default function ProductModal({
       form.setFieldsValue(transformProductToFormValues(editing))
     } else {
       form.setFieldsValue({
-        measurementProfile: 'tops',
-        sizeGuideGender: 'unisex',
-        sizeGuidePresetProfile: 'tops',
-        sizeGuideRows: getMeasurementPresetRows('tops', 'unisex'),
+        measurementProfile: DEFAULT_MEASUREMENT_PROFILE,
+        sizeGuideGender: DEFAULT_MEASUREMENT_GENDER,
+        sizeGuidePresetProfile: DEFAULT_MEASUREMENT_PROFILE,
+        sizeGuideRows: getMeasurementPresetRows(
+          DEFAULT_MEASUREMENT_PROFILE,
+          DEFAULT_MEASUREMENT_GENDER
+        ),
         isActive: true,
         descriptionSpecs: buildDefaultDescriptionSpecs(),
         description: '<p></p>'

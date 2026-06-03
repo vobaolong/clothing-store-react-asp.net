@@ -12,8 +12,8 @@ import type {
   Product,
   ProductSelection
 } from '@/types/product.type'
-import { formatDescriptionSpecDisplayValue } from '@/constants/product'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { formatDescriptionSpecDisplayValue } from '@/constants/product.constant'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import ProductCard from '@/components/ProductCard'
 import ProductDetailsTable from '@/components/product/ProductDetailsTable'
@@ -31,12 +31,12 @@ import { getStatisticTimerFormatForSaleEnd } from '@/utils/countdown-statistic-f
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import { compareSizes, normalizeSize } from '@/utils/size-utils'
 import { toCapitalize } from '@/utils/table.lib'
+import { MeasurementProfile, CategoryType } from '@/enums'
 import {
   getMeasurementPresetRows,
   normalizeMeasurementGender,
-  type MeasurementPresetRow,
-  type MeasurementProfile
-} from '@/constants/measurement-presets'
+  type MeasurementPresetRow
+} from '@/constants/measurement-presets.constant'
 import ProductGallery from '@/components/product/ProductGallery'
 import { Button, Result } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
@@ -56,27 +56,26 @@ function resolveSizeGuideProfile(
   product: Product | undefined,
   category: Category | undefined
 ): MeasurementProfile {
-  const categoryProductType = category?.productType?.toLowerCase() ?? ''
   const categoryText = `${product?.categoryName ?? ''} ${category?.name ?? ''}`
 
-  if (categoryProductType === 'shoes') {
-    return 'shoes'
+  if (category?.productType === CategoryType.SHOES) {
+    return MeasurementProfile.SHOES
   }
 
   if (
-    categoryProductType === 'clothing' &&
+    category?.productType === CategoryType.CLOTHING &&
     BOTTOMS_CATEGORY_PATTERN.test(categoryText)
   ) {
-    return 'bottoms'
+    return MeasurementProfile.BOTTOMS
   }
 
-  return 'tops'
+  return MeasurementProfile.TOPS
 }
 
 function buildSizeGuideColumns(
   profile: MeasurementProfile
 ): ColumnType<MeasurementPresetRow>[] {
-  if (profile === 'shoes') {
+  if (profile === MeasurementProfile.SHOES) {
     return [
       { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
       {
@@ -88,7 +87,7 @@ function buildSizeGuideColumns(
     ]
   }
 
-  if (profile === 'bottoms') {
+  if (profile === MeasurementProfile.BOTTOMS) {
     return [
       { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
       {

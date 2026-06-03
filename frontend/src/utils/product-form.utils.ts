@@ -3,16 +3,16 @@ import {
   DESCRIPTION_SPEC_LABELS,
   parseDescriptionSpecStoredValue,
   serializeDescriptionSpecValues
-} from '@/constants/product'
+} from '@/constants/product.constant'
 
 import type { DescriptionLayout, AdminProduct } from '@/types'
+import { MeasurementProfile } from '@/enums'
 import {
   getMeasurementPresetRows,
   normalizeMeasurementGender,
   type MeasurementGender,
-  type MeasurementPresetRow,
-  type MeasurementProfile
-} from '@/constants/measurement-presets'
+  type MeasurementPresetRow
+} from '@/constants/measurement-presets.constant'
 
 const normalizeMeasurementRows = (
   rows: Array<Partial<MeasurementPresetRow>>
@@ -80,12 +80,12 @@ export const transformProductToFormValues = (editing: AdminProduct) => {
   const measurementProfile: MeasurementProfile = /quần|váy|đầm|dress/i.test(
     editing.categoryName
   )
-    ? 'bottoms'
-    : 'tops'
+    ? MeasurementProfile.BOTTOMS
+    : MeasurementProfile.TOPS
   const sizeGuideGender = normalizeMeasurementGender(parsed?.sizeGuide?.gender)
   const sizeGuidePresetProfile =
-    parsed?.sizeGuide?.profile === 'bottoms' ||
-    parsed?.sizeGuide?.profile === 'tops'
+    parsed?.sizeGuide?.profile === MeasurementProfile.BOTTOMS ||
+    parsed?.sizeGuide?.profile === MeasurementProfile.TOPS
       ? parsed.sizeGuide.profile
       : measurementProfile
   const sizeGuideRows = parsed?.sizeGuide?.rows?.length

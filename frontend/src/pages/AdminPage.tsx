@@ -4,7 +4,7 @@ import AdminPageSections from '@/components/admin/admin-section/AdminPageSection
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '@/state/auth'
-import { AdminProvider } from '@/context/admin/AdminProvider'
+import { AdminProvider } from '@/context/AdminProvider'
 
 export default function AdminPage() {
   const { section } = useParams<{ section: string }>()

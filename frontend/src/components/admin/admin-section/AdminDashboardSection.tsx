@@ -24,13 +24,13 @@ import {
   getAdminProducts
 } from '@/api/admin-api'
 import { getAdminCoupons } from '@/api/coupons-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { AdminNavKey } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import type { Coupon } from '@/types'
 import AnalyticsAreaChart from '@/components/admin/AnalyticsAreaChart'
 import CategoryRadarChart from '@/components/admin/CategoryRadarChart'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { useAdmin } from '@/context/AdminContext'
 import { useDashboardAnalytics } from '@/hooks/useDashboardAnalytics'
 import OrdersTable from '../admin-table/OrdersTable'
 

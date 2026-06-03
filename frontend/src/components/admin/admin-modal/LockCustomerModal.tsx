@@ -1,4 +1,5 @@
 import { Modal, Select } from 'antd'
+import { ADMIN_CUSTOMER_LOCK_REASON_OPTIONS } from '@/options/admin-customer.options'
 import type { Customer } from '@/types'
 
 interface LockCustomerModalProps {
@@ -40,15 +41,7 @@ export default function LockCustomerModal({
         placeholder="Chọn lý do"
         value={reason}
         onChange={onChangeReason}
-        options={[
-          { value: 'Vi phạm điều khoản', label: 'Vi phạm điều khoản' },
-          { value: 'Hoạt động bất thường', label: 'Hoạt động bất thường' },
-          {
-            value: 'Theo yêu cầu người dùng',
-            label: 'Theo yêu cầu người dùng'
-          },
-          { value: 'Khác', label: 'Khác' }
-        ]}
+        options={ADMIN_CUSTOMER_LOCK_REASON_OPTIONS}
       />
     </Modal>
   )

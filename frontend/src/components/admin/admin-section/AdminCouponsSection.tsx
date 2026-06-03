@@ -5,19 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import {
-  ADMIN_COUPON_STATUS_FILTER_OPTIONS,
-  ADMIN_COUPON_TYPE_FILTER_OPTIONS
-} from '@/constants/admin-coupon.constant'
+
 import { CouponStatus } from '@/enums'
 import type { Coupon } from '@/types'
 import { getAdminCoupons, deleteCoupon, updateCoupon } from '@/api/coupons-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { useAdmin } from '@/context/AdminContext'
 
 import { AdminRefreshButtonAction } from '@/components/admin/AdminRefreshButtonAction'
 import { useFilteredCoupons } from '@/hooks/useFilteredCoupons'
 import AdminCouponsTable from '@/components/admin/admin-table/AdminCouponsTable'
+import {
+  ADMIN_COUPON_STATUS_FILTER_OPTIONS,
+  ADMIN_COUPON_TYPE_FILTER_OPTIONS
+} from '@/options'
 
 export default function AdminCouponsSection() {
   const { refresh, confirmDelete, modals, editing, editor } = useAdmin()

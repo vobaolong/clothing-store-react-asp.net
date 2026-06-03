@@ -7,11 +7,9 @@ import {
   updateShippingAddress
 } from '@/api/addresses-api'
 import { getProvinces, getWardsByProvinceId } from '@/api/provinces-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
-import {
-  SHIPPING_ADDRESS_LABEL_OPTIONS,
-  ShippingAddressLabel
-} from '@/enums/shipping-address.enum'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { ShippingAddressLabel } from '@/enums/shipping-address.enum'
+import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/options/shipping-address.options'
 import type { CreateShippingAddressPayload, ShippingAddress } from '@/types'
 
 type ShippingAddressFormValues = {
@@ -75,7 +73,7 @@ export default function ShippingAddressFormModal({
         isDefault: address.isDefault
       })
     } else {
-      form.setFieldsValue({ label: 'Home' })
+      form.setFieldsValue({ label: SHIPPING_ADDRESS_LABEL_OPTIONS[0].value })
     }
   }, [address, form, open])
 
@@ -266,7 +264,9 @@ export default function ShippingAddressFormModal({
                 onChange={(checked) => {
                   form.setFieldValue(
                     'label',
-                    checked ? item.value : SHIPPING_ADDRESS_LABEL_OPTIONS[0]
+                    checked
+                      ? item.value
+                      : SHIPPING_ADDRESS_LABEL_OPTIONS[0].value
                   )
                 }}
                 className="flex! items-center! justify-center! px-3 py-1.5 h-8! text-sm leading-none border cursor-pointer border-slate-300!"

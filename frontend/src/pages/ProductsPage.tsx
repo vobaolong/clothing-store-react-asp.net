@@ -16,7 +16,7 @@ import {
 } from '@/utils/category-tree'
 import { productMatchesSearch } from '@/utils/product-search'
 import { compareSizes, normalizeSize } from '@/utils/size-utils'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getEffectivePrice } from '@/utils/product-pricing'
 
 const pageSize = 12

@@ -1,5 +1,5 @@
 import { apiClient, apiData } from '@/api/api-client'
-import { API_ENDPOINTS } from '@/constants/api-endpoints'
+import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 
 export const createVnPayUrl = async (
   orderId: string

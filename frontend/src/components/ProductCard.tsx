@@ -9,7 +9,7 @@ import { toCapitalize } from '@/utils/table.lib'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import WishlistToggleButton from '@/components/wishlist/WishlistToggleButton'
 
-const NEW_BADGE_MAX_AGE_MS = 30 * 86_400_000
+const NEW_BADGE_MAX_AGE_MS = 24 * 60 * 60 * 1000 * 30 // 30 days
 
 function isNewProduct(createdAt: string | undefined): boolean {
   if (!createdAt?.trim()) return false

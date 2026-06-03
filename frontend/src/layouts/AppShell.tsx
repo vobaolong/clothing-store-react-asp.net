@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Footer from '@/components/AppFooter'
 import AppHeader from '@/components/AppHeader'
 import { getCategories } from '@/api/products-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import {
   closeCartDrawer,
   selectCartItemCount,

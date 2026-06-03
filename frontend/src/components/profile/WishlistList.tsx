@@ -1,6 +1,6 @@
 import { Card, Empty, Spin } from 'antd'
 import { useQuery } from '@tanstack/react-query'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getWishlistProducts } from '@/api/wishlist-api'
 import ProductCard from '@/components/ProductCard'
 import type { Product } from '@/types'

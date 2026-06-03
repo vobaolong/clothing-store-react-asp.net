@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Divider, Rate, Select, Skeleton } from 'antd'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getProductReviews } from '@/api/reviews-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import ReviewList from '@/components/reviews/ReviewList'
 
 const LOAD_MORE_COUNT = 4
@@ -80,15 +80,17 @@ export default function ProductReviewsSection({
 
   const hasMore = (summary?.reviews?.length ?? 0) > loadedCount
 
-  // Reset loadedCount when filters change
   const prevFilterRef = useRef([starFilter, sortOrder])
-  if (
-    prevFilterRef.current[0] !== starFilter ||
-    prevFilterRef.current[1] !== sortOrder
-  ) {
-    prevFilterRef.current = [starFilter, sortOrder]
-    setLoadedCount(LOAD_MORE_COUNT)
-  }
+
+  useEffect(() => {
+    if (
+      prevFilterRef.current[0] !== starFilter ||
+      prevFilterRef.current[1] !== sortOrder
+    ) {
+      prevFilterRef.current = [starFilter, sortOrder]
+      setLoadedCount(LOAD_MORE_COUNT)
+    }
+  }, [starFilter, sortOrder])
 
   return (
     <Card className="p-6 mt-8 bg-white rounded-lg border border-stone-200">

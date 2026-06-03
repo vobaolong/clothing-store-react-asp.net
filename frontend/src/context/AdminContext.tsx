@@ -10,15 +10,12 @@ import type {
 } from '@/types'
 
 export interface AdminContextType {
-  // Navigation & General
   navigate: ReturnType<typeof useNavigate>
   refresh: () => Promise<void>
   confirmDelete: (title: string, onOk: () => Promise<void>) => void
 
-  // Editor
   editor: ReturnType<typeof useAdminEditor>
 
-  // Filters
   filters: {
     productListMode: AdminProductListMode
     setProductListMode: (mode: AdminProductListMode) => void
@@ -26,7 +23,6 @@ export interface AdminContextType {
     setOrderStatusFilter: (status: string) => void
   }
 
-  // Modals UI
   modals: {
     product: boolean
     category: boolean
@@ -42,7 +38,6 @@ export interface AdminContextType {
     setOrderDetailId: (id: string | null) => void
   }
 
-  // Editing State
   editing: {
     product: AdminProduct | null
     setProduct: (p: AdminProduct | null) => void
@@ -54,7 +49,6 @@ export interface AdminContextType {
     setBanner: (b: AdminBanner | null) => void
   }
 
-  // Success Callbacks
   onSaved: {
     product: () => Promise<void>
     category: () => Promise<void>

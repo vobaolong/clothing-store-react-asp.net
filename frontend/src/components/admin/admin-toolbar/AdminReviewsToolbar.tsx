@@ -1,7 +1,7 @@
 import { Button, DatePicker, Input, Select } from 'antd'
 import { ReloadOutlined, SearchOutlined } from '@ant-design/icons'
 import type { Dayjs } from 'dayjs'
-import { RATING_FILTER_OPTIONS } from '@/constants/review.constant'
+import { RATING_FILTER_OPTIONS } from '@/options/review.options'
 
 interface AdminReviewsToolbarProps {
   search: string

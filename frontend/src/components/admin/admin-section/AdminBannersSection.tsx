@@ -8,8 +8,8 @@ import {
   updateAdminBanner,
   reorderAdminBanners
 } from '@/api/admin-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { useAdmin } from '@/context/AdminContext'
 import type { AdminBanner, AdminBannerUpsertPayload } from '@/types'
 import AdminBannersToolbar from '@/components/admin/admin-toolbar/AdminBannersToolbar'
 import AdminBannersTable from '@/components/admin/admin-table/AdminBannersTable'

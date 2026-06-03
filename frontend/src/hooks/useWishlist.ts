@@ -5,7 +5,7 @@ import {
   getWishlistProducts,
   removeFromWishlist
 } from '@/api/wishlist-api'
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import type { Product } from '@/types'
 import { getAuthToken } from '@/state/auth/auth-session'
 

@@ -7,12 +7,12 @@ import {
   setDefaultShippingAddress
 } from '@/api/addresses-api'
 
-import { QUERY_KEYS } from '@/constants/query-keys'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import type { ShippingAddress } from '@/types'
 import toast from 'react-hot-toast'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
-import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/enums'
+import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/options/shipping-address.options'
 
 export default function AddressList() {
   const [open, setOpen] = useState(false)

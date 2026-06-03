@@ -2,12 +2,13 @@ import { useMemo } from 'react'
 import { Table, Tag, Select, Button, Tooltip, Empty } from 'antd'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/constants/admin-filter.constant'
+import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { OrderStatus } from '@/enums'
-import { STATUS_COLORS, type AdminOrder } from '@/types'
+import { STATUS_COLORS } from '@/constants/labels.constant'
+import type { AdminOrder } from '@/types'
 
 interface AdminOrdersTableProps {
   dataSource: AdminOrder[]

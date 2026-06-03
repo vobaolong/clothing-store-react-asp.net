@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAdmin } from '@/context/admin/AdminContext'
+import { useAdmin } from '@/context/AdminContext'
 import { useAdminProducts } from '@/hooks/useAdminProducts'
 import { useProductSelection } from '@/hooks/useProductSelection'
 import { useProductActions } from '@/hooks/useProductActions'

@@ -1,5 +1,5 @@
 import { apiClient, apiData, apiVoid } from '@/api/api-client'
-import { API_ENDPOINTS } from '@/constants/api-endpoints'
+import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type { MyProfile } from '@/types'
 
 export const getMyProfile = async (): Promise<MyProfile> =>
