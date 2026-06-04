@@ -63,7 +63,7 @@ export default function CategoryModal({
       }
 
       if (!imageUrl) {
-        toast.error('Vui lòng chọn hoặc nhập hình ảnh danh mục')
+        toast.error('Vui lòng chọn hoặc nhập URL ảnh cho danh mục')
         return
       }
 
@@ -166,7 +166,7 @@ export default function CategoryModal({
       open={open}
       onOk={save}
       onCancel={onClose}
-      okText="Lưu"
+      okText={editing ? 'Cập nhật' : 'Thêm'}
       cancelText="Hủy"
       confirmLoading={isSaving}
       styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}

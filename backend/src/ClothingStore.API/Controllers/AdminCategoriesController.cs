@@ -25,16 +25,6 @@ public class AdminCategoriesController(ISender sender) : BaseApiController
         return Ok(id, "Category created.");
     }
 
-    [HttpPost("bulk")]
-    public async Task<IActionResult> CreateBulk(
-        [FromBody] BulkCreateCategoriesCommand request,
-        CancellationToken ct
-    )
-    {
-        var createdIds = await sender.Send(request, ct);
-        return Ok(createdIds, $"{createdIds.Count} categories created.");
-    }
-
     [HttpPut("bulk")]
     public async Task<IActionResult> BulkSetActive(
         [FromBody] BulkSetActiveCategoriesCommand request,

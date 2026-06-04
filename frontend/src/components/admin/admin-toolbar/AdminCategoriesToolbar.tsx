@@ -1,8 +1,4 @@
-import {
-  PlusOutlined,
-  AppstoreAddOutlined,
-  ReloadOutlined
-} from '@ant-design/icons'
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, FloatButton } from 'antd'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 import { AdminRefreshButtonAction } from '@/components/admin/AdminRefreshButtonAction'
@@ -33,7 +29,6 @@ type Props = {
   onFiltersChange: (
     updater: (prev: AdminCategoryFilters) => AdminCategoryFilters
   ) => void
-  onBulkAdd: () => void
   onCreate: () => void
   onRefresh: () => Promise<void>
   onClearSelection: () => void
@@ -46,14 +41,13 @@ export default function AdminCategoriesToolbar({
   hasSelection,
   refreshQuery,
   onFiltersChange,
-  onBulkAdd,
   onCreate,
   onRefresh,
   onClearSelection
 }: Props) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-      <div className="hidden sm:flex flex-wrap gap-2 justify-end items-center w-full sm:ml-auto sm:w-auto">
+      <div className="flex-wrap items-center justify-end hidden w-full gap-2 sm:flex sm:ml-auto sm:w-auto">
         {hasSelection && (
           <AdminCategoriesSelectionActions
             selectedIds={selectedIds}
@@ -61,7 +55,6 @@ export default function AdminCategoriesToolbar({
             onRefresh={onRefresh}
           />
         )}
-        <Button onClick={onBulkAdd}>Thêm hàng loạt</Button>
         <AdminRefreshButtonAction query={refreshQuery} />
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
           Thêm danh mục
@@ -123,11 +116,6 @@ export default function AdminCategoriesToolbar({
           icon={<PlusOutlined />}
           onClick={onCreate}
           tooltip="Thêm danh mục"
-        />
-        <FloatButton
-          icon={<AppstoreAddOutlined />}
-          onClick={onBulkAdd}
-          tooltip="Thêm hàng loạt"
         />
         <FloatButton
           icon={<ReloadOutlined />}
