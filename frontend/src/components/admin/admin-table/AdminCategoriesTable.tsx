@@ -28,12 +28,12 @@ type AdminCategoriesTableProps = {
 
 const GENDER_OPTIONS = Object.values(CategoryGender).map((item) => ({
   label: getVietnameseLabel(item),
-  value: item.toLocaleLowerCase()
+  value: item
 }))
 
 const PRODUCT_TYPE_OPTIONS = Object.values(CategoryType).map((item) => ({
   label: getVietnameseLabel(item),
-  value: item.toLocaleLowerCase()
+  value: item
 }))
 
 export default function AdminCategoriesTable({
