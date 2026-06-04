@@ -16,6 +16,7 @@ import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import { useHeaderVisibility } from '@/hooks/useHeaderVisibility'
 import AnnouncementBar from './AnnouncementBar'
+import ThemeToggleButton from '@/components/ThemeToggleButton'
 
 export type AppHeaderProps = {
   isAdminUser: boolean
@@ -97,7 +98,8 @@ function navLinkClass(isActive: boolean) {
   return [
     'inline-flex items-center h-9 px-3 text-base font-medium rounded-none! bg-transparent! border-none! shadow-none! transition-colors text-nowrap',
     'text-slate-700 hover:text-slate-900 hover:bg-transparent! hover:underline! underline-offset-6 decoration-2',
-    isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : ''
+    isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : '',
+    'dark:text-slate-300 dark:hover:text-white'
   ].join(' ')
 }
 
@@ -107,22 +109,22 @@ function MegaMenuContent({
   categoryGroups: CategoryGroup[]
 }) {
   return (
-    <div className="p-6 bg-white rounded-xl border shadow-xl border-slate-200">
+    <div className="p-6 bg-white rounded-xl border shadow-xl border-slate-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {categoryGroups.map(({ parent, children }) => (
           <div key={parent.id}>
             <Link
               to={toProductsCategorySearchUrl(parent)}
-              className="text-sm font-semibold text-slate-900! hover:underline! hover:text-slate-600!"
+              className="text-sm font-semibold text-slate-900! hover:underline! hover:text-slate-600! dark:text-slate-100! dark:hover:text-slate-300!"
             >
               {parent.name}
             </Link>
-            <div className="flex flex-col gap-2 mt-3 text-sm text-slate-600">
+            <div className="flex flex-col gap-2 mt-3 text-sm text-slate-600 dark:text-slate-400">
               {children.map((child) => (
                 <Link
                   key={child.id}
                   to={toProductsCategorySearchUrl(child)}
-                  className="transition-colors hover:text-slate-900 text-slate-900! hover:underline! underline-offset-4"
+                  className="transition-colors hover:text-slate-900 text-slate-900! hover:underline! underline-offset-4 dark:text-slate-100! dark:hover:text-slate-300!"
                 >
                   {child.name}
                 </Link>
@@ -207,21 +209,21 @@ function MobileNavDrawer({
           <Link
             key={item.key}
             to={item.key}
-            className="text-base font-medium text-slate-900 hover:text-slate-600"
+            className="text-base font-medium text-slate-900 hover:text-slate-600 dark:text-slate-100 dark:hover:text-slate-300"
             onClick={onClose}
           >
             {item.label}
           </Link>
         ))}
 
-        <div className="pt-4 border-t border-slate-200">
-          <p className="mb-3 text-sm font-semibold text-slate-600">Danh mục</p>
+        <div className="pt-4 border-t border-slate-200 dark:border-gray-700">
+          <p className="mb-3 text-sm font-semibold text-slate-600 dark:text-slate-400">Danh mục</p>
           <div className="flex flex-col gap-2">
             {categoryGroups.map(({ parent, children }) => (
               <div key={parent.id}>
                 <Link
                   to={toProductsCategorySearchUrl(parent)}
-                  className="text-sm font-medium text-slate-900 hover:text-slate-600"
+                  className="text-sm font-medium text-slate-900 hover:text-slate-600 dark:text-slate-100 dark:hover:text-slate-300"
                   onClick={onClose}
                 >
                   {parent.name}
@@ -231,7 +233,7 @@ function MobileNavDrawer({
                     <Link
                       key={child.id}
                       to={toProductsCategorySearchUrl(child)}
-                      className="text-xs text-slate-600 hover:text-slate-900"
+                      className="text-xs text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
                       onClick={onClose}
                     >
                       {child.name}
@@ -280,16 +282,16 @@ export default function AppHeader({
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white transition-transform duration-300 ease-in-out mx-auto ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white transition-transform duration-300 ease-in-out mx-auto dark:bg-gray-900 ${
         visible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
       {!isAdminUser && <AnnouncementBar />}
-      <Header className="bg-white! border-b border-slate-200 px-4! md:px-8!">
+      <Header className="bg-white border-b border-slate-200 px-4! md:px-8! dark:bg-gray-900! dark:border-gray-700!">
         <div className="flex items-center w-full gap-4 mx-auto h-18 max-w-7xl">
           <Link
             to={isAdminUser ? '/admin' : '/'}
-            className="hidden md:block text-2xl font-semibold tracking-tight text-slate-900!"
+            className="hidden md:block text-2xl font-semibold tracking-tight text-slate-900! dark:text-white!"
           >
             Wearly
           </Link>
@@ -318,6 +320,7 @@ export default function AppHeader({
           )}
 
           <div className="flex gap-2 items-center ml-auto shrink-0">
+            <ThemeToggleButton />
             {!isAdminUser && (
               <Button
                 type="default"

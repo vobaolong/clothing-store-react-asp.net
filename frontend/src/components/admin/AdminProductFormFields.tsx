@@ -321,7 +321,7 @@ export default function AdminProductFormFields({
           </Form.Item>
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-900">
+              <span className="text-sm font-medium">
                 Bảng thông số (Size Guide)
               </span>
               <Switch
@@ -379,9 +379,7 @@ export default function AdminProductFormFields({
 
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-900">
-                Thông số
-              </span>
+              <span className="text-sm font-medium">Thông số</span>
               <Switch
                 checked={showSpecs}
                 onChange={(checked) => {
@@ -448,7 +446,7 @@ export default function AdminProductFormFields({
           </div>
 
           <div className="mb-4">
-            <div className="mb-2 text-sm font-medium text-slate-900">
+            <div className="mb-2 text-sm font-medium">
               Phân loại<span className="text-red-500"> *</span>
             </div>
             <AdminVariantsMatrixField

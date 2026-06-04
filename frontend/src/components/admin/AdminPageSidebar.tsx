@@ -27,22 +27,25 @@ export default function AdminPageSidebar({
       collapsible
       collapsed={collapsed}
       onCollapse={onCollapsedChange}
-      className="border-r border-slate-200 [&_.ant-layout-sider-children]:flex [&_.ant-layout-sider-children]:min-h-0 [&_.ant-layout-sider-children]:flex-1 [&_.ant-layout-sider-children]:flex-col [&_.ant-layout-sider-trigger]:border-t [&_.ant-layout-sider-trigger]:border-slate-200"
+      className="border-r border-slate-200 [&_.ant-layout-sider-children]:flex [&_.ant-layout-sider-children]:min-h-0 [&_.ant-layout-sider-children]:flex-1 [&_.ant-layout-sider-children]:flex-col [&_.ant-layout-sider-trigger]:border-t [&_.ant-layout-sider-trigger]:border-slate-200 dark:border-gray-700 [&_.ant-layout-sider-trigger]:dark:border-gray-700 [&_.ant-layout-sider-trigger]:bg-white! [&_.ant-layout-sider-trigger]:dark:bg-[#192037]!"
     >
       <div className="flex flex-col flex-1 min-h-0">
         {!collapsed ? (
-          <div className="px-4 pt-5 pb-2">
-            <Typography.Title level={5} className="mb-0! mt-0! text-slate-900">
+          <div className="px-4 pt-5 pb-2 bg-white! dark:bg-[#192037]!">
+            <Typography.Title
+              level={5}
+              className="mb-0! mt-0! text-slate-900 dark:text-white"
+            >
               {brandTitle}
             </Typography.Title>
           </div>
         ) : (
           <div className="h-3 shrink-0" aria-hidden />
         )}
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto bg-white! dark:bg-[#192037]!">
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>
-        <div className="flex justify-center p-2 border-t shrink-0 border-slate-200">
+        <div className="flex justify-center p-2 border-t shrink-0 border-slate-200 dark:border-gray-700 bg-white! dark:bg-[#192037]!">
           <Tooltip title={collapsed ? 'Logout' : undefined}>
             <Button
               danger

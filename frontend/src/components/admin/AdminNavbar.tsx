@@ -1,12 +1,12 @@
 import {
   CommentOutlined,
   TeamOutlined,
-  DashboardOutlined,
   FolderOutlined,
   InboxOutlined,
   PictureOutlined,
   SkinOutlined,
-  TagsOutlined
+  TagsOutlined,
+  AreaChartOutlined
 } from '@ant-design/icons'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
@@ -21,7 +21,7 @@ type AdminNavbarProps = {
 const navItems: MenuProps['items'] = [
   {
     key: AdminNavKey.DASHBOARD,
-    icon: <DashboardOutlined />,
+    icon: <AreaChartOutlined />,
     label: ADMIN_NAV_LABELS.DASHBOARD
   },
   {
@@ -78,7 +78,7 @@ export default function AdminNavbar({ inlineCollapsed }: AdminNavbarProps) {
       selectedKeys={[selectedKey]}
       items={navItems}
       onClick={({ key }) => navigate(`/admin/${String(key)}`)}
-      className="px-2 pb-4 bg-transparent border-0"
+      className="px-2 pb-4 border-0 bg-white! dark:bg-[#192037]!"
     />
   )
 }
