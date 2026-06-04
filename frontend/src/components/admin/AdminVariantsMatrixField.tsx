@@ -35,10 +35,12 @@ export type AdminVariantsMatrixFieldProps = {
 }
 
 const variantKey = (color: string, size: string) => `${color}__${size}`
+let _uid = 0
+const nextUid = () => String(++_uid)
 
 function urlsToUploadFiles(colorName: string, urls: string[]): UploadFile[] {
   return urls.map((url, index) => ({
-    uid: `${colorName}-${index}`,
+    uid: `preset-${colorName}-${nextUid()}`,
     name: `image-${index + 1}.jpg`,
     status: 'done' as const,
     url,
@@ -329,7 +331,7 @@ export default forwardRef<
     const url = (matrixData.urlDrafts[colorName] ?? '').trim()
     if (!url) return
     const newFile: UploadFile = {
-      uid: `url-${colorName}-${Date.now()}`,
+      uid: `url-${colorName}-${nextUid()}`,
       name: 'URL',
       status: 'done',
       url,
@@ -468,7 +470,7 @@ export default forwardRef<
                       handleUploadChange(color.name, fileList)
                     }
                   >
-                    + Upload
+                    + Tải lên
                   </Upload>
 
                   <div className="flex flex-wrap gap-2 items-end max-w-2xl">

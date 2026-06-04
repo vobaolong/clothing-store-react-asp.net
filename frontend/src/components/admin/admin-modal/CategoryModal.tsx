@@ -1,4 +1,4 @@
-import { Checkbox, Form, Input, Modal, Select, TreeSelect, Upload } from 'antd'
+import { Form, Input, Modal, Select, Switch, TreeSelect, Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -90,9 +90,7 @@ export default function CategoryModal({
       onSaved()
     } catch (error) {
       if (error && typeof error === 'object' && 'errorFields' in error) return
-      toast.error(
-        (error as Error).message || 'Có lỗi xảy ra trong quá trình lưu'
-      )
+      toast.error((error as Error).message || 'Có lỗi xảy ra khi lưu')
     } finally {
       setIsSaving(false)
     }
@@ -248,7 +246,7 @@ export default function CategoryModal({
           valuePropName="checked"
           initialValue={true}
         >
-          <Checkbox />
+          <Switch checked={form.getFieldValue('isActive')} />
         </Form.Item>
       </Form>
     </Modal>

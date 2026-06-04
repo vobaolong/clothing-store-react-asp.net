@@ -69,7 +69,7 @@ export default function AppShell() {
       : `/${location.pathname.split('/')[1]}`
 
   return (
-    <div className="flex overflow-hidden flex-col min-h-dvh bg-slate-50">
+    <div className="flex flex-col overflow-hidden min-h-dvh bg-slate-50">
       <AppHeader
         isAdminUser={isAdminUser}
         isAuthenticated={isAuthenticated}
@@ -95,7 +95,7 @@ export default function AppShell() {
           <Empty description="Giỏ hàng của bạn trống" />
         ) : (
           <div className="flex flex-col h-full min-h-0">
-            <div className="flex overflow-y-auto flex-col flex-1 gap-4 pr-1 min-h-0">
+            <div className="flex flex-col flex-1 min-h-0 gap-4 pr-1 overflow-y-auto">
               {cartItems.map((item) => {
                 const thumb = getCartLineImage(item).trim()
                 return (
@@ -103,12 +103,12 @@ export default function AppShell() {
                     key={`${item.id}-${item.productVariantId}`}
                     className="flex flex-col gap-3 pb-4 border-b border-slate-100 sm:flex-row sm:items-start sm:justify-between"
                   >
-                    <div className="flex flex-1 gap-3 min-w-0">
+                    <div className="flex flex-1 min-w-0 gap-3">
                       {thumb ? (
                         <img
                           src={thumb}
                           alt={item.name}
-                          className="object-cover rounded-lg border size-16 shrink-0 border-slate-200 bg-slate-100"
+                          className="object-cover border rounded-lg size-16 shrink-0 border-slate-200 bg-slate-100"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none'
                           }}
@@ -131,7 +131,7 @@ export default function AppShell() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2 items-center shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <CartQuantityControl
                         value={item.quantity}
                         onChange={(quantity) =>
@@ -168,7 +168,7 @@ export default function AppShell() {
             </div>
 
             <div className="pt-4 mt-auto border-t shrink-0 border-slate-200">
-              <div className="flex justify-between items-center mb-3 text-slate-700">
+              <div className="flex items-center justify-between mb-3 text-slate-700">
                 <span>Tổng cộng</span>
                 <span className="text-lg font-semibold text-slate-900">
                   {formatCurrency(cartTotal)}

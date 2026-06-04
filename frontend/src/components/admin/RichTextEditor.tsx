@@ -68,7 +68,7 @@ export default function RichTextEditor({
           Bullet
         </Button>
         <Button size="small" onClick={insertImage}>
-          Add Image
+          Chèn ảnh
         </Button>
       </div>
       <EditorContent editor={editor} />
