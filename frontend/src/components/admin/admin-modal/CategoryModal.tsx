@@ -1,4 +1,4 @@
-import { Checkbox, Form, Input, Modal, Select, TreeSelect, Upload } from 'antd'
+import { Form, Input, Modal, Select, Switch, TreeSelect, Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -63,7 +63,7 @@ export default function CategoryModal({
       }
 
       if (!imageUrl) {
-        toast.error('Please select or enter a category image')
+        toast.error('Vui lòng chọn hoặc nhập hình ảnh danh mục')
         return
       }
 
@@ -84,11 +84,13 @@ export default function CategoryModal({
         await createAdminCategory(payload)
       }
 
-      toast.success(editing ? 'Category updated' : 'Category created')
+      toast.success(
+        editing ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công'
+      )
       onSaved()
     } catch (error) {
-      if (error && typeof error === 'object' && 'errorFields' in error) return // Form validation fail
-      toast.error((error as Error).message || 'An error occurred while saving')
+      if (error && typeof error === 'object' && 'errorFields' in error) return
+      toast.error((error as Error).message || 'Có lỗi xảy ra khi lưu')
     } finally {
       setIsSaving(false)
     }
@@ -164,6 +166,8 @@ export default function CategoryModal({
       open={open}
       onOk={save}
       onCancel={onClose}
+      okText="Lưu"
+      cancelText="Hủy"
       confirmLoading={isSaving}
       styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
       afterOpenChange={handleAfterOpenChange}
@@ -242,7 +246,7 @@ export default function CategoryModal({
           valuePropName="checked"
           initialValue={true}
         >
-          <Checkbox />
+          <Switch checked={form.getFieldValue('isActive')} />
         </Form.Item>
       </Form>
     </Modal>

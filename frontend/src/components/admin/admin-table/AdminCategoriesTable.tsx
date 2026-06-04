@@ -4,14 +4,10 @@ import type { TableProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { AdminCategory } from '@/types'
 import { CategoryGender, CategoryType } from '@/enums'
-import type {
-  CategoryGender as CategoryGenderType,
-  CategoryType as CategoryTypeType
-} from '@/enums'
 import { formatDate } from '@/utils/format'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
 import type { buildCategoryTreeSelectData } from '@/utils/category-tree'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 
 type AdminCategoriesTableProps = {
   loading: boolean
@@ -31,13 +27,13 @@ type AdminCategoriesTableProps = {
 }
 
 const GENDER_OPTIONS = Object.values(CategoryGender).map((item) => ({
-  label: getVietnameseStatusLabel(item),
-  value: item
+  label: getVietnameseLabel(item),
+  value: item.toLocaleLowerCase()
 }))
 
 const PRODUCT_TYPE_OPTIONS = Object.values(CategoryType).map((item) => ({
-  label: getVietnameseStatusLabel(item),
-  value: item
+  label: getVietnameseLabel(item),
+  value: item.toLocaleLowerCase()
 }))
 
 export default function AdminCategoriesTable({
@@ -113,11 +109,12 @@ export default function AdminCategoriesTable({
         dataIndex: 'gender',
         key: 'gender',
         align: 'center',
-        render: (value: CategoryGenderType, row) => (
+        render: (value: CategoryGender, row) => (
           <Select
             className="min-w-32"
             value={value}
             options={GENDER_OPTIONS}
+            optionLabelProp="label"
             onChange={async (gender) => {
               await onQuickUpdate(row, {
                 gender
@@ -131,12 +128,13 @@ export default function AdminCategoriesTable({
         dataIndex: 'productType',
         key: 'productType',
         align: 'center',
-        render: (value: CategoryTypeType | undefined, row) => (
+        render: (value: CategoryType, row) => (
           <Select
             allowClear
             className="min-w-36"
-            value={value}
+            value={value} //chỗ này phải hiển thị tiếng việt
             options={PRODUCT_TYPE_OPTIONS}
+            optionLabelProp="label"
             placeholder="None"
             onChange={async (productType) => {
               await onQuickUpdate(row, {
