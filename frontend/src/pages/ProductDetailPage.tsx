@@ -1,6 +1,13 @@
 import type { ColumnType } from 'antd/es/table'
 import { useQuery } from '@tanstack/react-query'
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
@@ -38,6 +45,7 @@ import {
   type MeasurementPresetRow
 } from '@/constants/measurement-presets.constant'
 import ProductGallery from '@/components/product/ProductGallery'
+import ProductFixedBuyBar from '@/components/ProductFixedBuyBar'
 import { Button, Result } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
 
@@ -170,8 +178,9 @@ export default function ProductDetailPage() {
     image: ''
   })
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false)
+  const [showFixedBuyBar, setShowFixedBuyBar] = useState(false)
+  const purchaseActionsRef = useRef<HTMLDivElement>(null)
   const [timer, setTimer] = useState(() => ({ now: Date.now() }))
-
   const refreshSaleTimer = useCallback(() => {
     setTimer({ now: Date.now() })
   }, [])
@@ -226,6 +235,19 @@ export default function ProductDetailPage() {
       window.clearInterval(intervalId)
     }
   }, [saleEndDate, showSaleCountdown])
+
+  useEffect(() => {
+    const target = purchaseActionsRef.current
+    if (!target) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowFixedBuyBar(!entry.isIntersecting),
+      { threshold: 0.2 }
+    )
+
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [product?.id])
 
   const saleStatisticCountdownFormat = useMemo(
     () =>
@@ -565,18 +587,20 @@ export default function ProductDetailPage() {
             </p>
           </div>
 
-          <ProductPurchaseActions
-            isOutOfStock={isOutOfStock}
-            selectedVariant={selectedVariant}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-          />
+          <div ref={purchaseActionsRef}>
+            <ProductPurchaseActions
+              isOutOfStock={isOutOfStock}
+              selectedVariant={selectedVariant}
+              onAddToCart={handleAddToCart}
+              onBuyNow={handleBuyNow}
+            />
+          </div>
 
           <div className="grid grid-cols-2 mt-4 rounded-lg bg-stone-200">
             {[
               {
                 title: 'https://www.coolmate.me/icons/product/free-ship.svg',
-                sub: 'Free ship cho đơn từ 200k'
+                sub: 'Free ship cho đơn từ 499k'
               },
               {
                 title: 'https://www.coolmate.me/icons/product/return-60.svg',
@@ -637,6 +661,19 @@ export default function ProductDetailPage() {
         onCancel={() => setIsSizeGuideOpen(false)}
         columns={sizeGuideColumns}
         dataSource={sizeGuideTableData}
+      />
+      <ProductFixedBuyBar
+        visible={showFixedBuyBar}
+        imageUrl={galleryImages[0]}
+        productName={product.name}
+        price={product.price}
+        salePrice={
+          effectiveDisplayPrice !== product.price ? effectiveDisplayPrice : null
+        }
+        isOutOfStock={isOutOfStock}
+        selectedVariant={selectedVariant}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
       />
     </section>
   )
