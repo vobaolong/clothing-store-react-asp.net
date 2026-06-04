@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Table, Tag, Tooltip, Button, Empty } from 'antd'
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons'
-import type { ColumnsType } from 'antd/es/table'
+import type { TablePaginationConfig, ColumnsType } from 'antd/es/table'
 import type { Customer } from '@/types'
 import { formatDate } from '@/utils/format'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
@@ -19,6 +19,13 @@ export default function AdminCustomerTable({
   onLockOpen,
   onUnlock
 }: AdminCustomerTableProps) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
+
   const columns = useMemo<ColumnsType<Customer>>(
     () => [
       {
@@ -27,7 +34,7 @@ export default function AdminCustomerTable({
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_, __, index) => index + 1
+        render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
         title: 'ID',
@@ -77,7 +84,7 @@ export default function AdminCustomerTable({
           )
       }
     ],
-    [onLockOpen, onUnlock]
+    [onLockOpen, onUnlock, page, pageSize]
   )
 
   return (
@@ -87,7 +94,9 @@ export default function AdminCustomerTable({
       loading={loading}
       dataSource={dataSource}
       columns={columns}
+      size="small"
       scroll={{ x: 'max-content' }}
+      onChange={handleTableChange}
       pagination={{
         defaultPageSize: 10,
         showSizeChanger: true,

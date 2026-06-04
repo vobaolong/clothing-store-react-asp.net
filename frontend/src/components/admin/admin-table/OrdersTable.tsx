@@ -3,8 +3,8 @@ import { formatCurrency, formatDate } from '@/utils/format'
 import { getOrderStatusLabel, STATUS_COLORS } from '@/constants/labels.constant'
 import { EyeOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { useMemo } from 'react'
-import type { ColumnsType } from 'antd/es/table'
+import { useMemo, useState, useCallback } from 'react'
+import type { TablePaginationConfig, ColumnsType } from 'antd/es/table'
 import type { OrderOverview } from '@/types'
 
 type OrdersTableProps = {
@@ -17,6 +17,12 @@ export default function OrdersTable({
   loading = false
 }: OrdersTableProps) {
   const navigate = useNavigate()
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
 
   const columns = useMemo<ColumnsType<OrderOverview>>(
     () => [
@@ -26,7 +32,7 @@ export default function OrdersTable({
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_, __, index) => index + 1
+        render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
         title: 'ID',
@@ -78,7 +84,7 @@ export default function OrdersTable({
         )
       }
     ],
-    [navigate]
+    [navigate, page, pageSize]
   )
 
   return (
@@ -90,7 +96,8 @@ export default function OrdersTable({
       dataSource={data}
       columns={columns}
       locale={{ emptyText: <Empty description="Không có đơn hàng nào" /> }}
-      pagination={{ pageSize: 10, hideOnSinglePage: true }}
+      pagination={{ current: page, pageSize: 10, hideOnSinglePage: true }}
+      onChange={handleTableChange}
       scroll={{ x: 'max-content' }}
     />
   )

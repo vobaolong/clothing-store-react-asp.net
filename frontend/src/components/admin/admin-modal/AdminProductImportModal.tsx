@@ -65,11 +65,11 @@ export default function AdminProductImportModal({
   return (
     <Modal
       open={open}
-      title="Nạp Excel"
+      title="Nhập Excel"
       onCancel={onClose}
       afterClose={resetState}
       onOk={handleImport}
-      okText="Import"
+      okText="Nhập"
       cancelText="Đóng"
       okButtonProps={{
         disabled: !selectedFile || isImporting,
@@ -79,7 +79,10 @@ export default function AdminProductImportModal({
       width={720}
     >
       <div className="space-y-4">
-        <Typography.Paragraph className="mb-0 text-sm text-gray-600">
+        <Typography.Paragraph
+          type="secondary"
+          className="mb-0 text-sm text-gray-600"
+        >
           Tải lên file .xlsx hoặc .xls. Mỗi dòng Excel đại diện cho một biến thể
           sản phẩm theo size/màu, không phải dữ liệu cấp sản phẩm.
         </Typography.Paragraph>

@@ -52,7 +52,7 @@ export default function CartPage() {
 
   if (!items.length)
     return (
-      <Card className="rounded-lg border border-slate-200">
+      <Card className="rounded-lg border border-slate-200 w-full">
         <Empty description="Giỏ hàng của bạn trống" className="py-12" />
         <div className="flex justify-center">
           <Link to="/products">

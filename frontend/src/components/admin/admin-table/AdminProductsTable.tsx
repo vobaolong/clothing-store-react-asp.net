@@ -1,4 +1,4 @@
-import { Button, Image, Switch, Table, Tooltip, Typography } from 'antd'
+import { Button, Image, Switch, Table, Tooltip } from 'antd'
 import type { ColumnsType, TableRowSelection } from 'antd/es/table/interface'
 import toast from 'react-hot-toast'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
@@ -7,7 +7,8 @@ import { formatCurrency, formatDate } from '@/utils/format'
 import { toCapitalize } from '@/utils/table.lib'
 import { getAdminProductThumbnail } from '@/components/admin/admin-products-utils'
 import { UndoOutlined } from '@ant-design/icons'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import type { TablePaginationConfig } from 'antd/es/table/interface'
 
 type AdminProductsTableProps = {
   dataSource: AdminProduct[]
@@ -33,6 +34,13 @@ export default function AdminProductsTable({
   onRestore,
   onToggleActive
 }: AdminProductsTableProps) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
+
   const renderProductImage = (row: AdminProduct) => {
     const src = getAdminProductThumbnail(row)
     if (!src) {
@@ -40,9 +48,7 @@ export default function AdminProductsTable({
         <div
           className={`flex justify-center items-center rounded-md size-16! bg-slate-100`}
         >
-          <Typography.Text type="secondary" style={{ fontSize: 10 }}>
-            No image
-          </Typography.Text>
+          <span className="text-xs text-slate-500">No image</span>
         </div>
       )
     }
@@ -51,7 +57,7 @@ export default function AdminProductsTable({
       <Image
         src={src}
         alt="Product"
-        className="object-cover rounded-md size-16!"
+        className="object-cover rounded-md size-12! self-center"
         preview
         onError={(event) => {
           event.currentTarget.style.display = 'none'
@@ -68,7 +74,7 @@ export default function AdminProductsTable({
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_, __, index) => index + 1
+        render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
         title: 'Tên sản phẩm',
@@ -187,10 +193,19 @@ export default function AdminProductsTable({
         )
       }
     ]
-  }, [isTrash, onView, onEdit, onDelete, onRestore, onToggleActive])
+  }, [
+    isTrash,
+    onView,
+    onEdit,
+    onDelete,
+    onRestore,
+    onToggleActive,
+    page,
+    pageSize
+  ])
 
   return (
-    <Table<AdminProduct>
+    <Table
       rowKey="id"
       bordered
       loading={loading}
@@ -198,6 +213,8 @@ export default function AdminProductsTable({
       rowSelection={rowSelection}
       columns={columns}
       scroll={{ x: 'max-content' }}
+      size="small"
+      onChange={handleTableChange}
       pagination={{
         defaultPageSize: 10,
         showSizeChanger: true,

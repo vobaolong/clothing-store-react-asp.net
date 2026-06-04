@@ -7,7 +7,9 @@ import {
   HomeHeroBanner,
   HomeProductRail,
   CategoryBrowser,
-  CategoryGrid
+  CategoryGrid,
+  NewsletterSection,
+  TrustBadges
 } from '@/components/home'
 
 const HomePage = () => {
@@ -46,7 +48,7 @@ const HomePage = () => {
   )
 
   return (
-    <main className="pb-10 space-y-8 min-h-screen">
+    <main className="pb-10 space-y-12 min-h-screen">
       <HomeHeroBanner banners={activeBanners} />
 
       <CategoryBrowser
@@ -65,7 +67,11 @@ const HomePage = () => {
         products={newProducts}
       />
 
+      <NewsletterSection />
+
       <CategoryGrid categories={rootCategories} />
+
+      <TrustBadges />
     </main>
   )
 }
