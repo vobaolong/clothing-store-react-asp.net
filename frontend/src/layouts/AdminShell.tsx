@@ -56,10 +56,11 @@ export default function AdminShell() {
       />
       <Layout className="flex flex-col flex-1 min-w-0 min-h-0">
         {!isOrderDetailPage ? (
-          <Header className="flex! h-auto! shrink-0 items-center! border-b! border-slate-200! bg-white! px-6! py-4! leading-normal!">
+          <Header className="flex h-auto shrink-0 items-center border-b border-slate-200! bg-white! px-6 py-4">
             <Typography.Title level={4} className="m-0! flex-1">
               {headerTitle}
             </Typography.Title>
+            <span className="mr-3">Xin chào Admin Wearly</span>
             <NotificationCenter />
           </Header>
         ) : null}

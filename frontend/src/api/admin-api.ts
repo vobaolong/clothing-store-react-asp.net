@@ -14,7 +14,8 @@ import type {
   AdminBannerUpsertPayload,
   AdminOrderStatusUpdatePayload,
   Review,
-  Customer
+  Customer,
+  Category
 } from '@/types'
 import { CategoryGender, CategoryType } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
@@ -137,25 +138,19 @@ export const getAdminCategories = async (): Promise<AdminCategory[]> =>
     await apiData<Array<Record<string, unknown>>>(
       apiClient.get(API_ENDPOINTS.admin.categories)
     )
-  ).map((item) => ({
-    id: String(item.id ?? ''),
-    name: String(item.name ?? ''),
-    slug: String(item.slug ?? ''),
-    image: String(item.image ?? ''),
-    description: item.description ? String(item.description) : undefined,
-    parentId: item.parentId ? String(item.parentId) : null,
-    level: item.parentId ? 1 : 0,
-    gender: item.gender
-      ? String(item.gender).toLowerCase()
-      : CategoryGender.UNISEX,
-    productType: item.productType
-      ? String(item.productType).toLowerCase()
-      : CategoryType.CLOTHING,
-    isActive: typeof item.isActive === 'boolean' ? item.isActive : true,
-    createdAt: String(item.createdAt ?? new Date().toISOString()),
-    updatedAt: String(
-      item.updatedAt ?? item.createdAt ?? new Date().toISOString()
-    )
+  ).map((item: Category) => ({
+    id: item.id,
+    name: item.name,
+    slug: item.slug,
+    image: item.image,
+    description: item.description ?? '',
+    parentId: item.parentId ?? null,
+    level: item.parentId ?? 0,
+    gender: item.gender ?? CategoryGender.UNISEX,
+    productType: item.productType ?? CategoryType.CLOTHING,
+    isActive: item.isActive,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt
   })) as AdminCategory[]
 
 export const createAdminCategory = async (
@@ -169,18 +164,6 @@ export const updateAdminCategory = async (
 
 export const deleteAdminCategory = async (id: string) =>
   apiVoid(apiClient.delete(API_ENDPOINTS.admin.categoryById(id)))
-
-export type AdminCategoryBulkCreatePayload = {
-  items: Array<{ name: string; image?: string; description?: string }>
-  parentId?: string | null
-  gender?: string
-  productType?: string
-  isActive?: boolean
-}
-
-export const bulkCreateAdminCategories = async (
-  payload: AdminCategoryBulkCreatePayload
-) => apiVoid(apiClient.post(API_ENDPOINTS.admin.categoriesBulk, payload))
 
 export const bulkUpdateCategoriesActive = async (payload: {
   ids: string[]

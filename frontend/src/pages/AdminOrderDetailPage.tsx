@@ -52,7 +52,7 @@ export default function AdminOrderDetailPage() {
   const { id } = useParams()
   const token = getAuthToken()
   const qc = useQueryClient()
-  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | undefined>(
     undefined
   )
 
@@ -106,8 +106,8 @@ export default function AdminOrderDetailPage() {
 
   return (
     <div className="space-y-4!">
-      <div className="flex flex-wrap gap-3 justify-between items-center">
-        <div className="flex gap-3 items-center min-w-0">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center min-w-0 gap-3">
           <Link
             to="/admin/orders"
             className="text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 "
@@ -126,15 +126,15 @@ export default function AdminOrderDetailPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex flex-wrap items-center gap-2">
           {detail && (
             <Tag color={STATUS_COLORS[detail.paymentStatus]}>
               {getVietnameseStatusLabel(detail.paymentStatus)}
             </Tag>
           )}
           <Select
-            value={selectedStatus ?? detail?.status}
-            onChange={(value) => setSelectedStatus(value)}
+            value={getVietnameseStatusLabel(selectedStatus ?? detail?.status)}
+            onChange={(value) => setSelectedStatus(value as OrderStatus)}
             disabled={
               detailQuery.isLoading ||
               !detail ||
@@ -143,7 +143,7 @@ export default function AdminOrderDetailPage() {
             }
             options={createOrderStatusOptions().map((option) => ({
               ...option,
-              label: getVietnameseStatusLabel(String(option.value)),
+              label: getVietnameseStatusLabel(option.value),
               disabled:
                 detail == null ||
                 !canUpdateToStatus(detail.status, String(option.value))
@@ -218,7 +218,7 @@ export default function AdminOrderDetailPage() {
                         key={row.id}
                         className="flex items-center justify-between gap-4 py-3"
                       >
-                        <div className="flex gap-3 items-center min-w-0">
+                        <div className="flex items-center min-w-0 gap-3">
                           <Image
                             alt={row.productName}
                             src={row.imageUrl}
@@ -268,7 +268,7 @@ export default function AdminOrderDetailPage() {
                   <span>Giảm giá</span>
                   <span className="text-emerald-600">
                     {detail.couponCodeSnapshot && (
-                      <span className="inline-block py-1 px-2 mr-2 text-xs text-emerald-800 bg-emerald-100 rounded">
+                      <span className="inline-block px-2 py-1 mr-2 text-xs rounded text-emerald-800 bg-emerald-100">
                         {detail.couponCodeSnapshot}
                       </span>
                     )}

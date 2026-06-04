@@ -26,13 +26,11 @@ export interface AdminContextType {
   modals: {
     product: boolean
     category: boolean
-    bulkCategory: boolean
     coupon: boolean
     banner: boolean
     orderDetailId: string | null
     setProduct: (open: boolean) => void
     setCategory: (open: boolean) => void
-    setBulkCategory: (open: boolean) => void
     setCoupon: (open: boolean) => void
     setBanner: (open: boolean) => void
     setOrderDetailId: (id: string | null) => void
@@ -52,7 +50,6 @@ export interface AdminContextType {
   onSaved: {
     product: () => Promise<void>
     category: () => Promise<void>
-    bulkCategory: () => Promise<void>
     coupon: () => Promise<void>
     banner: () => Promise<void>
   }

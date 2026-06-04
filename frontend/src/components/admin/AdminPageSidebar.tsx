@@ -39,10 +39,10 @@ export default function AdminPageSidebar({
         ) : (
           <div className="h-3 shrink-0" aria-hidden />
         )}
-        <div className="overflow-y-auto flex-1 min-h-0">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>
-        <div className="p-2 border-t shrink-0 border-slate-200 flex justify-center">
+        <div className="flex justify-center p-2 border-t shrink-0 border-slate-200">
           <Tooltip title={collapsed ? 'Logout' : undefined}>
             <Button
               danger

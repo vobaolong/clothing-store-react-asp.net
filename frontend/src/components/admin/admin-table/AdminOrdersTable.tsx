@@ -85,7 +85,7 @@ export default function AdminOrdersTable({
         align: 'center',
         render: (_, row) => (
           <Select
-            value={row.status}
+            value={getVietnameseStatusLabel(row.status)}
             style={{ width: 140 }}
             disabled={
               row.status === OrderStatus.DELIVERED ||
