@@ -119,8 +119,8 @@ const contactAddresses: ContactAddress[] = [
 
 export default function AppFooter() {
   return (
-    <footer id="footer" className="text-white bg-black/90">
-      <div className="px-4! md:px-8! py-6 mx-auto w-full max-w-7xl md:py-10">
+    <footer id="footer" className="text-white bg-black/90 px-4! md:px-8!">
+      <div className="py-8 mx-auto w-full max-w-7xl">
         <div className="flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row">
           <div className="max-w-xl space-y-6">
             <h2 className="font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl">

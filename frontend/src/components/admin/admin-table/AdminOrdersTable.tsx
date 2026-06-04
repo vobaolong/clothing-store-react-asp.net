@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Table, Tag, Select, Button, Tooltip, Empty } from 'antd'
+import type { TablePaginationConfig } from 'antd/es/table'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
@@ -27,6 +28,13 @@ export default function AdminOrdersTable({
   onUpdateStatus,
   onView
 }: AdminOrdersTableProps) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
+
   const rowSelection = useMemo(
     () => ({
       selectedRowKeys,
@@ -48,7 +56,7 @@ export default function AdminOrdersTable({
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_, __, index) => index + 1
+        render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
         title: 'Mã đơn',
@@ -131,18 +139,20 @@ export default function AdminOrdersTable({
         )
       }
     ],
-    [onUpdateStatus, onView]
+    [onUpdateStatus, onView, page, pageSize]
   )
 
   return (
-    <Table<AdminOrder>
+    <Table
       rowKey="id"
       bordered
       loading={loading}
       dataSource={dataSource}
       rowSelection={rowSelection}
       columns={columns}
+      size="small"
       scroll={{ x: 'max-content' }}
+      onChange={handleTableChange}
       pagination={{
         defaultPageSize: 10,
         showSizeChanger: true,

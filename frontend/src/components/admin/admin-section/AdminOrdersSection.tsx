@@ -117,7 +117,7 @@ export default function AdminOrdersSection() {
           activeKey={orderStatusFilter}
           onChange={setOrderStatusFilter}
           items={tabItems}
-          className="w-full order-status-tabs"
+          className="w-full order-status-tabs bg-white"
           tabBarStyle={{ marginBottom: 0 }}
         />
         <div className="flex gap-2 items-center">

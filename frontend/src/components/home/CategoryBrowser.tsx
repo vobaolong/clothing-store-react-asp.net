@@ -3,6 +3,7 @@ import { Carousel } from 'antd'
 import { Link } from 'react-router-dom'
 import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
+import ScrollReveal from '@/components/animations/ScrollReveal'
 
 const CATEGORY_CAROUSEL_RESPONSIVE = [
   { breakpoint: 1279, settings: { slidesToShow: 4.3, slidesToScroll: 1 } },
@@ -26,16 +27,17 @@ export default function CategoryBrowser({
   )
 
   return (
-    <section>
-      <div className="flex flex-wrap gap-3 items-center mb-5">
+    <ScrollReveal direction="up" className="relative">
+      <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-200 h-75 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="flex flex-wrap gap-3 items-center mb-5 relative z-10">
         {rootCategories.map(({ id, name }) => (
           <button
-            key={id}
             onClick={() => setSelectedRootId(id)}
-            className={`px-6 py-2 text-sm font-semibold uppercase rounded-full transition cursor-pointer ${
+            className={`px-6 py-2 text-sm font-semibold uppercase rounded-full transition-all duration-300 cursor-pointer ${
               id === activeRootId
-                ? 'bg-red-800 text-white!'
-                : 'bg-neutral-200 text-neutral-800 hover:bg-neutral-300'
+                ? 'bg-red-800 text-white! scale-105 shadow-lg shadow-red-800/30'
+                : 'bg-neutral-200 text-neutral-800 hover:bg-neutral-300 hover:scale-105'
             }`}
           >
             {name}
@@ -52,7 +54,7 @@ export default function CategoryBrowser({
           slidesToScroll={1}
           infinite={false}
           responsive={CATEGORY_CAROUSEL_RESPONSIVE}
-          className="home-category-carousel"
+          className="home-hero-carousel relative z-10"
         >
           {childCategories.map((cat) => (
             <div key={cat.id} className="px-2">
@@ -60,15 +62,15 @@ export default function CategoryBrowser({
                 to={toProductsCategorySearchUrl(cat)}
                 className="block group"
               >
-                <div className="overflow-hidden bg-white rounded-2xl">
+                <div className="overflow-hidden bg-white rounded-2xl shadow-xs transition-all duration-300 hover:scale-105">
                   <img
                     src={cat.image || ''}
                     alt={cat.name}
-                    className="object-cover w-full transition duration-300 h-54 group-hover:scale-105"
+                    className="object-cover w-full transition duration-500 h-54"
                     loading="lazy"
                   />
                 </div>
-                <p className="mt-2 mb-0 text-sm font-semibold text-center uppercase text-neutral-900">
+                <p className="mt-4! mb-0 text-sm font-semibold text-center uppercase text-neutral-900 group-hover:text-red-800 transition-colors duration-300">
                   {cat.name}
                 </p>
               </Link>
@@ -76,6 +78,6 @@ export default function CategoryBrowser({
           ))}
         </Carousel>
       )}
-    </section>
+    </ScrollReveal>
   )
 }

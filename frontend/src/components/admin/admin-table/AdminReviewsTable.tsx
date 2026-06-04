@@ -137,6 +137,8 @@ export default function AdminReviewsTable({
         title: 'Ngày tạo',
         dataIndex: 'createdAt',
         key: 'createdAt',
+        sorter: (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         width: 200,
         render: (value: string) => (
           <span className="text-slate-600 text-sm">{formatDate(value)}</span>
@@ -171,6 +173,7 @@ export default function AdminReviewsTable({
         loading={loading}
         bordered
         dataSource={dataSource}
+        size="small"
         columns={columns}
         pagination={{
           current,

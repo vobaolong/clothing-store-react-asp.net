@@ -1,5 +1,5 @@
-import { Empty, Select, Switch, Table, TreeSelect } from 'antd'
-import { useMemo } from 'react'
+import { Empty, Image, Select, Switch, Table, TreeSelect } from 'antd'
+import type { TablePaginationConfig } from 'antd/es/table'
 import type { TableProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { AdminCategory } from '@/types'
@@ -8,6 +8,7 @@ import { formatDate } from '@/utils/format'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
 import type { buildCategoryTreeSelectData } from '@/utils/category-tree'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
+import { useCallback, useMemo, useState } from 'react'
 
 type AdminCategoriesTableProps = {
   loading: boolean
@@ -45,6 +46,13 @@ export default function AdminCategoriesTable({
   onEdit,
   onDelete
 }: AdminCategoriesTableProps) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
+
   const columns = useMemo<ColumnsType<AdminCategory>>(
     () => [
       {
@@ -54,7 +62,9 @@ export default function AdminCategoriesTable({
         width: 60,
         fixed: 'left',
         render: (_, __, index) => (
-          <span className="font-semibold">{index + 1}</span>
+          <span className="font-semibold">
+            {(page - 1) * pageSize + index + 1}
+          </span>
         )
       },
       {
@@ -71,10 +81,10 @@ export default function AdminCategoriesTable({
         align: 'center',
         render: (value: string) =>
           value ? (
-            <img
+            <Image
               src={value}
               alt="Category"
-              className="object-cover w-16 h-16 rounded"
+              className="object-cover rounded-md size-12! self-center"
             />
           ) : (
             <span className="text-xs text-slate-500">Không có ảnh</span>
@@ -131,7 +141,7 @@ export default function AdminCategoriesTable({
           <Select
             allowClear
             className="min-w-36"
-            value={value} //chỗ này phải hiển thị tiếng việt
+            value={value}
             options={PRODUCT_TYPE_OPTIONS}
             optionLabelProp="label"
             placeholder="None"
@@ -190,7 +200,7 @@ export default function AdminCategoriesTable({
         )
       }
     ],
-    [getParentTreeData, onQuickUpdate, onEdit, onDelete]
+    [getParentTreeData, onQuickUpdate, onEdit, onDelete, page, pageSize]
   )
 
   return (
@@ -198,10 +208,12 @@ export default function AdminCategoriesTable({
       rowKey="id"
       loading={loading}
       bordered
+      size="small"
       dataSource={data}
       rowSelection={rowSelection}
       columns={columns}
       scroll={{ x: 'max-content' }}
+      onChange={handleTableChange}
       pagination={{
         defaultPageSize: 10,
         showSizeChanger: true,
@@ -212,5 +224,3 @@ export default function AdminCategoriesTable({
     />
   )
 }
-// UPDATE public."Categories"
-// SET "Gender" = initcap("Gender");

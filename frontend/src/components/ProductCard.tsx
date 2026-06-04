@@ -60,11 +60,11 @@ export default function ProductCard({
   const cardContent = (
     <Card
       hoverable
-      className={
+      className={`group h-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 shadow-none! hover:shadow-none! [&_.ant-card-body]:flex ${
         isCatalog
-          ? 'group h-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 shadow-none! hover:shadow-none! [&_.ant-card-body]:flex [&_.ant-card-body]:flex-col [&_.ant-card-body]:p-3!'
-          : 'group h-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 shadow-none! hover:shadow-none! [&_.ant-card-body]:flex [&_.ant-card-body]:max-h-65 [&_.ant-card-body]:flex-col [&_.ant-card-body]:p-4!'
-      }
+          ? '[&_.ant-card-body]:flex-col [&_.ant-card-body]:p-3!'
+          : '[&_.ant-card-body]:max-h-65 [&_.ant-card-body]:flex-col [&_.ant-card-body]:p-4!'
+      }`}
       onClick={() => navigate(`/products/${product.slug}`)}
       cover={
         <div className="overflow-hidden relative w-full aspect-square bg-slate-100">

@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Table, Tag, Space, Select } from 'antd'
+import type { TablePaginationConfig } from 'antd/es/table'
 import type { ColumnsType } from 'antd/es/table'
 import { CouponStatus } from '@/enums'
 import type { Coupon } from '@/types'
@@ -25,6 +26,13 @@ export default function AdminCouponsTable({
   onDelete,
   onStatusChange
 }: AdminCouponsTableProps) {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const handleTableChange = useCallback((pag: TablePaginationConfig) => {
+    setPage(pag.current ?? 1)
+    setPageSize(pag.pageSize ?? 10)
+  }, [])
+
   const columns = useMemo<ColumnsType<Coupon>>(
     () => [
       {
@@ -33,7 +41,7 @@ export default function AdminCouponsTable({
         align: 'center',
         width: 60,
         fixed: 'left',
-        render: (_, __, index) => index + 1
+        render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
         title: 'Mã',
@@ -70,6 +78,7 @@ export default function AdminCouponsTable({
         title: 'Lượt dùng',
         dataIndex: 'usedCount',
         key: 'usedCount',
+        align: 'center',
         render: (value: number, row) => `${value} / ${row.maxUsage}`
       },
       {
@@ -113,7 +122,7 @@ export default function AdminCouponsTable({
         )
       }
     ],
-    [onStatusChange, onEdit, onDelete]
+    [onStatusChange, onEdit, onDelete, page, pageSize]
   )
 
   return (
@@ -123,7 +132,9 @@ export default function AdminCouponsTable({
       loading={loading}
       dataSource={data}
       columns={columns}
+      size="small"
       scroll={{ x: 'max-content' }}
+      onChange={handleTableChange}
       pagination={{
         defaultPageSize: 10,
         showSizeChanger: true,
