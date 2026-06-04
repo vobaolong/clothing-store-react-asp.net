@@ -25,6 +25,7 @@ export default function LockCustomerModal({
       destroyOnHidden
       open={Boolean(target)}
       okText="Xác nhận khóa"
+      cancelText="Hủy"
       confirmLoading={isLocking}
       onCancel={onCancel}
       onOk={onConfirm}

@@ -1,10 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  AppstoreOutlined,
-  FolderOutlined,
-  TagsOutlined
-} from '@ant-design/icons'
 import {
   Alert,
   Card,
@@ -33,9 +28,62 @@ import CategoryRadarChart from '@/components/admin/CategoryRadarChart'
 import { useAdmin } from '@/context/AdminContext'
 import { useDashboardAnalytics } from '@/hooks/useDashboardAnalytics'
 import OrdersTable from '../admin-table/OrdersTable'
+import { ArrowUpRight, FolderTree, Package, Shirt, Ticket } from 'lucide-react'
 
 const CHART_HEIGHT = 280
 type RevenueGranularity = 'day' | 'week' | 'month' | 'year'
+
+interface StatCard {
+  navKey: AdminNavKey
+  title: string
+  statKey: 'products' | 'categories' | 'orders' | 'coupons'
+  icon: React.ReactNode
+}
+
+const STAT_CARDS: StatCard[] = [
+  {
+    navKey: AdminNavKey.PRODUCTS,
+    title: 'Sản phẩm',
+    statKey: 'products',
+    icon: <Shirt className="text-indigo-500!" />
+  },
+  {
+    navKey: AdminNavKey.CATEGORIES,
+    title: 'Danh mục',
+    statKey: 'categories',
+    icon: <FolderTree className="text-teal-500!" />
+  },
+  {
+    navKey: AdminNavKey.ORDERS,
+    title: 'Đơn hàng',
+    statKey: 'orders',
+    icon: <Package className="text-amber-500!" />
+  },
+  {
+    navKey: AdminNavKey.COUPONS,
+    title: 'Voucher',
+    statKey: 'coupons',
+    icon: <Ticket className="text-violet-500!" />
+  }
+]
+
+const mostSoldColumns = [
+  {
+    title: '#',
+    key: 'stt',
+    width: 60,
+    align: 'center' as const,
+    render: (_: unknown, __: unknown, index: number) => index + 1
+  },
+  { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+  {
+    title: 'Đã bán',
+    dataIndex: 'soldCount',
+    className: 'truncate',
+    key: 'soldCount',
+    align: 'right' as const
+  }
+]
 
 export default function AdminDashboardSection() {
   const { navigate } = useAdmin()
@@ -61,28 +109,18 @@ export default function AdminDashboardSection() {
     queryFn: () => getAdminCoupons()
   })
 
-  const loading =
-    productsQuery.isLoading ||
-    categoriesQuery.isLoading ||
-    ordersQuery.isLoading ||
-    couponsQuery.isLoading
-
-  const hasError =
-    productsQuery.isError ||
-    categoriesQuery.isError ||
-    ordersQuery.isError ||
-    couponsQuery.isError
-
-  const products = useMemo(() => productsQuery.data ?? [], [productsQuery.data])
-  const categories = useMemo(
-    () => categoriesQuery.data ?? [],
-    [categoriesQuery.data]
-  )
-  const orders = useMemo(
-    () => ordersQuery.data?.orders ?? [],
-    [ordersQuery.data]
-  )
-  const coupons = useMemo(() => couponsQuery.data ?? [], [couponsQuery.data])
+  const loading = [
+    productsQuery,
+    categoriesQuery,
+    ordersQuery,
+    couponsQuery
+  ].some((q) => q.isLoading)
+  const hasError = [
+    productsQuery,
+    categoriesQuery,
+    ordersQuery,
+    couponsQuery
+  ].some((q) => q.isError)
 
   const {
     stats,
@@ -91,34 +129,13 @@ export default function AdminDashboardSection() {
     orderOverviewData,
     mostSoldProducts
   } = useDashboardAnalytics({
-    products,
-    categories,
-    orders,
-    coupons,
+    products: productsQuery.data ?? [],
+    categories: categoriesQuery.data ?? [],
+    orders: ordersQuery.data?.orders ?? [],
+    coupons: couponsQuery.data ?? [],
     granularity,
     selectedRadarParent
   })
-
-  const mostSoldColumns = useMemo(
-    () => [
-      {
-        title: '#',
-        key: 'stt',
-        width: 60,
-        align: 'center' as const,
-        render: (_: unknown, __: unknown, index: number) => index + 1
-      },
-      { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
-      {
-        title: 'Đã bán',
-        dataIndex: 'soldCount',
-        className: 'truncate',
-        key: 'soldCount',
-        align: 'right' as const
-      }
-    ],
-    []
-  )
 
   if (loading) return <Skeleton active paragraph={{ rows: 10 }} />
 
@@ -131,50 +148,22 @@ export default function AdminDashboardSection() {
   return (
     <div className="space-y-6!">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card
-          hoverable
-          className="rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md"
-          onClick={() => navigate(`/admin/${AdminNavKey.PRODUCTS}`)}
-        >
-          <Statistic
-            title="Sản phẩm"
-            value={stats.products}
-            prefix={<AppstoreOutlined className="text-indigo-500!" />}
-          />
-        </Card>
-        <Card
-          hoverable
-          className="rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md"
-          onClick={() => navigate(`/admin/${AdminNavKey.CATEGORIES}`)}
-        >
-          <Statistic
-            title="Danh mục"
-            value={stats.categories}
-            prefix={<FolderOutlined className="text-teal-500!" />}
-          />
-        </Card>
-        <Card
-          hoverable
-          className="rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md"
-          onClick={() => navigate(`/admin/${AdminNavKey.ORDERS}`)}
-        >
-          <Statistic
-            title="Đơn hàng"
-            value={stats.orders}
-            prefix={<TagsOutlined className="text-amber-500!" />}
-          />
-        </Card>
-        <Card
-          hoverable
-          className="rounded-xl shadow-sm transition-shadow cursor-pointer border-slate-200 hover:shadow-md"
-          onClick={() => navigate(`/admin/${AdminNavKey.COUPONS}`)}
-        >
-          <Statistic
-            title="Voucher"
-            value={stats.coupons}
-            prefix={<TagsOutlined className="text-violet-500!" />}
-          />
-        </Card>
+        {STAT_CARDS.map((card) => (
+          <Card key={card.navKey}>
+            <div className="flex justify-between">
+              <Statistic
+                title={card.title}
+                value={stats[card.statKey]}
+                prefix={card.icon}
+              />
+              <Button
+                className="shrink-0 p-0! text-slate-800!"
+                icon={<ArrowUpRight className="text-slate-600!" />}
+                onClick={() => navigate(`/admin/${card.navKey}`)}
+              />
+            </div>
+          </Card>
+        ))}
       </div>
 
       <Row gutter={[16, 16]}>

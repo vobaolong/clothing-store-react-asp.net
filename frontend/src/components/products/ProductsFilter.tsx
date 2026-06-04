@@ -97,7 +97,7 @@ export default function ProductsFilter({
               className={`h-10 cursor-pointer rounded-lg border text-sm font-medium transition-all ${
                 selectedSizes.includes(size)
                   ? 'border-black bg-black text-white!'
-                  : 'border-stone-200 bg-white! text-stone-600 hover:border-stone-400'
+                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400'
               }`}
             >
               {size}
@@ -211,7 +211,7 @@ export default function ProductsFilter({
     >
       <aside className="w-full">
         <div className="flex justify-between items-center py-4 border-b border-stone-200">
-          <h2 className="text-lg font-bold text-black">Bộ lọc</h2>
+          <h2 className="text-lg font-bold">Bộ lọc</h2>
           <span className="text-sm font-medium text-stone-400">
             {totalResults} kết quả
           </span>

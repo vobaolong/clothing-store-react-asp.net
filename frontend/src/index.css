@@ -1,5 +1,19 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-surface: var(--color-white);
+  --color-surface-secondary: var(--color-slate-50);
+  --color-surface-tertiary: var(--color-gray-100);
+  --color-border: var(--color-slate-200);
+  --color-border-light: var(--color-slate-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-700);
+  --color-text-muted: var(--color-slate-500);
+  --color-text-dim: var(--color-stone-400);
+}
+
 html,
 body,
 #root {
@@ -17,6 +31,12 @@ body {
     sans-serif;
   background: #f8fafc;
   color: #0f172a;
+}
+
+.dark body,
+body.dark {
+  background: #192037;
+  color: #f1f5f9;
 }
 
 .ant-card,

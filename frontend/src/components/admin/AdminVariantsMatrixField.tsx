@@ -359,8 +359,8 @@ export default forwardRef<
 
   return (
     <div className="space-y-4">
-      <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
-        <p className="mb-3 text-sm font-semibold text-slate-800">Màu sắc</p>
+      <div className="p-4 border rounded-xl border-slate-200">
+        <p className="mb-3 text-sm font-semibold">Màu sắc</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {DEFAULT_COLORS.map((colorOption) => (
@@ -445,7 +445,7 @@ export default forwardRef<
       </div>
 
       {matrixData.colors.length > 0 && (
-        <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
+        <div className="p-4 border rounded-xl border-slate-200 ">
           <div className="space-y-5!">
             {matrixData.colors.map((color) => (
               <div key={color.name} className="space-y-2">
@@ -454,9 +454,7 @@ export default forwardRef<
                     className="w-3 h-3 rounded-full border shrink-0 border-slate-300"
                     style={{ backgroundColor: color.hex }}
                   />
-                  <span className="text-sm font-medium text-slate-800">
-                    {color.name}
-                  </span>
+                  <span className="text-sm font-medium">{color.name}</span>
                 </div>
 
                 <div className="pl-0 sm:pl-5 space-y-2!">
@@ -501,10 +499,8 @@ export default forwardRef<
       )}
 
       {!isAccessories && (
-        <div className="p-4 border rounded-xl border-slate-200 bg-slate-50/30">
-          <p className="mb-3 text-sm font-semibold text-slate-800">
-            Kích thước
-          </p>
+        <div className="p-4 border rounded-xl border-slate-200 ">
+          <p className="mb-3 text-sm font-semibold">Kích thước</p>
 
           <div className="flex flex-wrap gap-2 mb-4">
             {(productType === CategoryType.SHOES
@@ -575,9 +571,7 @@ export default forwardRef<
 
       <div className="p-3 rounded-md border border-slate-200">
         <div className="flex gap-2 items-center mb-2">
-          <span className="text-sm font-semibold text-slate-600">
-            Cấp số lượng tất cả:
-          </span>
+          <span className="text-sm font-semibold">Cấp số lượng tất cả:</span>
           <InputNumber
             min={0}
             value={formInputs.bulkQuantity}

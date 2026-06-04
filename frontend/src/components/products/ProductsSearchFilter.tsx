@@ -24,7 +24,7 @@ export default function ProductsSearchFilter({
   }
 
   return (
-    <div className="p-4 space-y-3 bg-white rounded-xl border border-slate-200">
+    <div className="p-4 space-y-3 rounded-xl border border-slate-200 dark:border-gray-700">
       <div className="flex gap-2">
         <Input
           key={value}
@@ -43,16 +43,14 @@ export default function ProductsSearchFilter({
         </Button>
       </div>
       <div className="flex flex-wrap gap-3 justify-between items-center pt-1">
-        <p className="text-base font-semibold text-slate-900">
+        <p className="text-base font-semibold">
           <span className="text-xl font-bold">
             {value && `Kết quả tìm kiếm cho từ khóa "${value}"`}
           </span>{' '}
           Có {total} mặt hàng
         </p>
         <div className="flex flex-wrap gap-3 items-center">
-          <span className="text-sm font-medium text-slate-700">
-            Sắp xếp theo:
-          </span>
+          <span className="text-sm font-medium">Sắp xếp theo:</span>
           <Select
             size="medium"
             value={sortBy}

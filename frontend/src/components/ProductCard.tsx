@@ -98,7 +98,7 @@ export default function ProductCard({
       </div>
       <p
         className={
-          'line-clamp-2 wrap-break-word w-full text-small font-normal text-[#3c3c43] hover:text-[#7f0019] h-10!'
+          'line-clamp-2 wrap-break-word w-full text-small font-normal hover:text-[#7f0019] h-10!'
         }
       >
         {toCapitalize(product.name)}
@@ -133,7 +133,6 @@ export default function ProductCard({
           block
           size={isCatalog ? 'middle' : 'large'}
           type="primary"
-          className="rounded-md!"
           disabled={!firstVariant}
           onClick={(e) => {
             e.stopPropagation()

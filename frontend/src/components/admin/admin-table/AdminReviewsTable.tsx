@@ -54,13 +54,13 @@ export default function AdminReviewsTable({
           <div className="flex items-center gap-2.5">
             <Avatar
               icon={<UserOutlined />}
-              className="bg-blue-50 text-blue-600 border border-blue-100 shrink-0"
+              className="bg-blue-50 border border-blue-100 shrink-0"
             />
             <div className="flex flex-col min-w-0">
-              <span className="font-semibold text-slate-800 truncate max-w-45">
+              <span className="font-semibold truncate max-w-45">
                 {row.userFullName || '—'}
               </span>
-              <span className="text-xs text-slate-500 truncate max-w-45">
+              <span className="text-xs truncate max-w-45">
                 {row.userEmail || '—'}
               </span>
             </div>
@@ -80,11 +80,11 @@ export default function AdminReviewsTable({
                 className="size-10 object-cover rounded-md border border-slate-100 shrink-0"
               />
             ) : (
-              <div className="size-10 bg-slate-50 flex items-center justify-center rounded-md border border-slate-100 text-slate-400 text-[10px] font-bold shrink-0">
+              <div className="size-10 flex items-center justify-center rounded-md border border-slate-100 text-slate-400 text-[10px] font-bold shrink-0">
                 NO IMG
               </div>
             )}
-            <span className="font-medium text-slate-800 line-clamp-2 max-w-50">
+            <span className="font-medium line-clamp-2 max-w-50">
               {row.productName}
             </span>
           </div>
@@ -110,7 +110,7 @@ export default function AdminReviewsTable({
         width: 350,
         render: (_, row) => (
           <div className="space-y-1.5 py-1">
-            <div className="text-slate-700 whitespace-pre-line text-sm leading-relaxed">
+            <div className="whitespace-pre-line text-sm leading-relaxed">
               {row.comment || (
                 <span className="text-slate-400 italic text-xs">
                   Không có bình luận
@@ -123,7 +123,7 @@ export default function AdminReviewsTable({
                   <Tag
                     key={tag}
                     color="blue"
-                    className="m-0 text-[11px] px-1.5 py-0.5 rounded border-blue-100 bg-blue-50 text-blue-600"
+                    className="m-0 text-xs px-1.5 py-0.5 rounded border-blue-100 bg-blue-50"
                   >
                     {tag}
                   </Tag>
@@ -141,7 +141,7 @@ export default function AdminReviewsTable({
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         width: 200,
         render: (value: string) => (
-          <span className="text-slate-600 text-sm">{formatDate(value)}</span>
+          <span className="text-sm">{formatDate(value)}</span>
         )
       },
       {
