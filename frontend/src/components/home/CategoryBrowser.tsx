@@ -36,8 +36,8 @@ export default function CategoryBrowser({
             onClick={() => setSelectedRootId(id)}
             className={`px-6 py-2 text-sm font-semibold uppercase rounded-full transition-all duration-300 cursor-pointer ${
               id === activeRootId
-                ? 'bg-red-800 text-white! scale-105 shadow-lg shadow-red-800/30'
-                : 'bg-neutral-200 text-neutral-800 hover:bg-neutral-300 hover:scale-105'
+                ? 'bg-red-800 dark:bg-red-700 text-white! scale-105 shadow-lg shadow-red-800/30'
+                : 'bg-neutral-200 text-neutral-800 hover:bg-neutral-300 hover:scale-105 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600'
             }`}
           >
             {name}
@@ -57,12 +57,12 @@ export default function CategoryBrowser({
           className="home-hero-carousel relative z-10"
         >
           {childCategories.map((cat) => (
-            <div key={cat.id} className="px-2">
+            <div key={cat.id} className="px-2 pt-4">
               <Link
                 to={toProductsCategorySearchUrl(cat)}
                 className="block group"
               >
-                <div className="overflow-hidden bg-white rounded-2xl shadow-xs transition-all duration-300 hover:scale-105">
+                <div className="overflow-hidden bg-white dark:bg-neutral-800 dark:border dark:border-neutral-700 rounded-2xl shadow-xs dark:shadow-neutral-900/50 transition-all duration-300 hover:scale-105">
                   <img
                     src={cat.image || ''}
                     alt={cat.name}
@@ -70,7 +70,7 @@ export default function CategoryBrowser({
                     loading="lazy"
                   />
                 </div>
-                <p className="mt-4! mb-0 text-sm font-semibold text-center uppercase text-neutral-900 group-hover:text-red-800 transition-colors duration-300">
+                <p className="mt-4! mb-0 text-sm font-semibold text-center uppercase text-neutral-900 dark:text-neutral-100 group-hover:text-red-800 transition-colors duration-300">
                   {cat.name}
                 </p>
               </Link>

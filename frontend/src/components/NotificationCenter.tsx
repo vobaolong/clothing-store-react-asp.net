@@ -70,24 +70,26 @@ const NotificationItem = ({
       onClick={handleClick}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       className={[
-        'p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors',
+        'p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-black/10 cursor-pointer transition-colors',
         !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
       ].join(' ')}
     >
-      <div className="flex gap-3 items-start">
+      <div className="flex items-start gap-3">
         <span className="text-lg shrink-0">{getIcon(notification.type)}</span>
         <div className="flex-1 min-w-0">
-          <div className="flex gap-2 justify-between items-start">
+          <div className="flex items-start justify-between gap-2">
             <h4
-              className={`text-sm text-gray-900 ${!notification.isRead ? 'font-semibold' : 'font-medium'}`}
+              className={`text-sm text-gray-900 dark:text-gray-300 ${!notification.isRead ? 'font-semibold' : 'font-medium'}`}
             >
               {notification.title}
             </h4>
-            <span className="text-xs text-gray-500 shrink-0">
+            <span className="text-xs text-gray-500 dark:text-gray-300 shrink-0">
               {formatRelativeTime(notification.createdAt)}
             </span>
           </div>
-          <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            {notification.message}
+          </p>
           {/* {notification.relatedEntityType === 'Order' &&
             notification.relatedEntityId && (
               <span className='inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
@@ -171,13 +173,13 @@ export const NotificationCenter = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <Button
         onClick={handleToggle}
-        className="relative p-2 text-gray-600 rounded-lg transition-colors hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="relative p-2 text-gray-600 transition-colors rounded-lg hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         aria-label="Thông báo"
         aria-expanded={isOpen}
         icon={<BellOutlined />}
       >
         {unreadCount > 0 && (
-          <span className="flex absolute -top-1 -right-1 justify-center items-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
+          <span className="absolute flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full -top-1 -right-1">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -185,10 +187,12 @@ export const NotificationCenter = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="overflow-hidden absolute right-0 z-50 mt-2 w-80 bg-white rounded-lg border border-gray-200 shadow-lg sm:w-96">
+        <div className="absolute right-0 z-50 mt-2 overflow-hidden rounded-lg shadow-lg w-80 card sm:w-96">
           {/* Header */}
-          <div className="flex justify-between items-center py-3 px-4 bg-gray-50 border-b border-gray-200">
-            <h3 className="text-base font-semibold text-gray-900">Thông báo</h3>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50 dark:bg-[#3D3C3F]!">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+              Thông báo
+            </h3>
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllAsRead()}
@@ -221,7 +225,7 @@ export const NotificationCenter = ({
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="py-3 px-4 text-center bg-gray-50 border-t border-gray-200">
+            <div className="px-4 py-3 text-center border-t border-gray-200 bg-gray-50 dark:bg-[#3D3C3F]!">
               <button
                 onClick={openNotificationsPage}
                 className="text-sm font-medium cursor-pointer"

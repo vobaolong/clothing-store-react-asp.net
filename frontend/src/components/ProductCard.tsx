@@ -60,7 +60,7 @@ export default function ProductCard({
   const cardContent = (
     <Card
       hoverable
-      className={`group h-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 shadow-none! hover:shadow-none! [&_.ant-card-body]:flex ${
+      className={`group h-full cursor-pointer overflow-hidden rounded- shadow-none! hover:shadow-none! [&_.ant-card-body]:flex card ${
         isCatalog
           ? '[&_.ant-card-body]:flex-col [&_.ant-card-body]:p-3!'
           : '[&_.ant-card-body]:max-h-65 [&_.ant-card-body]:flex-col [&_.ant-card-body]:p-4!'
@@ -111,19 +111,11 @@ export default function ProductCard({
               : 'flex h-6 items-start justify-between gap-2'
           }
         >
-          <span
-            className={
-              isCatalog
-                ? 'text-base! font-semibold! leading-none text-red-800'
-                : 'text-lg! font-semibold! leading-none text-red-800'
-            }
-          >
+          <span className="text-base! font-semibold! leading-none text-red-800 dark:text-red-500">
             {formatCurrency(effectiveDisplayPrice)}
           </span>
           <span
-            className={`line-through leading-none text-slate-400 ${
-              isCatalog ? 'text-xs' : 'text-base'
-            } ${listPrice > effectiveDisplayPrice ? 'opacity-100' : 'opacity-0'}`}
+            className={`line-through leading-none text-slate-400 text-xs ${listPrice > effectiveDisplayPrice ? 'opacity-100' : 'opacity-0'}`}
           >
             {formatCurrency(listPrice)}
           </span>
@@ -143,7 +135,7 @@ export default function ProductCard({
         </Button>
         <div className="flex justify-between items-center mt-2">
           {averageRating > 0 ? (
-            <span className="inline-flex gap-1 items-center text-sm text-slate-600">
+            <span className="inline-flex gap-1 items-center text-sm text-slate-600 dark:text-slate-300">
               <Rate
                 disabled
                 allowHalf

@@ -96,8 +96,8 @@ export default function ProductsFilter({
               }}
               className={`h-10 cursor-pointer rounded-lg border text-sm font-medium transition-all ${
                 selectedSizes.includes(size)
-                  ? 'border-black bg-black text-white!'
-                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400'
+                  ? 'border-black bg-black/50 text-white hover:bg-black/30 dark:text-black! dark:bg-white dark:hover:bg-white/80'
+                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:border-stone-500'
               }`}
             >
               {size}
@@ -132,8 +132,8 @@ export default function ProductsFilter({
                 <div
                   className={`relative h-9 w-9 rounded-full transition-transform group-hover:scale-105 ${
                     selectedColors.includes(label)
-                      ? 'ring-2 ring-black ring-offset-2'
-                      : ''
+                      ? 'ring-1 ring-black ring-offset-2'
+                      : 'border-stone-300 border'
                   } ${config.border ? 'border border-stone-200' : ''}`}
                   style={{ background: config.color }}
                 >
@@ -145,7 +145,7 @@ export default function ProductsFilter({
                     </div>
                   )}
                 </div>
-                <span className="text-center text-[10px] leading-tight text-stone-500 transition-colors group-hover:text-black">
+                <span className="text-center text-[10px] leading-tight text-stone-500 transition-colors group-hover:text-black dark:text-stone-300 dark:group-hover:text-white!">
                   {label}
                 </span>
               </button>

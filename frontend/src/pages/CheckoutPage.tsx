@@ -314,9 +314,11 @@ export default function CheckoutPage() {
     <div>
       <LoadingOverlay isSubmitting={isSubmitting} />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Thanh toán</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          <InfoCircleOutlined className="mr-1 text-slate-500" />
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+          Thanh toán
+        </h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
+          <InfoCircleOutlined className="mr-1 text-slate-500 dark:text-gray-400" />
           Hoàn thành thông tin đặt hàng để tiếp tục.
         </p>
       </div>

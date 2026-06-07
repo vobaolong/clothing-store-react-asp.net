@@ -32,9 +32,8 @@ export default function HomeProductRail({
   return (
     <ScrollReveal direction="up">
       <section>
-        {/* Header */}
         <div className="flex gap-4 justify-between items-end mb-4">
-          <h2 className="text-xl font-bold tracking-tight text-stone-900 md:text-2xl">
+          <h2 className="text-xl font-bold tracking-tight md:text-2xl">
             {title}
           </h2>
           <Link

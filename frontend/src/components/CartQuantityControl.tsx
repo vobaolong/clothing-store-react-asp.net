@@ -20,7 +20,7 @@ export default function CartQuantityControl({
   const canIncrease = typeof max === 'number' ? value < max : true
 
   return (
-    <div className="inline-flex overflow-hidden items-center rounded-lg border w-fit border-slate-300">
+    <div className="inline-flex items-center overflow-hidden border rounded-lg w-fit border-slate-300">
       {showButtons && (
         <Button
           type="text"
@@ -35,7 +35,7 @@ export default function CartQuantityControl({
         min={min}
         max={max}
         value={value}
-        className="cart-qty-input w-10! h-8 border-x border-y-0! border-slate-300 rounded-none!"
+        className="cart-qty-input w-10! h-8 border-x border-y-0! border-slate-300! rounded-none! card"
         style={{ width: 44 }}
         onChange={(nextValue) => {
           const next = Number(nextValue)
