@@ -28,9 +28,9 @@ export default function ProductVariantSelectors({
   return (
     <>
       <div className="space-y-3">
-        <p className="text-sm font-semibold text-black">
+        <p className="text-sm font-semibold">
           Màu sắc:{' '}
-          <span className="text-base font-medium tracking-normal normal-case text-stone-700">
+          <span className="text-base font-medium tracking-normal normal-case text-stone-700 dark:text-stone-300">
             {toCapitalize(resolvedColor ?? '-')}
           </span>
         </p>
@@ -83,9 +83,9 @@ export default function ProductVariantSelectors({
         sizeOptions.some((s) => s.trim().length > 0) && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <p className="m-0! text-sm font-semibold text-black">
+              <p className="m-0! text-sm font-semibold">
                 Kích thước:{' '}
-                <span className="text-base font-medium tracking-normal normal-case text-stone-700">
+                <span className="text-base font-medium tracking-normal normal-case text-stone-700 dark:text-stone-300">
                   {toCapitalize(resolvedSize ?? '-')}
                 </span>
               </p>
@@ -116,8 +116,8 @@ export default function ProductVariantSelectors({
                     }}
                     className={`relative min-w-12 rounded-xl px-3 py-2 text-xs! font-semibold tracking-wider transition-all duration-150 ${
                       resolvedSize === size
-                        ? 'bg-black text-white!'
-                        : 'bg-stone-200 text-stone-600!'
+                        ? 'bg-black text-white dark:bg-white dark:text-black!'
+                        : 'bg-stone-200 text-stone-600 dark:text-stone-300 dark:bg-neutral-700'
                     } ${
                       isDisabled
                         ? 'cursor-not-allowed opacity-45 line-through'

@@ -4,251 +4,251 @@ import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import type { UploadFile } from 'antd'
 import {
-  createAdminCategory,
-  getAdminCategories,
-  updateAdminCategory
+	createAdminCategory,
+	getAdminCategories,
+	updateAdminCategory
 } from '@/api/admin-api'
 import { uploadImage } from '@/api/uploads-api'
 import type { AdminCategory } from '@/types'
 import { CategoryGender, CategoryType } from '@/enums'
 import {
-  buildCategoryTreeSelectData,
-  collectDescendantCategoryIds,
-  type CategoryTreeNode
+	buildCategoryTreeSelectData,
+	collectDescendantCategoryIds,
+	type CategoryTreeNode
 } from '@/utils/category-tree'
 import {
-  ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
-  ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
+	ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
+	ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
 } from '@/options/admin-filter.options'
 
 type Props = {
-  open: boolean
-  editing: AdminCategory | null
-  onDirty: () => void
-  onClose: () => void
-  onSaved: () => void
+	open: boolean
+	editing: AdminCategory | null
+	onDirty: () => void
+	onClose: () => void
+	onSaved: () => void
 }
 
 export default function CategoryModal({
-  open,
-  editing,
-  onDirty,
-  onClose,
-  onSaved
+	open,
+	editing,
+	onDirty,
+	onClose,
+	onSaved
 }: Props) {
-  const [form] = Form.useForm()
-  const [isSaving, setIsSaving] = useState(false)
-  const [modalState, setModalState] = useState({
-    parentTreeData: [] as CategoryTreeNode[],
-    isLoadingParents: false
-  })
+	const [form] = Form.useForm()
+	const [isSaving, setIsSaving] = useState(false)
+	const [modalState, setModalState] = useState({
+		parentTreeData: [] as CategoryTreeNode[],
+		isLoadingParents: false
+	})
 
-  const save = useCallback(async () => {
-    try {
-      setIsSaving(true)
-      const values = await form.validateFields()
-      let imageUrl = values.imageUrlInput?.trim() || ''
+	const save = useCallback(async () => {
+		try {
+			setIsSaving(true)
+			const values = await form.validateFields()
+			let imageUrl = values.imageUrlInput?.trim() || ''
 
-      const fileList = values.imageUpload as UploadFile[] | undefined
-      const selectedFile = fileList?.[0]
+			const fileList = values.imageUpload as UploadFile[] | undefined
+			const selectedFile = fileList?.[0]
 
-      if (selectedFile?.originFileObj) {
-        const uploaded = await uploadImage(
-          selectedFile.originFileObj,
-          'categories'
-        )
-        imageUrl = uploaded.url
-      } else if (!imageUrl && selectedFile?.url) {
-        imageUrl = selectedFile.url
-      }
+			if (selectedFile?.originFileObj) {
+				const uploaded = await uploadImage(
+					selectedFile.originFileObj,
+					'categories'
+				)
+				imageUrl = uploaded.url
+			} else if (!imageUrl && selectedFile?.url) {
+				imageUrl = selectedFile.url
+			}
 
-      if (!imageUrl) {
-        toast.error('Vui lòng chọn hoặc nhập URL ảnh cho danh mục')
-        return
-      }
+			if (!imageUrl) {
+				toast.error('Vui lòng chọn hoặc nhập URL ảnh cho danh mục')
+				return
+			}
 
-      const payload = {
-        name: values.name,
-        image: imageUrl,
-        description: values.description?.trim() || undefined,
-        parentId: values.parentId || null,
-        level: values.parentId ? 1 : 0,
-        gender: values.gender,
-        productType: values.productType || undefined,
-        isActive: Boolean(values.isActive)
-      }
+			const payload = {
+				name: values.name,
+				image: imageUrl,
+				description: values.description?.trim() || undefined,
+				parentId: values.parentId || null,
+				level: values.parentId ? 1 : 0,
+				gender: values.gender,
+				productType: values.productType || undefined,
+				isActive: Boolean(values.isActive)
+			}
 
-      if (editing) {
-        await updateAdminCategory(editing.id, payload)
-      } else {
-        await createAdminCategory(payload)
-      }
+			if (editing) {
+				await updateAdminCategory(editing.id, payload)
+			} else {
+				await createAdminCategory(payload)
+			}
 
-      toast.success(
-        editing ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công'
-      )
-      onSaved()
-    } catch (error) {
-      if (error && typeof error === 'object' && 'errorFields' in error) return
-      toast.error((error as Error).message || 'Có lỗi xảy ra khi lưu')
-    } finally {
-      setIsSaving(false)
-    }
-  }, [form, editing, onSaved])
+			toast.success(
+				editing ? 'Cập nhật danh mục thành công' : 'Tạo danh mục thành công'
+			)
+			onSaved()
+		} catch (error) {
+			if (error && typeof error === 'object' && 'errorFields' in error) return
+			toast.error((error as Error).message || 'Có lỗi xảy ra khi lưu')
+		} finally {
+			setIsSaving(false)
+		}
+	}, [form, editing, onSaved])
 
-  useEffect(() => {
-    if (!open) return
+	useEffect(() => {
+		if (!open) return
 
-    form.resetFields()
-    if (editing) {
-      form.setFieldsValue({
-        name: editing.name,
-        description: editing.description ?? '',
-        parentId: editing.parentId ?? undefined,
-        gender: editing.gender ?? CategoryGender.UNISEX,
-        productType: editing.productType ?? CategoryType.CLOTHING,
-        isActive: editing.isActive,
-        imageUrlInput: editing.image,
-        imageUpload: editing.image
-          ? [
-              {
-                uid: `existing-${editing.id}`,
-                name: 'image',
-                status: 'done',
-                url: editing.image
-              }
-            ]
-          : []
-      })
-    } else {
-      form.setFieldsValue({
-        parentId: undefined,
-        gender: CategoryGender.UNISEX,
-        productType: CategoryType.CLOTHING,
-        isActive: true,
-        imageUpload: []
-      })
-    }
-  }, [open, editing, form])
+		form.resetFields()
+		if (editing) {
+			form.setFieldsValue({
+				name: editing.name,
+				description: editing.description ?? '',
+				parentId: editing.parentId ?? undefined,
+				gender: editing.gender ?? CategoryGender.UNISEX,
+				productType: editing.productType ?? CategoryType.CLOTHING,
+				isActive: editing.isActive,
+				imageUrlInput: editing.image,
+				imageUpload: editing.image
+					? [
+						{
+							uid: `existing-${editing.id}`,
+							name: 'image',
+							status: 'done',
+							url: editing.image
+						}
+					]
+					: []
+			})
+		} else {
+			form.setFieldsValue({
+				parentId: undefined,
+				gender: CategoryGender.UNISEX,
+				productType: CategoryType.CLOTHING,
+				isActive: true,
+				imageUpload: []
+			})
+		}
+	}, [open, editing, form])
 
-  const handleAfterOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      setModalState({ parentTreeData: [], isLoadingParents: false })
-      return
-    }
+	const handleAfterOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			setModalState({ parentTreeData: [], isLoadingParents: false })
+			return
+		}
 
-    setModalState((prev) => ({ ...prev, isLoadingParents: true }))
-    void getAdminCategories()
-      .then((categories) => {
-        const exclude =
-          editing?.id != null
-            ? collectDescendantCategoryIds(editing.id, categories)
-            : new Set<string>()
-        const eligible = categories.filter((c) => !exclude.has(c.id))
-        setModalState((prev) => ({
-          ...prev,
-          parentTreeData: buildCategoryTreeSelectData(eligible)
-        }))
-      })
-      .finally(() => {
-        setModalState((prev) => ({ ...prev, isLoadingParents: false }))
-      })
-  }
+		setModalState((prev) => ({ ...prev, isLoadingParents: true }))
+		void getAdminCategories()
+			.then((categories) => {
+				const exclude =
+					editing?.id != null
+						? collectDescendantCategoryIds(editing.id, categories)
+						: new Set<string>()
+				const eligible = categories.filter((c) => !exclude.has(c.id))
+				setModalState((prev) => ({
+					...prev,
+					parentTreeData: buildCategoryTreeSelectData(eligible)
+				}))
+			})
+			.finally(() => {
+				setModalState((prev) => ({ ...prev, isLoadingParents: false }))
+			})
+	}
 
-  const normFile = (e: { fileList: UploadFile[] }) => {
-    if (Array.isArray(e)) return e
-    return e?.fileList
-  }
+	const normFile = (e: { fileList: UploadFile[] }) => {
+		if (Array.isArray(e)) return e
+		return e?.fileList
+	}
 
-  return (
-    <Modal
-      title={editing ? 'Chỉnh sửa danh mục' : 'Thêm danh mục'}
-      open={open}
-      onOk={save}
-      onCancel={onClose}
-      okText={editing ? 'Cập nhật' : 'Thêm'}
-      cancelText="Hủy"
-      confirmLoading={isSaving}
-      styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
-      afterOpenChange={handleAfterOpenChange}
-    >
-      <Form form={form} layout="vertical" onValuesChange={onDirty}>
-        <Form.Item
-          name="name"
-          label="Tên danh mục"
-          rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}
-        >
-          <Input />
-        </Form.Item>
+	return (
+		<Modal
+			title={editing ? 'Chỉnh sửa danh mục' : 'Thêm danh mục'}
+			open={open}
+			onOk={save}
+			onCancel={onClose}
+			okText={editing ? 'Cập nhật' : 'Thêm'}
+			cancelText="Hủy"
+			confirmLoading={isSaving}
+			styles={{ body: { maxHeight: '70vh', overflowY: 'auto', padding: '16px' } }}
+			afterOpenChange={handleAfterOpenChange}
+		>
+			<Form form={form} layout="vertical" onValuesChange={onDirty}>
+				<Form.Item
+					name="name"
+					label="Tên danh mục"
+					rules={[{ required: true, message: 'Vui lòng nhập tên danh mục' }]}
+				>
+					<Input />
+				</Form.Item>
 
-        <Form.Item name="description" label="Mô tả">
-          <Input.TextArea rows={3} />
-        </Form.Item>
+				<Form.Item name="description" label="Mô tả">
+					<Input.TextArea rows={3} />
+				</Form.Item>
 
-        <Form.Item name="parentId" label="Danh mục cha">
-          <TreeSelect
-            className="w-full"
-            allowClear
-            placeholder="Chọn danh mục cha"
-            loading={modalState.isLoadingParents}
-            showSearch={{ treeNodeFilterProp: 'title' }}
-            treeDefaultExpandAll
-            treeLine={{ showLeafIcon: false }}
-            treeData={modalState.parentTreeData}
-            styles={{ popup: { root: { maxHeight: 400 } } }}
-          />
-        </Form.Item>
+				<Form.Item name="parentId" label="Danh mục cha">
+					<TreeSelect
+						className="w-full"
+						allowClear
+						placeholder="Chọn danh mục cha"
+						loading={modalState.isLoadingParents}
+						showSearch={{ treeNodeFilterProp: 'title' }}
+						treeDefaultExpandAll
+						treeLine={{ showLeafIcon: false }}
+						treeData={modalState.parentTreeData}
+						styles={{ popup: { root: { maxHeight: 400 } } }}
+					/>
+				</Form.Item>
 
-        <Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
-          <Select options={ADMIN_CATEGORY_GENDER_FILTER_OPTIONS} />
-        </Form.Item>
+				<Form.Item name="gender" label="Giới tính" rules={[{ required: true }]}>
+					<Select options={ADMIN_CATEGORY_GENDER_FILTER_OPTIONS} />
+				</Form.Item>
 
-        <Form.Item name="productType" label="Loại sản phẩm">
-          <Select allowClear options={ADMIN_CATEGORY_TYPE_FILTER_OPTIONS} />
-        </Form.Item>
+				<Form.Item name="productType" label="Loại sản phẩm">
+					<Select allowClear options={ADMIN_CATEGORY_TYPE_FILTER_OPTIONS} />
+				</Form.Item>
 
-        <Form.Item label="Hình ảnh" required>
-          <div className="space-y-3">
-            <Form.Item
-              name="imageUpload"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload.Dragger
-                accept="image/*"
-                maxCount={1}
-                beforeUpload={() => false}
-              >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Chọn hoặc kéo thả ảnh vào đây</p>
-                <p className="ant-upload-hint">
-                  Hỗ trợ tải lên một ảnh. Bạn cũng có thể nhập URL ảnh bên dưới.
-                </p>
-              </Upload.Dragger>
-            </Form.Item>
+				<Form.Item label="Hình ảnh" required>
+					<div className="space-y-3">
+						<Form.Item
+							name="imageUpload"
+							valuePropName="fileList"
+							getValueFromEvent={normFile}
+							noStyle
+						>
+							<Upload.Dragger
+								accept="image/*"
+								maxCount={1}
+								beforeUpload={() => false}
+							>
+								<p className="ant-upload-drag-icon">
+									<InboxOutlined />
+								</p>
+								<p className="ant-upload-text">Chọn hoặc kéo thả ảnh vào đây</p>
+								<p className="ant-upload-hint">
+									Hỗ trợ tải lên một ảnh. Bạn cũng có thể nhập URL ảnh bên dưới.
+								</p>
+							</Upload.Dragger>
+						</Form.Item>
 
-            <Form.Item
-              name="imageUrlInput"
-              label="Nhập URL ảnh"
-              style={{ marginBottom: 0 }}
-            >
-              <Input placeholder="https://example.com/image.jpg" allowClear />
-            </Form.Item>
-          </div>
-        </Form.Item>
+						<Form.Item
+							name="imageUrlInput"
+							label="Nhập URL ảnh"
+							style={{ marginBottom: 0 }}
+						>
+							<Input placeholder="https://example.com/image.jpg" allowClear />
+						</Form.Item>
+					</div>
+				</Form.Item>
 
-        <Form.Item
-          name="isActive"
-          label="Kích hoạt"
-          valuePropName="checked"
-          initialValue={true}
-        >
-          <Switch checked={form.getFieldValue('isActive')} />
-        </Form.Item>
-      </Form>
-    </Modal>
-  )
+				<Form.Item
+					name="isActive"
+					label="Kích hoạt"
+					valuePropName="checked"
+					initialValue={true}
+				>
+					<Switch checked={form.getFieldValue('isActive')} />
+				</Form.Item>
+			</Form>
+		</Modal>
+	)
 }

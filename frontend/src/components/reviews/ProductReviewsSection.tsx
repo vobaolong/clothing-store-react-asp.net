@@ -93,15 +93,17 @@ export default function ProductReviewsSection({
   }, [starFilter, sortOrder])
 
   return (
-    <Card className="p-6 mt-8 bg-white rounded-lg border border-stone-200">
+    <Card className="p-6 mt-8 rounded-lg card">
       <div className="mb-4 text-xl font-semibold">Đánh giá {productName}</div>
       <div className="mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]">
         <div className="flex flex-col gap-1 items-start">
           <div className="flex gap-1 items-end leading-none">
-            <span className="text-5xl font-bold text-slate-900">
+            <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
               {averageRating.toFixed(1)}
             </span>
-            <span className="pb-1 text-3xl text-slate-400">/5</span>
+            <span className="pb-1 text-3xl text-slate-400 dark:text-slate-500">
+              /5
+            </span>
           </div>
           <Rate
             disabled
@@ -137,7 +139,7 @@ export default function ProductReviewsSection({
         </div>
 
         <div>
-          <div className="mb-2 text-lg font-semibold text-slate-800">
+          <div className="mb-2 text-lg font-semibold text-slate-800 dark:text-slate-200">
             Đánh giá theo trải nghiệm
           </div>
           {topExperienceTags.length > 0 ? (
@@ -147,8 +149,10 @@ export default function ProductReviewsSection({
                   key={item.tag}
                   className="flex gap-3 justify-between items-center"
                 >
-                  <span className="text-sm text-slate-700">{item.tag}</span>
-                  <span className="text-sm font-medium text-slate-600">
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                    {item.tag}
+                  </span>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                     ({item.count} đánh giá)
                   </span>
                 </div>
@@ -165,7 +169,9 @@ export default function ProductReviewsSection({
       {!reviewsQuery.isLoading ? (
         <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center">
           <div className="flex flex-wrap gap-3 items-center">
-            <span className="text-sm text-slate-500">Lọc đánh giá theo:</span>
+            <span className="text-sm text-slate-500 dark:text-slate-300">
+              Lọc đánh giá theo:
+            </span>
             <div className="flex flex-wrap gap-3">
               {(['all', 5, 4, 3, 2, 1] as const).map((rating) => {
                 const isActive = starFilter === rating
@@ -176,8 +182,8 @@ export default function ProductReviewsSection({
                     onClick={() => setStarFilter(rating)}
                     className={`rounded-full! border px-5 py-2 text-[20px] leading-none transition-colors ${
                       isActive
-                        ? 'border-blue-500! bg-blue-50! text-blue-600!'
-                        : 'border-slate-300 bg-slate-100 text-slate-800'
+                        ? 'border-blue-500! bg-blue-50! text-blue-600! dark:border-blue-400! dark:bg-blue-900/20! dark:text-blue-400!'
+                        : 'border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-300'
                     }`}
                   >
                     {rating === 'all' ? 'Tất cả' : `${rating} sao`}
@@ -187,7 +193,9 @@ export default function ProductReviewsSection({
             </div>
           </div>
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-slate-500">Sắp xếp:</span>
+            <span className="text-sm text-slate-500 dark:text-slate-300">
+              Sắp xếp:
+            </span>
             <Select<'low-to-high' | 'high-to-low'>
               value={sortOrder}
               onChange={(value) => setSortOrder(value)}

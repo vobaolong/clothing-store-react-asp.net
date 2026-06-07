@@ -512,11 +512,11 @@ export default function ProductDetailPage() {
 
         <aside className="w-full space-y-8 lg:sticky lg:top-8 lg:h-fit">
           <div className="pb-4 space-y-3 border-b border-stone-200">
-            <h1 className="mt-3! text-3xl font-normal leading-snug tracking-tight text-stone-900">
+            <h1 className="mt-3! text-3xl font-normal leading-snug tracking-tight">
               {toCapitalize(product.name)}
             </h1>
             {selectedVariant?.sku ? (
-              <p className="text-sm text-stone-500">
+              <p className="text-sm text-stone-500 dark:text-stone-400">
                 SKU: {selectedVariant.sku}
               </p>
             ) : null}
@@ -525,7 +525,7 @@ export default function ProductDetailPage() {
           <div className="space-y-1">
             {showSaleCountdown && saleEndDate ? (
               <div className="flex flex-wrap items-center justify-between w-full gap-4">
-                <span className="text-3xl font-semibold tabular-nums text-rose-700">
+                <span className="text-3xl font-semibold tabular-nums text-rose-700. dark:text-rose-500">
                   {formatCurrency(product.salePrice ?? 0)}
                 </span>
                 <ProductSaleCountdown
@@ -533,19 +533,19 @@ export default function ProductDetailPage() {
                   saleStatisticCountdownFormat={saleStatisticCountdownFormat}
                   refreshSaleTimer={refreshSaleTimer}
                 />
-                <span className="text-lg font-medium line-through tabular-nums text-stone-400">
+                <span className="text-lg font-medium line-through tabular-nums text-stone-400 dark:text-stone-100">
                   {formatCurrency(product.price)}
                 </span>
               </div>
             ) : (
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-semibold text-stone-900">
+                <span className="text-3xl font-semibold text-stone-900 dark:text-stone-100">
                   {effectiveDisplayPrice !== product.price
                     ? formatCurrency(effectiveDisplayPrice)
                     : formatCurrency(product.price)}
                 </span>
                 {effectiveDisplayPrice !== product.price ? (
-                  <span className="text-sm line-through text-stone-400">
+                  <span className="text-sm line-through text-stone-400 dark:text-stone-100">
                     {formatCurrency(product.price)}
                   </span>
                 ) : null}
@@ -596,7 +596,7 @@ export default function ProductDetailPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 mt-4 rounded-lg bg-stone-200">
+          <div className="grid grid-cols-2 mt-4 rounded-lg bg-stone-200 dark:bg-stone-700">
             {[
               {
                 title: 'https://www.coolmate.me/icons/product/free-ship.svg',
@@ -620,7 +620,7 @@ export default function ProductDetailPage() {
                 className="flex items-center gap-2 p-4 text-start"
               >
                 <img src={title} alt={title} className="size-9" />
-                <p className="m-0! whitespace-pre-line text-xs text-stone-700">
+                <p className="m-0! whitespace-pre-line text-xs text-stone-700 dark:text-stone-300">
                   {sub}
                 </p>
               </div>

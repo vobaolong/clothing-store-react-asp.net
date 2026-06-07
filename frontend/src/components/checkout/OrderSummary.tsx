@@ -25,22 +25,28 @@ export default function OrderSummary({
 }: Props) {
   return (
     <Card
-      title={<span className="font-semibold text-slate-800">Tổng tiền</span>}
+      title={
+        <span className="font-semibold text-slate-800 dark:text-white card">
+          Tổng tiền
+        </span>
+      }
     >
       <div className="space-y-3 text-sm">
-        <div className="overflow-y-auto pr-1 space-y-2">
+        <div className="pr-1 space-y-2 overflow-y-auto">
           {items.map((item) => (
             <div
               key={`${item.id}-${item.productVariantId}`}
-              className="flex gap-2 justify-between"
+              className="flex justify-between gap-2"
             >
-              <span className="text-slate-600">
+              <span className="text-slate-600 dark:text-gray-400">
                 <span className="font-medium line-clamp-2">{item.name}</span>
                 {item.selectedColor}
                 {item.selectedSize ? ` / ${item.selectedSize}` : ''}
               </span>
-              <span className="text-slate-400">×{item.quantity}</span>
-              <span className="text-slate-800 shrink-0">
+              <span className="text-slate-400 dark:text-gray-400">
+                ×{item.quantity}
+              </span>
+              <span className="text-slate-800 dark:text-white shrink-0">
                 {formatCurrency(
                   getEffectivePriceAt(item, nowMs) * item.quantity
                 )}
@@ -50,12 +56,12 @@ export default function OrderSummary({
         </div>
 
         <div className="pt-3 space-y-2 border-t border-slate-100">
-          <div className="flex justify-between text-slate-600">
+          <div className="flex justify-between text-slate-600 dark:text-gray-400">
             <span>Tổng tiền</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
           {discountAmount > 0 && (
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-600 dark:text-gray-400">
               <span>Giảm giá</span>
               <span className="text-right">
                 <Tag className="text-xs! bg-emerald-100! text-emerald-700! border-emerald-200! leading-none! p-1!">
@@ -66,7 +72,7 @@ export default function OrderSummary({
             </div>
           )}
 
-          <div className="flex justify-between text-slate-600">
+          <div className="flex justify-between text-slate-600 dark:text-gray-400">
             <span>Phí vận chuyển</span>
             <span
               className={
@@ -82,7 +88,7 @@ export default function OrderSummary({
           </div>
         </div>
 
-        <div className="flex justify-between pt-3 text-base font-semibold border-t border-slate-200 text-slate-900">
+        <div className="flex justify-between pt-3 text-base font-semibold border-t border-slate-200 text-slate-900 dark:text-white">
           <span>Tổng tiền</span>
           <span>{formatCurrency(finalTotal)}</span>
         </div>

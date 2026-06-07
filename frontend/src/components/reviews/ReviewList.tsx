@@ -23,14 +23,14 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
       {reviews.map((review) => (
         <div
           key={review.id}
-          className="p-4 bg-white rounded-2xl border border-slate-200"
+          className="p-4 rounded-2xl border border-slate-200"
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
             <div className="flex gap-3 items-center w-full sm:w-44 sm:shrink-0">
-              <Avatar className="bg-slate-200! text-slate-700 font-semibold">
+              <Avatar className="bg-slate-200! text-slate-700 dark:text-slate-300 font-semibold">
                 {getInitial(review.userName)}
               </Avatar>
-              <span className="font-bold text-[15px] text-slate-900">
+              <span className="font-bold text-[15px] text-slate-900 dark:text-slate-200">
                 {review.userName}
               </span>
             </div>
@@ -44,7 +44,7 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
                   className="mt-1 text-xs text-amber-500"
                 />
                 {(review.variantSize || review.variantColor) && (
-                  <div className="flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500">
+                  <div className="flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500 dark:text-slate-300">
                     {review.variantSize && (
                       <span>
                         <span className="text-slate-400">Kích thước:</span>{' '}
@@ -62,7 +62,7 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
               </div>
 
               {review.comment && (
-                <p className="m-0! pt-2! text-sm font-medium leading-relaxed text-slate-800">
+                <p className="m-0! pt-2! text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-300">
                   {review.comment}
                 </p>
               )}

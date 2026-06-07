@@ -52,7 +52,7 @@ export default function CartPage() {
 
   if (!items.length)
     return (
-      <Card className="rounded-lg border border-slate-200 w-full">
+      <Card className="rounded-lg card w-full">
         <Empty description="Giỏ hàng của bạn trống" className="py-12" />
         <div className="flex justify-center">
           <Link to="/products">
@@ -65,10 +65,10 @@ export default function CartPage() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <Card
-        className="rounded-lg border border-slate-200"
+        className="rounded-lg card"
         title={<span className="text-xl font-semibold">Giỏ hàng</span>}
       >
-        <div className="flex justify-between items-center p-3 mb-4 rounded-xl border border-slate-200 bg-slate-50">
+        <div className="flex justify-between items-center p-3 mb-4 rounded-xl card">
           <Checkbox
             checked={allSelected}
             onChange={(event) =>
@@ -78,7 +78,7 @@ export default function CartPage() {
             Chọn tất cả
           </Checkbox>
           <div className="flex gap-3 items-center">
-            <span className="text-sm text-slate-500">
+            <span className="text-sm text-slate-500 dark:text-slate-300">
               Đã chọn: {selectedItems.length}/{items.length}
             </span>
             {selectedItems.length > 0 ? (
@@ -127,11 +127,12 @@ export default function CartPage() {
                       </div>
                     )}
                     <div className="space-y-2">
-                      <h3 className="text-base font-semibold text-slate-900">
+                      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-200">
                         {item.name}
                       </h3>
-                      <span className="text-sm text-slate-500">
-                        {item.selectedColor} / {item.selectedSize}
+                      <span className="text-sm text-slate-500 dark:text-slate-300">
+                        {item.selectedColor}
+                        {item.selectedSize && ` / ${item.selectedSize}`}
                       </span>
                       <div className="flex flex-wrap gap-2 mt-2">
                         <Select
@@ -166,38 +167,40 @@ export default function CartPage() {
                             )
                           }}
                         />
-                        <Select
-                          value={item.selectedSize}
-                          style={{ width: 100 }}
-                          options={Array.from(
-                            new Set(
-                              (item.variants ?? [])
-                                .filter((variant) => variant.quantity > 0)
-                                .map((variant) => variant.size)
-                            )
-                          ).map((size) => ({
-                            value: size,
-                            label: `${size}`
-                          }))}
-                          onChange={(sizeValue) => {
-                            const targetVariant = (item.variants ?? []).find(
-                              (variant) =>
-                                variant.size === sizeValue &&
-                                variant.color === item.selectedColor &&
-                                variant.quantity > 0
-                            )
-                            if (!targetVariant) return
-                            dispatch(
-                              updateCartVariant({
-                                id: item.id,
-                                oldProductVariantId: item.productVariantId,
-                                newProductVariantId: targetVariant.id,
-                                selectedSize: targetVariant.size,
-                                selectedColor: targetVariant.color
-                              })
-                            )
-                          }}
-                        />
+                        {item.selectedSize && (
+                          <Select
+                            value={item.selectedSize}
+                            style={{ width: 100 }}
+                            options={Array.from(
+                              new Set(
+                                (item.variants ?? [])
+                                  .filter((variant) => variant.quantity > 0)
+                                  .map((variant) => variant.size)
+                              )
+                            ).map((size) => ({
+                              value: size,
+                              label: `${size}`
+                            }))}
+                            onChange={(sizeValue) => {
+                              const targetVariant = (item.variants ?? []).find(
+                                (variant) =>
+                                  variant.size === sizeValue &&
+                                  variant.color === item.selectedColor &&
+                                  variant.quantity > 0
+                              )
+                              if (!targetVariant) return
+                              dispatch(
+                                updateCartVariant({
+                                  id: item.id,
+                                  oldProductVariantId: item.productVariantId,
+                                  newProductVariantId: targetVariant.id,
+                                  selectedSize: targetVariant.size,
+                                  selectedColor: targetVariant.color
+                                })
+                              )
+                            }}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -220,7 +223,7 @@ export default function CartPage() {
                         )
                       }
                     />
-                    <div className="font-semibold text-right min-w-30 text-slate-900">
+                    <div className="font-semibold text-right min-w-30 text-slate-900 dark:text-slate-200">
                       {formatCurrency(
                         getCartLineEffectivePrice(item) * item.quantity
                       )}
@@ -240,20 +243,22 @@ export default function CartPage() {
         </div>
       </Card>
 
-      <aside className="sticky top-24 self-start p-5 bg-white rounded-lg border border-slate-200">
+      <aside className="sticky top-24 self-start p-5 rounded-lg card">
         <h2 className="mb-4 text-xl font-semibold">Chi tiết thanh toán</h2>
         <div className="space-y-3 text-sm">
-          <div className="flex justify-between text-slate-600">
+          <div className="flex justify-between text-slate-600 dark:text-slate-300">
             <span>Tạm tính</span>
             <span>{formatCurrency(total)}</span>
           </div>
-          <div className="flex justify-between text-slate-600">
+          <div className="flex justify-between text-slate-600 dark:text-slate-300">
             <span>Phí giao hàng</span>
             <span>{formatCurrency(shippingFee)}</span>
           </div>
           <div className="flex justify-between pt-3 mt-3 text-base font-semibold border-t border-slate-200">
             <span>Thành tiền</span>
-            <span className="text-slate-900">{formatCurrency(grandTotal)}</span>
+            <span className="text-slate-900 dark:text-slate-200">
+              {formatCurrency(grandTotal)}
+            </span>
           </div>
         </div>
         <div className="grid gap-2 mt-5">

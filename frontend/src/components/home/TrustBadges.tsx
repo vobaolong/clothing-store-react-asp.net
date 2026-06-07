@@ -36,14 +36,18 @@ export default function TrustBadges() {
         {badges.map(({ icon: Icon, title, desc }) => (
           <div
             key={title}
-            className="flex flex-col gap-3 items-center p-6 text-center bg-white rounded-2xl border border-slate-100 shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+            className="flex flex-col gap-3 items-center p-6 text-center rounded-2xl shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1 card"
           >
             <div className="flex justify-center items-center w-14 h-14 text-xl text-red-800 bg-red-50 rounded-full transition-all duration-300">
               <Icon className="text-2xl!" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-stone-900">{title}</h4>
-              <p className="mt-0.5 text-xs text-slate-500">{desc}</p>
+              <h4 className="text-sm font-bold text-stone-900 dark:text-white">
+                {title}
+              </h4>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                {desc}
+              </p>
             </div>
           </div>
         ))}

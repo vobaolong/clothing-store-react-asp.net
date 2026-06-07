@@ -11,7 +11,11 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } }
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut' as const }
+  }
 }
 
 export default function CategoryGrid({
@@ -49,7 +53,7 @@ export default function CategoryGrid({
                 <h3 className="text-2xl font-bold uppercase drop-shadow-lg">
                   {name}
                 </h3>
-                <span className="inline-flex py-2 px-5 mt-3 text-xs font-bold bg-white rounded-full text-neutral-900 transition-all duration-300 group-hover:translate-y-[-4px] group-hover:shadow-lg">
+                <span className="inline-flex py-2 px-5 mt-3 text-xs font-bold bg-white rounded-full text-neutral-900 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
                   MUA NGAY
                 </span>
               </div>
