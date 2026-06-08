@@ -55,24 +55,26 @@ export default function ProductsFilter({
         </span>
       ),
       children: (
-        <Checkbox.Group
-          value={selectedCategories}
-          onChange={(values) => onCategoryChange(values as string[])}
-          className="flex flex-col gap-3 w-full"
-        >
-          {categoryOptions.map((option) => (
-            <Checkbox
-              key={`category-${option.value}`}
-              value={option.value}
-              className="w-full text-[14px] font-medium text-stone-700"
-              style={{
-                paddingLeft: (option.depth ?? 0) * 18
-              }}
-            >
-              {option.label}
-            </Checkbox>
-          ))}
-        </Checkbox.Group>
+        <div className="max-h-[500px] overflow-y-auto">
+          <Checkbox.Group
+            value={selectedCategories}
+            onChange={(values) => onCategoryChange(values as string[])}
+            className="flex flex-col gap-3 w-full"
+          >
+            {categoryOptions.map((option) => (
+              <Checkbox
+                key={`category-${option.value}`}
+                value={option.value}
+                className="w-full text-[14px] font-medium text-stone-700"
+                style={{
+                  paddingLeft: (option.depth ?? 0) * 18
+                }}
+              >
+                {option.label}
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
+        </div>
       )
     },
     {
