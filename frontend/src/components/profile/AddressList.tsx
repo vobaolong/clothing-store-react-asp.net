@@ -60,7 +60,7 @@ export default function AddressList() {
           Thêm địa chỉ mới
         </Button>
       </div>
-      <div className="py-6 divide-y divide-slate-200">
+      <div className="pt-6 divide-y divide-slate-200">
         {(!data || data.length === 0) && !isLoading ? (
           <Empty description="Không có địa chỉ nào" />
         ) : (

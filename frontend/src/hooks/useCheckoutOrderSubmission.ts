@@ -109,7 +109,7 @@ export function useCheckoutOrderSubmission({
       toast.success(
         `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
       )
-      navigate('/')
+      navigate('/products')
     } catch (error: unknown) {
       const msg =
         axios.isAxiosError(error) &&

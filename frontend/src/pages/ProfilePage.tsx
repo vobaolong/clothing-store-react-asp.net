@@ -99,23 +99,19 @@ export default function ProfilePage() {
         <div className="flex-1 min-w-0">
           {section === 'profile' && (
             <Card>
-              <h1 className="text-2xl font-semibold text-slate-900">
-                Cài đặt tài khoản
-              </h1>
+              <h1 className="text-2xl font-semibold">Cài đặt tài khoản</h1>
 
               <div className="mt-4 border-t divide-y divide-slate-200 border-slate-200">
                 <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-900">
-                      Hồ sơ
-                    </h2>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <h2 className="text-xl font-semibold">Hồ sơ</h2>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                       Cài đặt thông tin cá nhân
                     </p>
                   </div>
 
                   <div>
-                    <label className="block mb-1 text-sm font-medium text-slate-900">
+                    <label className="block mb-1 text-sm font-medium">
                       Họ và tên
                     </label>
                     {isLoading ? (
@@ -133,17 +129,15 @@ export default function ProfilePage() {
 
                 <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-900">
-                      Bảo mật tài khoản
-                    </h2>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <h2 className="text-xl font-semibold">Bảo mật tài khoản</h2>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                       Thông tin để đăng nhập vào tài khoản của bạn
                     </p>
                   </div>
 
                   <div className="space-y-6">
                     <div>
-                      <label className="block mb-1 text-sm font-medium text-slate-900">
+                      <label className="block mb-1 text-sm font-medium">
                         Email
                       </label>
                       <Input
@@ -155,11 +149,11 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block mb-1 text-sm font-medium text-slate-900">
+                      <label className="block mb-1 text-sm font-medium">
                         Mật khẩu
                       </label>
                       <Button
-                        className="h-10 px-5 rounded-md border-slate-300 text-slate-900"
+                        className="h-10 px-5 rounded-md border-slate-300"
                         onClick={() => setShowPasswordDialog(true)}
                       >
                         Đổi mật khẩu
