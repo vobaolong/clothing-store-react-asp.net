@@ -6,7 +6,8 @@ import { Toaster } from 'react-hot-toast'
 import type { ReactNode } from 'react'
 import { store } from '@/app/store'
 import { queryClient } from '@/app/providers/query-client'
-import { ThemeProvider, useTheme } from '@/context/ThemeContext'
+import { ThemeProvider } from '@/context/ThemeContext'
+import { useTheme } from '@/hooks/useTheme'
 
 type AppProvidersProps = {
   children: ReactNode

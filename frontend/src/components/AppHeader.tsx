@@ -98,7 +98,9 @@ function navLinkClass(isActive: boolean) {
   return [
     'inline-flex items-center h-9 px-3 text-base font-medium rounded-none! bg-transparent! border-none! shadow-none! transition-colors text-nowrap',
     'text-slate-700 hover:text-slate-900 hover:bg-transparent! hover:underline! underline-offset-6 decoration-2',
-    isActive ? 'underline! underline-offset-6! decoration-2 text-slate-900' : '',
+    isActive
+      ? 'underline! underline-offset-6! decoration-2 text-slate-900'
+      : '',
     'dark:text-slate-300 dark:hover:text-white'
   ].join(' ')
 }
@@ -158,6 +160,11 @@ function DesktopNav({
           const showMegaMenu =
             item.key === '/products' && categoryGroups.length > 0
 
+          const link = (
+            <Link to={item.key} className={navLinkClass(isActive)}>
+              {item.label}
+            </Link>
+          )
           return (
             <div key={item.key}>
               {showMegaMenu ? (
@@ -168,14 +175,10 @@ function DesktopNav({
                     <MegaMenuContent categoryGroups={categoryGroups} />
                   )}
                 >
-                  <Link to={item.key} className={navLinkClass(isActive)}>
-                    {item.label}
-                  </Link>
+                  {link}
                 </Dropdown>
               ) : (
-                <Link to={item.key} className={navLinkClass(isActive)}>
-                  {item.label}
-                </Link>
+                link
               )}
             </div>
           )
@@ -209,7 +212,7 @@ function MobileNavDrawer({
           <Link
             key={item.key}
             to={item.key}
-            className="text-base font-medium text-slate-900 hover:text-slate-600 dark:text-slate-100 dark:hover:text-slate-300"
+            className="text-base font-medium text-slate-900! dark:text-slate-100! dark:hover:text-slate-300! hover:underline! underline-offset-4! hover:text-slate-600"
             onClick={onClose}
           >
             {item.label}
@@ -217,23 +220,25 @@ function MobileNavDrawer({
         ))}
 
         <div className="pt-4 border-t border-slate-200 dark:border-gray-700">
-          <p className="mb-3 text-sm font-semibold text-slate-600 dark:text-slate-400">Danh mục</p>
+          <p className="mb-3 text-sm font-semibold text-slate-600 dark:text-slate-400">
+            Danh mục
+          </p>
           <div className="flex flex-col gap-2">
             {categoryGroups.map(({ parent, children }) => (
               <div key={parent.id}>
                 <Link
                   to={toProductsCategorySearchUrl(parent)}
-                  className="text-sm font-medium text-slate-900 hover:text-slate-600 dark:text-slate-100 dark:hover:text-slate-300"
+                  className="text-sm font-medium text-slate-900! dark:text-slate-100! dark:hover:text-slate-300! hover:underline! underline-offset-4! hover:text-slate-600"
                   onClick={onClose}
                 >
                   {parent.name}
                 </Link>
-                <div className="flex flex-col gap-1 mt-1 ml-3">
+                <div className="flex flex-col gap-3 mt-1 ml-3">
                   {children.map((child) => (
                     <Link
                       key={child.id}
                       to={toProductsCategorySearchUrl(child)}
-                      className="text-xs text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                      className="text-xs text-slate-600! hover:text-slate-900! dark:text-slate-400! dark:hover:text-slate-100!"
                       onClick={onClose}
                     >
                       {child.name}

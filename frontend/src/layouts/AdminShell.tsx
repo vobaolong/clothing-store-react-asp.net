@@ -12,7 +12,7 @@ import { isAdmin, removeAuthToken } from '@/state/auth/auth-session'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import AdminPageSidebar from '@/components/admin/AdminPageSidebar'
 import ThemeToggleButton from '@/components/ThemeToggleButton'
-import { useTheme } from '@/context/ThemeContext'
+import { useTheme } from '@/hooks/useTheme'
 
 const { Header, Content } = Layout
 

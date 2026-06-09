@@ -7,9 +7,9 @@ import dayjs from 'dayjs'
 import {
   getAdminOrders,
   updateAdminOrderStatus,
-  bulkUpdateAdminOrdersStatus,
-  getAdminApiErrorMessage
+  bulkUpdateAdminOrdersStatus
 } from '@/api/admin-api'
+import { getApiErrorMessage } from '@/utils/error-handler'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { useAdmin } from '@/context/AdminContext'
 import { OrderStatus } from '@/enums'
@@ -82,8 +82,7 @@ export default function AdminOrdersSection() {
       },
       onError: (error: unknown) => {
         toast.error(
-          getAdminApiErrorMessage(error) ||
-            'Có lỗi xảy ra khi cập nhật trạng thái'
+          getApiErrorMessage(error, 'Có lỗi xảy ra khi cập nhật trạng thái')
         )
       }
     })

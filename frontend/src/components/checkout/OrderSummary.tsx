@@ -9,7 +9,8 @@ type Props = {
   nowMs: number
   subtotal: number
   finalTotal: number
-  total: number
+  /** Raw total before discount, used for free-shipping threshold */
+  rawTotal: number
   discountAmount: number
   appliedCouponCode?: string
 }
@@ -19,10 +20,12 @@ export default function OrderSummary({
   nowMs,
   subtotal,
   finalTotal,
-  total,
+  rawTotal,
   discountAmount,
   appliedCouponCode
 }: Props) {
+  const isFreeShipping = rawTotal >= FREE_SHIPPING_THRESHOLD
+
   return (
     <Card
       title={
@@ -76,12 +79,10 @@ export default function OrderSummary({
             <span>Phí vận chuyển</span>
             <span
               className={
-                total >= FREE_SHIPPING_THRESHOLD
-                  ? 'text-green-600 font-medium'
-                  : ''
+                isFreeShipping ? 'text-green-600 font-medium' : ''
               }
             >
-              {total >= FREE_SHIPPING_THRESHOLD
+              {isFreeShipping
                 ? 'Miễn phí'
                 : formatCurrency(SHIPPING_FEE)}
             </span>
@@ -93,9 +94,9 @@ export default function OrderSummary({
           <span>{formatCurrency(finalTotal)}</span>
         </div>
 
-        {total < FREE_SHIPPING_THRESHOLD && (
+        {!isFreeShipping && (
           <p className="pt-1 text-xs text-center text-slate-400">
-            Thêm {formatCurrency(FREE_SHIPPING_THRESHOLD - total)} để được miễn
+            Thêm {formatCurrency(FREE_SHIPPING_THRESHOLD - rawTotal)} để được miễn
             phí vận chuyển
           </p>
         )}

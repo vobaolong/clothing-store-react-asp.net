@@ -32,6 +32,14 @@ const PRICE_RANGES = [
   { label: '> 500.000đ', value: [500000, 10000000] }
 ]
 
+function CollapseHeader({ children }: { children: string }) {
+  return (
+    <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
+      {children}
+    </span>
+  )
+}
+
 export default function ProductsFilter({
   selectedCategories,
   categoryOptions,
@@ -46,14 +54,13 @@ export default function ProductsFilter({
   onPriceRangeChange,
   totalResults = 0
 }: ProductsFilterProps) {
+  const isPriceSelected = ([lo, hi]: number[]) =>
+    lo === priceRange[0] && hi === priceRange[1]
+
   const collapseItems: CollapseProps['items'] = [
     {
       key: 'category',
-      label: (
-        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
-          Danh mục
-        </span>
-      ),
+      label: <CollapseHeader>Danh mục</CollapseHeader>,
       children: (
         <div className="max-h-[500px] overflow-y-auto">
           <Checkbox.Group
@@ -66,9 +73,7 @@ export default function ProductsFilter({
                 key={`category-${option.value}`}
                 value={option.value}
                 className="w-full text-[14px] font-medium text-stone-700"
-                style={{
-                  paddingLeft: (option.depth ?? 0) * 18
-                }}
+                style={{ paddingLeft: (option.depth ?? 0) * 18 }}
               >
                 {option.label}
               </Checkbox>
@@ -79,67 +84,65 @@ export default function ProductsFilter({
     },
     {
       key: 'size',
-      label: (
-        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
-          Kích thước
-        </span>
-      ),
+      label: <CollapseHeader>Kích thước</CollapseHeader>,
       children: (
         <div className="grid grid-cols-4 gap-2">
-          {sizeOptions.map((size) => (
-            <button
-              key={size}
-              type="button"
-              onClick={() => {
-                const next = selectedSizes.includes(size)
-                  ? selectedSizes.filter((s) => s !== size)
-                  : [...selectedSizes, size]
-                onSizeChange(next)
-              }}
-              className={`h-10 cursor-pointer rounded-lg border text-sm font-medium transition-all ${
-                selectedSizes.includes(size)
-                  ? 'border-black bg-black/50 text-white hover:bg-black/30 dark:text-black! dark:bg-white dark:hover:bg-white/80'
-                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:border-stone-500'
-              }`}
-            >
-              {size}
-            </button>
-          ))}
+          {sizeOptions.map((size) => {
+            const isSelected = selectedSizes.includes(size)
+            return (
+              <button
+                key={size}
+                type="button"
+                onClick={() => {
+                  onSizeChange(
+                    isSelected
+                      ? selectedSizes.filter((s) => s !== size)
+                      : [...selectedSizes, size]
+                  )
+                }}
+                className={`h-10 cursor-pointer rounded-lg border text-sm font-medium transition-all ${
+                  isSelected
+                    ? 'border-black bg-black/50 text-white hover:bg-black/30 dark:text-black! dark:bg-white dark:hover:bg-white/80'
+                    : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:hover:border-stone-500'
+                }`}
+              >
+                {size}
+              </button>
+            )
+          })}
         </div>
       )
     },
     {
       key: 'color',
-      label: (
-        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
-          Màu sắc
-        </span>
-      ),
+      label: <CollapseHeader>Màu sắc</CollapseHeader>,
       children: (
         <div className="grid grid-cols-4 gap-x-2 gap-y-4">
           {colorOptions.map(({ label, hex }) => {
             const config = COLOR_CONFIG[label] || { color: hex }
+            const isSelected = selectedColors.includes(label)
             return (
               <button
                 key={label}
                 type="button"
                 onClick={() => {
-                  const next = selectedColors.includes(label)
-                    ? selectedColors.filter((v) => v !== label)
-                    : [...selectedColors, label]
-                  onColorChange(next)
+                  onColorChange(
+                    isSelected
+                      ? selectedColors.filter((v) => v !== label)
+                      : [...selectedColors, label]
+                  )
                 }}
                 className="flex flex-col gap-1 items-center cursor-pointer group"
               >
                 <div
                   className={`relative h-9 w-9 rounded-full transition-transform group-hover:scale-105 ${
-                    selectedColors.includes(label)
+                    isSelected
                       ? 'ring-1 ring-black ring-offset-2'
                       : 'border-stone-300 border'
                   } ${config.border ? 'border border-stone-200' : ''}`}
                   style={{ background: config.color }}
                 >
-                  {selectedColors.includes(label) && (
+                  {isSelected && (
                     <div className="flex absolute inset-0 justify-center items-center">
                       <div
                         className={`h-1.5 w-1.5 rounded-full ${label === 'Trắng' ? 'bg-black' : 'bg-white'}`}
@@ -158,35 +161,21 @@ export default function ProductsFilter({
     },
     {
       key: 'price',
-      label: (
-        <span className="font-bold text-stone-500 uppercase text-[11px] tracking-wider">
-          Giá
-        </span>
-      ),
+      label: <CollapseHeader>Giá</CollapseHeader>,
       children: (
-        <div className="space-y-3">
-          <Checkbox.Group
-            value={PRICE_RANGES.filter(
-              (r) =>
-                r.value[0] === priceRange[0] && r.value[1] === priceRange[1]
-            ).map((r) => r.label)}
-            className="flex flex-col gap-3 w-full"
-          >
-            {PRICE_RANGES.map((range) => (
-              <Checkbox
-                key={range.label}
-                value={range.label}
-                className="text-[14px] font-medium text-stone-700"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onPriceRangeChange(range.value as [number, number])
-                  }
-                }}
-              >
-                {range.label}
-              </Checkbox>
-            ))}
-          </Checkbox.Group>
+        <div className="flex flex-col gap-3">
+          {PRICE_RANGES.map((range) => (
+            <Checkbox
+              key={range.label}
+              checked={isPriceSelected(range.value)}
+              onChange={() =>
+                onPriceRangeChange(range.value as [number, number])
+              }
+              className="text-[14px] font-medium text-stone-700"
+            >
+              {range.label}
+            </Checkbox>
+          ))}
         </div>
       )
     }

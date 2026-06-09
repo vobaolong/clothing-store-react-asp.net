@@ -12,9 +12,9 @@ import {
 	bulkDeleteAdminProducts,
 	bulkDeleteAdminProductsPermanent,
 	bulkRestoreAdminProducts,
-	bulkUpdateAdminProductsActive,
-	getAdminApiErrorMessage
+	bulkUpdateAdminProductsActive
 } from '@/api/admin-api'
+import { getApiErrorMessage } from '@/utils/error-handler'
 
 type AdminProductsSelectionActionsProps = {
 	isTrash: boolean
@@ -109,8 +109,7 @@ export default function AdminProductsSelectionActions({
 												return Promise.reject(error)
 											}
 											toast.error(
-												getAdminApiErrorMessage(error) ??
-												'Xóa vĩnh viễn thất bại'
+												getApiErrorMessage(error, 'Xóa vĩnh viễn thất bại')
 											)
 											return Promise.reject(error)
 										}

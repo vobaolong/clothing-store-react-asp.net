@@ -154,7 +154,6 @@ export default function CheckoutPage() {
     ? subtotal >= appliedCouponDetails.minOrderSubtotal
     : true
   const finalTotal = calculateFinalTotal(subtotal, coupon.discountAmount)
-  const total = subtotal
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
@@ -306,7 +305,7 @@ export default function CheckoutPage() {
           subtotal={subtotal}
           finalTotal={finalTotal}
           discountAmount={coupon.discountAmount}
-          total={total}
+          rawTotal={subtotal}
           appliedCouponCode={coupon.appliedCode || undefined}
         />
       </div>

@@ -2,7 +2,7 @@ import { Drawer, Image, Typography, Descriptions } from 'antd'
 import { formatCurrency, formatDate } from '@/utils/format'
 import type { ProductView } from '@/types'
 import { useCallback, useState } from 'react'
-import { FALLBACK_IMG } from '@/utils/error-handler'
+import { FALLBACK_IMG } from '@/constants/images.constant'
 
 type ProductDrawerProps = {
   open: boolean
