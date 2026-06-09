@@ -141,10 +141,6 @@ export default function ShippingAddressFormModal({
       wardsQuery.data?.find(
         (x: { name: string; code: string }) => x.code === wardCode
       )?.name ?? ''
-    const fullAddress = [street, wardName, provinceName]
-      .filter(Boolean)
-      .join(', ')
-
     if (!fullName || !phone || !provinceId || !wardCode || !street) {
       toast.error('Vui lòng nhập đầy đủ thông tin địa chỉ')
       return
@@ -153,13 +149,12 @@ export default function ShippingAddressFormModal({
     const payload: CreateShippingAddressPayload = {
       fullName,
       phone,
-      address: fullAddress,
       province: provinceName,
       provinceId: provinceId,
       ward: wardName,
       wardCode,
       street,
-      label: values.label,
+      label: values.label ?? SHIPPING_ADDRESS_LABEL_OPTIONS[0].value,
       isDefault: Boolean(values.isDefault)
     }
 

@@ -5,7 +5,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getAuthToken } from '@/state/auth/auth-session'
 import { cancelMyOrder, getMyOrderDetail } from '@/api/orders-api'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
 import { OrderStatus } from '@/enums'
 import { LeftOutlined } from '@ant-design/icons'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
@@ -13,22 +13,6 @@ import { createReview } from '@/api/reviews-api'
 import toast from 'react-hot-toast'
 import ReviewForm from '@/components/reviews/ReviewForm'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
-
-const formatStructuredAddress = (detail: {
-  shippingStreet?: string
-  shippingWard?: string
-  shippingProvince?: string
-  shippingAddress?: string
-}) => {
-  const structured = [
-    detail.shippingStreet,
-    detail.shippingWard,
-    detail.shippingProvince
-  ]
-    .filter((x) => Boolean(x && x.trim()))
-    .join(', ')
-  return structured || detail.shippingAddress || '-'
-}
 
 const STEP_COPY: Partial<Record<OrderStatus, string>> = {
   [OrderStatus.CONFIRMED]: 'Đơn hàng đã được xác nhận',
@@ -168,7 +152,9 @@ export default function OrderDetailPage() {
       color: 'gray' as const,
       content: (
         <div>
-          <div className="font-medium text-slate-900">Đơn hàng đã được đặt</div>
+          <div className="font-medium text-slate-900 dark:text-white!">
+            Đơn hàng đã được đặt
+          </div>
           <div className="text-sm text-slate-500">
             {formatDate(detail.createdAt)}
           </div>
@@ -179,7 +165,7 @@ export default function OrderDetailPage() {
       color: timelineColorForStatus(step.status),
       content: (
         <div>
-          <div className="font-medium text-slate-900">
+          <div className="font-medium text-slate-900 dark:text-white!">
             {STEP_COPY[step.status] ?? step.status}
           </div>
           <div className="text-sm text-slate-500">
@@ -194,7 +180,7 @@ export default function OrderDetailPage() {
             color: timelineColorForStatus(synthetic.status),
             content: (
               <div>
-                <div className="font-medium text-slate-900">
+                <div className="font-medium text-slate-900 dark:text-white!">
                   {STEP_COPY[synthetic.status] ?? synthetic.status}
                 </div>
                 <div className="text-sm text-slate-500">
@@ -212,7 +198,7 @@ export default function OrderDetailPage() {
       <div className="flex flex-wrap items-center gap-3">
         <Link
           to="/profile?tab=orders"
-          className="hover:bg-slate-200! p-3 rounded-full"
+          className="hover:bg-slate-200! dark:hover:bg-slate-800! px-3 py-2.5 rounded-full"
         >
           <LeftOutlined />
         </Link>
@@ -292,7 +278,7 @@ export default function OrderDetailPage() {
             render: (_, row) => (
               <Link
                 to={`/products/${row.productSlug}`}
-                className="flex gap-2 items-center text-black! line-clamp-2 max-w-56"
+                className="flex gap-2 items-center text-black! dark:text-white! hover:text-blue-500! dark:hover:text-blue-400! line-clamp-2 max-w-56"
               >
                 <img
                   src={row.imageUrl}
@@ -374,7 +360,7 @@ export default function OrderDetailPage() {
               <span>Phí vận chuyển</span>
               <span>{formatCurrency(shippingFee)}</span>
             </div>
-            <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200">
+            <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200 dark:border-slate-600">
               <span>Tổng cộng</span>
               <span>{formatCurrency(detail.totalAmount)}</span>
             </div>

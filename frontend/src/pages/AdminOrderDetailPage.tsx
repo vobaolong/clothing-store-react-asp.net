@@ -21,33 +21,8 @@ import {
   SHIPPING_ADDRESS_LABELS,
   STATUS_COLORS
 } from '@/constants/labels.constant'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
-import {
-  createOrderStatusOptions,
-  getVietnameseStatusLabel
-} from '@/utils/enum.utils'
-import { canUpdateToStatus } from '@/utils/order-status-transition'
-import { useOrderRealtime } from '@/hooks/useOrderRealtime'
-import { toCapitalize } from '@/utils/table.lib'
-import { openBillPrintWindow } from '@/utils/bill-export'
-import { CouponDiscountType, OrderStatus } from '@/enums'
-
-const formatStructuredAddress = (detail: {
-  shippingStreet?: string
-  shippingWard?: string
-  shippingProvince?: string
-  shippingAddress?: string
-}) => {
-  const structured = [
-    detail.shippingStreet,
-    detail.shippingWard,
-    detail.shippingProvince
-  ]
-    .filter((x) => Boolean(x && x.trim()))
-    .join(', ')
-  return structured || detail.shippingAddress || '-'
-}
 
 export default function AdminOrderDetailPage() {
   const { id } = useParams()
@@ -134,7 +109,9 @@ export default function AdminOrderDetailPage() {
             </Tag>
           )}
           <Select
-            value={getVietnameseStatusLabel(selectedStatus ?? detail?.status)}
+            value={getVietnameseStatusLabel(
+              selectedStatus ?? detail?.status ?? ''
+            )}
             onChange={(value) => setSelectedStatus(value as OrderStatus)}
             disabled={
               detailQuery.isLoading ||

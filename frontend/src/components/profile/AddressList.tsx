@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Empty, Table, Tooltip } from 'antd'
+import { Button, Card, Empty, Modal, Table, Tooltip } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getShippingAddresses,
@@ -134,7 +134,12 @@ export default function AddressList() {
                         danger
                         loading={deleteAddressMutation.isPending}
                         onClick={async () => {
-                          await deleteAddressMutation.mutateAsync(row.id)
+                          Modal.confirm({
+                            title: 'Xóa địa chỉ?',
+                            content: 'Hành động này không thể hoàn tác.',
+                            onOk: () =>
+                              deleteAddressMutation.mutateAsync(row.id)
+                          })
                         }}
                         icon={<DeleteOutlined />}
                       />

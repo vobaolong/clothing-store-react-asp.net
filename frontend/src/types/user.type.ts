@@ -35,14 +35,13 @@ export type ShippingAddress = {
 export type CreateShippingAddressPayload = {
   fullName: string
   phone: string
-  address?: string
-  province?: string
-  provinceId?: string
-  ward?: string
-  wardCode?: string
-  street?: string
-  label?: ShippingAddressLabel
-  isDefault?: boolean
+  province: string
+  provinceId: string
+  ward: string
+  wardCode: string
+  street: string
+  label: ShippingAddressLabel
+  isDefault: boolean
 }
 
 export type UpdateShippingAddressPayload = CreateShippingAddressPayload

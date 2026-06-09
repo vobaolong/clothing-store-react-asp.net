@@ -7,13 +7,8 @@ export const createVnPayUrl = async (
   apiData(apiClient.post(API_ENDPOINTS.payments.vnpayCreateUrl, { orderId }))
 
 export const handleVnPayReturn = async (
-  rawQueryString: string
-): Promise<{ orderId: string; paymentStatus: string; totalAmount: number }> =>
-  apiData(
-    apiClient.get(
-      `${API_ENDPOINTS.payments.vnpayReturn}${rawQueryString.startsWith('?') ? rawQueryString : `?${rawQueryString}`}`,
-      {
-        timeout: 15000
-      }
-    )
-  )
+  queryString: string
+): Promise<{ orderId: string; paymentStatus: string; totalAmount: number }> => {
+  const url = `${API_ENDPOINTS.payments.vnpayReturn}${queryString.startsWith('?') ? queryString : `?${queryString}`}`
+  return apiData(apiClient.get(url))
+}

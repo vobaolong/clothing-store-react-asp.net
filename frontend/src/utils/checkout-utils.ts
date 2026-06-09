@@ -5,12 +5,10 @@ const formatShippingAddress = (address: {
   street?: string
   ward?: string
   province?: string
-  address?: string
 }) => {
-  const structured = [address.street, address.ward, address.province]
-    .filter((x) => Boolean(x && x.trim()))
+  return [address.street, address.ward, address.province]
+    .filter((x) => x?.trim())
     .join(', ')
-  return structured || address.address || ''
 }
 
 const normalizeCouponCode = (couponCode?: string) =>

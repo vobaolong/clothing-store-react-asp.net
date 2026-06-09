@@ -1,8 +1,8 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -14,7 +14,7 @@ import PaymentSection from '@/components/checkout/PaymentSection'
 import OrderSummary from '@/components/checkout/OrderSummary'
 import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
 import { PaymentMethod } from '@/enums'
-import { getAvailableCoupons, validateCoupon } from '@/api/coupons-api'
+import { getAvailableCoupons } from '@/api/coupons-api'
 import {
   getShippingAddresses,
   getShippingAddressPrefill
@@ -22,10 +22,7 @@ import {
 import { placeOrder } from '@/api/orders-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
-import {
-  calculateFinalTotal,
-  normalizeCouponCode
-} from '@/utils/checkout-utils'
+import { calculateFinalTotal } from '@/utils/checkout-utils'
 import { getAuthToken } from '@/state/auth/auth-session'
 import {
   removePurchasedCartItems,
@@ -33,6 +30,7 @@ import {
 } from '@/state/cart-slice'
 import type { CheckoutFormValues } from '@/types/checkout.type'
 import { useCheckoutAddressModalState } from '@/hooks/useCheckoutAddressModalState'
+import { useCheckoutCouponState } from '@/hooks/useCheckoutCouponState'
 
 const checkoutSchema = z.object({
   fullName: z.string().optional(),
@@ -56,9 +54,10 @@ export default function CheckoutPage() {
   const queryClient = useQueryClient()
   const items = useSelector(selectSelectedCartItems)
   const [nowMs] = useState(() => Date.now())
+  const justPlacedOrderRef = useRef(false)
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !justPlacedOrderRef.current) {
       navigate('/cart', { replace: true })
     }
   }, [items.length, navigate])
@@ -118,10 +117,18 @@ export default function CheckoutPage() {
       }
     })
 
-  const watchedCouponCode = useWatch({ control, name: 'couponCode' })
-  const [couponIsApplying, setCouponIsApplying] = useState(false)
-  const [appliedCouponCode, setAppliedCouponCode] = useState('')
-  const [couponDiscountAmount, setCouponDiscountAmount] = useState(0)
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  )
+
+  const {
+    coupon,
+    watchedCouponCode,
+    handleCouponCodeChange,
+    applyCouponByCode,
+    handleRemoveCoupon
+  } = useCheckoutCouponState({ control, getValues, setValue, subtotal })
 
   useEffect(() => {
     if (prefillQuery.data) setValue('fullName', prefillQuery.data.fullName)
@@ -140,65 +147,6 @@ export default function CheckoutPage() {
     }
   }, [addressesQuery.data, getValues, reset])
 
-  const coupon = {
-    isApplying: couponIsApplying,
-    appliedCode: appliedCouponCode,
-    discountAmount: couponDiscountAmount
-  }
-
-  const handleCouponCodeChange = (nextCode: string) => {
-    setValue('couponCode', nextCode)
-    const normalized = normalizeCouponCode(nextCode)
-    if (
-      !normalized ||
-      (appliedCouponCode && normalized !== appliedCouponCode)
-    ) {
-      setAppliedCouponCode('')
-      setCouponDiscountAmount(0)
-    }
-  }
-
-  const applyCouponByCode = async (inputCode?: string) => {
-    const rawCode = inputCode?.trim() || getValues('couponCode')?.trim()
-    if (!rawCode) {
-      toast.error('Vui lòng nhập mã giảm giá')
-      return
-    }
-
-    const normalizedCode = normalizeCouponCode(rawCode)
-    if (couponIsApplying) return
-    if (appliedCouponCode && appliedCouponCode === normalizedCode) return
-
-    try {
-      setCouponIsApplying(true)
-      const result = await validateCoupon({
-        code: rawCode,
-        orderTotal: subtotal
-      })
-      const finalCode = normalizeCouponCode(result.code)
-      setAppliedCouponCode(finalCode)
-      setCouponDiscountAmount(result.discountAmount)
-      setValue('couponCode', finalCode)
-      toast.success('Đã áp dụng mã giảm giá')
-    } catch {
-      setAppliedCouponCode('')
-      setCouponDiscountAmount(0)
-      toast.error('Mã giảm giá không hợp lệ')
-    } finally {
-      setCouponIsApplying(false)
-    }
-  }
-
-  const handleRemoveCoupon = () => {
-    setAppliedCouponCode('')
-    setCouponDiscountAmount(0)
-    setValue('couponCode', '')
-  }
-
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  )
   const appliedCouponDetails = availableCouponsQuery.data?.find(
     (c) => c.code.toUpperCase() === coupon.appliedCode
   )
@@ -237,7 +185,7 @@ export default function CheckoutPage() {
       setIsSubmitting(true)
       if (
         watchedCouponCode?.trim() &&
-        normalizeCouponCode(watchedCouponCode) !== coupon.appliedCode
+        watchedCouponCode.trim().toUpperCase() !== coupon.appliedCode
       ) {
         toast.error('Vui lòng áp dụng mã giảm giá trước khi đặt hàng')
         return
@@ -296,7 +244,8 @@ export default function CheckoutPage() {
       toast.success(
         `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
       )
-      navigate('/')
+      justPlacedOrderRef.current = true
+      navigate(`/orders/${orderId}`)
     } catch (error: unknown) {
       const msg =
         error instanceof Error

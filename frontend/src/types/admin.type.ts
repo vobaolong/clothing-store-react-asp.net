@@ -219,5 +219,25 @@ export type ProductView = {
   imageUrl?: string | null
 }
 
+export type AdminProductImportResult = {
+  totalRows: number
+  totalProductsDetected: number
+  productsImported: number
+  variantsImported: number
+  failedRows: number
+  errors: Array<{ rowNumber: number; error: string }>
+}
+
+export type AdminBulkPermanentProductsResult = {
+  deleted: number
+  skippedDueToOrders: number
+  skippedNotInTrash: number
+}
+
+export type LockCustomerResponse = {
+  success: boolean
+  message?: string
+}
+
 export type AdminProductListMode = 'active' | 'deleted'
 export type DateRangeType = [dayjs.Dayjs | null, dayjs.Dayjs | null] | null

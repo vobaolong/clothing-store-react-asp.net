@@ -1,4 +1,4 @@
-import { apiClient, apiData } from '@/api/api-client'
+import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type { ProductReviews } from '@/types'
 
@@ -14,6 +14,6 @@ export const createReview = async (payload: {
   rating: number
   comment?: string
   tags?: string[]
-}) => {
-  return apiData<unknown>(apiClient.post(API_ENDPOINTS.reviews.root, payload))
+}): Promise<void> => {
+  await apiVoid(apiClient.post(API_ENDPOINTS.reviews.root, payload))
 }

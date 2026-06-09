@@ -39,6 +39,7 @@ export const API_ENDPOINTS = {
   },
   coupons: {
     available: '/coupons/available',
+    validate: '/coupons/validate',
     admin: '/coupons',
     adminById: (id: string) => `/coupons/${id}`,
     adminDeleted: '/coupons/deleted',
