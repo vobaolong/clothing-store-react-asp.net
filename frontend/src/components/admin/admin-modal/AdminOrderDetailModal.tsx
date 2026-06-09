@@ -2,27 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import { Card, Descriptions, Empty, Modal, Spin, Table, Tag } from 'antd'
 import { getAdminOrderDetail } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
 import { getOrderStatusLabel } from '@/constants/labels.constant'
 import { toCapitalize } from '@/utils/table.lib'
 import { useMemo } from 'react'
 import type { ColumnsType } from 'antd/es/table'
-
-const formatStructuredAddress = (detail: {
-  shippingStreet?: string
-  shippingWard?: string
-  shippingProvince?: string
-  shippingAddress?: string
-}) => {
-  const structured = [
-    detail.shippingStreet,
-    detail.shippingWard,
-    detail.shippingProvince
-  ]
-    .filter((x) => Boolean(x && x.trim()))
-    .join(', ')
-  return structured || detail.shippingAddress || '-'
-}
 
 type Props = {
   open: boolean

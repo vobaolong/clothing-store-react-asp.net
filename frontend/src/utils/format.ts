@@ -1,5 +1,19 @@
 import type { DateFormatMode } from '@/types'
 
+export type ShippingAddressLike = {
+  shippingStreet?: string
+  shippingWard?: string
+  shippingProvince?: string
+  shippingAddress?: string
+}
+
+export const formatStructuredAddress = (detail: ShippingAddressLike): string => {
+  const structured = [detail.shippingStreet, detail.shippingWard, detail.shippingProvince]
+    .filter((x) => x?.trim())
+    .join(', ')
+  return structured || detail.shippingAddress || ''
+}
+
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',

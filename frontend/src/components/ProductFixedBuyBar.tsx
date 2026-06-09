@@ -42,7 +42,7 @@ export default function ProductFixedBuyBar({
           : 'opacity-0 translate-y-8 pointer-events-none'
       ].join(' ')}
     >
-      <div className="flex items-center max-w-3xl gap-3 p-3 mx-auto bg-white border shadow rounded-xl border-white/40 backdrop-blur-md">
+      <div className="flex items-center max-w-3xl gap-3 p-3 mx-auto card shadow rounded-xl backdrop-blur-md">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -52,9 +52,9 @@ export default function ProductFixedBuyBar({
         ) : null}
 
         <div className="flex-1 min-w-0">
-          <span className="text-sm font-medium truncate text-stone-900">
+          <span className="text-sm font-medium truncate">
             {toCapitalize(productName)}{' '}
-            <span className="text-xs text-stone-500">
+            <span className="text-xs text-stone-500 dark:text-stone-200">
               {selectedVariant
                 ? `- ${toCapitalize(selectedVariant.color)} / ${toCapitalize(selectedVariant.size)}`
                 : ''}
@@ -63,7 +63,7 @@ export default function ProductFixedBuyBar({
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
             {hasSale ? (
               <>
-                <span className="text-sm font-semibold text-rose-700">
+                <span className="text-sm font-semibold text-red-700 dark:text-red-500">
                   {formatCurrency(salePrice)}
                 </span>
                 <span className="text-xs line-through text-stone-400">
@@ -71,7 +71,7 @@ export default function ProductFixedBuyBar({
                 </span>
               </>
             ) : (
-              <span className="text-sm font-semibold text-stone-900">
+              <span className="text-sm font-semibold text-stone-900 dark:text-white">
                 {formatCurrency(price)}
               </span>
             )}

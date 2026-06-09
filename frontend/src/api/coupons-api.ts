@@ -2,7 +2,6 @@ import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import { CouponStatus } from '@/enums'
 import type { Coupon, AvailableCoupon, CouponUpsertPayload } from '@/types'
-import { calculateCouponDiscountAmount } from '@/utils/coupon-discount'
 
 export const getAdminCoupons = async (
   status?: CouponStatus
@@ -29,25 +28,7 @@ export const getAvailableCoupons = async (): Promise<AvailableCoupon[]> =>
 export const validateCoupon = async (payload: {
   code: string
   orderTotal: number
-}): Promise<{ code: string; discountAmount: number }> => {
-  const coupon = (await getAvailableCoupons()).find(
-    (item) => item.code.toUpperCase() === payload.code.toUpperCase()
-  )
-  if (!coupon) throw new Error('Coupon not found')
-  if (payload.orderTotal < coupon.minOrderSubtotal) {
-    throw new Error('Order total does not meet minimum subtotal')
-  }
-  const discountAmount = calculateCouponDiscountAmount(
-    coupon,
-    payload.orderTotal
-  )
-  if (discountAmount > payload.orderTotal) {
-    throw new Error('Coupon is not applicable')
-  }
-  return {
-    code: coupon.code,
-    discountAmount
-  }
-}
+}): Promise<{ code: string; discountAmount: number }> =>
+  apiData(apiClient.post(API_ENDPOINTS.coupons.validate, payload))
 
 export type { Coupon, AvailableCoupon, CouponUpsertPayload }

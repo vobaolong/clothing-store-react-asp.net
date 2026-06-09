@@ -1,5 +1,5 @@
 import type { AdminOrderDetail } from '@/types/admin.type'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
 import { getVietnameseStatusLabel } from '@/utils/enum.utils'
 
 const escapeHtml = (value: string) =>
@@ -9,22 +9,6 @@ const escapeHtml = (value: string) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;')
-
-const formatStructuredAddress = (detail: {
-  shippingStreet?: string
-  shippingWard?: string
-  shippingProvince?: string
-  shippingAddress?: string
-}) => {
-  const structured = [
-    detail.shippingStreet,
-    detail.shippingWard,
-    detail.shippingProvince
-  ]
-    .filter((x) => Boolean(x && x.trim()))
-    .join(', ')
-  return structured || detail.shippingAddress || '-'
-}
 
 export const generateBillHtml = (detail: AdminOrderDetail): string => {
   const subtotal = detail.items.reduce((sum, item) => sum + item.lineTotal, 0)

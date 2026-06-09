@@ -98,7 +98,7 @@ export default function ProductCard({
       </div>
       <p
         className={
-          'line-clamp-2 wrap-break-word w-full text-small font-normal hover:text-[#7f0019] h-10!'
+          'line-clamp-2 wrap-break-word w-full text-small font-normal hover:text-[#7f0019] dark:hover:text-[#ccc] h-10!'
         }
       >
         {toCapitalize(product.name)}
@@ -123,7 +123,6 @@ export default function ProductCard({
 
         <Button
           block
-          size={isCatalog ? 'middle' : 'large'}
           type="primary"
           disabled={!firstVariant}
           onClick={(e) => {

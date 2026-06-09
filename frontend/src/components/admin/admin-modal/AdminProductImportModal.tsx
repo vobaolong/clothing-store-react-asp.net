@@ -6,9 +6,9 @@ import { useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   importAdminProducts,
-  getAdminApiErrorMessage,
-  type AdminProductImportResult
+  getAdminApiErrorMessage
 } from '@/api/admin-api'
+import type { AdminProductImportResult } from '@/types'
 
 type AdminProductImportModalProps = {
   open: boolean
