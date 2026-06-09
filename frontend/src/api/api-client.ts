@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from 'axios'
+import axios from 'axios'
 import toast from 'react-hot-toast'
 
 import { getAuthToken, removeAuthToken } from '@/state/auth/auth-session'
@@ -30,17 +30,9 @@ apiClient.interceptors.response.use(
   }
 )
 
-export const unwrapApiResponse = <T>(
-  response: AxiosResponse<ApiResponse<T>>
-): T => response.data.data
-
 export const apiData = async <T>(
-  request: Promise<AxiosResponse<ApiResponse<T>>>
-): Promise<T> => unwrapApiResponse(await request)
-
-export const apiResponse = async <T = unknown>(
-  request: Promise<AxiosResponse<ApiResponse<T>>>
-): Promise<ApiResponse<T>> => (await request).data
+  request: Promise<{ data: ApiResponse<T> }>
+): Promise<T> => (await request).data.data
 
 export const apiVoid = async (request: Promise<unknown>): Promise<void> => {
   await request

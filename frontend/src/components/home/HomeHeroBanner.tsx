@@ -1,5 +1,5 @@
 import type { HomepageBanner } from '@/types'
-import { FALLBACK_IMG } from '@/utils/error-handler'
+import { FALLBACK_IMG } from '@/constants/images.constant'
 import { Carousel } from 'antd'
 import { Link } from 'react-router-dom'
 

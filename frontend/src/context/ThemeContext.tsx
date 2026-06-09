@@ -1,13 +1,7 @@
-import { createContext, use, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-
-type Theme = 'light' | 'dark'
-
-interface ThemeContextType {
-  theme: Theme
-  toggleTheme: () => void
-  isDark: boolean
-}
+import { ThemeContext } from '@/context/theme-context'
+import type { Theme } from '@/context/theme-context'
 
 const STORAGE_KEY = 'wearly-theme'
 
@@ -28,12 +22,9 @@ function applyTheme(theme: Theme) {
   }
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const initial = getInitialTheme()
-    // Apply on first render
     queueMicrotask(() => applyTheme(initial))
     return initial
   })
@@ -53,10 +44,4 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   )
 
   return <ThemeContext value={value}>{children}</ThemeContext>
-}
-
-export function useTheme() {
-  const ctx = use(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider')
-  return ctx
 }

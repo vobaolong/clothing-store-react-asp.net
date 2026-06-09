@@ -1,3 +1,3 @@
 export * from './auth-slice'
 export * from './auth-session'
-export * from './authSelectors'
+export * from './auth-selectors'

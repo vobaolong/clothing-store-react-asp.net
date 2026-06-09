@@ -5,9 +5,9 @@ import type { RcFile } from 'antd/es/upload'
 import { useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
-  importAdminProducts,
-  getAdminApiErrorMessage
+  importAdminProducts
 } from '@/api/admin-api'
+import { getApiErrorMessage } from '@/utils/error-handler'
 import type { AdminProductImportResult } from '@/types'
 
 type AdminProductImportModalProps = {
@@ -56,7 +56,7 @@ export default function AdminProductImportModal({
       await onImported()
       toast.success('Nhập Excel hoàn tất')
     } catch (error) {
-      toast.error(getAdminApiErrorMessage(error) ?? 'Nhập Excel thất bại')
+      toast.error(getApiErrorMessage(error, 'Nhập Excel thất bại'))
     } finally {
       setIsImporting(false)
     }

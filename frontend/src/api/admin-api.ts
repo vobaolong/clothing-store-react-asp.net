@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
 import type {
@@ -117,13 +115,6 @@ export const bulkDeleteAdminProductsPermanent = async (
       data: ids
     })
   )
-}
-
-// Error handling
-export const getAdminApiErrorMessage = (error: unknown): string | undefined => {
-  if (!axios.isAxiosError(error)) return undefined
-  const body = error.response?.data as { message?: string } | undefined
-  return typeof body?.message === 'string' ? body.message : undefined
 }
 
 // PUT api/admin/products/{id}

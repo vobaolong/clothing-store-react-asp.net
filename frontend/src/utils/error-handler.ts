@@ -1,7 +1,7 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-interface ApiError {
+type ApiErrorBody = {
   message?: string
   Message?: string
   errors?: Record<string, string[] | string>
@@ -9,9 +9,8 @@ interface ApiError {
 
 export const getApiErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    const data = error.response?.data as ApiError | undefined
-    if (typeof data === 'string' && (data as string).trim())
-      return (data as string).trim()
+    const data = error.response?.data as ApiErrorBody | string | undefined
+    if (typeof data === 'string' && data.trim()) return data.trim()
     if (data && typeof data === 'object') {
       const message = data.message || data.Message
       if (typeof message === 'string' && message.trim()) return message.trim()
@@ -35,6 +34,3 @@ export const handleApiError = (error: unknown, defaultMessage?: string) => {
   toast.error(message || defaultMessage || 'Lỗi kết nối server')
   return message
 }
-
-export const FALLBACK_IMG =
-  'https://www.mangobeds.com/images/image-fallback.jpg'
