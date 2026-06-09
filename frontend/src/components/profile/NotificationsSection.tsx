@@ -97,8 +97,8 @@ export default function NotificationsSection() {
     <Card>
       <h1 className="mb-4 text-2xl font-semibold">Thông báo</h1>
       {groupedOrderNotifications.length > 0 && (
-        <div className="pt-6 mb-6 border-t border-slate-200">
-          <div className="space-y-3 max-h-screen! overflow-y-auto">
+        <div className="pt-6 mb-6 border-t border-slate-200 dark:border-slate-600">
+          <div className="space-y-3 max-h-screen! overflow-y-auto px-2">
             {groupedOrderNotifications.map(
               ({ orderId, items, latest, unreadCount }) => {
                 const isExpanded = expandedGroups[orderId] ?? false
@@ -106,11 +106,11 @@ export default function NotificationsSection() {
                 return (
                   <div
                     key={orderId}
-                    className="overflow-hidden bg-white rounded-lg border border-slate-200"
+                    className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600"
                   >
                     <button
                       type="button"
-                      className="p-4 w-full text-left transition-colors cursor-pointer hover:bg-slate-50"
+                      className="p-4 w-full text-left transition-colors cursor-pointer hover:bg-black/10 dark:hover:bg-white/10"
                       onClick={() => toggleGroup(orderId)}
                     >
                       <div className="flex gap-3 justify-between items-start">
@@ -128,7 +128,7 @@ export default function NotificationsSection() {
                           </div>
                           <div className="min-w-0">
                             <div className="flex flex-wrap gap-2 items-center">
-                              <div className="font-semibold truncate text-slate-900">
+                              <div className="font-semibold truncate">
                                 {latest.title}
                               </div>
                               <Tag className="m-0">{items.length} cập nhật</Tag>
@@ -138,7 +138,7 @@ export default function NotificationsSection() {
                                 </Tag>
                               )}
                             </div>
-                            <div className="mt-1 text-sm line-clamp-2 text-slate-600">
+                            <div className="mt-1 text-sm line-clamp-2 text-slate-600 dark:text-slate-300">
                               {latest.message}
                             </div>
                           </div>
@@ -157,7 +157,7 @@ export default function NotificationsSection() {
                       </div>
                     </button>
                     {isExpanded && (
-                      <div className="px-4 py-4 border-t border-slate-200 bg-slate-50">
+                      <div className="px-4 py-4 border-t border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-black/10">
                         <div className="space-y-4">
                           {items.map((item, index) => (
                             <button
@@ -166,7 +166,7 @@ export default function NotificationsSection() {
                               onClick={() => {
                                 if (!item.isRead) markAsRead(item.id)
                               }}
-                              className="block relative px-4 py-3 w-full text-left bg-white rounded-md transition-colors cursor-pointer hover:bg-slate-100"
+                              className="block relative px-4 py-3 w-full text-left rounded-md transition-colors cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10"
                             >
                               <div className="flex absolute top-0 left-0 justify-center w-7 h-full">
                                 <span
@@ -178,14 +178,14 @@ export default function NotificationsSection() {
                               </div>
                               <div className="pl-6">
                                 <div className="flex gap-3 justify-between items-start">
-                                  <div className="font-medium text-slate-900">
+                                  <div className="font-medium text-slate-900 dark:text-slate-300">
                                     {item.title}
                                   </div>
-                                  <div className="text-xs shrink-0 text-slate-400">
+                                  <div className="text-xs shrink-0 text-slate-400 dark:text-slate-300">
                                     {formatDate(item.createdAt)}
                                   </div>
                                 </div>
-                                <div className="mt-1 text-sm text-slate-600">
+                                <div className="mt-1 text-sm text-slate-600 dark:text-slate-500">
                                   {item.message}
                                 </div>
                               </div>
