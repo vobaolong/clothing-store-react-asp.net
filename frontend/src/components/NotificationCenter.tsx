@@ -71,7 +71,9 @@ const NotificationItem = ({
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       className={[
         'p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-black/10 cursor-pointer transition-colors',
-        !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+        !notification.isRead
+          ? 'bg-blue-50 dark:bg-blue-900/10 border-l-4 border-l-blue-500'
+          : ''
       ].join(' ')}
     >
       <div className="flex items-start gap-3">

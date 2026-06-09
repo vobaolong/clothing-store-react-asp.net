@@ -9,7 +9,8 @@ import {
   Modal,
   Select,
   Skeleton,
-  Tag
+  Tag,
+  Tooltip
 } from 'antd'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -30,7 +31,7 @@ import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { toCapitalize } from '@/utils/table.lib'
 import { openBillPrintWindow } from '@/utils/bill-export'
-import { OrderStatus } from '@/enums'
+import { CouponDiscountType, OrderStatus } from '@/enums'
 
 const formatStructuredAddress = (detail: {
   shippingStreet?: string
@@ -119,7 +120,7 @@ export default function AdminOrderDetailPage() {
               Order: {detail ? detail.id.slice(0, 8).toUpperCase() : '...'}
             </div>
             {detail ? (
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-200">
                 Tạo lúc {formatDate(detail.createdAt)}
               </div>
             ) : null}
@@ -211,7 +212,7 @@ export default function AdminOrderDetailPage() {
               {detail.items.length === 0 ? (
                 <Empty description="Đơn hàng chưa có sản phẩm" />
               ) : (
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-slate-100 dark:divide-slate-600">
                   {detail.items.map((row) => {
                     return (
                       <div
@@ -239,9 +240,9 @@ export default function AdminOrderDetailPage() {
                         </div>
 
                         <div className="flex items-center gap-8 shrink-0">
-                          <div className="text-sm text-slate-600">
+                          <div className="text-sm text-slate-600 dark:text-slate-200">
                             SL:{' '}
-                            <span className="font-medium text-slate-800">
+                            <span className="font-medium text-slate-800 dark:text-slate-400">
                               {row.quantity}
                             </span>
                           </div>
@@ -267,11 +268,21 @@ export default function AdminOrderDetailPage() {
                 <div className="flex justify-between">
                   <span>Giảm giá</span>
                   <span className="text-emerald-600">
-                    {detail.couponCodeSnapshot && (
-                      <span className="inline-block px-2 py-1 mr-2 text-xs rounded text-emerald-800 bg-emerald-100">
-                        {detail.couponCodeSnapshot}
-                      </span>
-                    )}
+                    <Tooltip
+                      title={
+                        detail.couponDiscountTypeSnapshot ===
+                        CouponDiscountType.PERCENT
+                          ? `Giảm ${detail.couponDiscountValueSnapshot}%`
+                          : `Giảm ${detail.couponDiscountValueSnapshot}`
+                      }
+                      color="blue"
+                    >
+                      {detail.couponCodeSnapshot && (
+                        <span className="inline-block px-2 py-1 mr-2 text-xs rounded text-emerald-800 bg-emerald-100">
+                          {detail.couponCodeSnapshot}
+                        </span>
+                      )}
+                    </Tooltip>
                     -{formatCurrency(detail.discountAmount || 0)}
                   </span>
                 </div>
@@ -279,7 +290,7 @@ export default function AdminOrderDetailPage() {
                   <span>Phí vận chuyển</span>
                   <span>{formatCurrency(shippingFee)}</span>
                 </div>
-                <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200">
+                <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200 dark:border-slate-600">
                   <span>Tổng cộng</span>
                   <span>{formatCurrency(detail.totalAmount)}</span>
                 </div>
