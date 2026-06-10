@@ -15,13 +15,7 @@ function variantPrimaryUrl(variant: Product['variants'][number]): string {
   return row[0]?.trim() ?? ''
 }
 
-export function withDerivedProductImages<T extends Product>(product: T): T {
-  // No longer derive product-level imageUrl/imageUrls from variants
-  return product
-}
-
 function productFallbackGallery(): string[] {
-  // No longer fallback to product-level images - return empty if no variant images
   return []
 }
 

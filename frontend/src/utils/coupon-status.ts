@@ -2,7 +2,7 @@ import { Tag } from 'antd'
 import { createElement } from 'react'
 import type { Coupon } from '@/types'
 
-export type CouponStatus =
+export type CouponDisplayStatus =
   | 'Active'
   | 'Expired'
   | 'Inactive'
@@ -11,7 +11,7 @@ export type CouponStatus =
 
 const toYmdUtc = (iso: string) => iso.slice(0, 10)
 
-export const resolveCouponStatus = (coupon: Coupon): CouponStatus => {
+export const resolveCouponStatus = (coupon: Coupon): CouponDisplayStatus => {
   if (coupon.status === 'Archived') return 'Archived'
 
   const todayUtc = toYmdUtc(new Date().toISOString())
@@ -27,7 +27,7 @@ export const resolveCouponStatus = (coupon: Coupon): CouponStatus => {
   return 'Active'
 }
 
-const COUPON_STATUS_COLORS: Record<CouponStatus, string> = {
+const COUPON_STATUS_COLORS: Record<CouponDisplayStatus, string> = {
   Active: 'green',
   Expired: 'red',
   Inactive: 'default',

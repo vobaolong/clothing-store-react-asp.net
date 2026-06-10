@@ -7,7 +7,15 @@ type ApiErrorBody = {
   errors?: Record<string, string[] | string>
 }
 
-export const getApiErrorMessage = (error: unknown): string => {
+export const getApiErrorMessage = (
+  error: unknown,
+  fallback?: string
+): string => {
+  const msg = tryExtractApiError(error)
+  return msg || fallback || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+}
+
+function tryExtractApiError(error: unknown): string | null {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as ApiErrorBody | string | undefined
     if (typeof data === 'string' && data.trim()) return data.trim()
@@ -26,7 +34,7 @@ export const getApiErrorMessage = (error: unknown): string => {
   }
 
   if (error instanceof Error) return error.message
-  return 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+  return null
 }
 
 export const handleApiError = (error: unknown, defaultMessage?: string) => {

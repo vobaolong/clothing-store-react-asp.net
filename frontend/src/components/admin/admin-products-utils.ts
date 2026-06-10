@@ -33,7 +33,10 @@ export function buildAdminProductView(
     name: product.name,
     category: product.categoryName,
     description: product.description,
-    price: product.salePrice > 0 ? product.salePrice : product.price,
+    price:
+      product.salePrice != null && product.salePrice > 0
+        ? product.salePrice
+        : product.price,
     createdAt: product.createdAt,
     updatedAt: updatedAt ?? product.updatedAt ?? product.createdAt,
     imageUrl: getAdminProductThumbnail(product)

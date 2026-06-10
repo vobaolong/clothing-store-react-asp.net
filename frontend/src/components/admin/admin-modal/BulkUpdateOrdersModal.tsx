@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Modal, Select } from 'antd'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 
 interface BulkUpdateOrdersModalProps {
   open: boolean
@@ -29,7 +29,7 @@ export default function BulkUpdateOrdersModal({
         (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE
       ).map((opt) => ({
         ...opt,
-        label: getVietnameseStatusLabel(opt.value)
+        label: getVietnameseLabel(opt.value)
       })),
     []
   )

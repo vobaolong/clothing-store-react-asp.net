@@ -16,12 +16,23 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { getAdminOrderDetail, updateAdminOrderStatus } from '@/api/admin-api'
+import { OrderStatus, CouponDiscountType } from '@/enums'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import {
   SHIPPING_ADDRESS_LABELS,
   STATUS_COLORS
 } from '@/constants/labels.constant'
-import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
+import {
+  formatCurrency,
+  formatDate,
+  formatStructuredAddress
+} from '@/utils/format'
+import { createOrderStatusOptions } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
+import { toCapitalize } from '@/utils/table.lib'
+import { canUpdateToStatus } from '@/utils/order-status-transition'
+import { openBillPrintWindow } from '@/utils/bill-export'
+import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 
 export default function AdminOrderDetailPage() {
@@ -105,13 +116,11 @@ export default function AdminOrderDetailPage() {
         <div className="flex flex-wrap items-center gap-2">
           {detail && (
             <Tag color={STATUS_COLORS[detail.paymentStatus]}>
-              {getVietnameseStatusLabel(detail.paymentStatus)}
+              {getVietnameseLabel(detail.paymentStatus)}
             </Tag>
           )}
           <Select
-            value={getVietnameseStatusLabel(
-              selectedStatus ?? detail?.status ?? ''
-            )}
+            value={getVietnameseLabel(selectedStatus ?? detail?.status ?? '')}
             onChange={(value) => setSelectedStatus(value as OrderStatus)}
             disabled={
               detailQuery.isLoading ||
@@ -121,7 +130,7 @@ export default function AdminOrderDetailPage() {
             }
             options={createOrderStatusOptions().map((option) => ({
               ...option,
-              label: getVietnameseStatusLabel(option.value),
+              label: getVietnameseLabel(option.value),
               disabled:
                 detail == null ||
                 !canUpdateToStatus(detail.status, String(option.value))
@@ -324,7 +333,7 @@ export default function AdminOrderDetailPage() {
                         {formatDate(h.changedAt)} -{' '}
                       </span>
                       <span className="font-medium">
-                        {getVietnameseStatusLabel(h.status)}
+                        {getVietnameseLabel(h.status)}
                       </span>
                     </div>
                   ))}

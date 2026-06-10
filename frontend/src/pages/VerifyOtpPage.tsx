@@ -10,6 +10,7 @@ import toast from 'react-hot-toast'
 import { resendOtp, verifyOtp } from '@/api/auth-api'
 import { useOtp } from '@/hooks/useOtp'
 import OtpInput from '@/components/auth/OtpInput'
+import { OTP_LENGTH, OTP_EXPIRY_SECONDS } from '@/constants/otp.constant'
 
 const { Title, Paragraph, Text } = Typography
 
@@ -39,7 +40,7 @@ export default function VerifyOtpPage() {
     },
     onError: () => {
       toast.error('Mã OTP không đúng. Vui lòng thử lại.')
-      setOtp(Array(6).fill(''))
+      setOtp(Array(OTP_LENGTH).fill(''))
       inputRefs.current[0]?.focus()
     }
   })
@@ -48,8 +49,8 @@ export default function VerifyOtpPage() {
     mutationFn: resendOtp,
     onSuccess: () => {
       toast.success('OTP mới đã được gửi qua email!')
-      setOtp(Array(6).fill(''))
-      setExpiryLeft(300)
+      setOtp(Array(OTP_LENGTH).fill(''))
+      setExpiryLeft(OTP_EXPIRY_SECONDS)
       startDown()
       inputRefs.current[0]?.focus()
     },
@@ -58,7 +59,7 @@ export default function VerifyOtpPage() {
 
   const handleManualSubmit = () => {
     const code = otp.join('')
-    if (code.length < 6) {
+    if (code.length < OTP_LENGTH) {
       toast.error('Vui lòng nhập đủ 6 chữ số OTP.')
       return
     }

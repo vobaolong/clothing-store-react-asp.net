@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  OTP_LENGTH,
+  OTP_EXPIRY_SECONDS,
+  OTP_RESEND_COOLDOWN_SECONDS
+} from '@/constants/otp.constant'
 
-export function useOtp(expirySeconds = 300, resendSeconds = 60) {
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
+export function useOtp(
+  expirySeconds = OTP_EXPIRY_SECONDS,
+  resendSeconds = OTP_RESEND_COOLDOWN_SECONDS
+) {
+  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''))
   const [resendDown, setResendDown] = useState(0)
   const [expiryLeft, setExpiryLeft] = useState(expirySeconds)
   const inputRefs = useRef<Array<HTMLInputElement | null>>([])

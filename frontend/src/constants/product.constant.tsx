@@ -2,6 +2,17 @@ import type { ColumnsType } from 'antd/es/table'
 import type { SizeGuideItem } from '@/types/product.type'
 import { getProductSizes, getProductShoeSizes } from '@/utils/enum.utils'
 
+export const PRODUCTS_PAGE_SIZE = 12
+export const PRODUCTS_PRICE_MAX = 5_000_000
+export const PRODUCTS_PRICE_RANGE_DEFAULT: [number, number] = [
+  0,
+  PRODUCTS_PRICE_MAX
+]
+export const PRODUCTS_SIMILAR_LIMIT = 8
+export const NEW_BADGE_MAX_AGE_MS = 24 * 60 * 60 * 1000 * 30
+export const CART_NOTE_MAX_LENGTH = 2000
+export const FREE_SHIPPING_THRESHOLD = 499_000
+
 export const SIZE_GUIDE: SizeGuideItem[] = [
   {
     size: 'S',
@@ -102,8 +113,6 @@ export const DESCRIPTION_SPEC_LABELS = [
 
 export type DescriptionSpecLabel = (typeof DESCRIPTION_SPEC_LABELS)[number]
 
-export const DESCRIPTION_SPEC_VALUE_JOINER = '\n'
-
 export function parseDescriptionSpecStoredValue(raw: string): string[] {
   const t = raw.trim()
   if (!t) return []
@@ -121,7 +130,7 @@ export function serializeDescriptionSpecValues(selected: string[]): string {
   return selected
     .map((s) => s.trim())
     .filter(Boolean)
-    .join(DESCRIPTION_SPEC_VALUE_JOINER)
+    .join('\n')
 }
 
 export const DESCRIPTION_SPEC_OPTIONS: Record<

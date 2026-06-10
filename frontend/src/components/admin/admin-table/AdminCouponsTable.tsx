@@ -5,7 +5,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { CouponStatus } from '@/enums'
 import type { Coupon } from '@/types'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { formatCouponDiscount } from '@/utils/coupon-discount'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
@@ -65,7 +65,7 @@ export default function AdminCouponsTable({
         title: 'Loại',
         dataIndex: 'discountType',
         key: 'discountType',
-        render: (value: string) => getVietnameseStatusLabel(value)
+        render: (value: string) => getVietnameseLabel(value)
       },
       {
         title: 'Đơn tối thiểu',

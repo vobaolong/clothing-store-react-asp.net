@@ -35,12 +35,13 @@ export type AdminVariantsMatrixFieldProps = {
 }
 
 const variantKey = (color: string, size: string) => `${color}__${size}`
-let _uid = 0
-const nextUid = () => String(++_uid)
+// Replace module-level _uid with useId
+const nextUid = (prefix: string) =>
+  `${prefix}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 9)}`
 
 function urlsToUploadFiles(colorName: string, urls: string[]): UploadFile[] {
   return urls.map((url, index) => ({
-    uid: `preset-${colorName}-${nextUid()}`,
+    uid: nextUid(`preset-${colorName}`),
     name: `image-${index + 1}.jpg`,
     status: 'done' as const,
     url,
@@ -331,7 +332,7 @@ export default forwardRef<
     const url = (matrixData.urlDrafts[colorName] ?? '').trim()
     if (!url) return
     const newFile: UploadFile = {
-      uid: `url-${colorName}-${nextUid()}`,
+      uid: nextUid(`url-${colorName}`),
       name: 'URL',
       status: 'done',
       url,

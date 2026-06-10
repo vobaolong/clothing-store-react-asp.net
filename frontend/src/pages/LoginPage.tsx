@@ -63,16 +63,25 @@ export default function LoginPage() {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, type: 'email' }]}
+            rules={[
+              { required: true, message: 'Vui lòng nhập email' },
+              { type: 'email', message: 'Định dạng email không hợp lệ' }
+            ]}
           >
-            <Input placeholder="Email" prefix={<UserOutlined />} />
+            <Input
+              placeholder="Email"
+              prefix={<UserOutlined className="text-slate-500" />}
+              allowClear
+            />
           </Form.Item>
           <Form.Item
             label="Mật khẩu"
             name="password"
-            rules={[{ required: true, min: 6 }]}
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
           >
-            <Input.Password prefix={<LockOutlined />} />
+            <Input.Password
+              prefix={<LockOutlined className="text-slate-500" />}
+            />
           </Form.Item>
           <div className="flex justify-between items-center mb-4">
             <Form.Item

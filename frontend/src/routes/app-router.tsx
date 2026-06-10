@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { lazy, Suspense, type ReactNode } from 'react'
+import { lazy } from 'react'
 import AdminShell from '@/layouts/AdminShell'
 import AppShell from '@/layouts/AppShell'
 import ScrollToTop from '@/components/ScrollToTop'
-import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
+import { ProtectedRoute } from '@/routes/ProtectedRoute'
 
 const AboutPage = lazy(() => import('@/pages/AboutPage'))
 const AdminPage = lazy(() => import('@/pages/AdminPage'))
@@ -23,22 +23,6 @@ const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
 const VerifyOtpPage = lazy(() => import('@/pages/VerifyOtpPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
-function RouteSuspense({ children }: { children: ReactNode }) {
-  return <Suspense fallback={null}>{children}</Suspense>
-}
-
-function AdminOnly({ children }: { children: ReactNode }) {
-  const token = getAuthToken()
-  if (!token) return <Navigate to="/login" replace />
-  if (!isAdmin()) return <Navigate to="/" replace />
-  return children
-}
-
-function CustomerOnly({ children }: { children: ReactNode }) {
-  if (isAdmin()) return <Navigate to="/admin" replace />
-  return children
-}
-
 export function AppRouter() {
   return (
     <>
@@ -48,11 +32,9 @@ export function AppRouter() {
           <Route
             path="/admin/orders/:id"
             element={
-              <AdminOnly>
-                <RouteSuspense>
-                  <AdminOrderDetailPage />
-                </RouteSuspense>
-              </AdminOnly>
+              <ProtectedRoute requireAdmin>
+                <AdminOrderDetailPage />
+              </ProtectedRoute>
             }
           />
           <Route
@@ -62,169 +44,132 @@ export function AppRouter() {
           <Route
             path="/admin/:section"
             element={
-              <AdminOnly>
-                <RouteSuspense>
-                  <AdminPage />
-                </RouteSuspense>
-              </AdminOnly>
+              <ProtectedRoute requireAdmin>
+                <AdminPage />
+              </ProtectedRoute>
             }
           />
         </Route>
+
         <Route element={<AppShell />}>
           <Route
             path="/"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <HomePage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <HomePage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/products"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ProductsPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <ProductsPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/about"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <AboutPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <AboutPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/products/:slug"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ProductDetailPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <ProductDetailPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/cart"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <CartPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <CartPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/checkout"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <CheckoutPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <CheckoutPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/profile"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ProfilePage />
-                </RouteSuspense>
-              </CustomerOnly>
-            }
-          />
-          <Route
-            path="/profile/notifications"
-            element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ProfilePage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <ProfilePage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/orders/:id"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <OrderDetailPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <OrderDetailPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/payment-return"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <PaymentReturnPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <PaymentReturnPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/login"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <LoginPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <LoginPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/register"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <RegisterPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <RegisterPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/forgot-password"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ForgotPasswordPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <ForgotPasswordPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/reset-password"
             element={
-              <CustomerOnly>
-                <RouteSuspense>
-                  <ResetPasswordPage />
-                </RouteSuspense>
-              </CustomerOnly>
+              <ProtectedRoute blockAdmin>
+                <ResetPasswordPage />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/verify-otp"
             element={
-              <RouteSuspense>
+              <ProtectedRoute>
                 <VerifyOtpPage />
-              </RouteSuspense>
+              </ProtectedRoute>
             }
           />
           <Route
             path="*"
             element={
-              <RouteSuspense>
+              <ProtectedRoute>
                 <NotFoundPage />
-              </RouteSuspense>
+              </ProtectedRoute>
             }
           />
         </Route>

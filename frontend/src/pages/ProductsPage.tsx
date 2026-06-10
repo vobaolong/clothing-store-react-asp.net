@@ -17,9 +17,11 @@ import {
 import { productMatchesSearch } from '@/utils/product-search'
 import { compareSizes, normalizeSize } from '@/utils/size-utils'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import {
+  PRODUCTS_PAGE_SIZE,
+  PRODUCTS_PRICE_RANGE_DEFAULT
+} from '@/constants/product.constant.tsx'
 import { getEffectivePrice } from '@/utils/product-pricing'
-
-const pageSize = 12
 
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -38,7 +40,9 @@ export default function ProductsPage() {
   const selectedColors = searchParams.getAll('color')
   const searchKeyword = searchParams.get('search') ?? ''
   const sortBy = searchParams.get('sort') ?? 'price-asc'
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000000])
+  const [priceRange, setPriceRange] = useState<[number, number]>(
+    PRODUCTS_PRICE_RANGE_DEFAULT
+  )
   const [page, setPage] = useState(1)
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false)
 
@@ -167,7 +171,10 @@ export default function ProductsPage() {
     selectedColors
   ])
 
-  const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
+  const paged = filtered.slice(
+    (page - 1) * PRODUCTS_PAGE_SIZE,
+    page * PRODUCTS_PAGE_SIZE
+  )
   if (isLoading || categoriesLoading) return <p>Đang tải &hellip;</p>
 
   const updateFilters = (key: string, values: string[]) => {
@@ -180,7 +187,7 @@ export default function ProductsPage() {
 
   const clearAllFilters = () => {
     setSearchParams(new URLSearchParams())
-    setPriceRange([0, 5000000])
+    setPriceRange(PRODUCTS_PRICE_RANGE_DEFAULT)
     setPage(1)
   }
 
@@ -307,7 +314,7 @@ export default function ProductsPage() {
               <Pagination
                 current={page}
                 total={filtered.length}
-                pageSize={pageSize}
+                pageSize={PRODUCTS_PAGE_SIZE}
                 onChange={setPage}
               />
             </div>

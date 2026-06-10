@@ -22,7 +22,10 @@ import {
 import { placeOrder } from '@/api/orders-api'
 import { createVnPayUrl } from '@/api/payments-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { PENDING_VNPAY_CART_ITEMS_KEY } from '@/constants/order.constant'
+import { CART_NOTE_MAX_LENGTH } from '@/constants/product.constant.tsx'
 import { calculateFinalTotal } from '@/utils/checkout-utils'
+import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import { getAuthToken } from '@/state/auth/auth-session'
 import {
   removePurchasedCartItems,
@@ -45,7 +48,7 @@ const checkoutSchema = z.object({
   paymentMethod: z.enum(PaymentMethod),
   shippingAddressId: z.string().optional(),
   couponCode: z.string().optional(),
-  note: z.string().max(2000).optional()
+  note: z.string().max(CART_NOTE_MAX_LENGTH).optional()
 })
 
 export default function CheckoutPage() {
@@ -118,7 +121,7 @@ export default function CheckoutPage() {
     })
 
   const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + getCartLineEffectivePrice(item, nowMs) * item.quantity,
     0
   )
 
@@ -130,12 +133,13 @@ export default function CheckoutPage() {
     handleRemoveCoupon
   } = useCheckoutCouponState({ control, getValues, setValue, subtotal })
 
+  const prefilledName = prefillQuery.data?.fullName
   useEffect(() => {
-    if (prefillQuery.data) setValue('fullName', prefillQuery.data.fullName)
-  }, [prefillQuery.data, setValue])
+    if (prefilledName) setValue('fullName', prefilledName)
+  }, [prefilledName, setValue])
 
+  const defaultAddress = addressesQuery.data?.find((x) => x.isDefault)
   useEffect(() => {
-    const defaultAddress = addressesQuery.data?.find((x) => x.isDefault)
     if (defaultAddress) {
       reset({
         ...getValues(),
@@ -145,7 +149,8 @@ export default function CheckoutPage() {
         fullAddress: defaultAddress.fullAddress
       })
     }
-  }, [addressesQuery.data, getValues, reset])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultAddress])
 
   const appliedCouponDetails = availableCouponsQuery.data?.find(
     (c) => c.code.toUpperCase() === coupon.appliedCode
@@ -227,6 +232,15 @@ export default function CheckoutPage() {
       })
 
       if (values.paymentMethod === PaymentMethod.VNPAY) {
+        sessionStorage.setItem(
+          PENDING_VNPAY_CART_ITEMS_KEY,
+          JSON.stringify(
+            orderItems.map((item) => ({
+              id: item.productId,
+              productVariantId: item.productVariantId
+            }))
+          )
+        )
         const data = await createVnPayUrl(orderId)
         window.location.assign(data.paymentUrl)
         return

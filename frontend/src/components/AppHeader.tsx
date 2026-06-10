@@ -328,8 +328,8 @@ export default function AppHeader({
             <ThemeToggleButton />
             {!isAdminUser && (
               <Button
-                type="default"
-                className="h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900"
+                type="text"
+                className="flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 icon={
                   <Badge count={itemCount} size="small" offset={[3, -2]}>
                     <ShoppingOutlined />
@@ -348,14 +348,15 @@ export default function AppHeader({
                 destroyOnHidden
               >
                 <Button
-                  className="h-9 rounded-md! border-slate-300 px-3 text-slate-700 hover:border-slate-400 hover:text-slate-900"
+                  type="text"
+                  className="flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   icon={<UserOutlined />}
                 />
               </Dropdown>
             ) : (
               <Button
-                type="default"
-                className="h-9 rounded-md! border-slate-300 px-4 text-slate-700 hover:border-slate-400 hover:text-slate-900"
+                type="text"
+                className="flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 icon={<UserOutlined />}
                 onClick={() => navigate('/login')}
               />

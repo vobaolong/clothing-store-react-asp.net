@@ -56,8 +56,9 @@ export default function ForgotPasswordPage() {
             ]}
           >
             <Input
-              prefix={<MailOutlined className="text-slate-400" />}
+              prefix={<MailOutlined className="text-slate-500" />}
               placeholder="name@example.com"
+              allowClear
             />
           </Form.Item>
 
