@@ -2,6 +2,14 @@ import * as signalR from '@microsoft/signalr'
 import { getAuthToken } from '@/state/auth/auth-session'
 import type { RealtimeNotificationDto } from '@/types/notification.type'
 
+const debug: (...args: unknown[]) => void = import.meta.env.DEV
+  ? (...args: unknown[]) => console.log('[SignalR]', ...args)
+  : () => {}
+
+const debugError: (...args: unknown[]) => void = import.meta.env.DEV
+  ? (...args: unknown[]) => console.error('[SignalR]', ...args)
+  : () => {}
+
 export class SignalRService {
   private connection: signalR.HubConnection | null = null
   private reconnectAttempts = 0
@@ -54,9 +62,9 @@ export class SignalRService {
     try {
       await this.connection.start()
       this.reconnectAttempts = 0
-      console.log('[SignalR] Connected')
+      debug('Connected')
     } catch (error) {
-      console.error('[SignalR] Connection error:', error)
+      debugError('Connection error:', error)
       throw error
     }
   }
@@ -66,7 +74,7 @@ export class SignalRService {
       this.isManuallyDisconnected = true
       await this.connection.stop()
       this.connection = null
-      console.log('[SignalR] Disconnected')
+      debug('Disconnected')
     }
   }
 
@@ -74,25 +82,25 @@ export class SignalRService {
     if (!this.connection) return
 
     this.connection.onclose((error) => {
-      console.log('[SignalR] Connection closed:', error)
+      debug('Connection closed:', error)
       if (!this.isManuallyDisconnected) {
         void this.handleReconnection()
       }
     })
 
     this.connection.onreconnecting((error) => {
-      console.log('[SignalR] Reconnecting:', error)
+      debug('Reconnecting:', error)
     })
 
     this.connection.onreconnected((connectionId) => {
-      console.log('[SignalR] Reconnected:', connectionId)
+      debug('Reconnected:', connectionId)
       this.reconnectAttempts = 0
     })
   }
 
   private async handleReconnection(): Promise<void> {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('[SignalR] Max reconnection attempts reached')
+      debugError('Max reconnection attempts reached')
       return
     }
 
@@ -102,7 +110,7 @@ export class SignalRService {
       this.maxReconnectDelay
     )
 
-    console.log(
+    debug(
       `[SignalR] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`
     )
 

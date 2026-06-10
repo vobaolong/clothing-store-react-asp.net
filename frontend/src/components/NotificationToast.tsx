@@ -5,46 +5,9 @@ import {
   clearRealtimeNotifications,
   selectRealtimeNotifications
 } from '@/state/notification-slice'
-import { NotificationType } from '@/types/notification.type'
 import type { RealtimeNotificationDto } from '@/types/notification.type'
+import { getNotificationIcon, getNotificationLevel } from '@/utils/notification'
 import { isAdmin } from '@/state/auth/auth-session'
-
-const getIcon = (type: RealtimeNotificationDto['type']): string => {
-  switch (type) {
-    case NotificationType.OrderCreated:
-      return '🛍️'
-    case NotificationType.OrderConfirmed:
-      return '✅'
-    case NotificationType.OrderShipping:
-      return '🚚'
-    case NotificationType.OrderDelivered:
-      return '📦'
-    case NotificationType.OrderCancelled:
-      return '❌'
-    case NotificationType.PaymentReceived:
-      return '💳'
-    case NotificationType.Promotion:
-      return '🎉'
-    default:
-      return '🔔'
-  }
-}
-
-type AntdLevel = 'success' | 'info' | 'warning' | 'error'
-
-const getLevel = (type: RealtimeNotificationDto['type']): AntdLevel => {
-  switch (type) {
-    case NotificationType.OrderCancelled:
-      return 'error'
-    case NotificationType.OrderDelivered:
-      return 'success'
-    case NotificationType.OrderConfirmed:
-    case NotificationType.OrderShipping:
-      return 'info'
-    default:
-      return 'info'
-  }
-}
 
 export const NotificationToastManager = () => {
   const dispatch = useDispatch()
@@ -64,8 +27,8 @@ export const NotificationToastManager = () => {
     dispatch(clearRealtimeNotifications())
 
     snapshot.forEach((n: RealtimeNotificationDto) => {
-      const icon = getIcon(n.type)
-      const level = getLevel(n.type)
+      const icon = getNotificationIcon(n.type)
+      const level = getNotificationLevel(n.type)
 
       antdNotification[level]({
         message: `${icon} ${n.title}`,

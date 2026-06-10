@@ -5,10 +5,14 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getAuthToken } from '@/state/auth/auth-session'
 import { cancelMyOrder, getMyOrderDetail } from '@/api/orders-api'
-import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
+import {
+  formatCurrency,
+  formatDate,
+  formatStructuredAddress
+} from '@/utils/format'
 import { OrderStatus } from '@/enums'
 import { LeftOutlined } from '@ant-design/icons'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { createReview } from '@/api/reviews-api'
 import toast from 'react-hot-toast'
 import ReviewForm from '@/components/reviews/ReviewForm'
@@ -194,7 +198,7 @@ export default function OrderDetailPage() {
   ]
 
   return (
-    <div className="space-y-4! py-10">
+    <div className="space-y-4!">
       <div className="flex flex-wrap items-center gap-3">
         <Link
           to="/profile?tab=orders"
@@ -237,7 +241,7 @@ export default function OrderDetailPage() {
           </Descriptions.Item>
 
           <Descriptions.Item label="Trạng thái">
-            {getVietnameseStatusLabel(detail.status)}
+            {getVietnameseLabel(detail.status)}
           </Descriptions.Item>
 
           <Descriptions.Item label="Phương thức thanh toán">
@@ -245,7 +249,7 @@ export default function OrderDetailPage() {
           </Descriptions.Item>
 
           <Descriptions.Item label="Trạng thái thanh toán">
-            {getVietnameseStatusLabel(detail.paymentStatus)}
+            {getVietnameseLabel(detail.paymentStatus)}
           </Descriptions.Item>
 
           <Descriptions.Item label="Tên người nhận">

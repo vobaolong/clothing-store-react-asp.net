@@ -1,10 +1,5 @@
 import { useState } from 'react'
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useSearchParams
-} from 'react-router-dom'
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
 import { MenuOutlined } from '@ant-design/icons'
@@ -20,26 +15,31 @@ import { getAuthToken } from '@/state/auth/auth-session'
 
 type Section = 'profile' | 'addresses' | 'wishlist' | 'orders' | 'notifications'
 
+const PROFILE_SECTIONS: readonly Section[] = [
+  'profile',
+  'addresses',
+  'wishlist',
+  'orders',
+  'notifications'
+]
+
+function isProfileSection(value: string | null): value is Section {
+  return value != null && PROFILE_SECTIONS.includes(value as Section)
+}
+
+function profileSectionPath(section: Section): string {
+  return section === 'profile' ? '/profile' : `/profile?tab=${section}`
+}
+
 export default function ProfilePage() {
   const token = getAuthToken()
-  const location = useLocation()
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const [isMobileSectionDrawerOpen, setIsMobileSectionDrawerOpen] =
     useState(false)
 
-  const section: Section = (() => {
-    if (location.pathname === '/profile/notifications') return 'notifications'
-    const tab = searchParams.get('tab')
-    if (
-      tab === 'addresses' ||
-      tab === 'wishlist' ||
-      tab === 'orders' ||
-      tab === 'notifications'
-    )
-      return tab
-    return 'profile'
-  })()
+  const tab = searchParams.get('tab')
+  const section: Section = isProfileSection(tab) ? tab : 'profile'
 
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
   const { data: profile, isLoading } = useQuery({
@@ -50,22 +50,7 @@ export default function ProfilePage() {
 
   const handleSectionChange = (nextSection: Section) => {
     setIsMobileSectionDrawerOpen(false)
-
-    if (nextSection === 'notifications') {
-      navigate('/profile/notifications')
-      return
-    }
-
-    if (nextSection === 'profile') {
-      if (location.pathname === '/profile/notifications') {
-        navigate('/profile')
-        return
-      }
-      setSearchParams({})
-      return
-    }
-
-    setSearchParams({ tab: nextSection })
+    navigate(profileSectionPath(nextSection))
   }
 
   if (!token) return <Navigate to="/login" replace />

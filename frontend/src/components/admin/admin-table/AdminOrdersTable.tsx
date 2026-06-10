@@ -4,7 +4,7 @@ import type { TablePaginationConfig } from 'antd/es/table'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { OrderStatus } from '@/enums'
@@ -83,7 +83,7 @@ export default function AdminOrdersTable({
         align: 'center',
         render: (value: string) => (
           <Tag variant="outlined" color={STATUS_COLORS[value]}>
-            {getVietnameseStatusLabel(value)}
+            {getVietnameseLabel(value)}
           </Tag>
         )
       },
@@ -93,7 +93,7 @@ export default function AdminOrdersTable({
         align: 'center',
         render: (_, row) => (
           <Select
-            value={getVietnameseStatusLabel(row.status)}
+            value={getVietnameseLabel(row.status)}
             style={{ width: 140 }}
             disabled={
               row.status === OrderStatus.DELIVERED ||
@@ -101,7 +101,7 @@ export default function AdminOrdersTable({
             }
             options={ADMIN_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
               ...option,
-              label: getVietnameseStatusLabel(option.value),
+              label: getVietnameseLabel(option.value),
               disabled: !canUpdateToStatus(row.status, option.value)
             }))}
             onChange={(value) => onUpdateStatus(row, value)}

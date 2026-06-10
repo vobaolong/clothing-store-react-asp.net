@@ -39,9 +39,7 @@ export default function AdminPageSidebar({
               {brandTitle}
             </Typography.Title>
           </div>
-        ) : (
-          <div className="h-3 shrink-0" aria-hidden />
-        )}
+        ) : null}
         <div className="flex-1 min-h-0 overflow-y-auto bg-white! dark:bg-[#192037]!">
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>

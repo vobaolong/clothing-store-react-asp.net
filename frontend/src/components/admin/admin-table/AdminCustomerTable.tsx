@@ -4,7 +4,7 @@ import { LockOutlined, UnlockOutlined } from '@ant-design/icons'
 import type { TablePaginationConfig, ColumnsType } from 'antd/es/table'
 import type { Customer } from '@/types'
 import { formatDate } from '@/utils/format'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 
 interface AdminCustomerTableProps {
   dataSource: Customer[]
@@ -52,7 +52,7 @@ export default function AdminCustomerTable({
         align: 'center',
         render: (status: Customer['status']) => (
           <Tag color={status === 'active' ? 'green' : 'red'}>
-            {getVietnameseStatusLabel(status)}
+            {getVietnameseLabel(status)}
           </Tag>
         )
       },

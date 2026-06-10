@@ -1,9 +1,9 @@
-import React from 'react'
+import { createElement } from 'react'
 
 export const titleNode = (
   title: string,
   align: 'left' | 'center' | 'right' = 'left'
-) => React.createElement('div', { style: { textAlign: align } }, title)
+) => createElement('div', { style: { textAlign: align } }, title)
 
 export const toCapitalize = (value: string): string => {
   const trimmed = value.trim()

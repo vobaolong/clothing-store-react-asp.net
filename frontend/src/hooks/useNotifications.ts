@@ -9,6 +9,10 @@ import {
 } from '@/api/notifications-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import {
+  NOTIFICATIONS_STALE_TIME_MS,
+  NOTIFICATIONS_POLL_INTERVAL_MS
+} from '@/constants/timing.constant'
+import {
   markNotificationAsRead as markAsReadAction,
   markAllAsRead as markAllAsReadAction,
   setUnreadCount as setUnreadCountAction,
@@ -36,7 +40,7 @@ export const useNotifications = (params: GetNotificationsRequest = {}) => {
   } = useQuery<NotificationsResponse>({
     queryKey: QUERY_KEYS.notificationsList(params),
     queryFn: () => getNotifications(params),
-    staleTime: 30_000,
+    staleTime: NOTIFICATIONS_STALE_TIME_MS,
     refetchOnWindowFocus: false
   })
 
@@ -83,8 +87,8 @@ export const useUnreadCount = () => {
   const { data, isLoading, error } = useQuery<number>({
     queryKey: QUERY_KEYS.notificationsUnreadCount,
     queryFn: getUnreadCount,
-    refetchInterval: 60_000,
-    staleTime: 30_000
+    refetchInterval: NOTIFICATIONS_POLL_INTERVAL_MS,
+    staleTime: NOTIFICATIONS_STALE_TIME_MS
   })
 
   useEffect(() => {

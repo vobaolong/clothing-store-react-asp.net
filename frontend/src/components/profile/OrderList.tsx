@@ -22,7 +22,7 @@ import {
 import { getMyOrders } from '@/api/orders-api'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { ORDER_FILTER_STATUSES } from '@/options/order.options'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { STATUS_COLORS } from '@/constants/labels.constant'
 import type { MyOrder } from '@/types'
 
@@ -77,7 +77,7 @@ export default function OrderList() {
               <span className="truncate">
                 {status === ORDER_FILTER_ALL_VALUE
                   ? ORDER_FILTER_ALL_LABEL
-                  : getVietnameseStatusLabel(status)}
+                  : getVietnameseLabel(status)}
               </span>
               <Badge count={count} />
             </div>
@@ -124,7 +124,7 @@ export default function OrderList() {
         width: 120,
         render: (_, row) => (
           <Tag variant="outlined" color={STATUS_COLORS[row.paymentStatus]}>
-            {getVietnameseStatusLabel(row.paymentStatus)}
+            {getVietnameseLabel(row.paymentStatus)}
           </Tag>
         )
       },
@@ -134,7 +134,7 @@ export default function OrderList() {
         width: 120,
         render: (_, row) => (
           <Tag variant="outlined" color={STATUS_COLORS[row.status]}>
-            {getVietnameseStatusLabel(row.status)}
+            {getVietnameseLabel(row.status)}
           </Tag>
         )
       },

@@ -44,7 +44,7 @@ function PasswordStrengthChecklist({ password }: { password: string }) {
         return (
           <li
             key={rule.label}
-            className={`flex items-center gap-1.5 ${passed ? 'text-green-600' : 'text-slate-400'}`}
+            className={`flex items-center gap-1.5 ${passed ? 'text-green-600' : 'text-slate-500'}`}
           >
             {passed ? (
               <CheckOutlined className="text-green-500" />
@@ -115,7 +115,8 @@ export default function RegisterPage() {
           >
             <Input
               placeholder="Nguyễn Văn A"
-              prefix={<UserOutlined className="text-slate-400" />}
+              prefix={<UserOutlined className="text-slate-500" />}
+              allowClear
             />
           </Form.Item>
 
@@ -129,7 +130,8 @@ export default function RegisterPage() {
           >
             <Input
               placeholder="example@gmail.com"
-              prefix={<MailOutlined className="text-slate-400" />}
+              prefix={<MailOutlined className="text-slate-500" />}
+              allowClear
             />
           </Form.Item>
 
@@ -140,7 +142,8 @@ export default function RegisterPage() {
           >
             <Input
               placeholder="0901234567"
-              prefix={<PhoneOutlined className="text-slate-400" />}
+              prefix={<PhoneOutlined className="text-slate-500" />}
+              allowClear
             />
           </Form.Item>
 
@@ -162,7 +165,7 @@ export default function RegisterPage() {
           >
             <Input.Password
               placeholder="Tạo mật khẩu mạnh"
-              prefix={<LockOutlined className="text-slate-400" />}
+              prefix={<LockOutlined className="text-slate-500" />}
             />
           </Form.Item>
 
@@ -189,7 +192,7 @@ export default function RegisterPage() {
           >
             <Input.Password
               placeholder="Nhập lại mật khẩu"
-              prefix={<LockOutlined className="text-slate-400" />}
+              prefix={<LockOutlined className="text-slate-500" />}
             />
           </Form.Item>
 

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { adminRowMatches, adminSearchNeedle } from '@/utils/admin-list-filter'
 import type { AdminOrder, DateRangeType } from '@/types'
 
@@ -49,8 +49,8 @@ export function useFilteredOrders({
           o.userEmail,
           o.status,
           o.paymentStatus,
-          getVietnameseStatusLabel(o.status),
-          getVietnameseStatusLabel(o.paymentStatus),
+          getVietnameseLabel(o.status),
+          getVietnameseLabel(o.paymentStatus),
           String(o.totalAmount),
           String(o.itemCount ?? '')
         )

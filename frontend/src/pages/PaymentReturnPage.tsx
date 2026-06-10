@@ -8,12 +8,15 @@ import { Button } from 'antd'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useEffect, type ReactNode } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getMyOrderDetail } from '@/api/orders-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { PENDING_VNPAY_CART_ITEMS_KEY } from '@/constants/order.constant'
 import { handleVnPayReturn } from '@/api/payments-api'
-import { getVietnameseStatusLabel } from '@/utils/enum.utils'
+import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { formatCurrency } from '@/utils/format'
+import { removePurchasedCartItems } from '@/state/cart-slice'
 
 function IconSuccess() {
   return <CheckCircleOutlined style={{ fontSize: 28, color: '#3B6D11' }} />
@@ -57,7 +60,7 @@ function StatusBadge({ status }: { status: string }) {
     <span
       className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full uppercase tracking-wide ${badgeStyles[key]}`}
     >
-      {getVietnameseStatusLabel(status)}
+      {getVietnameseLabel(status)}
     </span>
   )
 }
@@ -230,6 +233,7 @@ export default function PaymentReturnPage() {
   const responseCode = params.get('vnp_ResponseCode') ?? ''
   const hasSecureHash = Boolean(params.get('vnp_SecureHash'))
   const queryClient = useQueryClient()
+  const dispatch = useDispatch()
 
   const query = useQuery({
     queryKey: QUERY_KEYS.vnpayReturn(txnRef, responseCode),
@@ -257,6 +261,24 @@ export default function PaymentReturnPage() {
       queryKey: QUERY_KEYS.myOrderDetail(query.data.orderId)
     })
   }, [query.data, queryClient])
+
+  useEffect(() => {
+    if (!isSuccessfulPayment(query.data, responseCode)) return
+
+    const raw = sessionStorage.getItem(PENDING_VNPAY_CART_ITEMS_KEY)
+    if (!raw) return
+
+    try {
+      const items = JSON.parse(raw) as Array<{
+        id: string
+        productVariantId: string
+      }>
+      dispatch(removePurchasedCartItems(items))
+      sessionStorage.removeItem(PENDING_VNPAY_CART_ITEMS_KEY)
+    } catch {
+      sessionStorage.removeItem(PENDING_VNPAY_CART_ITEMS_KEY)
+    }
+  }, [dispatch, query.data, responseCode])
 
   const missingParams = !txnRef || !responseCode || !hasSecureHash
   const errorMessage = getErrorMessage(query.error)

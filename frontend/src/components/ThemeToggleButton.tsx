@@ -3,14 +3,14 @@ import { Button } from 'antd'
 import { useTheme } from '@/hooks/useTheme'
 
 export default function ThemeToggleButton() {
-	const { isDark, toggleTheme } = useTheme()
+  const { isDark, toggleTheme } = useTheme()
 
-	return (
-		<Button
-			type="default"
-			className="mr-2! h-9 rounded-md! border-slate-300 px-3 text-slate-700 hover:border-slate-400 hover:text-slate-900"
-			icon={isDark ? <Sun size={16} /> : <Moon size={16} />}
-			onClick={toggleTheme}
-		/>
-	)
+  return (
+    <Button
+      type="text"
+      className="mr-2! flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      icon={isDark ? <Sun size={16} /> : <Moon size={16} />}
+      onClick={toggleTheme}
+    />
+  )
 }

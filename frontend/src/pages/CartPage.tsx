@@ -15,6 +15,7 @@ import CartQuantityControl from '@/components/CartQuantityControl'
 import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
+import { SHIPPING_FEE } from '@/utils/checkout-utils'
 
 export default function CartPage() {
   const dispatch = useDispatch()
@@ -24,7 +25,7 @@ export default function CartPage() {
     (sum, item) => sum + getCartLineEffectivePrice(item) * item.quantity,
     0
   )
-  const shippingFee = selectedItems.length > 0 ? 30000 : 0
+  const shippingFee = selectedItems.length > 0 ? SHIPPING_FEE : 0
   const grandTotal = total + shippingFee
   const allSelected = items.length > 0 && items.every((item) => item.isSelected)
 

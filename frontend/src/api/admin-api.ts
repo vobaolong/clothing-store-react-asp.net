@@ -138,7 +138,7 @@ export const getAdminCategories = async (): Promise<AdminCategory[]> =>
     image: item.image,
     description: item.description ?? '',
     parentId: item.parentId ?? null,
-    level: item.parentId ?? 0,
+    level: item.level ?? 0,
     gender: item.gender ?? CategoryGender.UNISEX,
     productType: item.productType ?? CategoryType.CLOTHING,
     isActive: item.isActive,

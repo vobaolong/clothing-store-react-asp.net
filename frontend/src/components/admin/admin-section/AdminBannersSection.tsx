@@ -25,15 +25,16 @@ export default function AdminBannersSection() {
 
   const [localBanners, setLocalBanners] = useState<AdminBanner[]>([])
   const [hasChanges, setHasChanges] = useState(false)
-  const [prevData, setPrevData] = useState<AdminBanner[] | undefined>(undefined)
+  const [prevBannersData, setPrevBannersData] = useState<
+    AdminBanner[] | undefined
+  >(undefined)
 
-  if (bannersQuery.data !== prevData) {
-    setPrevData(bannersQuery.data)
+  if (bannersQuery.data !== prevBannersData) {
+    setPrevBannersData(bannersQuery.data)
     setLocalBanners(bannersQuery.data ?? [])
     setHasChanges(false)
   }
 
-  // --- 3. Các Mutations xử lý API (TanStack Query) ---
   const { mutate: reorderBanners, isPending: isReordering } = useMutation({
     mutationFn: reorderAdminBanners,
     onSuccess: async () => {

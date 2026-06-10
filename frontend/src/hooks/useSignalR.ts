@@ -14,65 +14,79 @@ export const useSignalR = () => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const token = useSelector(selectAuthToken)
-  const isInitializedRef = useRef(false)
+  const isConnectedRef = useRef(false)
+  const handlersRegisteredRef = useRef(false)
+
+  // Stable callbacks via ref — identity never changes
+  const callbacksRef = useRef({
+    onNotification: (notification: RealtimeNotificationDto) => {
+      dispatch(addRealtimeNotification(notification))
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notifications
+      })
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.notificationsUnreadCount
+      })
+    },
+    onOrderUpdate: (raw: unknown) => {
+      const update = raw as OrderUpdateDto
+      if (!update?.orderId) return
+
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.myOrderDetail(update.orderId)
+      })
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.myOrders()
+      })
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.adminOrdersBase
+      })
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.adminOrderDetail(update.orderId)
+      })
+    }
+  })
 
   useEffect(() => {
     if (!token) {
-      if (isInitializedRef.current) {
+      if (isConnectedRef.current) {
         getSignalRService().stop()
-        isInitializedRef.current = false
+        isConnectedRef.current = false
       }
+      handlersRegisteredRef.current = false
       return
     }
 
-    if (isInitializedRef.current) return
+    if (isConnectedRef.current) return
+
+    const service = getSignalRService()
 
     const tryConnect = async () => {
-      const service = getSignalRService()
+      if (!handlersRegisteredRef.current) {
+        service.offNotification(callbacksRef.current.onNotification)
+        service.offOrderUpdate(callbacksRef.current.onOrderUpdate)
 
-      service.onNotification((notification: RealtimeNotificationDto) => {
-        dispatch(addRealtimeNotification(notification))
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.notifications
-        })
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.notificationsUnreadCount
-        })
-      })
-
-      service.onOrderUpdate((raw: unknown) => {
-        const update = raw as OrderUpdateDto
-        if (!update?.orderId) return
-
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.myOrderDetail(update.orderId)
-        })
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.myOrders()
-        })
-
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.adminOrdersBase
-        })
-        void queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.adminOrderDetail(update.orderId)
-        })
-      })
+        service.onNotification(callbacksRef.current.onNotification)
+        service.onOrderUpdate(callbacksRef.current.onOrderUpdate)
+        handlersRegisteredRef.current = true
+      }
 
       try {
         await service.start()
-        isInitializedRef.current = true
+        isConnectedRef.current = true
       } catch (error) {
-        console.error('[SignalR] Failed to start:', error)
+        if (import.meta.env.DEV) {
+          console.error('[SignalR] Failed to start:', error)
+        }
       }
     }
 
     void tryConnect()
 
     return () => {
-      if (isInitializedRef.current) {
+      if (isConnectedRef.current) {
         getSignalRService().stop()
-        isInitializedRef.current = false
+        isConnectedRef.current = false
       }
     }
   }, [dispatch, queryClient, token])
