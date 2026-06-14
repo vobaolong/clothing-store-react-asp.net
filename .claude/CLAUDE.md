@@ -68,3 +68,88 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+---
+
+## Project: Wearly — Clothing Store E-Commerce
+
+### Tech Stack
+
+**Frontend:** React 19, TypeScript 6, Vite, Ant Design 6, Tailwind CSS 4, Redux Toolkit, React Query (TanStack Query), Zustand, React Router v7, React Hook Form + Zod, Axios, SignalR, Tiptap
+
+**Backend:** .NET 10, Clean Architecture (4 layers: Domain, Application, Infrastructure, API), CQRS with MediatR, FluentValidation, AutoMapper, Entity Framework Core, PostgreSQL, JWT Bearer + HttpOnly refresh cookie, SignalR
+
+### Project Structure
+
+```
+├── backend/src/
+│   ├── ClothingStore.Domain/        # Entities, enums, domain events
+│   ├── ClothingStore.Application/   # CQRS commands/queries, handlers, validators
+│   ├── ClothingStore.Infrastructure/# EF Core DbContext, JWT, email, persistence
+│   └── ClothingStore.API/           # REST controllers, middleware, SignalR hubs
+├── frontend/src/
+│   ├── api/         # Axios-based API client functions
+│   ├── app/         # Store wiring, providers
+│   ├── components/  # Shared UI components (auth, product, checkout, admin, etc.)
+│   ├── constants/   # Enum maps, query keys, API endpoints
+│   ├── context/     # React context providers
+│   ├── data/        # Static data (measurement presets)
+│   ├── enums/       # TypeScript enums
+│   ├── hooks/       # Custom React hooks (useSignalR, useWishlist, etc.)
+│   ├── layouts/     # App shell, admin shell
+│   ├── routes/      # Route definitions
+│   ├── services/    # Axios interceptors, SignalR connection
+│   ├── state/       # Redux slices, auth session
+│   ├── types/       # TypeScript interfaces/types
+│   └── utils/       # Formatting, validation, helpers
+└── README.md        # Full documentation
+```
+
+### Architecture Rules
+
+**Backend:**
+
+- Controllers dispatch commands/queries via MediatR's `ISender` — NO business logic in controllers.
+- Handlers (Application layer) contain all business logic.
+- Pipelines: Logging → Validation → Transaction (commands only).
+- Queries use `AsNoTracking()` + `ProjectTo<>` for read optimization.
+- Domain events publish after successful state changes.
+- All API responses follow envelope: `{ success, data, message }`.
+- API base: `/api/v1`
+
+**Frontend:**
+
+- Server state → React Query. Global client state → Redux Toolkit. Local → useState/useReducer.
+- Axios interceptors handle JWT attachment + refresh token flow.
+- Feature-based component organization under `components/` (not `features/`).
+- SignalR connection established at app root with auto-reconnect.
+
+### Database & Auth
+
+- **Database:** PostgreSQL, EF Core, migrations in Infrastructure
+- **Auth:** JWT access token + HttpOnly refresh cookie
+
+### Commands
+
+**Backend:**
+
+- `dotnet build backend/src/ClothingStore.API` — Build
+- `dotnet test` — Run tests
+- `dotnet ef migrations add <Name>` — New migration (from `ClothingStore.API/`)
+- `dotnet ef database update` — Apply migrations
+- `dotnet run --project backend/src/ClothingStore.API` — Run API
+
+**Frontend:**
+
+- `pnpm dev` — Start dev server (from `frontend/`)
+- `pnpm build` — Production build
+- `pnpm lint` — ESLint
+- `pnpm type-check` — TypeScript type checking
+
+### Conventions
+
+- **Naming:** Components → PascalCase, files → kebab-case (frontend), C# → PascalCase
+- **API paths:** camelCase (e.g., `/api/v1/admin/products`, `/api/v1/auth/login`)
+- **Validation:** FluentValidation (backend), Zod schemas (frontend)
+- **Payments:** VNPay (redirect-based) + COD
+- **State management:** Redux Toolkit for global client state, React Query for server state, Zustand for lightweight local stores

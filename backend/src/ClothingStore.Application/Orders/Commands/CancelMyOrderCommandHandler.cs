@@ -46,6 +46,18 @@ public class CancelMyOrderCommandHandler(IApplicationDbContext context)
                 variant.Quantity += item.Quantity;
         }
 
+        if (order.CouponId.HasValue)
+        {
+            var coupon = await context.Coupons.FirstOrDefaultAsync(
+                c => c.Id == order.CouponId.Value,
+                cancellationToken
+            );
+            if (coupon != null && coupon.UsedCount > 0)
+            {
+                coupon.UsedCount -= 1;
+            }
+        }
+
         order.Status = OrderStatus.Cancelled;
         await context.OrderStatusHistories.AddAsync(
             new OrderStatusHistory

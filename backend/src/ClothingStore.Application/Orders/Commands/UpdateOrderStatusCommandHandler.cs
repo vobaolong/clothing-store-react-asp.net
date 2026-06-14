@@ -73,6 +73,18 @@ public class UpdateOrderStatusCommandHandler(
                 if (variant is not null)
                     variant.Quantity += item.Quantity;
             }
+
+            if (order.CouponId.HasValue)
+            {
+                var coupon = await context.Coupons.FirstOrDefaultAsync(
+                    c => c.Id == order.CouponId.Value,
+                    cancellationToken
+                );
+                if (coupon != null && coupon.UsedCount > 0)
+                {
+                    coupon.UsedCount -= 1;
+                }
+            }
         }
 
         order.ChangeStatus(request.Status);

@@ -55,6 +55,19 @@ public class BulkUpdateOrderStatusCommandHandler(
             .Products.Where(p => allItemProductIds.Contains(p.Id))
             .ToDictionaryAsync(p => p.Id, cancellationToken);
 
+        var allCouponIds = orders
+            .Where(o => o.CouponId.HasValue && o.Status != OrderStatus.Cancelled)
+            .Select(o => o.CouponId!.Value)
+            .Distinct()
+            .ToList();
+
+        var couponsMap =
+            allCouponIds.Count > 0
+                ? await context
+                    .Coupons.Where(c => allCouponIds.Contains(c.Id))
+                    .ToDictionaryAsync(c => c.Id, cancellationToken)
+                : new Dictionary<Guid, Coupon>();
+
         foreach (var order in orders)
         {
             bool justDelivered =
@@ -100,6 +113,15 @@ public class BulkUpdateOrderStatusCommandHandler(
                 {
                     if (variantsMap.TryGetValue(item.ProductVariantId, out var variant))
                         variant.Quantity += item.Quantity;
+                }
+
+                if (
+                    order.CouponId.HasValue
+                    && couponsMap.TryGetValue(order.CouponId.Value, out var coupon)
+                    && coupon.UsedCount > 0
+                )
+                {
+                    coupon.UsedCount -= 1;
                 }
             }
 
