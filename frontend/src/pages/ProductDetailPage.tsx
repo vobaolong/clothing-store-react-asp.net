@@ -1,7 +1,5 @@
-import type { ColumnType } from 'antd/es/table'
 import { useQuery } from '@tanstack/react-query'
 import {
-  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -13,13 +11,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
-import type {
-  Category,
-  DescriptionLayout,
-  Product,
-  ProductSelection
-} from '@/types/product.type'
-import { formatDescriptionSpecDisplayValue } from '@/constants/product.constant'
+import type { ProductSelection } from '@/types/product.type'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import ProductCard from '@/components/ProductCard'
@@ -29,6 +21,9 @@ import ProductPurchaseActions from '@/components/product/ProductPurchaseActions'
 import ProductVariantSelectors from '@/components/product/ProductVariantSelectors'
 import ProductTabs from '@/components/product/ProductTabs'
 import SizeGuideModal from '@/components/product/SizeGuideModal'
+import ProductDetailBreadcrumbs from '@/components/product/ProductDetailBreadcrumbs'
+import ProductFeatureIcons from '@/components/product/ProductFeatureIcons'
+import SimilarProducts from '@/components/product/SimilarProducts'
 import {
   getCategoryAncestorChain,
   toProductsCategorySearchUrl
@@ -38,134 +33,18 @@ import { getStatisticTimerFormatForSaleEnd } from '@/utils/countdown-statistic-f
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import { compareSizes, normalizeSize } from '@/utils/size-utils'
 import { toCapitalize } from '@/utils/table.lib'
-import { MeasurementProfile, CategoryType } from '@/enums'
 import {
-  getMeasurementPresetRows,
-  normalizeMeasurementGender,
-  type MeasurementPresetRow
-} from '@/constants/measurement-presets.constant'
+  parseDescriptionLayout,
+  resolveSizeGuideProfile,
+  buildSizeGuideColumns,
+  buildProductDetails,
+  buildSizeGuideTableData
+} from '@/utils/product-detail-utils'
 import ProductGallery from '@/components/product/ProductGallery'
 import ProductFixedBuyBar from '@/components/ProductFixedBuyBar'
 import { Button, Result } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
-
-const BOTTOMS_CATEGORY_PATTERN = /quần|váy|đầm|dress/i
-
-function parseDescriptionLayout(raw?: string | null): DescriptionLayout | null {
-  if (!raw?.trim()) return null
-  try {
-    return JSON.parse(raw) as DescriptionLayout
-  } catch {
-    return null
-  }
-}
-
-function resolveSizeGuideProfile(
-  product: Product | undefined,
-  category: Category | undefined
-): MeasurementProfile {
-  const categoryText = `${product?.categoryName ?? ''} ${category?.name ?? ''}`
-
-  if (category?.productType === CategoryType.SHOES) {
-    return MeasurementProfile.SHOES
-  }
-
-  if (
-    category?.productType === CategoryType.CLOTHING &&
-    BOTTOMS_CATEGORY_PATTERN.test(categoryText)
-  ) {
-    return MeasurementProfile.BOTTOMS
-  }
-
-  return MeasurementProfile.TOPS
-}
-
-function buildSizeGuideColumns(
-  profile: MeasurementProfile
-): ColumnType<MeasurementPresetRow>[] {
-  if (profile === MeasurementProfile.SHOES) {
-    return [
-      { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
-      {
-        title: 'Độ dài (cm)',
-        dataIndex: 'footLength',
-        key: 'footLength',
-        align: 'center'
-      }
-    ]
-  }
-
-  if (profile === MeasurementProfile.BOTTOMS) {
-    return [
-      { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
-      {
-        title: 'Chiều cao (cm)',
-        dataIndex: 'height',
-        key: 'height',
-        align: 'center'
-      },
-      {
-        title: 'Cân nặng (kg)',
-        dataIndex: 'weight',
-        key: 'weight',
-        align: 'center'
-      },
-      {
-        title: 'Vòng eo (cm)',
-        dataIndex: 'waist',
-        key: 'waist',
-        align: 'center'
-      }
-    ]
-  }
-
-  return [
-    { title: 'Size', dataIndex: 'size', key: 'size', align: 'center' },
-    {
-      title: 'Chiều cao (cm)',
-      dataIndex: 'height',
-      key: 'height',
-      align: 'center'
-    },
-    {
-      title: 'Cân nặng (kg)',
-      dataIndex: 'weight',
-      key: 'weight',
-      align: 'center'
-    },
-    {
-      title: 'Vòng ngực (cm)',
-      dataIndex: 'chest',
-      key: 'chest',
-      align: 'center'
-    }
-  ]
-}
-
-function buildProductDetails(
-  product: Product,
-  descriptionLayout: DescriptionLayout | null
-): Array<{ label: string; value: string }> {
-  if (!descriptionLayout?.specs?.length) {
-    return [
-      {
-        label: 'Mã sản phẩm',
-        value: product.productCode.toUpperCase()
-      }
-    ]
-  }
-
-  return [
-    {
-      label: 'Mã sản phẩm',
-      value: product.productCode.toUpperCase()
-    },
-    ...descriptionLayout.specs.map((spec) => ({
-      label: String(spec.label ?? ''),
-      value: formatDescriptionSpecDisplayValue(String(spec.value ?? ''))
-    }))
-  ]
-}
+import { FreeShipIcon } from '@/components/icons'
 
 export default function ProductDetailPage() {
   const { slug } = useParams()
@@ -401,21 +280,12 @@ export default function ProductDetailPage() {
   const sizeGuideProfile = resolveSizeGuideProfile(product, listCategory)
   const sizeGuideProfileForDisplay =
     descriptionLayout?.sizeGuide?.profile ?? sizeGuideProfile
-  const sizeGuideGenderForDisplay = normalizeMeasurementGender(
+  const sizeGuideColumns = buildSizeGuideColumns(sizeGuideProfileForDisplay)
+  const sizeGuideTableData = buildSizeGuideTableData(
+    descriptionLayout,
+    sizeGuideProfileForDisplay,
     descriptionLayout?.sizeGuide?.gender ?? listCategory?.gender
   )
-  const sizeGuideColumns = buildSizeGuideColumns(sizeGuideProfileForDisplay)
-  const sizeGuideRows = useMemo(() => {
-    const rows = descriptionLayout?.sizeGuide?.rows
-    return Array.isArray(rows) ? rows : []
-  }, [descriptionLayout?.sizeGuide?.rows])
-  const sizeGuideTableData =
-    sizeGuideRows.length > 0
-      ? sizeGuideRows
-      : getMeasurementPresetRows(
-          sizeGuideProfileForDisplay,
-          sizeGuideGenderForDisplay
-        )
 
   const productCategoryListHref = listCategory
     ? toProductsCategorySearchUrl(listCategory)
@@ -465,39 +335,12 @@ export default function ProductDetailPage() {
 
   return (
     <section>
-      <nav className="flex flex-wrap items-center gap-2 mb-8 text-xs font-medium text-stone-400">
-        <Link
-          to="/"
-          className="text-stone-400! hover:text-stone-600 hover:underline!"
-        >
-          Home
-        </Link>
-        {categoryBreadcrumbs.length > 0 ? (
-          categoryBreadcrumbs.map((item) => (
-            <Fragment key={item.id}>
-              <span className="text-stone-300">/</span>
-              <Link
-                to={toProductsCategorySearchUrl(item)}
-                className="text-stone-400! hover:text-stone-600 hover:underline!"
-              >
-                {item.name}
-              </Link>
-            </Fragment>
-          ))
-        ) : (
-          <>
-            <span className="text-stone-300">/</span>
-            <Link
-              to={productCategoryListHref}
-              className="text-stone-400! hover:text-stone-600 hover:underline!"
-            >
-              {product.category ?? product.categoryName}
-            </Link>
-          </>
-        )}
-        <span className="text-stone-300">/</span>
-        <span className="text-stone-600">{toCapitalize(product.name)}</span>
-      </nav>
+      <ProductDetailBreadcrumbs
+        categoryBreadcrumbs={categoryBreadcrumbs}
+        productCategoryListHref={productCategoryListHref}
+        categoryName={product.category ?? product.categoryName}
+        productName={toCapitalize(product.name)}
+      />
 
       <div className="grid gap-12 lg:grid-cols-2">
         <div className="space-y-4">
@@ -552,11 +395,7 @@ export default function ProductDetailPage() {
               </div>
             )}
             <div className="flex items-baseline gap-3">
-              <img
-                src="https://n7media.coolmate.me/uploads/2026/04/15/icon4.png"
-                alt="Freeship"
-                className="size-4"
-              />
+              <FreeShipIcon className="size-4 inline-block" />
               <small className="text-xs text-stone-400">
                 Freeship đơn trên 200K
               </small>
@@ -596,36 +435,7 @@ export default function ProductDetailPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 mt-4 rounded-lg bg-stone-200 dark:bg-stone-700">
-            {[
-              {
-                title: 'https://www.coolmate.me/icons/product/free-ship.svg',
-                sub: 'Free ship cho đơn từ 499k'
-              },
-              {
-                title: 'https://www.coolmate.me/icons/product/return-60.svg',
-                sub: '60 ngày đổi trả vì bất kỳ lý do gì'
-              },
-              {
-                title: 'https://www.coolmate.me/icons/product/phone.svg',
-                sub: 'Hotline 1900272737\nhỗ trợ từ 8h30 - 22h'
-              },
-              {
-                title: 'https://www.coolmate.me/icons/product/location.svg',
-                sub: 'Đến tận nơi nhận hàng trả,\nhoàn tiền 2-3 ngày (trừ T7, CN)'
-              }
-            ].map(({ title, sub }) => (
-              <div
-                key={title}
-                className="flex items-center gap-2 p-4 text-start"
-              >
-                <img src={title} alt={title} className="size-9" />
-                <p className="m-0! whitespace-pre-line text-xs text-stone-700 dark:text-stone-300">
-                  {sub}
-                </p>
-              </div>
-            ))}
-          </div>
+          <ProductFeatureIcons />
         </aside>
       </div>
 
@@ -635,26 +445,10 @@ export default function ProductDetailPage() {
         productName={product.name}
       />
 
-      {similarProducts.length > 0 ? (
-        <div className="mt-12">
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <h2 className="text-xl font-semibold tracking-tight text-stone-900 md:text-2xl">
-              Sản phẩm tương tự
-            </h2>
-            <Link
-              to={productCategoryListHref}
-              className="shrink-0 text-sm font-semibold text-[#8B2332] hover:underline"
-            >
-              Xem thêm trong danh mục
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-            {similarProducts.map((item) => (
-              <ProductCard key={item.id} mode="catalog" product={item} />
-            ))}
-          </div>
-        </div>
-      ) : null}
+      <SimilarProducts
+        products={similarProducts}
+        listHref={productCategoryListHref}
+      />
 
       <SizeGuideModal
         isOpen={isSizeGuideOpen}

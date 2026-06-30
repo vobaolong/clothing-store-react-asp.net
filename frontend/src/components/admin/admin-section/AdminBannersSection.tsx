@@ -23,25 +23,16 @@ export default function AdminBannersSection() {
     queryFn: getAdminBanners
   })
 
-  const [localBanners, setLocalBanners] = useState<AdminBanner[]>([])
-  const [hasChanges, setHasChanges] = useState(false)
-  const [prevBannersData, setPrevBannersData] = useState<
-    AdminBanner[] | undefined
-  >(undefined)
-
-  if (bannersQuery.data !== prevBannersData) {
-    setPrevBannersData(bannersQuery.data)
-    setLocalBanners(bannersQuery.data ?? [])
-    setHasChanges(false)
-  }
+  const [draftChanges, setDraftChanges] = useState<AdminBanner[] | null>(null)
+  const displayBanners = draftChanges ?? bannersQuery.data ?? []
+  const hasChanges = draftChanges !== null
 
   const { mutate: reorderBanners, isPending: isReordering } = useMutation({
     mutationFn: reorderAdminBanners,
     onSuccess: async () => {
       toast.success('Đã lưu thứ tự banner mới')
-      setHasChanges(false)
+      setDraftChanges(null)
       await refresh()
-      bannersQuery.refetch()
     },
     onError: () => toast.error('Lỗi khi cập nhật thứ tự banner')
   })
@@ -51,7 +42,6 @@ export default function AdminBannersSection() {
     onSuccess: async () => {
       toast.success('Banner đã được xóa')
       await refresh()
-      bannersQuery.refetch()
     },
     onError: () => toast.error('Xóa banner thất bại')
   })
@@ -67,23 +57,22 @@ export default function AdminBannersSection() {
     onSuccess: async () => {
       toast.success('Trạng thái kích hoạt đã được cập nhật')
       await refresh()
-      bannersQuery.refetch()
     },
     onError: () => toast.error('Cập nhật trạng thái thất bại')
   })
 
   const handleReorder = useCallback((newData: AdminBanner[]) => {
-    setLocalBanners(newData)
-    setHasChanges(true)
+    setDraftChanges(newData)
   }, [])
 
   const handleSaveOrder = useCallback(() => {
-    const payload = localBanners.map((b, index) => ({
+    if (!draftChanges) return
+    const payload = draftChanges.map((b, index) => ({
       id: b.id,
       displayOrder: index
     }))
     reorderBanners(payload)
-  }, [localBanners, reorderBanners])
+  }, [draftChanges, reorderBanners])
 
   const onCreate = useCallback(() => {
     editing.setBanner(null)
@@ -137,7 +126,7 @@ export default function AdminBannersSection() {
       />
       <AdminBannersTable
         loading={bannersQuery.isLoading}
-        data={localBanners}
+        data={displayBanners}
         onEdit={onEdit}
         onDelete={onDelete}
         onToggleActive={onToggleActive}

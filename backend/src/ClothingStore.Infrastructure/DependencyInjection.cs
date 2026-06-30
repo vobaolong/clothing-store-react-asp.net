@@ -26,7 +26,12 @@ public static class DependencyInjection
             configuration.GetSection("Email")
         );
         services.AddScoped<IEmailSender, MailKitEmailSender>();
-        services.AddScoped<IEmailTemplateBuilder, EmailTemplateBuilder>();
+        services.AddScoped<IEmailTemplateBuilder>(sp =>
+        {
+            var config = sp.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();
+            var baseUrl = config["Frontend:BaseUrl"] ?? "http://localhost:5173";
+            return new EmailTemplateBuilder(baseUrl);
+        });
         services.AddSingleton<IBackgroundEmailQueue, BackgroundEmailQueue>();
         services.AddHostedService<BackgroundEmailSenderService>();
         services.AddScoped<IEmailNotificationService, EmailNotificationService>();

@@ -4,6 +4,7 @@ using ClothingStore.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClothingStore.Application.Orders.Commands;
 
@@ -11,7 +12,8 @@ public class PlaceOrderCommandHandler(
     IApplicationDbContext context,
     IEmailTemplateBuilder emailTemplateBuilder,
     IEmailNotificationService emailNotificationService,
-    IMemoryCache memoryCache
+    IMemoryCache memoryCache,
+    IServiceScopeFactory scopeFactory
 ) : IRequestHandler<PlaceOrderCommand, Guid>
 {
     public async Task<Guid> Handle(PlaceOrderCommand request, CancellationToken cancellationToken)
@@ -178,10 +180,11 @@ public class PlaceOrderCommandHandler(
             order.MarkAsCreated();
 
             // Khi cache VNPAY hết hạn mà chưa thanh toán, cộng lại tồn kho
+            // Dùng scopeFactory tạo scope mới — tránh dùng scoped DbContext đã disposed
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
                 .RegisterPostEvictionCallback(
-                    (key, value, reason, state) =>
+                    (key, value, reason, _) =>
                     {
                         if (
                             reason != EvictionReason.Removed
@@ -189,29 +192,36 @@ public class PlaceOrderCommandHandler(
                             && evictedOrder.PaymentStatus != PaymentStatus.Paid
                         )
                         {
-                            var variantQuantities = evictedOrder
-                                .Items.GroupBy(i => i.ProductVariantId)
-                                .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
-
-                            var dbContext = (IApplicationDbContext)state!;
-                            var variantIds = variantQuantities.Keys.ToList();
-                            var variantsToRestore = dbContext
-                                .ProductVariants.Where(v => variantIds.Contains(v.Id))
-                                .ToList();
-
-                            foreach (var v in variantsToRestore)
+                            try
                             {
-                                if (variantQuantities.TryGetValue(v.Id, out var qty))
-                                    v.Quantity += qty;
-                            }
+                                var variantQuantities = evictedOrder
+                                    .Items.GroupBy(i => i.ProductVariantId)
+                                    .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
 
-                            dbContext
-                                .SaveChangesAsync(CancellationToken.None)
-                                .GetAwaiter()
-                                .GetResult();
+                                using var scope = scopeFactory.CreateScope();
+                                var db =
+                                    scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+                                var variantIds = variantQuantities.Keys.ToList();
+                                var variantsToRestore = db
+                                    .ProductVariants.Where(v => variantIds.Contains(v.Id))
+                                    .ToList();
+
+                                foreach (var v in variantsToRestore)
+                                {
+                                    if (variantQuantities.TryGetValue(v.Id, out var qty))
+                                        v.Quantity += qty;
+                                }
+
+                                db.SaveChangesAsync(CancellationToken.None)
+                                    .GetAwaiter()
+                                    .GetResult();
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[VNPay cache eviction] {ex}");
+                            }
                         }
-                    },
-                    context
+                    }
                 );
 
             memoryCache.Set($"vnpay_order_{order.Id}", order, cacheEntryOptions);

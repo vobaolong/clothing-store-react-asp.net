@@ -22,6 +22,7 @@ public class GetAvailableCouponsQueryHandler(IApplicationDbContext context)
                 c.Status == CouponStatus.Active
                 && c.ExpiresAt > now
                 && (!c.StartsAt.HasValue || c.StartsAt.Value <= now)
+                && c.UsedCount < c.MaxUsage
             )
             .OrderBy(c => c.MinOrderSubtotal)
             .ThenByDescending(c => c.DiscountAmount)

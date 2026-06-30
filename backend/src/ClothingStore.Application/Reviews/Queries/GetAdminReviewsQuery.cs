@@ -20,31 +20,40 @@ public class GetAdminReviewsQueryHandler(IApplicationDbContext context)
         var query = context
             .Reviews.AsNoTracking()
             .Include(r => r.User)
-            .Include(r => r.Product)
-                .ThenInclude(p => p!.Variants)
             .OrderByDescending(r => r.CreatedAt);
 
         var total = await query.CountAsync(ct);
-        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(ct);
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(r => new
+            {
+                Review = r,
+                FirstVariantImageUrl = context
+                    .ProductVariants.Where(v => v.ProductId == r.ProductId)
+                    .Select(v => v.ImageUrl)
+                    .FirstOrDefault(),
+            })
+            .ToListAsync(ct);
 
         var dtos = items
-            .Select(r => new AdminReviewDto(
-                r.Id,
-                r.ProductId,
-                r.Product?.Name ?? string.Empty,
-                r.Product?.Variants.FirstOrDefault()?.ImageUrl ?? string.Empty,
-                r.UserId,
-                r.User?.Email ?? string.Empty,
-                r.User?.FullName ?? string.Empty,
-                r.Rating,
-                r.Comment,
-                string.IsNullOrWhiteSpace(r.Tags)
+            .Select(x => new AdminReviewDto(
+                x.Review.Id,
+                x.Review.ProductId,
+                x.Review.Product?.Name ?? string.Empty,
+                x.FirstVariantImageUrl ?? string.Empty,
+                x.Review.UserId,
+                x.Review.User?.Email ?? string.Empty,
+                x.Review.User?.FullName ?? string.Empty,
+                x.Review.Rating,
+                x.Review.Comment,
+                string.IsNullOrWhiteSpace(x.Review.Tags)
                     ? Array.Empty<string>()
-                    : r.Tags.Split(
+                    : x.Review.Tags.Split(
                         ',',
                         StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries
                     ),
-                r.CreatedAt
+                x.Review.CreatedAt
             ))
             .ToList();
 

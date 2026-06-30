@@ -20,6 +20,9 @@ public class UploadsController(IImageStorageService imageStorageService) : BaseA
             return BadRequest("File is required.");
 
         var folder = string.IsNullOrWhiteSpace(request.Folder) ? "general" : request.Folder.Trim();
+        var allowed = new[] { "products", "banners", "avatars", "general", "reviews" };
+        if (!allowed.Contains(folder))
+            return BadRequest($"Invalid folder. Allowed: {string.Join(", ", allowed)}");
 
         var result = await imageStorageService.UploadImageAsync(request.File, folder, ct);
         var response = new UploadImageResponse(result.Url, result.PublicId);

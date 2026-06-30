@@ -4,6 +4,7 @@ import type { FormInstance, UploadFile } from 'antd'
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
   useImperativeHandle,
   forwardRef
@@ -241,9 +242,26 @@ export default forwardRef<
     })
   }, [matrixData, isAccessories])
 
+  // Only push to form when colors/sizes actually change, not every render
+  const lastVariantKey = useRef('')
+  const variantKeyStr = isAccessories
+    ? matrixData.colors
+        .map(
+          (c) => `${c.name}:${matrixData.quantities[variantKey(c.name, '')]}`
+        )
+        .join('|')
+    : matrixData.colors
+        .map(
+          (c) =>
+            `${c.name}:${matrixData.sizes.map((s) => `${s}=${matrixData.quantities[variantKey(c.name, s)]}`).join(',')}`
+        )
+        .join('|')
   useEffect(() => {
-    form.setFieldsValue({ variants: normalizeVariants(matrixVariants) })
-  }, [form, matrixVariants])
+    if (variantKeyStr !== lastVariantKey.current) {
+      lastVariantKey.current = variantKeyStr
+      form.setFieldsValue({ variants: normalizeVariants(matrixVariants) })
+    }
+  }, [form, matrixVariants, variantKeyStr, isAccessories])
 
   const addColor = () => {
     const name = formInputs.newColorName.trim()
@@ -316,6 +334,16 @@ export default forwardRef<
   }
 
   const handleUploadChange = (colorName: string, fileList: UploadFile[]) => {
+    const oldFiles = matrixData.galleryFiles[colorName] ?? []
+    // Revoke removed blob URLs
+    for (const f of oldFiles) {
+      if (
+        f.thumbUrl?.startsWith('blob:') &&
+        !fileList.some((x) => x.uid === f.uid)
+      ) {
+        URL.revokeObjectURL(f.thumbUrl)
+      }
+    }
     const withPreviews = fileList.map((f) => {
       if (f.originFileObj && !f.thumbUrl) {
         return { ...f, thumbUrl: URL.createObjectURL(f.originFileObj) }

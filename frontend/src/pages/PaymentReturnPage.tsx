@@ -12,11 +12,11 @@ import { useDispatch } from 'react-redux'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getMyOrderDetail } from '@/api/orders-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
-import { PENDING_VNPAY_CART_ITEMS_KEY } from '@/constants/order.constant'
 import { handleVnPayReturn } from '@/api/payments-api'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { formatCurrency } from '@/utils/format'
 import { removePurchasedCartItems } from '@/state/cart-slice'
+import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
 
 function IconSuccess() {
   return <CheckCircleOutlined style={{ fontSize: 28, color: '#3B6D11' }} />
@@ -265,7 +265,7 @@ export default function PaymentReturnPage() {
   useEffect(() => {
     if (!isSuccessfulPayment(query.data, responseCode)) return
 
-    const raw = sessionStorage.getItem(PENDING_VNPAY_CART_ITEMS_KEY)
+    const raw = sessionStorage.getItem(STORAGE_KEYS.pendingVnPayCartItems)
     if (!raw) return
 
     try {
@@ -274,9 +274,9 @@ export default function PaymentReturnPage() {
         productVariantId: string
       }>
       dispatch(removePurchasedCartItems(items))
-      sessionStorage.removeItem(PENDING_VNPAY_CART_ITEMS_KEY)
+      sessionStorage.removeItem(STORAGE_KEYS.pendingVnPayCartItems)
     } catch {
-      sessionStorage.removeItem(PENDING_VNPAY_CART_ITEMS_KEY)
+      sessionStorage.removeItem(STORAGE_KEYS.pendingVnPayCartItems)
     }
   }, [dispatch, query.data, responseCode])
 
@@ -301,9 +301,7 @@ export default function PaymentReturnPage() {
             {config.icon}
           </div>
 
-          <h1 className="mb-2 text-2xl font-normal tracking-tight leading-tight text-gray-900">
-            {config.title}
-          </h1>
+          <h1 className="mb-2 text-2xl">{config.title}</h1>
           <p className="text-sm font-light leading-relaxed text-gray-700">
             {config.subtitle}
           </p>

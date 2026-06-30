@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using ClothingStore.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,7 @@ public class ResendRegisterOtpCommandHandler(
         if (user.IsEmailVerified)
             throw new InvalidOperationException("User is already verified.");
 
-        var random = new Random();
-        var otpCode = random.Next(100000, 999999).ToString();
+        var otpCode = RandomNumberGenerator.GetInt32(100000, 999999).ToString();
         var otpHash = passwordHasher.Hash(otpCode);
 
         user.EmailVerificationOtpHash = otpHash;

@@ -363,6 +363,8 @@ public class ApplicationDbContext(
 
     private async Task DispatchEventsAsync(List<INotification> domainEvents)
     {
+        if (publisher is null)
+            return;
         foreach (var domainEvent in domainEvents)
         {
             await publisher.Publish(domainEvent);

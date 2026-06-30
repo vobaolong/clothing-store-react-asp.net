@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
 import type { CartItem } from '@/types'
 import { normalizeSize } from '@/utils/size-utils'
 
@@ -52,7 +53,7 @@ export function saveCartItemsToStorage(items: CartItem[]) {
     .filter((item): item is CartItem => item !== null)
     .map((item) => compactCartItem(item))
   try {
-    localStorage.setItem('cart_items', JSON.stringify(compact))
+    localStorage.setItem(STORAGE_KEYS.cartItems, JSON.stringify(compact))
   } catch {
     try {
       const minimal = compact.map((item) => ({
@@ -74,10 +75,10 @@ export function saveCartItemsToStorage(items: CartItem[]) {
               : undefined
         }))
       }))
-      localStorage.setItem('cart_items', JSON.stringify(minimal))
+      localStorage.setItem(STORAGE_KEYS.cartItems, JSON.stringify(minimal))
     } catch {
       try {
-        localStorage.removeItem('cart_items')
+        localStorage.removeItem(STORAGE_KEYS.cartItems)
       } catch {
         /* quota / private mode */
       }
@@ -87,7 +88,7 @@ export function saveCartItemsToStorage(items: CartItem[]) {
 
 export function loadCartItemsFromStorage(): CartItem[] {
   try {
-    const raw = localStorage.getItem('cart_items')
+    const raw = localStorage.getItem(STORAGE_KEYS.cartItems)
     if (!raw) return []
     const data = JSON.parse(raw) as unknown
     if (!Array.isArray(data)) return []

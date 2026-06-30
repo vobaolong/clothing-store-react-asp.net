@@ -172,7 +172,7 @@ let _instance: SignalRService | null = null
 
 export const getSignalRService = (): SignalRService => {
   if (!_instance) {
-    const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5230'
+    const baseUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5230/api').replace(/\/api$/, '')
     _instance = new SignalRService(baseUrl)
   }
   return _instance

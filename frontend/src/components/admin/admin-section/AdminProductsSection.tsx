@@ -9,6 +9,9 @@ import ProductDrawer from '@/components/admin/ProductDrawer'
 import AdminProductImportModal from '@/components/admin/admin-modal/AdminProductImportModal'
 import AdminProductsSelectionActions from '@/components/admin/admin-selection-action/AdminProductsSelectionActions'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
+import { getCategories } from '@/api/products-api'
+import { QUERY_KEYS } from '@/constants/query-keys.constant'
+import { useQuery } from '@tanstack/react-query'
 
 export default function AdminProductsSection() {
   const { filters: adminFilters, refresh, editing, modals, editor } = useAdmin()
@@ -45,7 +48,11 @@ export default function AdminProductsSection() {
   const isTrash = listMode === 'deleted'
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
-  const categoryTreeData = buildCategoryTreeSelectData([])
+  const categoriesQuery = useQuery({
+    queryKey: QUERY_KEYS.categories,
+    queryFn: getCategories
+  })
+  const categoryTreeData = buildCategoryTreeSelectData(categoriesQuery.data ?? [])
 
   return (
     <div className="space-y-3!">

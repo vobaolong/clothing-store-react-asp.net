@@ -47,7 +47,6 @@ export default function AdminCouponsSection() {
     onSuccess: async () => {
       toast.success('Đã lưu trữ voucher')
       await refresh()
-      couponsQuery.refetch()
     }
   })
 
@@ -57,7 +56,6 @@ export default function AdminCouponsSection() {
     onSuccess: async () => {
       toast.success('Đã cập nhật trạng thái')
       await refresh()
-      couponsQuery.refetch()
     }
   })
 

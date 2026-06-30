@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
+import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
 import { ThemeContext } from '@/context/theme-context'
 import type { Theme } from '@/context/theme-context'
 
-const STORAGE_KEY = 'wearly-theme'
+const STORAGE_KEY = STORAGE_KEYS.theme
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'light'

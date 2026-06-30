@@ -3,10 +3,10 @@ using ClothingStore.Domain.Entities;
 
 namespace ClothingStore.Infrastructure.Security;
 
-public class EmailTemplateBuilder : IEmailTemplateBuilder
+public class EmailTemplateBuilder(string clientBaseUrl) : IEmailTemplateBuilder
 {
     private readonly string _appName = "Wearly Store";
-    private readonly string _clientBaseUrl = "http://localhost:5173";
+    private readonly string _clientBaseUrl = clientBaseUrl;
     private readonly string _primaryColor = "#0f172a";
     private readonly string _buttonColor = "#0ea5e9";
 

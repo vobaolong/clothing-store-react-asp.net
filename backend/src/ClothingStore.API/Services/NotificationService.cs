@@ -23,22 +23,15 @@ public class NotificationService(
         CancellationToken cancellationToken = default
     )
     {
-        try
-        {
-            var notification = BuildNotification(userId, title, message, type, data);
-            await PersistAsync(notification, cancellationToken);
+        var notification = BuildNotification(userId, title, message, type, data);
+        await PersistAsync(notification, cancellationToken);
 
-            var connections = await connectionManager.GetUserConnectionsAsync(userId);
-            if (connections.Count > 0)
-            {
-                await hubContext
-                    .Clients.Clients(connections)
-                    .ReceiveNotification(ToDto(notification, data));
-            }
-        }
-        catch
+        var connections = await connectionManager.GetUserConnectionsAsync(userId);
+        if (connections.Count > 0)
         {
-            throw;
+            await hubContext
+                .Clients.Clients(connections)
+                .ReceiveNotification(ToDto(notification, data));
         }
     }
 
@@ -50,35 +43,26 @@ public class NotificationService(
         CancellationToken cancellationToken = default
     )
     {
-        try
+        List<Guid> adminIds;
+        await using (var scope = scopeFactory.CreateAsyncScope())
         {
-            List<Guid> adminIds;
-            await using (var scope = scopeFactory.CreateAsyncScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
-                adminIds = await db
-                    .Users.Where(u => u.IsAdmin)
-                    .Select(u => u.Id)
-                    .ToListAsync(cancellationToken);
-            }
-
-            if (adminIds.Count == 0)
-                return;
-
-            var notifications = adminIds
-                .Select(id => BuildNotification(id, title, message, type, data))
-                .ToList();
-
-            await PersistManyAsync(notifications, cancellationToken);
-
-            await hubContext
-                .Clients.Group("Admins")
-                .ReceiveNotification(ToDto(notifications[0], data));
+            var db = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+            adminIds = await db
+                .Users.Where(u => u.IsAdmin)
+                .Select(u => u.Id)
+                .ToListAsync(cancellationToken);
         }
-        catch
-        {
-            throw;
-        }
+
+        if (adminIds.Count == 0)
+            return;
+
+        var notifications = adminIds
+            .Select(id => BuildNotification(id, title, message, type, data))
+            .ToList();
+
+        await PersistManyAsync(notifications, cancellationToken);
+
+        await hubContext.Clients.Group("Admins").ReceiveNotification(ToDto(notifications[0], data));
     }
 
     public async Task SaveNotificationAsync(

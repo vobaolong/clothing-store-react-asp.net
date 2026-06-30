@@ -13,6 +13,15 @@ public sealed class CloudinaryImageStorageService(
 {
     private readonly CloudinaryOptions _options = options.Value;
     private readonly IImageProcessingService _imageProcessingService = imageProcessingService;
+    private readonly Cloudinary _cloudinary = InitCloudinary(options.Value);
+
+    private static Cloudinary InitCloudinary(CloudinaryOptions opts)
+    {
+        var account = new Account(opts.CloudName, opts.ApiKey, opts.ApiSecret);
+        var cloudinary = new Cloudinary(account);
+        cloudinary.Api.Secure = true;
+        return cloudinary;
+    }
 
     public async Task<ImageUploadResult> UploadImageAsync(
         IFormFile file,
@@ -49,10 +58,6 @@ public sealed class CloudinaryImageStorageService(
             cancellationToken: cancellationToken
         );
 
-        var account = new Account(_options.CloudName, _options.ApiKey, _options.ApiSecret);
-        var cloudinary = new Cloudinary(account);
-        cloudinary.Api.Secure = true;
-
         var uploadParams = new ImageUploadParams
         {
             File = new FileDescription(
@@ -65,7 +70,7 @@ public sealed class CloudinaryImageStorageService(
             Overwrite = false,
         };
 
-        var result = await cloudinary.UploadAsync(uploadParams, cancellationToken);
+        var result = await _cloudinary.UploadAsync(uploadParams, cancellationToken);
         if (result.Error is not null)
         {
             throw new InvalidOperationException(

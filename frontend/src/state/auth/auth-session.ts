@@ -1,6 +1,7 @@
+import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
 import type { JwtPayload } from '@/types'
 
-const TOKEN_KEY = 'authToken'
+const TOKEN_KEY = STORAGE_KEYS.authToken
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY)

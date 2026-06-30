@@ -1,13 +1,15 @@
 using ClothingStore.API.DTOs.Banners;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.API.Controllers;
 
-public class BannersController(IApplicationDbContext context) : BaseApiController
+public class BannersController(IApplicationDbContext context)
+    : BaseApiController
 {
     [HttpGet("api/banners/active")]
     [AllowAnonymous]

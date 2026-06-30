@@ -1,13 +1,15 @@
 using ClothingStore.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ClothingStore.Application.Auth.Commands;
 
 public class ForgotPasswordCommandHandler(
     IApplicationDbContext context,
     IEmailTemplateBuilder emailTemplateBuilder,
-    IEmailNotificationService emailNotificationService
+    IEmailNotificationService emailNotificationService,
+    IConfiguration configuration
 ) : IRequestHandler<ForgotPasswordCommand>
 {
     public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
@@ -28,7 +30,8 @@ public class ForgotPasswordCommandHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        var resetLink = $"http://localhost:5173/reset-password?token={token}&email={request.Email}";
+        var frontendUrl = configuration["Frontend:BaseUrl"] ?? "http://localhost:5173";
+        var resetLink = $"{frontendUrl}/reset-password?token={token}&email={request.Email}";
         var emailBody = emailTemplateBuilder.BuildResetPasswordEmail(user, resetLink);
 
         await emailNotificationService.SendSafeAsync(

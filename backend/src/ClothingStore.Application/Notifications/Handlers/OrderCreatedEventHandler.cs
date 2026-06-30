@@ -48,6 +48,9 @@ public class OrderCreatedEventHandler(
                 cancellationToken
             );
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[OrderCreatedEventHandler] {ex}");
+        }
     }
 }

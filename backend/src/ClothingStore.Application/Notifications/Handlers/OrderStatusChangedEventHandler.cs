@@ -42,7 +42,10 @@ public class OrderStatusChangedEventHandler(INotificationService notificationSer
                 cancellationToken
             );
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[OrderStatusChangedEventHandler] {ex}");
+        }
     }
 
     private static (string title, string message, NotificationType type) GetCustomerContent(
