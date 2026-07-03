@@ -4,9 +4,9 @@ import {
   type PayloadAction
 } from '@reduxjs/toolkit'
 import toast from 'react-hot-toast'
-
 import type { RootState } from '@/app/store'
 import type { CartState, Product } from '@/types'
+import { i18n } from '@/i18n'
 
 type AddToCartPayload = {
   product: Product
@@ -74,7 +74,7 @@ const cartSlice = createSlice({
 
       const stock = Math.max(0, selectedVariant.quantity)
       if (stock === 0) {
-        toast.error('Sản phẩm đã hết hàng')
+        toast.error(i18n.t('product.outOfStock'))
         return
       }
 
@@ -91,11 +91,11 @@ const cartSlice = createSlice({
 
       if (existingItem) {
         if (nextQuantity === existingItem.quantity) {
-          toast.error('Số lượng trong giỏ đã đạt mức tồn kho tối đa')
+          toast.error(i18n.t('cart.maxStockReached'))
           return
         }
         existingItem.quantity = nextQuantity
-        toast.success('Cập nhật số lượng trong giỏ hàng')
+        toast.success(i18n.t('cart.updateCartQuantity'))
       } else {
         state.items.push({
           ...product,
@@ -106,7 +106,7 @@ const cartSlice = createSlice({
           isSelected: true,
           quantity: nextQuantity
         })
-        toast.success('Đã thêm vào giỏ hàng')
+        toast.success(i18n.t('cart.productAddedToCart'))
       }
     },
     updateQuantity: (state, action: PayloadAction<UpdateQuantityPayload>) => {
@@ -131,7 +131,7 @@ const cartSlice = createSlice({
         (item) =>
           !(item.id === productId && item.selectedVariant.id === variantId)
       )
-      toast.success('Đã xóa khỏi giỏ hàng')
+      toast.success(i18n.t('product.productRemoved'))
     },
     toggleSelectAllCartItems: (state, action: PayloadAction<boolean>) => {
       state.items.forEach((item) => {

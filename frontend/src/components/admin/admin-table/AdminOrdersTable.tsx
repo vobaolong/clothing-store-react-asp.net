@@ -8,7 +8,7 @@ import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { OrderStatus } from '@/enums'
-import { STATUS_COLORS } from '@/constants/labels.constant'
+import { ORDER_STATUS_COLORS } from '@/constants/order-status.constant'
 import type { AdminOrder } from '@/types'
 
 interface AdminOrdersTableProps {
@@ -82,7 +82,7 @@ export default function AdminOrdersTable({
         key: 'paymentStatus',
         align: 'center',
         render: (value: string) => (
-          <Tag variant="outlined" color={STATUS_COLORS[value]}>
+          <Tag variant="outlined" color={ORDER_STATUS_COLORS[value]}>
             {getVietnameseLabel(value)}
           </Tag>
         )

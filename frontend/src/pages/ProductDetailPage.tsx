@@ -1,20 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
+import { lp } from '@/utils/language-path'
 import type { ProductSelection } from '@/types/product.type'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import CartQuantityControl from '@/components/CartQuantityControl'
-import ProductCard from '@/components/ProductCard'
 import ProductDetailsTable from '@/components/product/ProductDetailsTable'
 import ProductSaleCountdown from '@/components/product/ProductSaleCountdown'
 import ProductPurchaseActions from '@/components/product/ProductPurchaseActions'
@@ -47,6 +42,7 @@ import { ShoppingOutlined } from '@ant-design/icons'
 import { FreeShipIcon } from '@/components/icons'
 
 export default function ProductDetailPage() {
+  const { t } = useTranslation()
   const { slug } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -262,7 +258,7 @@ export default function ProductDetailPage() {
         quantity: selection.quantity
       })
     )
-    navigate('/checkout')
+    navigate(lp('/checkout'))
   }, [
     dispatch,
     isOutOfStock,
@@ -299,7 +295,7 @@ export default function ProductDetailPage() {
     return (
       <div className="flex items-center justify-center min-h-80">
         <p className="text-sm uppercase tracking-[0.2em] text-stone-400">
-          Loading…
+          {t('common.loading')}
         </p>
       </div>
     )
@@ -312,19 +308,18 @@ export default function ProductDetailPage() {
           status="404"
           title={
             <span className="text-xl font-medium text-stone-800">
-              Sản phẩm không tồn tại
+              {t('product.notFound')}
             </span>
           }
           subTitle={
             <p className="max-w-md mx-auto mt-1 text-sm leading-relaxed text-stone-500">
-              Có vẻ như liên kết đã bị hỏng, sản phẩm đã ngừng kinh doanh hoặc
-              danh mục vừa được cập nhật lại.
+              {t('product.notFoundDesc')}
             </p>
           }
           extra={
-            <Link to="/products">
+            <Link to={lp('/products')}>
               <Button type="primary" size="large" icon={<ShoppingOutlined />}>
-                Tiếp tục mua sắm
+                {t('product.continueShopping')}
               </Button>
             </Link>
           }
@@ -360,7 +355,7 @@ export default function ProductDetailPage() {
             </h1>
             {selectedVariant?.sku ? (
               <p className="text-sm text-stone-500 dark:text-stone-400">
-                SKU: {selectedVariant.sku}
+                {t('product.sku')}: {selectedVariant.sku}
               </p>
             ) : null}
           </div>
@@ -394,10 +389,10 @@ export default function ProductDetailPage() {
                 ) : null}
               </div>
             )}
-            <div className="flex items-baseline gap-3">
+            <div className="flex items-center gap-3">
               <FreeShipIcon className="size-4 inline-block" />
               <small className="text-xs text-stone-400">
-                Freeship đơn trên 200K
+                {t('product.freeShippingTag')}
               </small>
             </div>
           </div>
@@ -422,7 +417,7 @@ export default function ProductDetailPage() {
               }
             />
             <p className="text-[11px] text-stone-400">
-              {remainingStock} sản phẩm có sẵn
+              {t('product.inStockCount', { count: remainingStock })}
             </p>
           </div>
 

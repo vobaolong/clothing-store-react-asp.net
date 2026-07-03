@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons'
 import type { ComponentType } from 'react'
 import { Button } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 type ContactItem = {
   label: string
@@ -118,24 +119,24 @@ const contactAddresses: ContactAddress[] = [
 ]
 
 export default function AppFooter() {
+  const { t } = useTranslation()
+
   return (
     <footer id="footer" className="text-white bg-black/90 px-4! md:px-8!">
       <div className="py-8 mx-auto w-full max-w-7xl">
         <div className="flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row">
           <div className="max-w-xl space-y-6">
             <h2 className="font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl">
-              Wearly lắng nghe bạn!
+              {t('footer.newsletterTitle')}
             </h2>
             <p className="text-sm leading-relaxed text-stone-400">
-              Chúng tôi luôn trân trọng và mong đợi nhận được mọi ý kiến đóng
-              góp từ khách hàng để có thể nâng cấp trải nghiệm dịch vụ và sản
-              phẩm tốt hơn nữa.
+              {t('footer.newsletterDesc')}
             </p>
             <Button
               type="primary"
               className="font-semibold text-black bg-white border-none rounded-full"
             >
-              ĐÓNG GÓP Ý KIẾN &rarr;
+              {t('footer.feedbackCta')}
             </Button>
           </div>
 
@@ -147,7 +148,7 @@ export default function AppFooter() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold tracking-wider uppercase text-stone-500">
-                    {label}
+                    {label === 'Hotline' ? t('footer.hotline') : t('footer.email')}
                   </p>
                   <p className="font-semibold text-md">{value}</p>
                 </div>
@@ -192,7 +193,7 @@ export default function AppFooter() {
 
           <div className="space-y-4">
             <h3 className="text-sm font-bold tracking-wider uppercase">
-              ĐỊA CHỈ LIÊN HỆ
+              {t('footer.addressTitle')}
             </h3>
             <ul className="space-y-4 text-[13px] leading-relaxed text-stone-400">
               {contactAddresses.map((item) => (
@@ -209,7 +210,7 @@ export default function AppFooter() {
 
         <div className="pt-8 mt-16 border-t border-stone-800">
           <p className="text-xs text-center text-stone-500">
-            &copy; {new Date().getFullYear()} Wearly. All rights reserved.
+            &copy; {new Date().getFullYear()} Wearly. {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

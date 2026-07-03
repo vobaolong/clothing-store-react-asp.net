@@ -2,11 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 import { Card, Descriptions, Empty, Modal, Spin, Table, Tag } from 'antd'
 import { getAdminOrderDetail } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
-import { formatCurrency, formatDate, formatStructuredAddress } from '@/utils/format'
-import { getOrderStatusLabel } from '@/constants/labels.constant'
+import {
+  formatCurrency,
+  formatDate,
+  formatStructuredAddress
+} from '@/utils/format'
 import { toCapitalize } from '@/utils/table.lib'
 import { useMemo } from 'react'
 import type { ColumnsType } from 'antd/es/table'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   open: boolean
@@ -24,6 +28,14 @@ interface OrderItem {
   unitPrice: number
 }
 
+const ORDER_STATUS_KEYS = {
+  Pending: 'order.pending',
+  Confirmed: 'order.confirmed',
+  Shipping: 'order.shipping',
+  Delivered: 'order.delivered',
+  Cancelled: 'order.cancelled'
+} as const
+
 export default function AdminOrderDetailModal({
   open,
   orderId,
@@ -34,8 +46,25 @@ export default function AdminOrderDetailModal({
     queryFn: () => getAdminOrderDetail(String(orderId)),
     enabled: open && Boolean(orderId)
   })
-
+  const { t } = useTranslation()
   const detail = detailQuery.data
+
+  const getOrderStatusLabel = (status: string) => {
+    const key = ORDER_STATUS_KEYS[status as keyof typeof ORDER_STATUS_KEYS]
+    return key ? t(key) : status
+  }
+
+  const PAYMENT_STATUS_KEYS = {
+    Unpaid: 'payment.unpaid',
+    Paid: 'payment.paid',
+    Refunded: 'payment.refunded'
+  } as const
+
+  const getPaymentStatusLabel = (paymentStatus: string) => {
+    const key =
+      PAYMENT_STATUS_KEYS[paymentStatus as keyof typeof PAYMENT_STATUS_KEYS]
+    return key ? t(key) : paymentStatus
+  }
 
   const subtotal = useMemo(() => {
     return detail?.items.reduce((sum, item) => sum + item.lineTotal, 0) ?? 0
@@ -120,40 +149,41 @@ export default function AdminOrderDetailModal({
         <div className="space-y-4!">
           <Card className="rounded-2xl" size="small">
             <Descriptions column={2} bordered size="small">
-              <Descriptions.Item label="ID đơn hàng">
+              <Descriptions.Item label={t('order.orderId')}>
                 {detail.id.slice(0, 8).toUpperCase()}
               </Descriptions.Item>
-              <Descriptions.Item label="Ngày tạo">
+              <Descriptions.Item label={t('order.orderDate')}>
                 {formatDate(detail.createdAt)}
               </Descriptions.Item>
               {detail.updatedAt ? (
-                <Descriptions.Item label="Cập nhật gần nhất">
+                <Descriptions.Item label={t('order.updateStatus')}>
                   {formatDate(detail.updatedAt)}
                 </Descriptions.Item>
               ) : null}
-              <Descriptions.Item label="Khách hàng">
+              <Descriptions.Item label={t('order.username')}>
                 {detail.userName}
               </Descriptions.Item>
-              <Descriptions.Item label="Email">
+              <Descriptions.Item label={t('profile.email')}>
                 {detail.userEmail}
               </Descriptions.Item>
-              <Descriptions.Item label="Trạng thái">
+              <Descriptions.Item label={t('order.status')}>
                 <Tag>{getOrderStatusLabel(detail.status)}</Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Thanh toán">
-                {detail.paymentMethod} - <Tag>{detail.paymentStatus}</Tag>
+              <Descriptions.Item label={t('payment.payment')}>
+                {detail.paymentMethod} -{' '}
+                <Tag>{getPaymentStatusLabel(detail.paymentStatus)}</Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Tên người nhận">
+              <Descriptions.Item label={t('order.recipientName')}>
                 {detail.shippingName || '-'}
               </Descriptions.Item>
-              <Descriptions.Item label="Số điện thoại">
+              <Descriptions.Item label={t('order.recipientPhone')}>
                 {detail.shippingPhone || '-'}
               </Descriptions.Item>
-              <Descriptions.Item label="Địa chỉ giao hàng" span={2}>
+              <Descriptions.Item label={t('order.recipientAddress')} span={2}>
                 {formatStructuredAddress(detail)}
               </Descriptions.Item>
               {detail.note ? (
-                <Descriptions.Item label="Ghi chú" span={2}>
+                <Descriptions.Item label={t('common.note')} span={2}>
                   {detail.note}
                 </Descriptions.Item>
               ) : null}

@@ -3,6 +3,7 @@ import { Button, Tooltip } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useWishlist } from '@/hooks/useWishlist'
 import type { Product } from '@/types'
+import { lp } from '@/utils/language-path'
 
 export default function WishlistToggleButton({
   product,
@@ -36,7 +37,7 @@ export default function WishlistToggleButton({
           e.preventDefault()
           e.stopPropagation()
           if (!isAuthenticated) {
-            navigate('/login')
+            navigate(lp('/login'))
             return
           }
           toggleWishlist(product)

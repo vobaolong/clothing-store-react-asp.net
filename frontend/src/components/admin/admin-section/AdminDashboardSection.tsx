@@ -29,63 +29,40 @@ import { useAdmin } from '@/context/AdminContext'
 import { useDashboardAnalytics } from '@/hooks/useDashboardAnalytics'
 import OrdersTable from '../admin-table/OrdersTable'
 import { ArrowUpRight, FolderTree, Package, Shirt, Ticket } from 'lucide-react'
+import { lp } from '@/utils/language-path'
+import { useTranslation } from 'react-i18next'
 
 const CHART_HEIGHT = 280
 type RevenueGranularity = 'day' | 'week' | 'month' | 'year'
-
-interface StatCard {
-  navKey: AdminNavKey
-  title: string
-  statKey: 'products' | 'categories' | 'orders' | 'coupons'
-  icon: React.ReactNode
-}
-
-const STAT_CARDS: StatCard[] = [
+const STAT_CARD_ITEMS = [
   {
     navKey: AdminNavKey.PRODUCTS,
-    title: 'Sản phẩm',
+    titleKey: 'admin.products',
     statKey: 'products',
     icon: <Shirt className="text-indigo-500!" />
   },
   {
     navKey: AdminNavKey.CATEGORIES,
-    title: 'Danh mục',
+    titleKey: 'admin.categories',
     statKey: 'categories',
     icon: <FolderTree className="text-teal-500!" />
   },
   {
     navKey: AdminNavKey.ORDERS,
-    title: 'Đơn hàng',
+    titleKey: 'admin.orders',
     statKey: 'orders',
     icon: <Package className="text-amber-500!" />
   },
   {
     navKey: AdminNavKey.COUPONS,
-    title: 'Voucher',
+    titleKey: 'admin.coupons',
     statKey: 'coupons',
     icon: <Ticket className="text-violet-500!" />
   }
-]
-
-const mostSoldColumns = [
-  {
-    title: '#',
-    key: 'stt',
-    width: 60,
-    align: 'center' as const,
-    render: (_: unknown, __: unknown, index: number) => index + 1
-  },
-  { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
-  {
-    title: 'Đã bán',
-    dataIndex: 'soldCount',
-    className: 'truncate',
-    key: 'soldCount',
-    align: 'right' as const
-  }
-]
+] as const
 
 export default function AdminDashboardSection() {
+  const { t } = useTranslation()
   const { navigate } = useAdmin()
   const [granularity, setGranularity] = useState<RevenueGranularity>('day')
   const [selectedRadarParent, setSelectedRadarParent] = useState<string | null>(
@@ -136,6 +113,23 @@ export default function AdminDashboardSection() {
     granularity,
     selectedRadarParent
   })
+  const mostSoldColumns = [
+    {
+      title: '#',
+      key: 'stt',
+      width: 60,
+      align: 'center' as const,
+      render: (_: unknown, __: unknown, index: number) => index + 1
+    },
+    { title: t('product.productName'), dataIndex: 'name', key: 'name' },
+    {
+      title: t('product.soldCount'),
+      dataIndex: 'soldCount',
+      className: 'truncate',
+      key: 'soldCount',
+      align: 'right' as const
+    }
+  ]
 
   if (loading) return <Skeleton active paragraph={{ rows: 10 }} />
 
@@ -148,18 +142,18 @@ export default function AdminDashboardSection() {
   return (
     <div className="space-y-6!">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {STAT_CARDS.map((card) => (
+        {STAT_CARD_ITEMS.map((card) => (
           <Card key={card.navKey}>
             <div className="flex justify-between">
               <Statistic
-                title={card.title}
+                title={t(card.titleKey)}
                 value={stats[card.statKey]}
                 prefix={card.icon}
               />
               <Button
                 className="shrink-0 p-0! text-slate-800!"
                 icon={<ArrowUpRight className="text-slate-600!" />}
-                onClick={() => navigate(`/admin/${card.navKey}`)}
+                onClick={() => navigate(lp(`/admin/${card.navKey}`))}
               />
             </div>
           </Card>
@@ -169,17 +163,17 @@ export default function AdminDashboardSection() {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={14}>
           <Card
-            title="Tổng doanh thu"
+            title={t('admin.totalRevenue')}
             className="h-full rounded-xl border-slate-200"
             extra={
               <Segmented<RevenueGranularity>
                 value={granularity}
                 onChange={setGranularity}
                 options={[
-                  { label: 'Ngày', value: 'day' },
-                  { label: 'Tuần', value: 'week' },
-                  { label: 'Tháng', value: 'month' },
-                  { label: 'Năm', value: 'year' }
+                  { label: t('common.day'), value: 'day' },
+                  { label: t('common.week'), value: 'week' },
+                  { label: t('common.month'), value: 'month' },
+                  { label: t('common.year'), value: 'year' }
                 ]}
               />
             }
@@ -200,8 +194,8 @@ export default function AdminDashboardSection() {
               <div className="flex justify-between items-center w-full">
                 <span className="pr-2 truncate">
                   {selectedRadarParent
-                    ? `Danh mục: ${selectedRadarParent}`
-                    : 'Danh mục bán chạy'}
+                    ? `${t('admin.categories')}: ${selectedRadarParent}`
+                    : `${t('admin.topCategories')}`}
                 </span>
                 {selectedRadarParent && (
                   <Button
@@ -210,7 +204,7 @@ export default function AdminDashboardSection() {
                     onClick={() => setSelectedRadarParent(null)}
                     className="px-0"
                   >
-                    Quay lại
+                    {t('common.goBack')}
                   </Button>
                 )}
               </div>
@@ -235,7 +229,7 @@ export default function AdminDashboardSection() {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={8}>
           <Card
-            title="Sản phẩm bán chạy nhất"
+            title={t('admin.mostSoldProducts')}
             className="h-full rounded-xl border-slate-200"
           >
             {mostSoldProducts.length ? (
@@ -254,7 +248,7 @@ export default function AdminDashboardSection() {
         </Col>
         <Col xs={24} lg={16}>
           <Card
-            title="Tổng quan đơn hàng"
+            title={t('admin.orderOverview')}
             className="h-full rounded-xl border-slate-200"
           >
             <OrdersTable data={orderOverviewData} />

@@ -1,9 +1,10 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
+import { AUTH_REDIRECT_DELAY_MS } from '@/constants/timing.constant'
 import { getAuthToken, removeAuthToken } from '@/state/auth/auth-session'
 import type { ApiResponse } from '@/types/common.type'
-import { AUTH_REDIRECT_DELAY_MS } from '@/constants/timing.constant'
+import { lp } from '@/utils/language-path'
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5230/api'
@@ -20,10 +21,10 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       removeAuthToken()
-      if (!window.location.pathname.startsWith('/login')) {
+      if (!window.location.pathname.includes('/login')) {
         toast.error('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.')
         setTimeout(() => {
-          window.location.href = '/login'
+          window.location.href = lp('/login')
         }, AUTH_REDIRECT_DELAY_MS)
       }
     }

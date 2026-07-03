@@ -1,5 +1,6 @@
 import type { AdminCategory, AdminProduct } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
+import { lp } from '@/utils/language-path'
 
 export type BannerCtaDestination = 'category' | 'product' | 'search' | 'custom'
 
@@ -55,10 +56,11 @@ export function parseBannerCta(
     return { destination: 'custom', customUrl: raw }
   }
 
-  const norm =
-    pathname.replace(/\/+$/, '') === '' ? '/' : pathname.replace(/\/+$/, '')
+  const norm = pathname.replace(/\/+$/, '') === '' ? '/' : pathname.replace(/\/+$/, '')
+    // Strip language prefix for parsing (e.g. /vi/products → /products)
+    const stripped = norm.replace(/^\/\w{2}(\/|$)/, '/')
 
-  if (norm === '/products') {
+  if (stripped === '/products') {
     const cat = searchParams.get('category')
     if (cat != null && cat !== '') {
       const categoryId = resolveCategoryIdFromParam(cat, categories)
@@ -71,8 +73,8 @@ export function parseBannerCta(
     return { destination: 'custom', customUrl: raw }
   }
 
-  if (norm.startsWith('/products/')) {
-    const rest = norm.slice('/products/'.length)
+  if (stripped.startsWith('/products/')) {
+    const rest = stripped.slice('/products/'.length)
     const slug = decodeURIComponent(rest.split('/')[0] ?? '').trim()
     if (slug) {
       const product = products.find(
@@ -108,14 +110,14 @@ export function buildBannerCtaLink(
     }
     case 'product': {
       const p = products.find((pr) => pr.id === productId)
-      return p ? `/products/${encodeURIComponent(p.slug)}` : '/products'
+      return p ? lp(`/products/${encodeURIComponent(p.slug)}`) : lp('/products')
     }
     case 'search': {
       const q = (searchKeyword ?? '').trim()
-      return q ? `/products?search=${encodeURIComponent(q)}` : '/products'
+      return q ? lp(`/products?search=${encodeURIComponent(q)}`) : lp('/products')
     }
     case 'custom':
     default:
-      return (customUrl ?? '/products').trim() || '/products'
+      return lp((customUrl ?? '/products').trim() || '/products')
   }
 }

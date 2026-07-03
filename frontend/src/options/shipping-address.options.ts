@@ -1,13 +1,12 @@
 import { ShippingAddressLabel } from '@/enums'
-import { SHIPPING_ADDRESS_LABELS } from '@/constants/labels.constant'
 
 export const SHIPPING_ADDRESS_LABEL_OPTIONS = [
   {
-    label: SHIPPING_ADDRESS_LABELS.HOME,
+    labelKey: 'checkout.home',
     value: ShippingAddressLabel.HOME
   },
   {
-    label: SHIPPING_ADDRESS_LABELS.OFFICE,
+    labelKey: 'checkout.office',
     value: ShippingAddressLabel.OFFICE
   }
 ] as const

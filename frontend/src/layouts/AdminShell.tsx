@@ -2,47 +2,51 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Layout, Modal, Typography } from 'antd'
 import { createElement, useMemo, useState } from 'react'
 import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import {
-  ADMIN_PAGE_BRAND_TITLE,
-  ADMIN_PAGE_HEADER_TITLE
+  ADMIN_PAGE_BRAND_TITLE_KEY,
+  ADMIN_PAGE_HEADER_TITLE_KEYS
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { isAdmin, removeAuthToken } from '@/state/auth/auth-session'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import AdminPageSidebar from '@/components/admin/AdminPageSidebar'
 import ThemeToggleButton from '@/components/ThemeToggleButton'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useTheme } from '@/hooks/useTheme'
+import { lp } from '@/utils/language-path'
 
 const { Header, Content } = Layout
 
 export default function AdminShell() {
+  const { t } = useTranslation()
   const { isDark: isDarkTheme } = useTheme()
   const { section } = useParams<{ section: string }>()
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
-  const isOrderDetailPage = location.pathname.startsWith('/admin/orders/')
+  const isOrderDetailPage = location.pathname.includes('/admin/orders/')
 
   const headerTitle = useMemo(() => {
     if (section && isAdminNavKey(section)) {
-      return ADMIN_PAGE_HEADER_TITLE[section as AdminNavKey]
+      return t(ADMIN_PAGE_HEADER_TITLE_KEYS[section as AdminNavKey])
     }
 
-    return 'Admin'
-  }, [section])
+    return t('admin.title')
+  }, [section, t])
 
   const handleLogout = () => {
     Modal.confirm({
-      title: 'Xác nhận đăng xuất',
+      title: t('confirm.logoutTitle'),
       icon: createElement(ExclamationCircleOutlined),
-      content: 'Bạn có chắc chắn muốn đăng xuất?',
-      okText: 'Đăng xuất',
-      cancelText: 'Hủy',
+      content: t('confirm.logoutContent'),
+      okText: t('confirm.logoutOk'),
+      cancelText: t('confirm.cancel'),
       okButtonProps: { danger: true },
       onOk: () => {
         removeAuthToken()
-        toast.success('Đăng xuất thành công')
-        window.location.href = '/'
+        toast.success(t('confirm.logoutSuccess'))
+        window.location.href = lp('/')
       }
     })
   }
@@ -56,7 +60,7 @@ export default function AdminShell() {
       <AdminPageSidebar
         collapsed={collapsed}
         onCollapsedChange={setCollapsed}
-        brandTitle={ADMIN_PAGE_BRAND_TITLE}
+        brandTitle={t(ADMIN_PAGE_BRAND_TITLE_KEY)}
         onLogout={handleLogout}
       />
       <Layout className="flex flex-col flex-1 min-w-0 min-h-0">
@@ -72,8 +76,9 @@ export default function AdminShell() {
               {headerTitle}
             </Typography.Title>
             <span className="mr-3 dark:text-slate-300">
-              Xin chào Admin Wearly
+              {t('admin.greeting')}
             </span>
+            <LanguageSwitcher />
             <ThemeToggleButton />
             <NotificationCenter />
           </Header>

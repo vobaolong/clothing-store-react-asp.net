@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Tabs } from 'antd'
 import { toCapitalize } from '@/utils/table.lib'
+import { useTranslation } from 'react-i18next'
 
 const ProductReviewsSection = lazy(
   () => import('@/components/reviews/ProductReviewsSection')
@@ -17,6 +18,7 @@ export default function ProductTabs({
   productId,
   productName
 }: ProductTabsProps) {
+  const { t } = useTranslation()
   return (
     <div className="w-full mt-8 rounded-lg card">
       <Tabs
@@ -25,7 +27,7 @@ export default function ProductTabs({
         items={[
           {
             key: 'description',
-            label: 'Mô tả sản phẩm',
+            label: t('product.productDescription'),
             children: (
               <div className="px-4 py-3 md:px-6 md:py-4">
                 <div
@@ -37,7 +39,7 @@ export default function ProductTabs({
           },
           {
             key: 'reviews',
-            label: 'Đánh giá sản phẩm',
+            label: t('product.productReviews'),
             children: (
               <div className="px-4 py-3 md:px-6 md:py-4">
                 <Suspense fallback={null}>

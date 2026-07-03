@@ -1,6 +1,7 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { Button, Input, Select } from 'antd'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type ProductsSearchFilterProps = {
   value: string
@@ -18,7 +19,7 @@ export default function ProductsSearchFilter({
   onSortChange
 }: ProductsSearchFilterProps) {
   const draftKeywordRef = useRef(value)
-
+  const { t } = useTranslation()
   const handleSubmitSearch = () => {
     onChange(draftKeywordRef.current)
   }
@@ -35,11 +36,11 @@ export default function ProductsSearchFilter({
             draftKeywordRef.current = event.target.value
           }}
           onPressEnter={handleSubmitSearch}
-          placeholder="Tìm kiếm sản phẩm"
+          placeholder={t('productFilter.searchPlaceholder')}
           suffix={<SearchOutlined className="text-slate-400" />}
         />
         <Button type="primary" size="large" onClick={handleSubmitSearch}>
-          Tìm kiếm
+          {t('common.search')}
         </Button>
       </div>
       <div className="flex flex-wrap gap-3 justify-between items-center pt-1">
@@ -47,20 +48,22 @@ export default function ProductsSearchFilter({
           <span className="text-xl font-bold">
             {value && `Kết quả tìm kiếm cho từ khóa "${value}"`}
           </span>{' '}
-          Có {total} mặt hàng
+          {t('product.totalProducts', { total: total })}
         </p>
         <div className="flex flex-wrap gap-3 items-center">
-          <span className="text-sm font-medium">Sắp xếp theo:</span>
+          <span className="text-sm font-medium">
+            {t('productFilter.sortBy')}
+          </span>
           <Select
             size="medium"
             value={sortBy}
             onChange={onSortChange}
             className="w-40"
             options={[
-              { label: 'Mới nhất', value: 'newest' },
-              { label: 'Bán chạy', value: 'best-selling' },
-              { label: 'Giá thấp đến cao', value: 'price-asc' },
-              { label: 'Giá cao đến thấp', value: 'price-desc' }
+              { label: t('productFilter.newest'), value: 'newest' },
+              { label: t('productFilter.bestSelling'), value: 'best-selling' },
+              { label: t('productFilter.priceAsc'), value: 'price-asc' },
+              { label: t('productFilter.priceDesc'), value: 'price-desc' }
             ]}
           />
         </div>

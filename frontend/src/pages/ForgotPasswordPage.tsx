@@ -2,23 +2,23 @@ import { MailOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Card, Form, Input, message, Typography } from 'antd'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { forgotPassword } from '@/api/auth-api'
 import type { ApiError } from '@/types/common.type'
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation()
   const [form] = Form.useForm()
 
   const { mutate, isPending } = useMutation({
     mutationFn: forgotPassword,
     onSuccess: () => {
-      message.success(
-        'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.'
-      )
+      message.success(t('auth.resetLinkSent'))
       form.resetFields()
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+        error.response?.data?.message || t('auth.someError')
       )
     }
   })
@@ -32,11 +32,10 @@ export default function ForgotPasswordPage() {
       <Card className="w-full max-w-md rounded-3xl shadow-xl border-slate-200">
         <div className="mb-8 text-center">
           <Typography.Title level={2} className="mb-2!">
-            Quên mật khẩu?
+            {t('auth.forgotPasswordTitle')}
           </Typography.Title>
           <Typography.Paragraph type="secondary">
-            Nhập email của bạn và chúng tôi sẽ gửi cho bạn liên kết để đặt lại
-            mật khẩu.
+            {t('auth.forgotPasswordDesc')}
           </Typography.Paragraph>
         </div>
 
@@ -49,10 +48,10 @@ export default function ForgotPasswordPage() {
         >
           <Form.Item
             name="email"
-            label="Email"
+            label={t('auth.email')}
             rules={[
-              { required: true, message: 'Vui lòng nhập email!' },
-              { type: 'email', message: 'Email không hợp lệ!' }
+              { required: true, message: t('auth.pleaseEnterEmailExcl') },
+              { type: 'email', message: t('auth.invalidEmailExcl') }
             ]}
           >
             <Input
@@ -70,7 +69,7 @@ export default function ForgotPasswordPage() {
               loading={isPending}
               className="h-12 font-semibold rounded-xl"
             >
-              Gửi yêu cầu
+              {t('auth.sendRequest')}
             </Button>
           </Form.Item>
 
@@ -79,7 +78,7 @@ export default function ForgotPasswordPage() {
               to="/login"
               className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
             >
-              Quay lại đăng nhập
+              {t('auth.backToLogin')}
             </Link>
           </div>
         </Form>

@@ -4,16 +4,17 @@ import {
   PhoneOutlined,
   TruckOutlined
 } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 export default function AnnouncementBar() {
+  const { t } = useTranslation()
   return (
     <div className="hidden bg-[#2f2f2f] px-4 text-center text-xs text-white md:flex md:text-sm justify-between md:px-8! py-3!">
       <span>
-        <TruckOutlined className="me-1" /> Miễn phí vận chuyển cho đơn từ
-        499.000K
+        <TruckOutlined className="me-1" /> {t('announcement.freeShippingPromo')}
       </span>
       <span>
-        <GiftOutlined className="me-1" /> Ưu đãi đến 20% cho thành viên mới
+        <GiftOutlined className="me-1" /> {t('announcement.newMemberPromo')}
       </span>
       <span className="gap-2">
         <PhoneOutlined className="me-1" /> Hotline: 0123 456 789

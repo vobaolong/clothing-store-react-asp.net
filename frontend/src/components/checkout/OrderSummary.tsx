@@ -3,13 +3,13 @@ import { formatCurrency } from '@/utils/format'
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from '@/utils/checkout-utils'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import type { CartItem } from '@/types/cart.type'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   items: CartItem[]
   nowMs: number
   subtotal: number
   finalTotal: number
-  /** Raw total before discount, used for free-shipping threshold */
   rawTotal: number
   discountAmount: number
   appliedCouponCode?: string
@@ -25,12 +25,13 @@ export default function OrderSummary({
   appliedCouponCode
 }: Props) {
   const isFreeShipping = rawTotal >= FREE_SHIPPING_THRESHOLD
+  const { t } = useTranslation()
 
   return (
     <Card
       title={
-        <span className="font-semibold text-slate-800 dark:text-white card">
-          Tổng tiền
+        <span className="font-semibold text-slate-800 dark:text-white">
+          {t('common.total')}
         </span>
       }
     >
@@ -60,12 +61,12 @@ export default function OrderSummary({
 
         <div className="pt-3 space-y-2 border-t border-slate-100">
           <div className="flex justify-between text-slate-600 dark:text-gray-400">
-            <span>Tổng tiền</span>
+            <span>{t('order.total')}</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
           {discountAmount > 0 && (
             <div className="flex justify-between text-slate-600 dark:text-gray-400">
-              <span>Giảm giá</span>
+              <span>{t('order.discount')}</span>
               <span className="text-right">
                 <Tag className="text-xs! bg-emerald-100! text-emerald-700! border-emerald-200! leading-none! p-1!">
                   {appliedCouponCode}
@@ -76,28 +77,25 @@ export default function OrderSummary({
           )}
 
           <div className="flex justify-between text-slate-600 dark:text-gray-400">
-            <span>Phí vận chuyển</span>
+            <span>{t('order.shippingFee')}</span>
             <span
-              className={
-                isFreeShipping ? 'text-green-600 font-medium' : ''
-              }
+              className={isFreeShipping ? 'text-green-600 font-medium' : ''}
             >
-              {isFreeShipping
-                ? 'Miễn phí'
-                : formatCurrency(SHIPPING_FEE)}
+              {isFreeShipping ? t('order.free') : formatCurrency(SHIPPING_FEE)}
             </span>
           </div>
         </div>
 
         <div className="flex justify-between pt-3 text-base font-semibold border-t border-slate-200 text-slate-900 dark:text-white">
-          <span>Tổng tiền</span>
+          <span>{t('order.total')}</span>
           <span>{formatCurrency(finalTotal)}</span>
         </div>
 
         {!isFreeShipping && (
           <p className="pt-1 text-xs text-center text-slate-400">
-            Thêm {formatCurrency(FREE_SHIPPING_THRESHOLD - rawTotal)} để được miễn
-            phí vận chuyển
+            {t('order.addMoreForFreeShipping', {
+              amount: formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)
+            })}
           </p>
         )}
       </div>

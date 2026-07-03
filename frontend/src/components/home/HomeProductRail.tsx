@@ -1,5 +1,6 @@
 import { Carousel } from 'antd'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { Product } from '@/types'
 import ProductCard from '@/components/ProductCard'
 import ScrollReveal from '@/components/animations/ScrollReveal'
@@ -25,6 +26,8 @@ export default function HomeProductRail({
   seeMoreTo,
   products
 }: HomeProductRailProps) {
+  const { t } = useTranslation()
+
   if (products.length === 0) {
     return null
   }
@@ -41,7 +44,7 @@ export default function HomeProductRail({
             className="text-sm font-semibold shrink-0 hover:underline"
             style={{ color: SEE_MORE }}
           >
-            Xem Thêm
+            {t('common.viewAll')}
           </Link>
         </div>
 

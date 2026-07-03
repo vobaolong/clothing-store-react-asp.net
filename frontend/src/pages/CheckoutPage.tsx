@@ -3,11 +3,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
 import LoadingOverlay from '@/components/checkout/LoadingOverlay'
+import { lp } from '@/utils/language-path'
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection'
 import CouponSection from '@/components/checkout/CouponSection'
 import PaymentSection from '@/components/checkout/PaymentSection'
@@ -52,6 +54,7 @@ const checkoutSchema = z.object({
 })
 
 export default function CheckoutPage() {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -61,7 +64,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (items.length === 0 && !justPlacedOrderRef.current) {
-      navigate('/cart', { replace: true })
+      navigate(lp('/cart'), { replace: true })
     }
   }, [items.length, navigate])
 
@@ -177,7 +180,7 @@ export default function CheckoutPage() {
     if (isSubmitting) return
     if (!getAuthToken()) {
       toast.error('Vui lòng đăng nhập trước khi thanh toán')
-      navigate('/login')
+      navigate(lp('/login'))
       return
     }
     if (items.length === 0) {
@@ -258,7 +261,7 @@ export default function CheckoutPage() {
         `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
       )
       justPlacedOrderRef.current = true
-      navigate(`/orders/${orderId}`)
+      navigate(lp(`/orders/${orderId}`))
     } catch (error: unknown) {
       const msg =
         error instanceof Error
@@ -277,11 +280,11 @@ export default function CheckoutPage() {
       <LoadingOverlay isSubmitting={isSubmitting} />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-          Thanh toán
+          {t('payment.payment')}
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
           <InfoCircleOutlined className="mr-1 text-slate-500 dark:text-gray-400" />
-          Hoàn thành thông tin đặt hàng để tiếp tục.
+          {t('checkout.completeInfo')}
         </p>
       </div>
 

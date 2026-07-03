@@ -11,8 +11,10 @@ import {
   NewsletterSection,
   TrustBadges
 } from '@/components/home'
+import { useTranslation } from 'react-i18next'
 
 const HomePage = () => {
+  const { t } = useTranslation()
   const { data: products = [] } = useQuery({
     queryKey: QUERY_KEYS.products,
     queryFn: getProducts
@@ -57,12 +59,12 @@ const HomePage = () => {
       />
 
       <HomeProductRail
-        title="Sản phẩm nổi bật"
+        title={t('home.featuredProducts')}
         seeMoreTo="/products?sort=best-selling"
         products={featuredProducts}
       />
       <HomeProductRail
-        title="Sản phẩm mới"
+        title={t('home.newArrivals')}
         seeMoreTo="/products?sort=newest"
         products={newProducts}
       />

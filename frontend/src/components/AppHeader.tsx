@@ -11,12 +11,15 @@ import { Badge, Button, Drawer, Dropdown, Input, Layout } from 'antd'
 import type { MenuProps } from 'antd'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { Category } from '@/types'
 import { toProductsCategorySearchUrl } from '@/utils/category-tree'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import { useHeaderVisibility } from '@/hooks/useHeaderVisibility'
 import AnnouncementBar from './AnnouncementBar'
 import ThemeToggleButton from '@/components/ThemeToggleButton'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { lp } from '@/utils/language-path'
 
 export type AppHeaderProps = {
   isAdminUser: boolean
@@ -36,39 +39,12 @@ type CategoryGroup = {
 const { Header } = Layout
 const { Search } = Input
 
-const NAV_ITEMS = [
-  { key: '/', label: 'Trang chủ' },
-  { key: '/products', label: 'Sản phẩm' },
-  { key: '/about', label: 'Về Wearly' }
-]
-
 const PROFILE_ROUTES: Record<string, string> = {
-  profile: '/profile',
-  'profile-wishlist': '/profile?tab=wishlist',
-  'profile-orders': '/profile?tab=orders',
-  'profile-addresses': '/profile?tab=addresses'
+  profile: lp('/profile'),
+  'profile-wishlist': lp('/profile?tab=wishlist'),
+  'profile-orders': lp('/profile?tab=orders'),
+  'profile-addresses': lp('/profile?tab=addresses')
 }
-
-const USER_MENU_ITEMS: MenuProps['items'] = [
-  { key: 'profile', label: 'Thông tin tài khoản', icon: <UserOutlined /> },
-  {
-    key: 'profile-wishlist',
-    label: 'Danh sách yêu thích',
-    icon: <HeartOutlined />
-  },
-  {
-    key: 'profile-orders',
-    label: 'Danh sách đơn hàng',
-    icon: <OrderedListOutlined />
-  },
-  {
-    key: 'profile-addresses',
-    label: 'Danh sách địa chỉ',
-    icon: <EnvironmentOutlined />
-  },
-  { type: 'divider' },
-  { key: 'logout', label: 'Đăng xuất', danger: true, icon: <LogoutOutlined /> }
-]
 
 function useCategoryGroups(categories: Category[]): CategoryGroup[] {
   return useMemo(() => {
@@ -152,16 +128,24 @@ function DesktopNav({
   onSearchChange: (v: string) => void
   onSearch: () => void
 }) {
+  const { t } = useTranslation()
+
+  const navItems = [
+    { key: '/', label: t('header.navHome') },
+    { key: '/products', label: t('header.navProducts') },
+    { key: '/about', label: t('header.navAbout') }
+  ]
+
   return (
     <div className="hidden flex-1 justify-evenly items-center md:flex">
       <div className="flex gap-5 items-center">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive = selectedRootPath === item.key
           const showMegaMenu =
             item.key === '/products' && categoryGroups.length > 0
 
           const link = (
-            <Link to={item.key} className={navLinkClass(isActive)}>
+            <Link to={lp(item.key)} className={navLinkClass(isActive)}>
               {item.label}
             </Link>
           )
@@ -188,7 +172,7 @@ function DesktopNav({
         value={searchKeyword}
         onChange={(e) => onSearchChange(e.target.value)}
         onSearch={onSearch}
-        placeholder="Tìm sản phẩm..."
+        placeholder={t('header.searchPlaceholder')}
         className="w-56! justify-end items-end"
         allowClear
       />
@@ -205,13 +189,21 @@ function MobileNavDrawer({
   categoryGroups: CategoryGroup[]
   onClose: () => void
 }) {
+  const { t } = useTranslation()
+
+  const navItems = [
+    { key: '/', label: t('header.navHome') },
+    { key: '/products', label: t('header.navProducts') },
+    { key: '/about', label: t('header.navAbout') }
+  ]
+
   return (
-    <Drawer title="Menu" placement="left" onClose={onClose} open={open}>
+    <Drawer title={t('header.menuTitle')} placement="left" onClose={onClose} open={open}>
       <div className="flex flex-col gap-4">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <Link
             key={item.key}
-            to={item.key}
+            to={lp(item.key)}
             className="text-base font-medium text-slate-900! dark:text-slate-100! dark:hover:text-slate-300! hover:underline! underline-offset-4! hover:text-slate-600"
             onClick={onClose}
           >
@@ -221,7 +213,7 @@ function MobileNavDrawer({
 
         <div className="pt-4 border-t border-slate-200 dark:border-gray-700">
           <p className="mb-3 text-sm font-semibold text-slate-600 dark:text-slate-400">
-            Danh mục
+            {t('header.categoriesTitle')}
           </p>
           <div className="flex flex-col gap-2">
             {categoryGroups.map(({ parent, children }) => (
@@ -263,12 +255,34 @@ export default function AppHeader({
   onCartClick,
   onLogout
 }: AppHeaderProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const visible = useHeaderVisibility({ disabled: isAdminUser })
 
   const categoryGroups = useCategoryGroups(categories)
+
+  const userMenuItems: MenuProps['items'] = useMemo(() => [
+    { key: 'profile', label: t('header.userProfile'), icon: <UserOutlined /> },
+    {
+      key: 'profile-wishlist',
+      label: t('header.userWishlist'),
+      icon: <HeartOutlined />
+    },
+    {
+      key: 'profile-orders',
+      label: t('header.userOrders'),
+      icon: <OrderedListOutlined />
+    },
+    {
+      key: 'profile-addresses',
+      label: t('header.userAddresses'),
+      icon: <EnvironmentOutlined />
+    },
+    { type: 'divider' },
+    { key: 'logout', label: t('header.logout'), danger: true, icon: <LogoutOutlined /> }
+  ], [t])
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') return onLogout()
@@ -278,12 +292,12 @@ export default function AppHeader({
   const handleSearch = () => {
     const keyword = searchKeyword.trim()
     navigate(
-      keyword ? `/products?search=${encodeURIComponent(keyword)}` : '/products'
+      keyword ? lp(`/products?search=${encodeURIComponent(keyword)}`) : lp('/products')
     )
   }
 
   const handleCartClick = () =>
-    onCartClick ? onCartClick() : navigate('/cart')
+    onCartClick ? onCartClick() : navigate(lp('/cart'))
 
   return (
     <div
@@ -295,7 +309,7 @@ export default function AppHeader({
       <Header className="bg-white border-b border-slate-200 px-4! md:px-8! dark:bg-gray-900! dark:border-gray-700!">
         <div className="flex items-center w-full gap-4 mx-auto h-18 max-w-7xl">
           <Link
-            to={isAdminUser ? '/admin' : '/'}
+            to={isAdminUser ? lp('/admin') : lp('/')}
             className="hidden md:block text-2xl font-semibold tracking-tight text-slate-900! dark:text-white!"
           >
             Wearly
@@ -325,6 +339,7 @@ export default function AppHeader({
           )}
 
           <div className="flex gap-2 items-center ml-auto shrink-0">
+            <LanguageSwitcher />
             <ThemeToggleButton />
             {!isAdminUser && (
               <Button
@@ -344,7 +359,7 @@ export default function AppHeader({
             {isAuthenticated ? (
               <Dropdown
                 trigger={['click']}
-                menu={{ items: USER_MENU_ITEMS, onClick: handleMenuClick }}
+                menu={{ items: userMenuItems, onClick: handleMenuClick }}
                 destroyOnHidden
               >
                 <Button
@@ -358,7 +373,7 @@ export default function AppHeader({
                 type="text"
                 className="flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 icon={<UserOutlined />}
-                onClick={() => navigate('/login')}
+                onClick={() => navigate(lp('/login'))}
               />
             )}
           </div>

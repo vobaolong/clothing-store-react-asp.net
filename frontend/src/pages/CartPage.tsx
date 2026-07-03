@@ -1,6 +1,7 @@
 import { DeleteOutlined } from '@ant-design/icons'
 import { Button, Card, Checkbox, Empty, Modal, Select } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   clearCart,
@@ -16,8 +17,10 @@ import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import { SHIPPING_FEE } from '@/utils/checkout-utils'
+import { lp } from '@/utils/language-path'
 
 export default function CartPage() {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const items = useSelector(selectCartItems)
   const selectedItems = items.filter((item) => item.isSelected)
@@ -33,8 +36,8 @@ export default function CartPage() {
     Modal.confirm({
       title: 'Xóa sản phẩm khỏi giỏ hàng?',
       content: 'Hành động này sẽ xóa sản phẩm khỏi giỏ hàng.',
-      okText: 'Xóa',
-      cancelText: 'Hủy',
+      okText: t('common.delete'),
+      cancelText: t('common.cancel'),
       okButtonProps: { danger: true },
       onOk: () => dispatch(removeFromCart({ id, productVariantId }))
     })
@@ -44,8 +47,8 @@ export default function CartPage() {
     Modal.confirm({
       title: 'Xóa toàn bộ giỏ hàng?',
       content: 'Hành động này sẽ xóa tất cả sản phẩm trong giỏ hàng.',
-      okText: 'Xóa tất cả',
-      cancelText: 'Hủy',
+      okText: t('cart.deleteAll'),
+      cancelText: t('common.cancel'),
       okButtonProps: { danger: true },
       onOk: () => dispatch(clearCart())
     })
@@ -54,10 +57,10 @@ export default function CartPage() {
   if (!items.length)
     return (
       <Card className="rounded-lg card w-full">
-        <Empty description="Giỏ hàng của bạn trống" className="py-12" />
+        <Empty description={t('cart.isEmpty')} className="py-12" />
         <div className="flex justify-center">
-          <Link to="/products">
-            <Button type="primary">Tiếp tục mua sắm</Button>
+          <Link to={lp('/products')}>
+            <Button type="primary">{t('cart.continueShopping')}</Button>
           </Link>
         </div>
       </Card>
@@ -67,7 +70,7 @@ export default function CartPage() {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <Card
         className="rounded-lg card"
-        title={<span className="text-xl font-semibold">Giỏ hàng</span>}
+        title={<span className="text-xl font-semibold">{t('cart.cart')}</span>}
       >
         <div className="flex justify-between items-center p-3 mb-4 rounded-xl card">
           <Checkbox
@@ -76,15 +79,15 @@ export default function CartPage() {
               dispatch(toggleSelectAllCartItems(event.target.checked))
             }
           >
-            Chọn tất cả
+            {t('cart.selectAll')}
           </Checkbox>
           <div className="flex gap-3 items-center">
             <span className="text-sm text-slate-500 dark:text-slate-300">
-              Đã chọn: {selectedItems.length}/{items.length}
+              {t('cart.selected')}: {selectedItems.length}/{items.length}
             </span>
             {selectedItems.length > 0 ? (
               <Button danger type="text" onClick={confirmClearCart}>
-                Xóa tất cả
+                {t('cart.deleteAll')}
               </Button>
             ) : null}
           </div>
@@ -124,7 +127,7 @@ export default function CartPage() {
                         className="flex size-24 shrink-0 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-[10px] text-slate-400"
                         aria-hidden
                       >
-                        No img
+                        {t('common.noImage')}
                       </div>
                     )}
                     <div className="space-y-2">
@@ -245,37 +248,37 @@ export default function CartPage() {
       </Card>
 
       <aside className="sticky top-24 self-start p-5 rounded-lg card">
-        <h2 className="mb-4 text-xl font-semibold">Chi tiết thanh toán</h2>
+        <h2 className="mb-4 text-xl font-semibold">{t('checkout.orderSummary')}</h2>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between text-slate-600 dark:text-slate-300">
-            <span>Tạm tính</span>
+            <span>{t('cart.subtotal')}</span>
             <span>{formatCurrency(total)}</span>
           </div>
           <div className="flex justify-between text-slate-600 dark:text-slate-300">
-            <span>Phí giao hàng</span>
+            <span>{t('cart.shippingFee')}</span>
             <span>{formatCurrency(shippingFee)}</span>
           </div>
           <div className="flex justify-between pt-3 mt-3 text-base font-semibold border-t border-slate-200">
-            <span>Thành tiền</span>
+            <span>{t('cart.total')}</span>
             <span className="text-slate-900 dark:text-slate-200">
               {formatCurrency(grandTotal)}
             </span>
           </div>
         </div>
         <div className="grid gap-2 mt-5">
-          <Link to="/checkout">
+          <Link to={lp('/checkout')}>
             <Button
               type="primary"
               block
               size="large"
               disabled={selectedItems.length === 0}
             >
-              Tiến hành đặt hàng
+              {t('cart.proceedToCheckout')}
             </Button>
           </Link>
-          <Link to="/products">
+          <Link to={lp('/products')}>
             <Button block size="large">
-              Tiếp tục mua sắm
+              {t('cart.continueShopping')}
             </Button>
           </Link>
         </div>

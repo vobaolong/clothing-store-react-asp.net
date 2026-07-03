@@ -10,6 +10,7 @@ import type {
 } from '@/types/checkout.type'
 import type { AvailableCoupon } from '@/types/coupon.type'
 import { formatCurrency } from '@/utils/format'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   control: Control<CheckoutFormValues>
@@ -32,9 +33,10 @@ export default function CouponSection({
   watchedCouponCode,
   subtotal
 }: Props) {
+  const { t } = useTranslation()
   return (
     <Card>
-      <CheckoutSectionTitle step={2} title="Mã giảm giá" />
+      <CheckoutSectionTitle step={2} title={t('checkout.couponCode')} />
       <div className="flex gap-2 mb-4">
         <Controller
           name="couponCode"
@@ -42,7 +44,7 @@ export default function CouponSection({
           render={({ field }) => (
             <Input
               {...field}
-              placeholder="Nhập mã giảm giá"
+              placeholder={t('checkout.applyCoupon')}
               onChange={(e) => handleCouponCodeChange(e.target.value)}
             />
           )}
@@ -53,7 +55,7 @@ export default function CouponSection({
           onClick={() => void applyCouponByCode()}
           className="rounded-md shrink-0"
         >
-          Áp dụng
+          {t('checkout.applyCoupon')}
         </Button>
         {coupon.appliedCode && (
           <Button
@@ -61,7 +63,7 @@ export default function CouponSection({
             onClick={handleRemoveCoupon}
             className="rounded-lg! shrink-0"
           >
-            Xóa
+            {t('checkout.removeCoupon')}
           </Button>
         )}
       </div>
@@ -93,7 +95,7 @@ export default function CouponSection({
       {(availableCouponsQuery.data ?? []).length > 0 && (
         <div className="overflow-y-auto pr-1 max-h-64">
           <p className="mb-3 text-xs font-medium tracking-wide uppercase text-slate-400">
-            Mã giảm giá có sẵn
+            {t('checkout.availableCoupons')}
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {(availableCouponsQuery.data ?? []).map((c: AvailableCoupon) => {

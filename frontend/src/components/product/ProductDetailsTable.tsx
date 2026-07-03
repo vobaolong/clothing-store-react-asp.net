@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 interface ProductDetailsTableProps {
   productDetails: { label: string; value: string }[]
 }
@@ -5,11 +6,11 @@ interface ProductDetailsTableProps {
 export default function ProductDetailsTable({
   productDetails
 }: ProductDetailsTableProps) {
+  const { t } = useTranslation()
   if (productDetails.length === 0) return null
-
   return (
     <div className="p-6 rounded-lg card">
-      <p className="mb-4 text-base font-semibold">Thông số kỹ thuật</p>
+      <p className="mb-4 text-base font-semibold">{t('product.specs')}</p>
       <dl className="divide-y divide-stone-100">
         {productDetails.map(({ label, value }, idx) => (
           <div

@@ -37,8 +37,10 @@ export function categoryProductsQueryValue(category: CategoryLike): string {
   return slug ? slug : category.id
 }
 
+import { lp } from '@/utils/language-path'
+
 export function toProductsCategorySearchUrl(category: CategoryLike): string {
-  return `/products?category=${encodeURIComponent(categoryProductsQueryValue(category))}`
+  return lp(`/products?category=${encodeURIComponent(categoryProductsQueryValue(category))}`)
 }
 
 export type CategoryTreeNode = {

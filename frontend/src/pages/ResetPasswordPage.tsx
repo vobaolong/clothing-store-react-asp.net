@@ -2,9 +2,11 @@ import { LockOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Card, Form, Input, message, Typography } from 'antd'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { resetPassword } from '@/api/auth-api'
 import type { ApiError } from '@/types/common.type'
+import { lp } from '@/utils/language-path'
 
 interface ResetPasswordFormValues {
   password: string
@@ -12,6 +14,7 @@ interface ResetPasswordFormValues {
 }
 
 export default function ResetPasswordPage() {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const token = searchParams.get('token')
@@ -19,20 +22,20 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     if (!token || !email) {
-      message.error('Liên kết không hợp lệ hoặc đã hết hạn.')
-      navigate('/login')
+      message.error(t('auth.invalidLink'))
+      navigate(lp('/login'))
     }
   }, [token, email, navigate])
 
   const { mutate, isPending } = useMutation({
     mutationFn: resetPassword,
     onSuccess: () => {
-      message.success('Mật khẩu của bạn đã được đặt lại thành công.')
-      navigate('/login')
+      message.success(t('auth.passwordResetSuccess'))
+      navigate(lp('/login'))
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+        error.response?.data?.message || t('auth.someError')
       )
     }
   })
@@ -52,10 +55,10 @@ export default function ResetPasswordPage() {
       <Card className="w-full max-w-md rounded-3xl shadow-xl border-slate-200">
         <div className="mb-8 text-center">
           <Typography.Title level={2} className="mb-2!">
-            Đặt lại mật khẩu
+            {t('auth.resetPasswordTitle')}
           </Typography.Title>
           <Typography.Paragraph type="secondary">
-            Nhập mật khẩu mới cho tài khoản {email}
+            {t('auth.resetPasswordDesc', { email })}
           </Typography.Paragraph>
         </div>
 
@@ -67,10 +70,10 @@ export default function ResetPasswordPage() {
         >
           <Form.Item
             name="password"
-            label="Mật khẩu mới"
+            label={t('auth.newPassword')}
             rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu mới!' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
+              { required: true, message: t('auth.pleaseEnterNewPassword') },
+              { min: 6, message: t('auth.passwordMinLength') }
             ]}
           >
             <Input.Password
@@ -81,17 +84,17 @@ export default function ResetPasswordPage() {
 
           <Form.Item
             name="confirm"
-            label="Xác nhận mật khẩu mới"
+            label={t('auth.confirmNewPassword')}
             dependencies={['password']}
             rules={[
-              { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+              { required: true, message: t('auth.pleaseConfirmPasswordExcl') },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
                     return Promise.resolve()
                   }
                   return Promise.reject(
-                    new Error('Mật khẩu xác nhận không khớp!')
+                    new Error(t('auth.confirmPasswordMismatch'))
                   )
                 }
               })
@@ -111,7 +114,7 @@ export default function ResetPasswordPage() {
               loading={isPending}
               className="h-12 font-semibold rounded-xl"
             >
-              Đặt lại mật khẩu
+              {t('auth.resetPassword')}
             </Button>
           </Form.Item>
         </Form>

@@ -11,61 +11,64 @@ import {
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
-import { ADMIN_NAV_LABELS } from '@/constants/labels.constant'
+import { lp } from '@/utils/language-path'
 
 type AdminNavbarProps = {
   inlineCollapsed: boolean
 }
 
-const navItems: MenuProps['items'] = [
+const navItems = (t: TFunction): MenuProps['items'] => [
   {
     key: AdminNavKey.DASHBOARD,
     icon: <AreaChartOutlined />,
-    label: ADMIN_NAV_LABELS.DASHBOARD
+    label: t('admin.dashboard')
   },
   {
     key: AdminNavKey.PRODUCTS,
     icon: <SkinOutlined />,
-    label: ADMIN_NAV_LABELS.PRODUCTS
+    label: t('admin.products')
   },
   {
     key: AdminNavKey.CATEGORIES,
     icon: <FolderOutlined />,
-    label: ADMIN_NAV_LABELS.CATEGORIES
+    label: t('admin.categories')
   },
   {
     key: AdminNavKey.ORDERS,
     icon: <InboxOutlined />,
-    label: ADMIN_NAV_LABELS.ORDERS
+    label: t('admin.orders')
   },
   {
     key: AdminNavKey.REVIEWS,
     icon: <CommentOutlined />,
-    label: ADMIN_NAV_LABELS.REVIEWS
+    label: t('admin.reviews')
   },
   {
     key: AdminNavKey.CUSTOMERS,
     icon: <TeamOutlined />,
-    label: ADMIN_NAV_LABELS.CUSTOMERS
+    label: t('admin.customers')
   },
   {
     key: AdminNavKey.COUPONS,
     icon: <TagsOutlined />,
-    label: ADMIN_NAV_LABELS.COUPONS
+    label: t('admin.coupons')
   },
   {
     key: AdminNavKey.BANNERS,
     icon: <PictureOutlined />,
-    label: ADMIN_NAV_LABELS.BANNERS
+    label: t('admin.banners')
   }
 ]
 
 export default function AdminNavbar({ inlineCollapsed }: AdminNavbarProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const { section } = useParams<{ section: string }>()
-  const selectedKey = location.pathname.startsWith('/admin/orders/')
+  const selectedKey = location.pathname.includes('/admin/orders/')
     ? AdminNavKey.ORDERS
     : section && isAdminNavKey(section)
       ? section
@@ -76,8 +79,8 @@ export default function AdminNavbar({ inlineCollapsed }: AdminNavbarProps) {
       mode="inline"
       inlineCollapsed={inlineCollapsed}
       selectedKeys={[selectedKey]}
-      items={navItems}
-      onClick={({ key }) => navigate(`/admin/${String(key)}`)}
+      items={navItems(t)}
+      onClick={({ key }) => navigate(lp(`/admin/${String(key)}`))}
       className="px-2 pb-4 border-0 bg-white! dark:bg-[#192037]!"
     />
   )

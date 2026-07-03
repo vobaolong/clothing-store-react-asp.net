@@ -11,6 +11,7 @@ import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { ShippingAddressLabel } from '@/enums/shipping-address.enum'
 import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/options/shipping-address.options'
 import type { CreateShippingAddressPayload, ShippingAddress } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 type ShippingAddressFormValues = {
   fullName?: string
@@ -39,7 +40,7 @@ export default function ShippingAddressFormModal({
   const queryClient = useQueryClient()
   const previousProvinceIdRef = useRef<string | undefined>(undefined)
   const isEditMode = Boolean(address)
-
+  const { t } = useTranslation()
   const provincesQuery = useQuery({
     queryKey: QUERY_KEYS.checkoutProvinces,
     queryFn: () => getProvinces(),
@@ -168,44 +169,42 @@ export default function ShippingAddressFormModal({
 
   return (
     <Modal
-      title={isEditMode ? 'Chỉnh sửa địa chỉ' : 'Thêm địa chỉ mới'}
+      title={isEditMode ? t('profile.editAddress') : t('profile.addAddress')}
       open={open}
       onCancel={onCancel}
       onOk={() => form.submit()}
       confirmLoading={
         createAddressMutation.isPending || updateAddressMutation.isPending
       }
-      okText={isEditMode ? 'Cập nhật địa chỉ' : 'Lưu địa chỉ'}
-      cancelText="Hủy"
+      okText={isEditMode ? t('profile.editAddress') : t('profile.saveAddress')}
+      cancelText={t('common.cancel')}
       destroyOnHidden
     >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
           name="fullName"
-          label="Họ và tên"
-          rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+          label={t('profile.fullName')}
+          rules={[{ required: true, message: t('profile.fullNameRequired') }]}
         >
-          <Input placeholder="Nhập họ và tên" />
+          <Input placeholder={t('profile.fullName')} />
         </Form.Item>
 
         <Form.Item
           name="phone"
-          label="Số điện thoại"
-          rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+          label={t('profile.phone')}
+          rules={[{ required: true, message: t('profile.phoneRequired') }]}
         >
-          <Input placeholder="Nhập số điện thoại" />
+          <Input placeholder={t('profile.phone')} />
         </Form.Item>
 
         <Form.Item
           name="province"
-          label="Tỉnh / Thành phố"
-          rules={[
-            { required: true, message: 'Vui lòng chọn tỉnh / thành phố' }
-          ]}
+          label={t('profile.province')}
+          rules={[{ required: true, message: t('profile.provinceRequired') }]}
         >
           <Select
             showSearch
-            placeholder="Chọn tỉnh / thành phố"
+            placeholder={t('profile.province')}
             options={(provincesQuery.data ?? []).map((item) => ({
               label: item.name,
               value: item.code
@@ -220,13 +219,13 @@ export default function ShippingAddressFormModal({
 
         <Form.Item
           name="ward"
-          label="Phường / Xã"
-          rules={[{ required: true, message: 'Vui lòng chọn phường / xã' }]}
+          label={t('profile.ward')}
+          rules={[{ required: true, message: t('profile.wardRequired') }]}
         >
           <Select
             showSearch
             disabled={!selectedProvinceId}
-            placeholder="Chọn phường / xã"
+            placeholder={t('profile.ward')}
             options={(wardsQuery.data ?? []).map(
               (item: { name: string; code: string }) => ({
                 label: item.name,
@@ -243,14 +242,14 @@ export default function ShippingAddressFormModal({
 
         <Form.Item
           name="street"
-          label="Địa chỉ"
+          label={t('profile.street')}
           required
-          rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+          rules={[{ required: true, message: t('profile.streetRequired') }]}
         >
-          <Input placeholder="Số nhà, tên đường..." />
+          <Input placeholder={t('profile.street')} />
         </Form.Item>
 
-        <Form.Item name="label" label="Nhãn địa chỉ">
+        <Form.Item name="label" label={t('profile.addressLabel')}>
           <div className="flex flex-wrap gap-2">
             {SHIPPING_ADDRESS_LABEL_OPTIONS.map((item) => (
               <Tag.CheckableTag
@@ -266,18 +265,18 @@ export default function ShippingAddressFormModal({
                 }}
                 className="flex! items-center! justify-center! px-3 py-1.5 h-8! text-sm leading-none border cursor-pointer border-slate-300!"
               >
-                {item.label}
+                {t(item.labelKey)}
               </Tag.CheckableTag>
             ))}
           </div>
         </Form.Item>
 
         <Form.Item name="isDefault" valuePropName="checked">
-          <Checkbox>Đặt làm địa chỉ mặc định</Checkbox>
+          <Checkbox>{t('profile.setDefaultAddress')}</Checkbox>
         </Form.Item>
 
         <div className="hidden">
-          <Button htmlType="submit">Submit</Button>
+          <Button htmlType="submit">{t('common.save')}</Button>
         </div>
       </Form>
     </Modal>

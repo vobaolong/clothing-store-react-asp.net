@@ -3,6 +3,7 @@ import { toCapitalize } from '@/utils/table.lib'
 import { normalizeSize } from '@/utils/size-utils'
 import type { ProductSelection } from '@/types/product.type'
 import type { Product } from '@/types/product.type'
+import { useTranslation } from 'react-i18next'
 
 type ProductVariant = Product['variants'][number]
 
@@ -25,11 +26,12 @@ export default function ProductVariantSelectors({
   setSelection,
   onOpenSizeGuide
 }: ProductVariantSelectorsProps) {
+  const { t } = useTranslation()
   return (
     <>
       <div className="space-y-3">
         <p className="text-sm font-semibold">
-          Màu sắc:{' '}
+          {t('product.color')}:{' '}
           <span className="text-base font-medium tracking-normal normal-case text-stone-700 dark:text-stone-300">
             {toCapitalize(resolvedColor ?? '-')}
           </span>
@@ -84,7 +86,7 @@ export default function ProductVariantSelectors({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="m-0! text-sm font-semibold">
-                Kích thước:{' '}
+                {t('product.size')}:{' '}
                 <span className="text-base font-medium tracking-normal normal-case text-stone-700 dark:text-stone-300">
                   {toCapitalize(resolvedSize ?? '-')}
                 </span>
@@ -94,7 +96,7 @@ export default function ProductVariantSelectors({
                 onClick={onOpenSizeGuide}
                 className="cursor-pointer text-xs! text-blue-700! underline underline-offset-2 transition-colors hover:text-stone-600"
               >
-                Hướng dẫn chọn size
+                {t('product.sizeGuide')}
               </button>
             </div>
             <div className="flex flex-wrap gap-2">

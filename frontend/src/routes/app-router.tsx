@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { lazy } from 'react'
+import { i18n } from '@/i18n'
 import AdminShell from '@/layouts/AdminShell'
 import AppShell from '@/layouts/AppShell'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -23,6 +24,8 @@ const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
 const VerifyOtpPage = lazy(() => import('@/pages/VerifyOtpPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
+const defaultLng = i18n.language || i18n.resolvedLanguage || 'vi'
+
 export function AppRouter() {
   return (
     <>
@@ -30,7 +33,7 @@ export function AppRouter() {
       <Routes>
         <Route element={<AdminShell />}>
           <Route
-            path="/admin/orders/:id"
+            path="/:lng/admin/orders/:id"
             element={
               <ProtectedRoute requireAdmin>
                 <AdminOrderDetailPage />
@@ -38,11 +41,11 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/admin"
-            element={<Navigate to="/admin/dashboard" replace />}
+            path="/:lng/admin"
+            element={<Navigate to={`/${defaultLng}/admin/dashboard`} replace />}
           />
           <Route
-            path="/admin/:section"
+            path="/:lng/admin/:section"
             element={
               <ProtectedRoute requireAdmin>
                 <AdminPage />
@@ -53,7 +56,7 @@ export function AppRouter() {
 
         <Route element={<AppShell />}>
           <Route
-            path="/"
+            path="/:lng"
             element={
               <ProtectedRoute blockAdmin>
                 <HomePage />
@@ -61,7 +64,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/products"
+            path="/:lng/products"
             element={
               <ProtectedRoute blockAdmin>
                 <ProductsPage />
@@ -69,7 +72,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/about"
+            path="/:lng/about"
             element={
               <ProtectedRoute blockAdmin>
                 <AboutPage />
@@ -77,7 +80,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/products/:slug"
+            path="/:lng/products/:slug"
             element={
               <ProtectedRoute blockAdmin>
                 <ProductDetailPage />
@@ -85,7 +88,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/cart"
+            path="/:lng/cart"
             element={
               <ProtectedRoute blockAdmin>
                 <CartPage />
@@ -93,7 +96,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/checkout"
+            path="/:lng/checkout"
             element={
               <ProtectedRoute blockAdmin>
                 <CheckoutPage />
@@ -101,7 +104,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/profile"
+            path="/:lng/profile"
             element={
               <ProtectedRoute blockAdmin>
                 <ProfilePage />
@@ -109,7 +112,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/orders/:id"
+            path="/:lng/orders/:id"
             element={
               <ProtectedRoute blockAdmin>
                 <OrderDetailPage />
@@ -117,7 +120,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/payment-return"
+            path="/:lng/payment-return"
             element={
               <ProtectedRoute blockAdmin>
                 <PaymentReturnPage />
@@ -125,7 +128,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/login"
+            path="/:lng/login"
             element={
               <ProtectedRoute blockAdmin>
                 <LoginPage />
@@ -133,7 +136,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/register"
+            path="/:lng/register"
             element={
               <ProtectedRoute blockAdmin>
                 <RegisterPage />
@@ -141,7 +144,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/forgot-password"
+            path="/:lng/forgot-password"
             element={
               <ProtectedRoute blockAdmin>
                 <ForgotPasswordPage />
@@ -149,7 +152,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/reset-password"
+            path="/:lng/reset-password"
             element={
               <ProtectedRoute blockAdmin>
                 <ResetPasswordPage />
@@ -157,7 +160,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="/verify-otp"
+            path="/:lng/verify-otp"
             element={
               <ProtectedRoute>
                 <VerifyOtpPage />
@@ -165,7 +168,7 @@ export function AppRouter() {
             }
           />
           <Route
-            path="*"
+            path="/:lng/*"
             element={
               <ProtectedRoute>
                 <NotFoundPage />
@@ -173,6 +176,9 @@ export function AppRouter() {
             }
           />
         </Route>
+
+        <Route path="/" element={<Navigate to={`/${defaultLng}`} replace />} />
+        <Route path="*" element={<Navigate to={`/${defaultLng}`} replace />} />
       </Routes>
     </>
   )

@@ -7,6 +7,7 @@ import { getGalleryUrlsForColor } from '@/utils/product-color-images'
 import ProductColorSwatches from '@/components/products/ProductColorSwatches'
 import { toCapitalize } from '@/utils/table.lib'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
+import { lp } from '@/utils/language-path'
 import WishlistToggleButton from '@/components/wishlist/WishlistToggleButton'
 
 const NEW_BADGE_MAX_AGE_MS = 24 * 60 * 60 * 1000 * 30 // 30 days
@@ -65,7 +66,7 @@ export default function ProductCard({
           ? '[&_.ant-card-body]:flex-col [&_.ant-card-body]:p-3!'
           : '[&_.ant-card-body]:max-h-65 [&_.ant-card-body]:flex-col [&_.ant-card-body]:p-4!'
       }`}
-      onClick={() => navigate(`/products/${product.slug}`)}
+      onClick={() => navigate(lp(`/products/${product.slug}`))}
       cover={
         <div className="overflow-hidden relative w-full aspect-square bg-slate-100">
           {showNewBadge ? (
@@ -127,7 +128,7 @@ export default function ProductCard({
           disabled={!firstVariant}
           onClick={(e) => {
             e.stopPropagation()
-            navigate(`/products/${product.slug}`)
+            navigate(lp(`/products/${product.slug}`))
           }}
         >
           Mua hàng

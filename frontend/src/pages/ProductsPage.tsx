@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Pagination, Row, Col, Tag, Drawer, FloatButton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
@@ -24,6 +25,7 @@ import {
 import { getEffectivePrice } from '@/utils/product-pricing'
 
 export default function ProductsPage() {
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const { data: products = [], isLoading } = useQuery({
     queryKey: QUERY_KEYS.products,
@@ -175,7 +177,7 @@ export default function ProductsPage() {
     (page - 1) * PRODUCTS_PAGE_SIZE,
     page * PRODUCTS_PAGE_SIZE
   )
-  if (isLoading || categoriesLoading) return <p>Đang tải &hellip;</p>
+  if (isLoading || categoriesLoading) return <p>{t('common.loading')}</p>
 
   const updateFilters = (key: string, values: string[]) => {
     const next = new URLSearchParams(searchParams)
@@ -297,7 +299,7 @@ export default function ProductsPage() {
                   onClick={clearAllFilters}
                   className="text-sm! font-semibold text-red-700! hover:text-red-800! transition-colors underline! cursor-pointer"
                 >
-                  Xoá lọc
+                  {t('productFilter.clear')}
                 </button>
               </div>
             )}

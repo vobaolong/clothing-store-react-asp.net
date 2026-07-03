@@ -9,6 +9,7 @@ import {
 } from 'recharts'
 import type { AnalyticsPoint } from '@/types'
 import { formatCurrency } from '@/utils/format'
+import { useTranslation } from 'react-i18next'
 
 type AnalyticsAreaChartProps = {
   data: AnalyticsPoint[]
@@ -19,6 +20,7 @@ export default function AnalyticsAreaChart({
   data,
   height = 320
 }: AnalyticsAreaChartProps) {
+  const { t } = useTranslation()
   return (
     <ResponsiveContainer width="100%" height={height}>
       <AreaChart
@@ -47,7 +49,7 @@ export default function AnalyticsAreaChart({
         <Area
           type="monotone"
           dataKey="revenue"
-          name="Doanh thu"
+          name={t('admin.revenue')}
           stroke="#10b981"
           fill="url(#revenueGradient)"
           strokeWidth={2}

@@ -17,12 +17,14 @@ import {
   OrderDetailTotalsCard
 } from '@/components/order/OrderDetailTimelineCard'
 import OrderDetailReviewModal from '@/components/order/OrderDetailReviewModal'
+import { useTranslation } from 'react-i18next'
 
 export default function OrderDetailPage() {
   const { id } = useParams()
   const token = getAuthToken()
   const queryClient = useQueryClient()
   const [reviewingItemId, setReviewingItemId] = useState<string | null>(null)
+  const { t } = useTranslation()
 
   const detailQuery = useQuery({
     queryKey: QUERY_KEYS.myOrderDetail(id),
@@ -112,7 +114,7 @@ export default function OrderDetailPage() {
           <LeftOutlined />
         </Link>
         <h1 className="text-xl font-semibold sm:text-2xl m-0!">
-          Chi tiết đơn hàng
+          {t('order.orderDetails')}
         </h1>
         <div className="flex gap-3 items-center">
           {canCancelOrder ? (
@@ -121,16 +123,16 @@ export default function OrderDetailPage() {
               loading={cancelOrderMutation.isPending}
               onClick={() =>
                 Modal.confirm({
-                  title: 'Hủy đơn hàng?',
-                  content: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-                  okText: 'Hủy đơn',
+                  title: t('order.cancelOrderTitle'),
+                  content: t('order.cancelOrderContent'),
+                  okText: t('order.cancelOrder'),
                   okButtonProps: { danger: true },
-                  cancelText: 'Đóng',
+                  cancelText: t('common.close'),
                   onOk: () => cancelOrderMutation.mutateAsync()
                 })
               }
             >
-              Hủy đơn
+              {t('order.cancelOrder')}
             </Button>
           ) : null}
         </div>

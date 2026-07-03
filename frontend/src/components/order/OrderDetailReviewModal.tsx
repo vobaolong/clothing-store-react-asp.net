@@ -1,6 +1,7 @@
 import { Modal } from 'antd'
 import ReviewForm from '@/components/reviews/ReviewForm'
 import type { MyOrderItem } from '@/types/order.type'
+import { useTranslation } from 'react-i18next'
 
 interface OrderDetailReviewModalProps {
   item: MyOrderItem | null
@@ -19,12 +20,13 @@ export default function OrderDetailReviewModal({
   onSubmit,
   onCancel
 }: OrderDetailReviewModalProps) {
+  const { t } = useTranslation()
   return (
     <Modal
       title={
         item?.productName
-          ? `Đánh giá "${item.productName}"`
-          : 'Đánh giá sản phẩm'
+          ? `${t('product.reviews')}"${item.productName}"`
+          : t('product.productReviews')
       }
       open={Boolean(item)}
       onCancel={onCancel}

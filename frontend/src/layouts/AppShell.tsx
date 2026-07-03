@@ -2,6 +2,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Drawer, Empty, Layout, Modal } from 'antd'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -23,10 +24,12 @@ import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import { logout, selectAuth } from '@/state/auth'
+import { lp } from '@/utils/language-path'
 
 const { Content } = Layout
 
 export default function AppShell() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -48,25 +51,25 @@ export default function AppShell() {
 
   const handleLogout = () => {
     Modal.confirm({
-      title: 'Xác nhận đăng xuất',
+      title: t('confirm.logoutTitle'),
       icon: <ExclamationCircleOutlined />,
-      content: 'Bạn có chắc chắn muốn đăng xuất?',
-      okText: 'Đăng xuất',
-      cancelText: 'Hủy',
+      content: t('confirm.logoutContent'),
+      okText: t('confirm.logoutOk'),
+      cancelText: t('confirm.cancel'),
       okButtonProps: { danger: true },
       onOk: () => {
         dispatch(logout())
-        toast.success('Đăng xuất thành công')
-        navigate('/')
+        toast.success(t('confirm.logoutSuccess'))
+        navigate(lp('/'))
       }
     })
   }
 
-  const selectedRootPath = location.pathname.startsWith('/products')
+  const selectedRootPath = location.pathname.startsWith(lp('/products'))
     ? '/products'
-    : location.pathname === '/'
+    : location.pathname === lp('/')
       ? '/'
-      : `/${location.pathname.split('/')[1]}`
+      : `/${location.pathname.split('/')[2]}`
 
   return (
     <div className="flex flex-col overflow-hidden min-h-dvh bg-slate-50 dark:bg-gray-950">
@@ -87,14 +90,14 @@ export default function AppShell() {
       {!isAdminUser && <Footer />}
 
       <Drawer
-        title="Giỏ hàng"
+        title={t('header.cartTitle')}
         placement="right"
         size={420}
         open={isCartDrawerOpen}
         onClose={() => dispatch(closeCartDrawer())}
       >
         {!cartItems.length ? (
-          <Empty description="Giỏ hàng của bạn trống" />
+          <Empty description={t('header.cartEmpty')} />
         ) : (
           <div className="flex flex-col h-full min-h-0">
             <div className="flex flex-col flex-1 min-h-0 gap-4 pr-1 overflow-y-auto">
@@ -171,7 +174,7 @@ export default function AppShell() {
 
             <div className="pt-4 mt-auto border-t shrink-0 border-slate-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-3 text-slate-700 dark:text-slate-300">
-                <span>Tổng cộng</span>
+                <span>{t('common.total')}</span>
                 <span className="text-lg font-semibold text-slate-900 dark:text-white">
                   {formatCurrency(cartTotal)}
                 </span>
@@ -181,10 +184,10 @@ export default function AppShell() {
                 block
                 onClick={() => {
                   dispatch(closeCartDrawer())
-                  navigate('/cart')
+                  navigate(lp('/cart'))
                 }}
               >
-                Xem giỏ hàng
+                {t('cart.viewCart')}
               </Button>
             </div>
           </div>

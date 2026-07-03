@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Checkbox, Collapse, ConfigProvider } from 'antd'
 import type { CollapseProps } from 'antd'
 import { UpOutlined } from '@ant-design/icons'
@@ -54,15 +55,16 @@ export default function ProductsFilter({
   onPriceRangeChange,
   totalResults = 0
 }: ProductsFilterProps) {
+  const { t } = useTranslation()
   const isPriceSelected = ([lo, hi]: number[]) =>
     lo === priceRange[0] && hi === priceRange[1]
 
   const collapseItems: CollapseProps['items'] = [
     {
       key: 'category',
-      label: <CollapseHeader>Danh mục</CollapseHeader>,
+      label: <CollapseHeader>{t('productFilter.category')}</CollapseHeader>,
       children: (
-        <div className="max-h-[500px] overflow-y-auto">
+        <div className="max-h-125 overflow-y-auto">
           <Checkbox.Group
             value={selectedCategories}
             onChange={(values) => onCategoryChange(values as string[])}
@@ -84,7 +86,7 @@ export default function ProductsFilter({
     },
     {
       key: 'size',
-      label: <CollapseHeader>Kích thước</CollapseHeader>,
+      label: <CollapseHeader>{t('productFilter.size')}</CollapseHeader>,
       children: (
         <div className="grid grid-cols-4 gap-2">
           {sizeOptions.map((size) => {
@@ -115,7 +117,7 @@ export default function ProductsFilter({
     },
     {
       key: 'color',
-      label: <CollapseHeader>Màu sắc</CollapseHeader>,
+      label: <CollapseHeader>{t('productFilter.color')}</CollapseHeader>,
       children: (
         <div className="grid grid-cols-4 gap-x-2 gap-y-4">
           {colorOptions.map(({ label, hex }) => {
@@ -161,7 +163,7 @@ export default function ProductsFilter({
     },
     {
       key: 'price',
-      label: <CollapseHeader>Giá</CollapseHeader>,
+      label: <CollapseHeader>{t('productFilter.price')}</CollapseHeader>,
       children: (
         <div className="flex flex-col gap-3">
           {PRICE_RANGES.map((range) => (
@@ -202,9 +204,9 @@ export default function ProductsFilter({
     >
       <aside className="w-full">
         <div className="flex justify-between items-center py-4 border-b border-stone-200">
-          <h2 className="text-lg font-bold">Bộ lọc</h2>
+          <h2 className="text-lg font-bold">{t('productFilter.title')}</h2>
           <span className="text-sm font-medium text-stone-400">
-            {totalResults} kết quả
+            {t('productFilter.resultCount', { count: totalResults })}
           </span>
         </div>
 

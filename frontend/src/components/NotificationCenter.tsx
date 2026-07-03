@@ -8,6 +8,8 @@ import type { NotificationDto } from '@/types/notification.type'
 import { getNotificationIcon } from '@/utils/notification'
 import { selectNotificationUnreadCount } from '@/state/notification-slice'
 import { isAdmin } from '@/state/auth/auth-session'
+import { lp } from '@/utils/language-path'
+import { useTranslation } from 'react-i18next'
 
 const formatRelativeTime = (dateString: string): string => {
   const diffSec = Math.floor(
@@ -39,7 +41,7 @@ export const NotificationCenter = () => {
 
   const openNotificationsPage = () => {
     setIsOpen(false)
-    navigate('/profile?tab=notifications')
+    navigate(lp('/profile?tab=notifications'))
   }
 
   const openRelatedOrderDetail = (notification: NotificationDto) => {
@@ -49,9 +51,9 @@ export const NotificationCenter = () => {
       return
     }
     if (isAdmin()) {
-      navigate(`/admin/orders/${notification.relatedEntityId}`)
+      navigate(lp(`/admin/orders/${notification.relatedEntityId}`))
     } else {
-      navigate(`/orders/${notification.relatedEntityId}`)
+      navigate(lp(`/orders/${notification.relatedEntityId}`))
     }
   }
 
@@ -67,11 +69,14 @@ export const NotificationCenter = () => {
       openNotificationsPage()
     }
   }
+  const { t } = useTranslation()
 
   const dropdown = (
     <div className="w-80 sm:w-96">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 rounded-t-md">
-        <Typography.Text strong>Thông báo</Typography.Text>
+        <Typography.Text strong>
+          {t('notification.announcements')}
+        </Typography.Text>
         {unreadCount > 0 && (
           <button
             onClick={(e) => {
@@ -80,7 +85,7 @@ export const NotificationCenter = () => {
             }}
             className="text-sm font-medium cursor-pointer bg-transparent border-0"
           >
-            Đánh dấu tất cả đã đọc
+            {t('notification.markAsRead')}
           </button>
         )}
       </div>
@@ -91,7 +96,10 @@ export const NotificationCenter = () => {
             <Spin />
           </div>
         ) : notifications.length === 0 ? (
-          <Empty className="py-8" description="Không có thông báo nào" />
+          <Empty
+            className="py-8"
+            description={t('notification.noNotifications')}
+          />
         ) : (
           <List
             dataSource={notifications}
@@ -148,7 +156,7 @@ export const NotificationCenter = () => {
             }}
             className="text-sm font-medium cursor-pointer bg-transparent border-0 hover:text-slate-400!"
           >
-            Xem tất cả thông báo
+            {t('notification.viewAll')}
           </button>
         </div>
       )}

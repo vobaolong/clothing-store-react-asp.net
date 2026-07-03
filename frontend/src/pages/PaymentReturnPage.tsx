@@ -17,6 +17,7 @@ import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { formatCurrency } from '@/utils/format'
 import { removePurchasedCartItems } from '@/state/cart-slice'
 import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
+import { lp } from '@/utils/language-path'
 
 function IconSuccess() {
   return <CheckCircleOutlined style={{ fontSize: 28, color: '#3B6D11' }} />
@@ -328,7 +329,7 @@ export default function PaymentReturnPage() {
         )}
 
         <div className="flex gap-2.5 px-8 pb-8">
-          <Link to="/profile?tab=orders" className="flex-1">
+          <Link to={lp('/profile?tab=orders')} className="flex-1">
             <Button
               type="primary"
               block
@@ -338,7 +339,7 @@ export default function PaymentReturnPage() {
               Xem đơn hàng
             </Button>
           </Link>
-          <Link to="/" className="flex-1">
+          <Link to={lp('/')} className="flex-1">
             <Button
               block
               size="large"

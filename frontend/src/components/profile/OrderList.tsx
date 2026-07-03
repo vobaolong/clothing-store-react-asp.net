@@ -21,9 +21,10 @@ import {
 } from '@/constants/order.constant'
 import { getMyOrders } from '@/api/orders-api'
 import { formatCurrency, formatDate } from '@/utils/format'
+import { lp } from '@/utils/language-path'
 import { ORDER_FILTER_STATUSES } from '@/options/order.options'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
-import { STATUS_COLORS } from '@/constants/labels.constant'
+import { ORDER_STATUS_COLORS } from '@/constants/order-status.constant'
 import type { MyOrder } from '@/types'
 
 const matchesSearch = (needle: string, order: MyOrder) => {
@@ -123,7 +124,7 @@ export default function OrderList() {
         dataIndex: 'paymentStatus',
         width: 120,
         render: (_, row) => (
-          <Tag variant="outlined" color={STATUS_COLORS[row.paymentStatus]}>
+          <Tag variant="outlined" color={ORDER_STATUS_COLORS[row.paymentStatus]}>
             {getVietnameseLabel(row.paymentStatus)}
           </Tag>
         )
@@ -133,7 +134,7 @@ export default function OrderList() {
         dataIndex: 'status',
         width: 120,
         render: (_, row) => (
-          <Tag variant="outlined" color={STATUS_COLORS[row.status]}>
+          <Tag variant="outlined" color={ORDER_STATUS_COLORS[row.status]}>
             {getVietnameseLabel(row.status)}
           </Tag>
         )
@@ -156,7 +157,7 @@ export default function OrderList() {
           <Tooltip title="Xem chi tiết">
             <Button
               icon={<EyeOutlined />}
-              onClick={() => navigate(`/orders/${row.id}`)}
+              onClick={() => navigate(lp(`/orders/${row.id}`))}
             />
           </Tooltip>
         )

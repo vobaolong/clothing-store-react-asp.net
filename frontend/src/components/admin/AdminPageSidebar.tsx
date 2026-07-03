@@ -1,5 +1,6 @@
 import { LogoutOutlined } from '@ant-design/icons'
 import { Button, Layout, Tooltip, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import AdminNavbar from '@/components/admin/AdminNavbar'
 
@@ -18,6 +19,8 @@ export default function AdminPageSidebar({
   brandTitle,
   onLogout
 }: AdminPageSidebarProps) {
+  const { t } = useTranslation()
+
   return (
     <Sider
       width={240}
@@ -44,7 +47,7 @@ export default function AdminPageSidebar({
           <AdminNavbar inlineCollapsed={collapsed} />
         </div>
         <div className="flex justify-center p-2 border-t shrink-0 border-slate-200 dark:border-gray-700 bg-white! dark:bg-[#192037]!">
-          <Tooltip title={collapsed ? 'Logout' : undefined}>
+          <Tooltip title={collapsed ? t('admin.brandTitle') : undefined}>
             <Button
               danger
               type="default"
@@ -53,7 +56,7 @@ export default function AdminPageSidebar({
               className={collapsed ? 'flex w-full justify-center px-0!' : ''}
               onClick={onLogout}
             >
-              {!collapsed ? 'Đăng xuất' : null}
+              {!collapsed ? t('confirm.logoutOk') : null}
             </Button>
           </Tooltip>
         </div>

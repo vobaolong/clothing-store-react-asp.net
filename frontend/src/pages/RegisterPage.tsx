@@ -6,12 +6,14 @@ import {
   PhoneOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import axios from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Card, Form, Input, Typography } from 'antd'
+import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { register } from '@/api/auth-api'
+import { lp } from '@/utils/language-path'
 
 const { Title, Paragraph } = Typography
 
@@ -60,18 +62,16 @@ function PasswordStrengthChecklist({ password }: { password: string }) {
 }
 
 export default function RegisterPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [form] = Form.useForm()
-  // Use Form.useWatch so the Form manages the value internally — fixes confirm password bug
   const passwordValue: string = Form.useWatch('password', form) ?? ''
 
   const registerMutation = useMutation({
     mutationFn: register,
     onSuccess: (_data, variables) => {
-      toast.success(
-        'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.'
-      )
-      navigate('/verify-otp', { state: { email: variables.email } })
+      toast.success(t('auth.registerSuccess'))
+      navigate(lp('/verify-otp'), { state: { email: variables.email } })
     },
     onError: (error) => {
       const payload = axios.isAxiosError(error)
@@ -82,7 +82,7 @@ export default function RegisterPage() {
           ? (payload as { message?: unknown }).message
           : undefined
       const msg = typeof raw === 'string' && raw.trim() ? raw.trim() : null
-      toast.error(msg ?? 'Không thể tạo tài khoản. Vui lòng thử lại.')
+      toast.error(msg ?? t('auth.registerFailed'))
     }
   })
 
@@ -91,11 +91,10 @@ export default function RegisterPage() {
       <Card className="w-full rounded-3xl border shadow-sm border-slate-200">
         <div className="mb-6">
           <Title level={3} className="mb-1!">
-            Tạo tài khoản mới
+            {t('auth.registerTitle')}
           </Title>
           <Paragraph className="mb-0! text-slate-500!">
-            Đăng ký Wearly để lưu các sản phẩm yêu thích và thanh toán nhanh
-            hơn.
+            {t('auth.registerSubtitle')}
           </Paragraph>
         </div>
 
@@ -106,52 +105,52 @@ export default function RegisterPage() {
           requiredMark={false}
         >
           <Form.Item
-            label="Họ và tên"
+            label={t('auth.fullName')}
             name="fullName"
             rules={[
-              { required: true, message: 'Vui lòng nhập đầy đủ họ và tên' },
-              { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự' }
+              { required: true, message: t('auth.pleaseEnterFullName') },
+              { min: 2, message: t('auth.fullNameMinLength') }
             ]}
           >
             <Input
-              placeholder="Nguyễn Văn A"
+              placeholder={t('auth.fullNamePlaceholder')}
               prefix={<UserOutlined className="text-slate-500" />}
               allowClear
             />
           </Form.Item>
 
           <Form.Item
-            label="Email"
+            label={t('auth.email')}
             name="email"
             rules={[
-              { required: true, message: 'Vui lòng nhập email' },
-              { type: 'email', message: 'Định dạng email không hợp lệ' }
+              { required: true, message: t('auth.pleaseEnterEmail') },
+              { type: 'email', message: t('auth.invalidEmail') }
             ]}
           >
             <Input
-              placeholder="example@gmail.com"
+              placeholder={t('auth.emailPlaceholder')}
               prefix={<MailOutlined className="text-slate-500" />}
               allowClear
             />
           </Form.Item>
 
           <Form.Item
-            label="Số điện thoại"
+            label={t('auth.phone')}
             name="phone"
-            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+            rules={[{ required: true, message: t('auth.pleaseEnterPhone') }]}
           >
             <Input
-              placeholder="0901234567"
+              placeholder={t('auth.phonePlaceholder')}
               prefix={<PhoneOutlined className="text-slate-500" />}
               allowClear
             />
           </Form.Item>
 
           <Form.Item
-            label="Mật khẩu"
+            label={t('auth.password')}
             name="password"
             rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu' },
+              { required: true, message: t('auth.pleaseEnterPassword') },
               {
                 validator: (_, value) => {
                   if (!value) return Promise.resolve()
@@ -164,7 +163,7 @@ export default function RegisterPage() {
             ]}
           >
             <Input.Password
-              placeholder="Tạo mật khẩu mạnh"
+              placeholder={t('auth.createStrongPassword')}
               prefix={<LockOutlined className="text-slate-500" />}
             />
           </Form.Item>
@@ -173,11 +172,11 @@ export default function RegisterPage() {
 
           <Form.Item
             className="mt-4"
-            label="Xác nhận mật khẩu"
+            label={t('auth.confirmPassword')}
             name="confirmPassword"
             dependencies={['password']}
             rules={[
-              { required: true, message: 'Vui lòng xác nhận mật khẩu' },
+              { required: true, message: t('auth.pleaseConfirmPassword') },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
@@ -191,7 +190,7 @@ export default function RegisterPage() {
             ]}
           >
             <Input.Password
-              placeholder="Nhập lại mật khẩu"
+              placeholder={t('auth.reEnterPassword')}
               prefix={<LockOutlined className="text-slate-500" />}
             />
           </Form.Item>
@@ -202,17 +201,17 @@ export default function RegisterPage() {
             block
             loading={registerMutation.isPending}
           >
-            Tạo tài khoản
+            {t('auth.createAccount')}
           </Button>
         </Form>
 
         <div className="mt-5 text-sm text-center text-slate-500">
-          Đã có tài khoản?{' '}
+          {t('auth.hasAccount')}{' '}
           <Link
             to="/login"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Đăng nhập
+            {t('auth.login')}
           </Link>
         </div>
       </Card>

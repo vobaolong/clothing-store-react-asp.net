@@ -79,11 +79,15 @@ export default function AddressList() {
                   <div className="flex flex-col w-full gap-2">
                     <span className="flex items-center gap-2">
                       <strong>
-                        {
-                          SHIPPING_ADDRESS_LABEL_OPTIONS.find(
-                            (x) => x.value === row.label
-                          )?.label
-                        }
+                        {SHIPPING_ADDRESS_LABEL_OPTIONS.find(
+                          (x) => x.value === row.label
+                        )?.labelKey
+                          ? t(
+                              SHIPPING_ADDRESS_LABEL_OPTIONS.find(
+                                (x) => x.value === row.label
+                              )?.labelKey ?? ''
+                            )
+                          : ''}
                       </strong>
                       -
                       {row.isDefault ? (

@@ -13,15 +13,13 @@ import {
   Tooltip
 } from 'antd'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { getAdminOrderDetail, updateAdminOrderStatus } from '@/api/admin-api'
 import { OrderStatus, CouponDiscountType } from '@/enums'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
-import {
-  SHIPPING_ADDRESS_LABELS,
-  STATUS_COLORS
-} from '@/constants/labels.constant'
+import { ORDER_STATUS_COLORS } from '@/constants/order-status.constant'
 import {
   formatCurrency,
   formatDate,
@@ -36,6 +34,7 @@ import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
 
 export default function AdminOrderDetailPage() {
+  const { t } = useTranslation()
   const { id } = useParams()
   const token = getAuthToken()
   const qc = useQueryClient()
@@ -55,7 +54,7 @@ export default function AdminOrderDetailPage() {
     mutationFn: ({ status }: { status: string }) =>
       updateAdminOrderStatus(String(id), { status }),
     onSuccess: async () => {
-      toast.success('Cập nhật trạng thái đơn hàng thành công')
+      toast.success(t('order.updateStatusSuccess'))
       await Promise.all([
         qc.invalidateQueries({
           queryKey: QUERY_KEYS.adminOrderDetail(id ?? undefined)
@@ -64,7 +63,7 @@ export default function AdminOrderDetailPage() {
       ])
     },
     onError: () => {
-      toast.error('Cập nhật trạng thái đơn hàng thất bại')
+      toast.error(t('order.updateStatusFailed'))
     }
   })
 
@@ -87,7 +86,7 @@ export default function AdminOrderDetailPage() {
   const handleExportBill = () => {
     if (!detail) return
     openBillPrintWindow(detail, () => {
-      toast.error('Không thể mở cửa sổ in hóa đơn')
+      toast.error(t('order.invoicePrintFailed'))
     })
   }
 
@@ -107,7 +106,7 @@ export default function AdminOrderDetailPage() {
             </div>
             {detail ? (
               <div className="text-xs text-slate-500 dark:text-slate-200">
-                Tạo lúc {formatDate(detail.createdAt)}
+                {t('common.createdAt')} {formatDate(detail.createdAt)}
               </div>
             ) : null}
           </div>
@@ -115,7 +114,7 @@ export default function AdminOrderDetailPage() {
 
         <div className="flex flex-wrap items-center gap-2">
           {detail && (
-            <Tag color={STATUS_COLORS[detail.paymentStatus]}>
+            <Tag color={ORDER_STATUS_COLORS[detail.paymentStatus]}>
               {getVietnameseLabel(detail.paymentStatus)}
             </Tag>
           )}
@@ -146,21 +145,21 @@ export default function AdminOrderDetailPage() {
                 loading={updateStatusMutation.isPending}
                 onClick={() => {
                   if (!selectedStatus) {
-                    toast.error('Vui lòng chọn trạng thái mới')
+                    toast.error(t('translation:order.pleaseSelectStatus'))
                     return
                   }
                   Modal.confirm({
-                    title: 'Cập nhật trạng thái đơn hàng?',
+                    title: t('order.updateStatusConfirm'),
                     onOk: async () =>
                       updateStatusMutation.mutateAsync({
                         status: selectedStatus
                       }),
-                    okText: 'Cập nhật',
-                    cancelText: 'Hủy'
+                    okText: t('order.updateStatus'),
+                    cancelText: t('common.cancel')
                   })
                 }}
               >
-                Cập nhật
+                {t('order.updateStatus')}
               </Button>
             )}
           <Button
@@ -168,35 +167,35 @@ export default function AdminOrderDetailPage() {
             onClick={handleExportBill}
             icon={<PrinterOutlined />}
           >
-            Xuất hóa đơn
+            {t('order.exportInvoice')}
           </Button>
         </div>
       </div>
       {detailQuery.isLoading ? (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <Card className="rounded-2xl lg:col-span-2" title="Sản phẩm">
+          <Card className="rounded-2xl lg:col-span-2" title={t('order.products')}>
             <Skeleton active paragraph={{ rows: 7 }} />
           </Card>
-          <Card className="rounded-2xl lg:col-span-1" title="Thông tin">
+          <Card className="rounded-2xl lg:col-span-1" title={t('order.info')}>
             <Skeleton active paragraph={{ rows: 9 }} />
           </Card>
-          <Card className="rounded-2xl lg:col-span-2" title="Tổng tiền">
+          <Card className="rounded-2xl lg:col-span-2" title={t('order.total')}>
             <Skeleton active paragraph={{ rows: 5 }} />
           </Card>
         </div>
       ) : !detail ? (
         <Card className="rounded-2xl">
-          <p className="m-0 text-slate-600">Đơn hàng không tồn tại.</p>
+          <p className="m-0 text-slate-600">{t('order.notFound')}</p>
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="space-y-4! lg:col-span-2">
             <Card
               className="rounded-2xl"
-              title={`Sản phẩm (${detail.items.length})`}
+              title={`${t('order.products')} (${detail.items.length})`}
             >
               {detail.items.length === 0 ? (
-                <Empty description="Đơn hàng chưa có sản phẩm" />
+                <Empty description={t('order.noItems')} />
               ) : (
                 <div className="divide-y divide-slate-100 dark:divide-slate-600">
                   {detail.items.map((row) => {
@@ -227,7 +226,7 @@ export default function AdminOrderDetailPage() {
 
                         <div className="flex items-center gap-8 shrink-0">
                           <div className="text-sm text-slate-600 dark:text-slate-200">
-                            SL:{' '}
+                            {t('order.quantityShort')}{' '}
                             <span className="font-medium text-slate-800 dark:text-slate-400">
                               {row.quantity}
                             </span>
@@ -245,14 +244,14 @@ export default function AdminOrderDetailPage() {
               )}
             </Card>
 
-            <Card className="rounded-2xl" title="Tóm tắt đơn hàng">
+            <Card className="rounded-2xl" title={t('order.orderSummary')}>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>Thành tiền</span>
+                  <span>{t('order.subtotal')}</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Giảm giá</span>
+                  <span>{t('order.discount')}</span>
                   <span className="text-emerald-600">
                     <Tooltip
                       title={
@@ -273,11 +272,11 @@ export default function AdminOrderDetailPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Phí vận chuyển</span>
+                  <span>{t('order.shippingFee')}</span>
                   <span>{formatCurrency(shippingFee)}</span>
                 </div>
                 <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200 dark:border-slate-600">
-                  <span>Tổng cộng</span>
+                  <span>{t('common.total')}</span>
                   <span>{formatCurrency(detail.totalAmount)}</span>
                 </div>
               </div>
@@ -285,32 +284,32 @@ export default function AdminOrderDetailPage() {
           </div>
 
           <div className="space-y-4! lg:col-span-1">
-            <Card className="rounded-2xl" title="Địa chỉ giao hàng">
+            <Card className="rounded-2xl" title={t('order.shippingAddress')}>
               <Descriptions column={1} size="small" layout="horizontal">
-                <Descriptions.Item label="Họ tên">
+                <Descriptions.Item label={t('order.fullName')}>
                   {detail.shippingName || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Điện thoại">
+                <Descriptions.Item label={t('order.phone')}>
                   {detail.shippingPhone || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Địa chỉ">
+                <Descriptions.Item label={t('order.address')}>
                   {formatStructuredAddress(detail) || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Nhãn">
-                  {detail.shippingLabel
-                    ? SHIPPING_ADDRESS_LABELS[
-                        detail.shippingLabel.toUpperCase() as keyof typeof SHIPPING_ADDRESS_LABELS
-                      ] || '—'
-                    : '—'}
+                <Descriptions.Item label={t('order.label')}>
+                  {detail.shippingLabel === 'Home'
+                    ? t('checkout.home')
+                    : detail.shippingLabel === 'Office'
+                      ? t('checkout.office')
+                      : '—'}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
-            <Card className="rounded-2xl" title="Thông tin khách hàng">
+            <Card className="rounded-2xl" title={t('common.customerInfo')}>
               <Descriptions column={1} size="small" layout="horizontal">
-                <Descriptions.Item label="Tên người dùng">
+                <Descriptions.Item label={t('order.username')}>
                   {detail.userName || '—'}
                 </Descriptions.Item>
-                <Descriptions.Item label="Email">
+                <Descriptions.Item label={t('auth.email')}>
                   <span className="whitespace-nowrap">
                     {detail.userEmail || '—'}
                   </span>
@@ -318,11 +317,11 @@ export default function AdminOrderDetailPage() {
               </Descriptions>
             </Card>
             {detail.note && (
-              <Card className="rounded-2xl" title="Ghi chú">
+              <Card className="rounded-2xl" title={t('common.note')}>
                 <div className="text-slate-700">{detail.note?.trim()}</div>
               </Card>
             )}
-            <Card className="rounded-2xl" title="Lịch sử trạng thái">
+            <Card className="rounded-2xl" title={t('order.statusHistory')}>
               {statusHistories.length === 0 ? (
                 <p className="m-0 text-slate-600">—</p>
               ) : (

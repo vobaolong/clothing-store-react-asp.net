@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
 import { MenuOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { getMyProfile } from '@/api/profile-api'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
@@ -12,6 +13,7 @@ import AddressList from '@/components/profile/AddressList'
 import WishlistList from '@/components/profile/WishlistList'
 import OrderList from '@/components/profile/OrderList'
 import { getAuthToken } from '@/state/auth/auth-session'
+import { lp } from '@/utils/language-path'
 
 type Section = 'profile' | 'addresses' | 'wishlist' | 'orders' | 'notifications'
 
@@ -28,10 +30,11 @@ function isProfileSection(value: string | null): value is Section {
 }
 
 function profileSectionPath(section: Section): string {
-  return section === 'profile' ? '/profile' : `/profile?tab=${section}`
+  return section === 'profile' ? lp('/profile') : lp(`/profile?tab=${section}`)
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation()
   const token = getAuthToken()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -66,7 +69,7 @@ export default function ProfilePage() {
       />
 
       <Drawer
-        title="Trang cá nhân"
+        title={t('profile.pageTitle')}
         placement="bottom"
         onClose={() => setIsMobileSectionDrawerOpen(false)}
         open={isMobileSectionDrawerOpen}
@@ -84,20 +87,20 @@ export default function ProfilePage() {
         <div className="flex-1 min-w-0">
           {section === 'profile' && (
             <Card>
-              <h1 className="text-2xl font-semibold">Cài đặt tài khoản</h1>
+              <h1 className="text-2xl font-semibold">{t('profile.accountSettings')}</h1>
 
               <div className="mt-4 border-t divide-y divide-slate-200 border-slate-200">
                 <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">Hồ sơ</h2>
+                    <h2 className="text-xl font-semibold">{t('profile.profile')}</h2>
                     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                      Cài đặt thông tin cá nhân
+                      {t('profile.personalInfo')}
                     </p>
                   </div>
 
                   <div>
                     <label className="block mb-1 text-sm font-medium">
-                      Họ và tên
+                      {t('profile.fullName')}
                     </label>
                     {isLoading ? (
                       <Spin />
@@ -114,16 +117,16 @@ export default function ProfilePage() {
 
                 <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">Bảo mật tài khoản</h2>
+                    <h2 className="text-xl font-semibold">{t('profile.accountSecurity')}</h2>
                     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                      Thông tin để đăng nhập vào tài khoản của bạn
+                      {t('profile.loginInfo')}
                     </p>
                   </div>
 
                   <div className="space-y-6">
                     <div>
                       <label className="block mb-1 text-sm font-medium">
-                        Email
+                        {t('profile.email')}
                       </label>
                       <Input
                         value={profile?.email ?? '-'}
@@ -135,13 +138,13 @@ export default function ProfilePage() {
 
                     <div>
                       <label className="block mb-1 text-sm font-medium">
-                        Mật khẩu
+                        {t('profile.password')}
                       </label>
                       <Button
                         className="h-10 px-5 rounded-md border-slate-300"
                         onClick={() => setShowPasswordDialog(true)}
                       >
-                        Đổi mật khẩu
+                        {t('profile.changePassword')}
                       </Button>
                     </div>
                   </div>

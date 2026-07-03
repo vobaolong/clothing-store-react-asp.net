@@ -22,6 +22,7 @@ import type { AdminOrder } from '@/types'
 
 import { useFilteredOrders } from '@/hooks/useFilteredOrders'
 import { useOrdersTabs } from '@/hooks/useOrdersTabs'
+import { lp } from '@/utils/language-path'
 import OrdersTable from '@/components/admin/admin-table/AdminOrdersTable'
 import BulkUpdateOrdersModal from '@/components/admin/admin-modal/BulkUpdateOrdersModal'
 import { AdminRefreshButtonAction } from '../AdminRefreshButtonAction'
@@ -89,7 +90,7 @@ export default function AdminOrdersSection() {
 
   const onView = useCallback(
     (order: AdminOrder) => {
-      navigate(`/admin/orders/${order.id}`)
+      navigate(lp(`/admin/orders/${order.id}`))
     },
     [navigate]
   )
