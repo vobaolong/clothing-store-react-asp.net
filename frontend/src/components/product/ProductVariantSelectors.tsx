@@ -116,8 +116,8 @@ export default function ProductVariantSelectors({
                     }}
                     className={`relative min-w-12 rounded-xl px-3 py-2 text-xs! font-semibold tracking-wider transition-all duration-150 ${
                       resolvedSize === size
-                        ? 'bg-black text-white dark:bg-white dark:text-black!'
-                        : 'bg-stone-200 text-stone-600 dark:text-stone-300 dark:bg-neutral-700'
+                        ? 'bg-black text-white! dark:bg-neutral-700 dark:text-stone-300'
+                        : 'bg-stone-200 text-stone-600 dark:text-black! dark:bg-white'
                     } ${
                       isDisabled
                         ? 'cursor-not-allowed opacity-45 line-through'

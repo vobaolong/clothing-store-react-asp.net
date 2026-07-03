@@ -13,7 +13,7 @@ public class MailKitEmailSender(
     ILogger<MailKitEmailSender> logger
 ) : IEmailSender
 {
-    private readonly EmailSettings settings = emailSettings.Value;
+    private readonly EmailSettings _settings = emailSettings.Value;
 
     public async Task SendEmailAsync(
         string to,
@@ -33,7 +33,7 @@ public class MailKitEmailSender(
 
         var message = new MimeMessage();
 
-        message.From.Add(new MailboxAddress(settings.FromName, settings.FromEmail));
+        message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
 
         message.To.Add(MailboxAddress.Parse(to));
 
@@ -46,13 +46,17 @@ public class MailKitEmailSender(
         try
         {
             await client.ConnectAsync(
-                settings.Host,
-                settings.Port,
+                _settings.Host,
+                _settings.Port,
                 SecureSocketOptions.StartTls,
                 cancellationToken
             );
 
-            await client.AuthenticateAsync(settings.Username, settings.Password, cancellationToken);
+            await client.AuthenticateAsync(
+                _settings.Username,
+                _settings.Password,
+                cancellationToken
+            );
 
             await client.SendAsync(message, cancellationToken);
         }
