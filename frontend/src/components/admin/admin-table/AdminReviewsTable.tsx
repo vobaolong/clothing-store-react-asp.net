@@ -4,6 +4,7 @@ import type { ColumnsType, TableRowSelection } from 'antd/es/table/interface'
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons'
 import type { Review } from '@/types'
 import { formatDate } from '@/utils/format'
+import { useTranslation } from 'react-i18next'
 
 interface AdminReviewsTableProps {
   dataSource: Review[]
@@ -28,6 +29,7 @@ export default function AdminReviewsTable({
   onSelectionChange,
   onDelete
 }: AdminReviewsTableProps) {
+  const { t } = useTranslation()
   const rowSelection: TableRowSelection<Review> = {
     selectedRowKeys,
     onChange: (keys) => {
@@ -47,7 +49,7 @@ export default function AdminReviewsTable({
         }
       },
       {
-        title: 'Người dùng',
+        title: t('admin.columnUser'),
         key: 'user',
         width: 250,
         render: (_, row) => (
@@ -68,7 +70,7 @@ export default function AdminReviewsTable({
         )
       },
       {
-        title: 'Sản phẩm',
+        title: t('product.products'),
         key: 'product',
         width: 280,
         render: (_, row) => (
@@ -81,7 +83,7 @@ export default function AdminReviewsTable({
               />
             ) : (
               <div className="size-10 flex items-center justify-center rounded-md border border-slate-100 text-slate-400 text-[10px] font-bold shrink-0">
-                NO IMG
+                {t('common.noImage')}
               </div>
             )}
             <span className="font-medium line-clamp-2 max-w-50">
@@ -91,7 +93,7 @@ export default function AdminReviewsTable({
         )
       },
       {
-        title: 'Đánh giá',
+        title: t('review.review'),
         dataIndex: 'rating',
         key: 'rating',
         width: 140,
@@ -105,7 +107,7 @@ export default function AdminReviewsTable({
         )
       },
       {
-        title: 'Nội dung bình luận',
+        title: t('admin.columnContent'),
         key: 'contentAndTags',
         width: 350,
         render: (_, row) => (
@@ -113,7 +115,7 @@ export default function AdminReviewsTable({
             <div className="whitespace-pre-line text-sm leading-relaxed">
               {row.comment || (
                 <span className="text-slate-400 italic text-xs">
-                  Không có bình luận
+                  {t('admin.noComment')}
                 </span>
               )}
             </div>
@@ -134,7 +136,7 @@ export default function AdminReviewsTable({
         )
       },
       {
-        title: 'Ngày tạo',
+        title: t('admin.columnDate'),
         dataIndex: 'createdAt',
         key: 'createdAt',
         sorter: (a, b) =>
@@ -145,15 +147,15 @@ export default function AdminReviewsTable({
         )
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         align: 'center',
         fixed: 'right',
         width: 100,
         render: (_, row) => (
           <Popconfirm
-            title="Bạn có chắc chắn muốn xóa đánh giá này?"
-            okText="Xóa"
-            cancelText="Hủy"
+            title={t('admin.reviewDeleteConfirm')}
+            okText={t('admin.reviewDeleteOk')}
+            cancelText={t('admin.reviewDeleteCancel')}
             okButtonProps={{ danger: true }}
             onConfirm={() => onDelete(row.id)}
           >
@@ -162,7 +164,7 @@ export default function AdminReviewsTable({
         )
       }
     ],
-    [onDelete, current, pageSize]
+    [onDelete, current, pageSize, t]
   )
 
   return (
@@ -181,11 +183,12 @@ export default function AdminReviewsTable({
           total: totalCount,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '50', '100'],
-          showTotal: (total) => `Tổng số: ${total} đánh giá`,
+          showTotal: (total) =>
+            `${t('common.total')}: ${total} ${t('admin.reviews').toLowerCase()}`,
           onChange: onPaginationChange
         }}
         locale={{
-          emptyText: <Empty description="Không tìm thấy đánh giá nào" />
+          emptyText: <Empty description={t('common.noData')} />
         }}
         scroll={{ x: 'max-content' }}
       />

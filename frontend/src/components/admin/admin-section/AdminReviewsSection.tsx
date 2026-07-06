@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import toast from 'react-hot-toast'
@@ -13,6 +14,7 @@ import type { DateRangeType } from '@/types'
 dayjs.extend(isBetween)
 
 export default function AdminReviewsSection() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
   const [ratingFilter, setRatingFilter] = useState<string>('all')
@@ -35,12 +37,12 @@ export default function AdminReviewsSection() {
   const { mutateAsync: deleteReviewAsync } = useMutation({
     mutationFn: deleteAdminReview,
     onSuccess: (_, id) => {
-      toast.success('Đánh giá đã được xóa thành công')
+      toast.success(t('admin.reviewsDeleted'))
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.adminReviews })
       setSelectedRowKeys((prev) => prev.filter((key) => key !== id))
     },
     onError: () => {
-      toast.error('Xóa đánh giá thất bại')
+      toast.error(t('admin.reviewsDeleteFailed'))
     }
   })
 

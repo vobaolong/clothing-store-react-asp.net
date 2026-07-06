@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Layout, Modal, Typography } from 'antd'
 import { createElement, useMemo, useState } from 'react'
-import { Outlet, useLocation, useParams, Navigate } from 'react-router-dom'
+import { Outlet, useParams, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import {
@@ -23,9 +23,7 @@ export default function AdminShell() {
   const { t } = useTranslation()
   const { isDark: isDarkTheme } = useTheme()
   const { section } = useParams<{ section: string }>()
-  const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
-  const isOrderDetailPage = location.pathname.includes('/admin/orders/')
 
   const headerTitle = useMemo(() => {
     if (section && isAdminNavKey(section)) {
@@ -64,25 +62,24 @@ export default function AdminShell() {
         onLogout={handleLogout}
       />
       <Layout className="flex flex-col flex-1 min-w-0 min-h-0">
-        {!isOrderDetailPage ? (
-          <Header
-            className={`flex h-auto shrink-0 items-center border-b p-4! md:p-6! ${
-              isDarkTheme
-                ? 'border-gray-700 bg-[#192037]!'
-                : 'border-slate-200 bg-white!'
-            }`}
-          >
-            <Typography.Title level={4} className="m-0! flex-1">
-              {headerTitle}
-            </Typography.Title>
-            <span className="mr-3 dark:text-slate-300">
-              {t('admin.greeting')}
-            </span>
-            <LanguageSwitcher />
-            <ThemeToggleButton />
-            <NotificationCenter />
-          </Header>
-        ) : null}
+        <Header
+          className={`flex h-auto shrink-0 items-center border-b p-4! md:p-6! ${
+            isDarkTheme
+              ? 'border-gray-700 bg-[#192037]!'
+              : 'border-slate-200 bg-white!'
+          }`}
+        >
+          <Typography.Title level={4} className="m-0! flex-1">
+            {headerTitle}
+          </Typography.Title>
+          <span className="mr-3 dark:text-slate-300">
+            {t('admin.greeting')}
+          </span>
+          <LanguageSwitcher />
+          <ThemeToggleButton />
+          <NotificationCenter />
+        </Header>
+
         <Content
           className={`min-h-0 flex-1 overflow-auto p-4 md:p-6 ${
             isDarkTheme ? 'bg-gray-950/95' : 'bg-slate-50/90'

@@ -11,6 +11,7 @@ import {
 import type { FormInstance } from 'antd'
 import type { NamePath } from 'antd/es/form/interface'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Ref } from 'react'
 import { DESCRIPTION_SPEC_LABELS } from '@/constants/product.constant'
 import {
@@ -62,6 +63,7 @@ export default function AdminProductFormFields({
   editingProductId,
   variantsMatrixRef
 }: AdminProductFormFieldsProps) {
+  const { t } = useTranslation()
   const watchedValues = Form.useWatch([], form) as
     | Partial<ProductFormValues>
     | undefined
@@ -126,7 +128,7 @@ export default function AdminProductFormFields({
     if (resolvedProductType === CategoryType.SHOES) {
       return [
         {
-          label: 'Giày (size, độ dài chân)',
+          label: t('admin.productFormSizeGuideShoes'),
           value: MeasurementProfile.SHOES
         }
       ]
@@ -145,7 +147,7 @@ export default function AdminProductFormFields({
 
   const selectedCategoryName =
     categoryPathLabel(categories, watchedValues?.categoryId) ||
-    'Chưa chọn danh mục'
+    t('admin.productFormNoCategory')
 
   const previewImageUrl = useMemo(
     () => previewUrlFromVariants(variantsWatch),
@@ -188,7 +190,7 @@ export default function AdminProductFormFields({
           name={['sizeGuideRows', index, field] as NamePath}
           rules={
             field === 'size'
-              ? [{ required: true, message: 'Vui lòng nhập size' }]
+              ? [{ required: true, message: t('admin.productFormSizeGuideRequired') }]
               : undefined
           }
         >
@@ -200,7 +202,7 @@ export default function AdminProductFormFields({
       return [
         { title: 'Size', key: 'size', width: 120, render: renderCell('size') },
         {
-          title: 'Độ dài chân (cm)',
+          title: t('admin.sizeGuideColumnFootLength'),
           key: 'footLength',
           render: renderCell('footLength')
         }
@@ -211,22 +213,22 @@ export default function AdminProductFormFields({
       return [
         { title: 'Size', key: 'size', width: 120, render: renderCell('size') },
         {
-          title: 'Chiều cao (cm)',
+          title: t('admin.sizeGuideColumnHeight'),
           key: 'height',
           render: renderCell('height')
         },
-        { title: 'Cân nặng (kg)', key: 'weight', render: renderCell('weight') },
-        { title: 'Vòng eo (cm)', key: 'waist', render: renderCell('waist') }
+        { title: t('admin.sizeGuideColumnWeight'), key: 'weight', render: renderCell('weight') },
+        { title: t('admin.sizeGuideColumnWaist'), key: 'waist', render: renderCell('waist') }
       ]
     }
 
     return [
       { title: 'Size', key: 'size', width: 120, render: renderCell('size') },
-      { title: 'Chiều cao (cm)', key: 'height', render: renderCell('height') },
-      { title: 'Cân nặng (kg)', key: 'weight', render: renderCell('weight') },
-      { title: 'Vòng ngực (cm)', key: 'chest', render: renderCell('chest') }
+      { title: t('admin.sizeGuideColumnHeight'), key: 'height', render: renderCell('height') },
+      { title: t('admin.sizeGuideColumnWeight'), key: 'weight', render: renderCell('weight') },
+      { title: t('admin.sizeGuideColumnChest'), key: 'chest', render: renderCell('chest') }
     ]
-  }, [measurementProfile])
+  }, [measurementProfile, t])
 
   const editableSizeGuideRows =
     Array.isArray(sizeGuideRows) && sizeGuideRows.length > 0
@@ -238,7 +240,7 @@ export default function AdminProductFormFields({
           )
         : []
 
-  const previewName = watchedValues?.name?.trim() || 'Tên sản phẩm'
+  const previewName = watchedValues?.name?.trim() || t('admin.productFormName')
   const previewBasePrice =
     typeof watchedValues?.price === 'number' ? watchedValues.price : undefined
   const previewSalePriceValue =
@@ -291,19 +293,19 @@ export default function AdminProductFormFields({
         <Form form={form} layout="vertical" onValuesChange={onFormValuesChange}>
           <Form.Item
             name="name"
-            label="Tên sản phẩm"
+            label={t('admin.productFormName')}
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="categoryId"
-            label="Danh mục"
+            label={t('admin.productFormCategory')}
             rules={[{ required: true }]}
           >
             <TreeSelect
               className="w-full!"
-              placeholder="Chọn danh mục"
+              placeholder={t('admin.productFormCategoryPlaceholder')}
               allowClear
               showSearch={{ treeNodeFilterProp: 'title' }}
               treeDefaultExpandAll
@@ -314,7 +316,7 @@ export default function AdminProductFormFields({
           </Form.Item>
           <Form.Item
             name="description"
-            label="Mô tả"
+            label={t('admin.productFormDescription')}
             rules={[{ required: true }]}
           >
             <RichTextEditor />
@@ -322,7 +324,7 @@ export default function AdminProductFormFields({
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">
-                Bảng thông số (Size Guide)
+                {t('admin.productFormSizeGuide')}
               </span>
               <Switch
                 checked={showSizeGuide || !!measurementProfile}
@@ -336,21 +338,21 @@ export default function AdminProductFormFields({
                     })
                   }
                 }}
-                checkedChildren="Có"
-                unCheckedChildren="Không"
+                checkedChildren={t('admin.productFormSizeGuideYes')}
+                unCheckedChildren={t('admin.productFormSizeGuideNo')}
               />
             </div>
             {(showSizeGuide || !!measurementProfile) && (
               <>
                 <Form.Item
                   name="measurementProfile"
-                  label="Chọn loại thông số"
+                  label={t('admin.productFormSizeGuideSelect')}
                   rules={[
-                    { required: true, message: 'Vui lòng chọn bảng thông số' }
+                    { required: true, message: t('admin.productFormSizeGuideRequired') }
                   ]}
                 >
                   <Select
-                    placeholder="Chọn loại thông số"
+                    placeholder={t('admin.productFormSizeGuidePlaceholder')}
                     options={sizeGuideOptions}
                   />
                 </Form.Item>
@@ -379,7 +381,7 @@ export default function AdminProductFormFields({
 
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Thông số</span>
+              <span className="text-sm font-medium">{t('admin.productFormSpecs')}</span>
               <Switch
                 checked={showSpecs}
                 onChange={(checked) => {
@@ -416,8 +418,8 @@ export default function AdminProductFormFields({
                     })
                   }
                 }}
-                checkedChildren="Có"
-                unCheckedChildren="Không"
+                checkedChildren={t('admin.productFormSizeGuideYes')}
+                unCheckedChildren={t('admin.productFormSizeGuideNo')}
               />
             </div>
             {showSpecs && (
@@ -447,7 +449,7 @@ export default function AdminProductFormFields({
 
           <div className="mb-4">
             <div className="mb-2 text-sm font-medium">
-              Phân loại<span className="text-red-500"> *</span>
+              {t('admin.productFormVariants')}<span className="text-red-500"> *</span>
             </div>
             <AdminVariantsMatrixField
               ref={variantsMatrixRef}
@@ -494,14 +496,14 @@ export default function AdminProductFormFields({
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Form.Item
               name="price"
-              label="Giá gốc (VND)"
+              label={t('admin.productFormPrice')}
               rules={[{ required: true }]}
             >
               <InputNumber min={0} className="w-full!" />
             </Form.Item>
             <Form.Item
               name="salePrice"
-              label="Giá sale (VND) — Tùy chọn"
+              label={t('admin.productFormSalePrice')}
               dependencies={['price']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -521,7 +523,7 @@ export default function AdminProductFormFields({
                       return Promise.resolve()
                     }
                     return Promise.reject(
-                      new Error('Giá sale phải nhỏ hơn giá gốc')
+                      new Error(t('admin.productFormSalePriceError'))
                     )
                   }
                 })
@@ -533,7 +535,7 @@ export default function AdminProductFormFields({
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Form.Item
               name="salePriceStartDate"
-              label="Ngày bắt đầu giảm giá (Tùy chọn)"
+              label={t('admin.productFormSaleStart')}
               dependencies={['salePriceEndDate']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -544,7 +546,7 @@ export default function AdminProductFormFields({
                     }
                     if (value && endDate && value.isAfter(endDate)) {
                       return Promise.reject(
-                        new Error('Ngày bắt đầu phải trước ngày kết thúc')
+                        new Error(t('admin.productFormSaleStartError'))
                       )
                     }
                     return Promise.resolve()
@@ -560,7 +562,7 @@ export default function AdminProductFormFields({
             </Form.Item>
             <Form.Item
               name="salePriceEndDate"
-              label="Ngày kết thúc giảm giá (Tùy chọn)"
+              label={t('admin.productFormSaleEnd')}
               dependencies={['salePriceStartDate']}
               rules={[
                 ({ getFieldValue }) => ({
@@ -571,7 +573,7 @@ export default function AdminProductFormFields({
                     }
                     if (value && startDate && value.isBefore(startDate)) {
                       return Promise.reject(
-                        new Error('Ngày kết thúc phải sau ngày bắt đầu')
+                        new Error(t('admin.productFormSaleEndError'))
                       )
                     }
                     return Promise.resolve()
@@ -586,8 +588,8 @@ export default function AdminProductFormFields({
               />
             </Form.Item>
           </div>
-          <Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
-            <Switch checkedChildren="Hiển thị" unCheckedChildren="Ẩn" />
+          <Form.Item name="isActive" label={t('admin.productFormStatus')} valuePropName="checked">
+            <Switch checkedChildren={t('admin.productFormActive')} unCheckedChildren={t('admin.productFormInactive')} />
           </Form.Item>
         </Form>
       </div>

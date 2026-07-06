@@ -5,6 +5,7 @@ import type { TablePaginationConfig, ColumnsType } from 'antd/es/table'
 import type { Customer } from '@/types'
 import { formatDate } from '@/utils/format'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
+import { useTranslation } from 'react-i18next'
 
 interface AdminCustomerTableProps {
   dataSource: Customer[]
@@ -19,6 +20,7 @@ export default function AdminCustomerTable({
   onLockOpen,
   onUnlock
 }: AdminCustomerTableProps) {
+  const { t } = useTranslation()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const handleTableChange = useCallback((pag: TablePaginationConfig) => {
@@ -37,16 +39,16 @@ export default function AdminCustomerTable({
         render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
-        title: 'ID',
+        title: t('admin.columnId'),
         dataIndex: 'id',
         key: 'id',
         render: (id: string) => id.slice(0, 8).toUpperCase()
       },
-      { title: 'Tên', dataIndex: 'name', key: 'name' },
-      { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
-      { title: 'Email', dataIndex: 'email', key: 'email' },
+      { title: t('admin.columnName'), dataIndex: 'name', key: 'name' },
+      { title: t('admin.columnPhone'), dataIndex: 'phone', key: 'phone' },
+      { title: t('auth.email'), dataIndex: 'email', key: 'email' },
       {
-        title: 'Trạng thái',
+        title: t('common.status'),
         dataIndex: 'status',
         key: 'status',
         align: 'center',
@@ -57,26 +59,26 @@ export default function AdminCustomerTable({
         )
       },
       {
-        title: 'Ngày tạo',
+        title: t('admin.columnDate'),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (value: string) => formatDate(value, 'dateOnly')
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'action',
         align: 'center',
         width: 100,
         fixed: 'right',
         render: (_, row) =>
           row.status === 'active' ? (
-            <Tooltip title="Khóa tài khoản">
+            <Tooltip title={t('admin.tooltipLockAccount')}>
               <Button danger size="small" onClick={() => onLockOpen(row)}>
                 <LockOutlined />
               </Button>
             </Tooltip>
           ) : (
-            <Tooltip title="Mở khóa tài khoản">
+            <Tooltip title={t('admin.tooltipUnlockAccount')}>
               <Button size="small" onClick={() => onUnlock(row)}>
                 <UnlockOutlined />
               </Button>
@@ -84,7 +86,7 @@ export default function AdminCustomerTable({
           )
       }
     ],
-    [onLockOpen, onUnlock, page, pageSize]
+    [onLockOpen, onUnlock, page, pageSize, t]
   )
 
   return (
@@ -101,9 +103,10 @@ export default function AdminCustomerTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} khách hàng`
+        showTotal: (total) =>
+          `${t('common.total')} ${total} ${t('admin.customers').toLowerCase()}`
       }}
-      locale={{ emptyText: <Empty description="Không có khách hàng" /> }}
+      locale={{ emptyText: <Empty description={t('common.noData')} /> }}
     />
   )
 }

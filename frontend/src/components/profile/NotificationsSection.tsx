@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Card, Tag } from 'antd'
+import { useTranslation } from 'react-i18next'
 import { useNotifications } from '@/hooks/useNotifications'
 import { NotificationType } from '@/types/notification.type'
 import { formatDate } from '@/utils/format'
@@ -33,6 +34,7 @@ const getPrimaryImageUrl = (data: NotificationDto['data']) => {
 }
 
 export default function NotificationsSection() {
+  const { t } = useTranslation()
   const { notifications, markAsRead } = useNotifications({
     page: 1,
     pageSize: 100
@@ -95,7 +97,7 @@ export default function NotificationsSection() {
 
   return (
     <Card>
-      <h1 className="mb-4 text-2xl font-semibold">Thông báo</h1>
+      <h1 className="mb-4 text-2xl font-semibold">{t('profile.notifications')}</h1>
       {groupedOrderNotifications.length > 0 && (
         <div className="pt-6 mb-6 border-t border-slate-200 dark:border-slate-600">
           <div className="space-y-3 max-h-screen! overflow-y-auto px-2">
@@ -119,7 +121,7 @@ export default function NotificationsSection() {
                             {thumbnailUrl ? (
                               <img
                                 src={thumbnailUrl}
-                                alt="Sản phẩm"
+                                alt={t('profile.altProduct')}
                                 className="object-cover w-full h-full rounded-md"
                               />
                             ) : (
@@ -131,10 +133,10 @@ export default function NotificationsSection() {
                               <div className="font-semibold truncate">
                                 {latest.title}
                               </div>
-                              <Tag className="m-0">{items.length} cập nhật</Tag>
+                              <Tag className="m-0">{t('profile.updatesCount', { count: items.length })}</Tag>
                               {unreadCount > 0 && (
                                 <Tag className="m-0" color="blue">
-                                  {unreadCount} chưa đọc
+                                  {t('profile.unreadCount', { count: unreadCount })}
                                 </Tag>
                               )}
                             </div>
@@ -204,7 +206,7 @@ export default function NotificationsSection() {
 
       {otherNotifications.length > 0 && (
         <div>
-          <h3 className="mb-2 text-lg font-medium">Khác</h3>
+          <h3 className="mb-2 text-lg font-medium">{t('profile.otherNotifications')}</h3>
           <div className="space-y-3">
             {otherNotifications.map((it) => (
               <button
@@ -233,7 +235,7 @@ export default function NotificationsSection() {
       )}
 
       {notifications.length === 0 && (
-        <div className="p-6 text-center text-slate-500">Không có thông báo</div>
+        <div className="p-6 text-center text-slate-500">{t('profile.noNotifications')}</div>
       )}
     </Card>
   )

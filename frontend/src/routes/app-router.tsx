@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { lazy } from 'react'
 import { i18n } from '@/i18n'
 import AdminShell from '@/layouts/AdminShell'
@@ -24,7 +24,16 @@ const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
 const VerifyOtpPage = lazy(() => import('@/pages/VerifyOtpPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
-const defaultLng = i18n.language || i18n.resolvedLanguage || 'vi'
+function AdminDefaultRedirect() {
+  const { lng } = useParams()
+
+  return (
+    <Navigate
+      to={`/${lng ?? i18n.resolvedLanguage ?? 'vi'}/admin/dashboard`}
+      replace
+    />
+  )
+}
 
 export function AppRouter() {
   return (
@@ -40,10 +49,7 @@ export function AppRouter() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/:lng/admin"
-            element={<Navigate to={`/${defaultLng}/admin/dashboard`} replace />}
-          />
+          <Route path="/:lng/admin" element={<AdminDefaultRedirect />} />
           <Route
             path="/:lng/admin/:section"
             element={
@@ -177,8 +183,18 @@ export function AppRouter() {
           />
         </Route>
 
-        <Route path="/" element={<Navigate to={`/${defaultLng}`} replace />} />
-        <Route path="*" element={<Navigate to={`/${defaultLng}`} replace />} />
+        <Route
+          path="/"
+          element={
+            <Navigate to={`/${i18n.resolvedLanguage ?? 'vi'}`} replace />
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate to={`/${i18n.resolvedLanguage ?? 'vi'}`} replace />
+          }
+        />
       </Routes>
     </>
   )

@@ -84,10 +84,10 @@ export default function CouponSection({
             />
           </svg>
           <span>
-            {' '}
-            Mã giảm giá
-            <span className="font-semibold"> {coupon.appliedCode} </span>
-            đã được áp dụng — tiết kiệm {formatCurrency(coupon.discountAmount)}
+            {t('checkout.couponApplied', {
+              code: coupon.appliedCode,
+              saving: formatCurrency(coupon.discountAmount)
+            })}
           </span>
         </div>
       )}

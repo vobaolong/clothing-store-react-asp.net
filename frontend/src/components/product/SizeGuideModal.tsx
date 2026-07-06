@@ -1,6 +1,7 @@
 import { Modal, Table } from 'antd'
 import type { ColumnType } from 'antd/es/table'
 import type { MeasurementPresetRow } from '@/constants/measurement-presets.constant'
+import { useTranslation } from 'react-i18next'
 
 interface SizeGuideModalProps {
   isOpen: boolean
@@ -15,16 +16,17 @@ export default function SizeGuideModal({
   columns,
   dataSource
 }: SizeGuideModalProps) {
+  const { t } = useTranslation()
   return (
     <Modal
-      title="Hướng dẫn chọn size"
+      title={t('product.sizeGuide')}
       open={isOpen}
       onCancel={onCancel}
       footer={null}
       width={850}
     >
       <p className="mb-4 text-sm text-slate-600">
-        Dựa trên cân nặng và chiều cao của bạn để chọn size phù hợp nhất.
+        {t('product.sizeGuideDescription')}
       </p>
       {dataSource.length > 0 && (
         <Table

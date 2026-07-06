@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useWishlist } from '@/hooks/useWishlist'
 import type { Product } from '@/types'
 import { lp } from '@/utils/language-path'
+import { useTranslation } from 'react-i18next'
 
 export default function WishlistToggleButton({
   product,
@@ -13,6 +14,7 @@ export default function WishlistToggleButton({
   compact?: boolean
 }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { isAuthenticated, isWishlisted, toggleWishlist, isMutating } =
     useWishlist()
 
@@ -22,8 +24,8 @@ export default function WishlistToggleButton({
     <Tooltip
       title={
         wishlisted
-          ? 'Xóa khỏi danh sách yêu thích'
-          : 'Thêm vào danh sách yêu thích'
+          ? t('product.removeFromWishlist')
+          : t('product.addToWishlist')
       }
     >
       <Button

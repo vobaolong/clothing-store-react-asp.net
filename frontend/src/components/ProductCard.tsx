@@ -9,6 +9,7 @@ import { toCapitalize } from '@/utils/table.lib'
 import { getEffectivePriceAt } from '@/utils/product-pricing'
 import { lp } from '@/utils/language-path'
 import WishlistToggleButton from '@/components/wishlist/WishlistToggleButton'
+import { useTranslation } from 'react-i18next'
 
 const NEW_BADGE_MAX_AGE_MS = 24 * 60 * 60 * 1000 * 30 // 30 days
 
@@ -29,6 +30,7 @@ export default function ProductCard({
   mode = 'featured'
 }: ProductCardProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const isCatalog = mode === 'catalog'
   const firstVariant = product.variants[0]
   const [previewColor, setPreviewColor] = useState<string | null>(null)
@@ -131,7 +133,7 @@ export default function ProductCard({
             navigate(lp(`/products/${product.slug}`))
           }}
         >
-          Mua hàng
+          {t('product.buyProduct')}
         </Button>
         <div className="flex justify-between items-center mt-2">
           {averageRating > 0 ? (

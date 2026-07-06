@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Button, Tag } from 'antd'
 import toast from 'react-hot-toast'
@@ -14,14 +15,15 @@ export default function AdminReviewsSelectionActions({
 	onClearSelection,
 	onRefresh
 }: Props) {
+	const { t } = useTranslation()
 	const handleBulkDelete = async () => {
 		try {
 			await bulkDeleteAdminReviews(selectedIds)
-			toast.success('Đã xóa đánh giá')
+			toast.success(t('admin.reviewsDeleted'))
 			onClearSelection()
 			await onRefresh()
 		} catch {
-			toast.error('Xóa thất bại')
+			toast.error(t('admin.reviewsDeleteFailed'))
 		}
 	}
 
@@ -34,10 +36,10 @@ export default function AdminReviewsSelectionActions({
 					color="blue"
 					className="font-semibold text-gray-700 text-nowrap h-8! items-center flex!"
 				>
-					{selectedIds.length} đánh giá
+					{t('admin.reviewsCount', { count: selectedIds.length })}
 				</Tag>
 				<Button icon={<DeleteOutlined />} onClick={handleBulkDelete} danger>
-					<span className="hidden md:block">Xóa</span>
+					<span className="hidden md:block">{t('common.delete')}</span>
 				</Button>
 			</div>
 		</div>

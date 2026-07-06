@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 const LANGUAGES = [
   { value: 'vi', label: 'VI' },
-  { value: 'en', label: 'EN' },
+  { value: 'en', label: 'EN' }
 ]
 
 export default function LanguageSwitcher() {
@@ -13,8 +13,11 @@ export default function LanguageSwitcher() {
   const navigate = useNavigate()
 
   const handleChange = (lng: string) => {
-    const path = window.location.pathname.replace(/^\/\w{2}/, `/${lng}`)
-    i18n.changeLanguage(lng)
+    const path = window.location.pathname.replace(
+      /^\/(vi|en)(?=\/|$)/,
+      `/${lng}`
+    )
+    void i18n.changeLanguage(lng)
     navigate(path + window.location.search, { replace: true })
   }
 

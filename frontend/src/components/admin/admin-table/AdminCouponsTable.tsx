@@ -1,4 +1,5 @@
 import { useMemo, useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Table, Tag, Space, Select } from 'antd'
 import type { TablePaginationConfig } from 'antd/es/table'
 import type { ColumnsType } from 'antd/es/table'
@@ -9,7 +10,7 @@ import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { formatCouponDiscount } from '@/utils/coupon-discount'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
-import { ADMIN_COUPON_STATUS_FILTER_OPTIONS } from '@/options'
+import { useAdminFilterOptions } from '@/options'
 
 interface AdminCouponsTableProps {
   loading: boolean
@@ -26,6 +27,8 @@ export default function AdminCouponsTable({
   onDelete,
   onStatusChange
 }: AdminCouponsTableProps) {
+  const { t } = useTranslation()
+  const { couponStatus } = useAdminFilterOptions()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const handleTableChange = useCallback((pag: TablePaginationConfig) => {
@@ -44,7 +47,7 @@ export default function AdminCouponsTable({
         render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
-        title: 'Mã',
+        title: t('common.code'),
         dataIndex: 'code',
         key: 'code',
         width: 200,
@@ -55,40 +58,40 @@ export default function AdminCouponsTable({
         )
       },
       {
-        title: 'Giảm giá',
+        title: t('admin.columnDiscount'),
         dataIndex: 'discountAmount',
         key: 'discountAmount',
         align: 'right',
         render: (_, row) => formatCouponDiscount(row)
       },
       {
-        title: 'Loại',
+        title: t('admin.columnType'),
         dataIndex: 'discountType',
         key: 'discountType',
         render: (value: string) => getVietnameseLabel(value)
       },
       {
-        title: 'Đơn tối thiểu',
+        title: t('admin.columnMinOrder'),
         dataIndex: 'minOrderSubtotal',
         key: 'minOrderSubtotal',
         align: 'right',
         render: (value: number) => formatCurrency(value)
       },
       {
-        title: 'Lượt dùng',
+        title: t('admin.columnUsage'),
         dataIndex: 'usedCount',
         key: 'usedCount',
         align: 'center',
         render: (value: number, row) => `${value} / ${row.maxUsage}`
       },
       {
-        title: 'Ngày hết hạn',
+        title: t('admin.columnExpiry'),
         dataIndex: 'expiresAt',
         key: 'expiresAt',
         render: (value: string) => formatDate(value)
       },
       {
-        title: 'Trạng thái',
+        title: t('common.status'),
         dataIndex: 'status',
         key: 'status',
         align: 'center',
@@ -98,14 +101,14 @@ export default function AdminCouponsTable({
             size="small"
             style={{ width: 110 }}
             onChange={(newStatus) => onStatusChange(row, newStatus)}
-            options={ADMIN_COUPON_STATUS_FILTER_OPTIONS.filter(
+            options={couponStatus.filter(
               (o: { value: string }) => o.value !== ADMIN_FILTER_ALL_VALUE
             )}
           />
         )
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'action',
         fixed: 'right',
         align: 'center',
@@ -116,13 +119,13 @@ export default function AdminCouponsTable({
               row={row}
               onEdit={onEdit}
               onDelete={onDelete}
-              deleteTitle="Lưu trữ"
+              deleteTitle={t('coupon.archive')}
             />
           </Space>
         )
       }
     ],
-    [onStatusChange, onEdit, onDelete, page, pageSize]
+    [couponStatus, onStatusChange, onEdit, onDelete, page, pageSize, t]
   )
 
   return (
@@ -139,7 +142,8 @@ export default function AdminCouponsTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} vouchers`
+        showTotal: (total) =>
+          `${t('common.total')} ${total} ${t('coupon.coupons').toLowerCase()}`
       }}
     />
   )

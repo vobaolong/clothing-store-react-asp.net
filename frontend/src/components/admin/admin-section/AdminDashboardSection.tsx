@@ -31,6 +31,7 @@ import OrdersTable from '../admin-table/OrdersTable'
 import { ArrowUpRight, FolderTree, Package, Shirt, Ticket } from 'lucide-react'
 import { lp } from '@/utils/language-path'
 import { useTranslation } from 'react-i18next'
+import RevenueKpiCard from '@/components/admin/RevenueKpiCard'
 
 const CHART_HEIGHT = 280
 type RevenueGranularity = 'day' | 'week' | 'month' | 'year'
@@ -134,9 +135,7 @@ export default function AdminDashboardSection() {
   if (loading) return <Skeleton active paragraph={{ rows: 10 }} />
 
   if (hasError) {
-    return (
-      <Alert type="error" title="Không thể tải dữ liệu dashboard" showIcon />
-    )
+    return <Alert type="error" title={t('admin.dashboardLoadError')} showIcon />
   }
 
   return (
@@ -158,6 +157,10 @@ export default function AdminDashboardSection() {
             </div>
           </Card>
         ))}
+      </div>
+
+      <div>
+        <RevenueKpiCard />
       </div>
 
       <Row gutter={[16, 16]}>
@@ -184,7 +187,7 @@ export default function AdminDashboardSection() {
                 height={CHART_HEIGHT + 36}
               />
             ) : (
-              <Empty description="No analytics data" />
+              <Empty description={t('admin.noAnalyticsData')} />
             )}
           </Card>
         </Col>
@@ -220,7 +223,7 @@ export default function AdminDashboardSection() {
                 }
               />
             ) : (
-              <Empty description="Chưa có dữ liệu danh mục" />
+              <Empty description={t('admin.noCategoryData')} />
             )}
           </Card>
         </Col>
@@ -242,7 +245,7 @@ export default function AdminDashboardSection() {
                 bordered
               />
             ) : (
-              <Empty description="Chưa có dữ liệu sản phẩm" />
+              <Empty description={t('admin.noProductData')} />
             )}
           </Card>
         </Col>

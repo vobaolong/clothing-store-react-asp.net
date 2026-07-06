@@ -32,6 +32,7 @@ import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { openBillPrintWindow } from '@/utils/bill-export'
 import { useOrderRealtime } from '@/hooks/useOrderRealtime'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
+import { lp } from '@/utils/language-path'
 
 export default function AdminOrderDetailPage() {
   const { t } = useTranslation()
@@ -95,14 +96,16 @@ export default function AdminOrderDetailPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center min-w-0 gap-3">
           <Link
-            to="/admin/orders"
+            to={lp('/admin/orders')}
             className="text-slate-600! hover:text-slate-500! hover:underline! hover:bg-slate-200! rounded-full p-2 "
           >
             <LeftOutlined />
           </Link>
           <div className="min-w-0">
             <div className="text-2xl font-medium truncate">
-              Order: {detail ? detail.id.slice(0, 8).toUpperCase() : '...'}
+              {t('admin.orderTitle', {
+                id: detail ? detail.id.slice(0, 8).toUpperCase() : '...'
+              })}
             </div>
             {detail ? (
               <div className="text-xs text-slate-500 dark:text-slate-200">
@@ -145,7 +148,7 @@ export default function AdminOrderDetailPage() {
                 loading={updateStatusMutation.isPending}
                 onClick={() => {
                   if (!selectedStatus) {
-                    toast.error(t('translation:order.pleaseSelectStatus'))
+                    toast.error(t('order.pleaseSelectStatus'))
                     return
                   }
                   Modal.confirm({
@@ -173,7 +176,10 @@ export default function AdminOrderDetailPage() {
       </div>
       {detailQuery.isLoading ? (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <Card className="rounded-2xl lg:col-span-2" title={t('order.products')}>
+          <Card
+            className="rounded-2xl lg:col-span-2"
+            title={t('order.products')}
+          >
             <Skeleton active paragraph={{ rows: 7 }} />
           </Card>
           <Card className="rounded-2xl lg:col-span-1" title={t('order.info')}>
@@ -250,27 +256,33 @@ export default function AdminOrderDetailPage() {
                   <span>{t('order.subtotal')}</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>{t('order.discount')}</span>
-                  <span className="text-emerald-600">
-                    <Tooltip
-                      title={
-                        detail.couponDiscountTypeSnapshot ===
-                        CouponDiscountType.PERCENT
-                          ? `Giảm ${detail.couponDiscountValueSnapshot}%`
-                          : `Giảm ${detail.couponDiscountValueSnapshot}`
-                      }
-                      color="blue"
-                    >
-                      {detail.couponCodeSnapshot && (
-                        <span className="inline-block px-2 py-1 mr-2 text-xs rounded text-emerald-800 bg-emerald-100">
-                          {detail.couponCodeSnapshot}
-                        </span>
-                      )}
-                    </Tooltip>
-                    -{formatCurrency(detail.discountAmount || 0)}
-                  </span>
-                </div>
+                {detail.discountAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span>{t('order.discount')}</span>
+                    <span className="text-emerald-600">
+                      <Tooltip
+                        title={
+                          detail.couponDiscountTypeSnapshot ===
+                          CouponDiscountType.PERCENT
+                            ? t('order.discountPercent', {
+                                value: detail.couponDiscountValueSnapshot
+                              })
+                            : t('order.discountFlat', {
+                                value: detail.couponDiscountValueSnapshot
+                              })
+                        }
+                        color="blue"
+                      >
+                        {detail.couponCodeSnapshot && (
+                          <span className="inline-block px-2 py-1 mr-2 text-xs rounded text-emerald-800 bg-emerald-100">
+                            {detail.couponCodeSnapshot}
+                          </span>
+                        )}
+                      </Tooltip>
+                      -{formatCurrency(detail.discountAmount || 0)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>{t('order.shippingFee')}</span>
                   <span>{formatCurrency(shippingFee)}</span>

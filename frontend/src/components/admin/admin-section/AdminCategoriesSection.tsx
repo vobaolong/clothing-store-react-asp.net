@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import type { AdminCategory } from '@/types'
@@ -23,6 +24,7 @@ const initialFilters: AdminCategoryFilters = {
 }
 
 export default function AdminCategoriesSection() {
+  const { t } = useTranslation()
   const { refresh, confirmDelete, modals, editing, editor } = useAdmin()
   const { clearDirty } = editor
 
@@ -46,11 +48,11 @@ export default function AdminCategoriesSection() {
       return deleteAdminCategory(id)
     },
     onSuccess: async () => {
-      toast.success('Danh mục đã được xóa')
+      toast.success(t('admin.categoryDeleted'))
       await refresh()
       categoriesQuery.refetch()
     },
-    onError: () => toast.error('Xóa danh mục thất bại')
+    onError: () => toast.error(t('admin.categoryDeleteFailed'))
   })
 
   const { mutateAsync: updateCategoryAsync } = useMutation({
@@ -62,11 +64,11 @@ export default function AdminCategoriesSection() {
       payload: Parameters<typeof updateAdminCategory>[1]
     }) => updateAdminCategory(id, payload),
     onSuccess: async () => {
-      toast.success('Danh mục đã được cập nhật')
+      toast.success(t('admin.categoryUpdated'))
       await refresh()
       categoriesQuery.refetch()
     },
-    onError: () => toast.error('Cập nhật danh mục thất bại')
+    onError: () => toast.error(t('admin.categoryUpdateFailed'))
   })
 
   const onCreate = useCallback(() => {
@@ -86,7 +88,7 @@ export default function AdminCategoriesSection() {
 
   const onDelete = useCallback(
     async (category: AdminCategory): Promise<void> => {
-      confirmDelete('Bạn có chắc chắn muốn xóa danh mục này?', async () => {
+      confirmDelete(t('admin.categoryDeleteConfirm'), async () => {
         await deleteCategoryAsync(category.id)
       })
     },

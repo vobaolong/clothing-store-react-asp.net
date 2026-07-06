@@ -3,6 +3,7 @@ import { formatCurrency, formatDate } from '@/utils/format'
 import type { ProductView } from '@/types'
 import { useCallback, useState } from 'react'
 import { FALLBACK_IMG } from '@/constants/images.constant'
+import { useTranslation } from 'react-i18next'
 
 type ProductDrawerProps = {
   open: boolean
@@ -15,6 +16,7 @@ export default function ProductDrawer({
   product,
   onClose
 }: ProductDrawerProps) {
+  const { t } = useTranslation()
   const [fallbackShown, setFallbackShown] = useState(false)
 
   const handleImgError = useCallback(() => {
@@ -30,7 +32,7 @@ export default function ProductDrawer({
     <Drawer
       open={open}
       onClose={onClose}
-      title="Thông tin sản phẩm"
+      title={t('admin.productViewTitle')}
       placement="right"
       size={500}
       destroyOnHidden
@@ -47,12 +49,12 @@ export default function ProductDrawer({
 
           <div>
             <Typography.Title level={5} className="mb-1!">
-              Tên sản phẩm:{' '}
+              {t('admin.productViewName')}{' '}
               <span className="text-sm text-slate-600">{product.name}</span>
             </Typography.Title>
             {product.description && (
               <Typography.Title level={5}>
-                Mô tả:{' '}
+                {t('admin.productViewDesc')}{' '}
                 <p
                   className="text-sm font-medium text-slate-600"
                   dangerouslySetInnerHTML={{ __html: product.description }}
@@ -68,7 +70,7 @@ export default function ProductDrawer({
             items={[
               {
                 key: 'id',
-                label: 'ID',
+                label: t('admin.productViewId'),
                 children: (
                   <Typography.Paragraph
                     code
@@ -81,7 +83,7 @@ export default function ProductDrawer({
               },
               {
                 key: 'price',
-                label: 'Giá tiền',
+                label: t('admin.productViewPrice'),
                 children: (
                   <Typography.Paragraph strong className="m-0!">
                     {formatCurrency(product.price)}
@@ -90,17 +92,17 @@ export default function ProductDrawer({
               },
               {
                 key: 'category',
-                label: 'Phân loại',
+                label: t('admin.productViewCategory'),
                 children: product.category
               },
               {
                 key: 'createdAt',
-                label: 'Ngày thêm',
+                label: t('admin.productViewCreated'),
                 children: formatDate(product.createdAt)
               },
               {
                 key: 'updatedAt',
-                label: 'Cập nhật',
+                label: t('admin.productViewUpdated'),
                 children: formatDate(product.updatedAt)
               }
             ]}

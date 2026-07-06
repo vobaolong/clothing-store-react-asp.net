@@ -1,5 +1,6 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import i18n from 'i18next'
 
 import { AUTH_REDIRECT_DELAY_MS } from '@/constants/timing.constant'
 import { getAuthToken, removeAuthToken } from '@/state/auth/auth-session'
@@ -22,7 +23,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       removeAuthToken()
       if (!window.location.pathname.includes('/login')) {
-        toast.error('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.')
+        toast.error(i18n.t('message.error.sessionExpired'))
         setTimeout(() => {
           window.location.href = lp('/login')
         }, AUTH_REDIRECT_DELAY_MS)

@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CategoryGender, CategoryType } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import {
@@ -7,40 +9,53 @@ import {
   createOptions
 } from '@/utils/enum.utils'
 
-export const ADMIN_ORDER_STATUS_FILTER_OPTIONS = [
-  { label: 'Trạng thái đơn hàng', value: ADMIN_FILTER_ALL_VALUE },
-  ...createOrderStatusOptions()
-]
+export type AdminFilterOption = {
+  label: string
+  value: string
+}
 
-export const ADMIN_PAYMENT_STATUS_FILTER_OPTIONS = [
-  { label: 'Trạng thái thanh toán', value: ADMIN_FILTER_ALL_VALUE },
-  ...createPaymentStatusOptions()
-]
+export const getAdminFilterOptions = (t: (key: string) => string) => ({
+  orderStatus: [
+    { label: t('order.orderStatus'), value: ADMIN_FILTER_ALL_VALUE },
+    ...createOrderStatusOptions()
+  ] as AdminFilterOption[],
+  paymentStatus: [
+    { label: t('order.paymentStatus'), value: ADMIN_FILTER_ALL_VALUE },
+    ...createPaymentStatusOptions()
+  ] as AdminFilterOption[],
+  active: [
+    { label: t('common.status'), value: ADMIN_FILTER_ALL_VALUE },
+    { label: t('common.active'), value: 'true' },
+    { label: t('common.inactive'), value: 'false' }
+  ] as AdminFilterOption[],
+  categoryGender: [
+    {
+      label: t('admin.categoryGenderLabel'),
+      value: ADMIN_FILTER_ALL_VALUE
+    },
+    ...createOptions(Object.values(CategoryGender))
+  ] as AdminFilterOption[],
+  categoryType: [
+    { label: t('admin.categoryTypeLabel'), value: ADMIN_FILTER_ALL_VALUE },
+    ...createOptions(Object.values(CategoryType))
+  ] as AdminFilterOption[],
+  couponType: [
+    { label: t('coupon.discountType'), value: ADMIN_FILTER_ALL_VALUE },
+    ...createCouponDiscountTypeOptions()
+  ] as AdminFilterOption[],
+  couponStatus: [
+    { label: t('common.status'), value: ADMIN_FILTER_ALL_VALUE },
+    { label: t('common.active'), value: 'Active' },
+    { label: t('common.inactive'), value: 'Inactive' },
+    { label: t('coupon.archive'), value: 'Archived' }
+  ] as AdminFilterOption[]
+})
 
-export const ADMIN_ACTIVE_FILTER_OPTIONS = [
-  { label: 'Tất cả trạng thái', value: ADMIN_FILTER_ALL_VALUE },
-  { label: 'Kích hoạt', value: 'true' },
-  { label: 'Ngưng', value: 'false' }
-]
+export const useAdminFilterOptions = () => {
+  const { t } = useTranslation()
 
-export const ADMIN_CATEGORY_GENDER_FILTER_OPTIONS = [
-  { label: 'Giới tính', value: ADMIN_FILTER_ALL_VALUE },
-  ...createOptions(Object.values(CategoryGender))
-]
-
-export const ADMIN_CATEGORY_TYPE_FILTER_OPTIONS = [
-  { label: 'Loại sản phẩm', value: ADMIN_FILTER_ALL_VALUE },
-  ...createOptions(Object.values(CategoryType))
-]
-
-export const ADMIN_COUPON_TYPE_FILTER_OPTIONS = [
-  { label: 'Loại giảm giá', value: ADMIN_FILTER_ALL_VALUE },
-  ...createCouponDiscountTypeOptions()
-]
-
-export const ADMIN_COUPON_STATUS_FILTER_OPTIONS = [
-  { label: 'Trạng thái mã', value: ADMIN_FILTER_ALL_VALUE },
-  { label: 'Kích hoạt', value: 'Active' },
-  { label: 'Ngưng', value: 'Inactive' },
-  { label: 'Lưu trữ', value: 'Archived' }
-]
+  return useMemo(
+    () => getAdminFilterOptions((key: string) => t(key as never) as string),
+    [t]
+  )
+}

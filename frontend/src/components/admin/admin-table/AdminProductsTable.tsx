@@ -8,6 +8,7 @@ import { toCapitalize } from '@/utils/table.lib'
 import { getAdminProductThumbnail } from '@/components/admin/admin-products-utils'
 import { UndoOutlined } from '@ant-design/icons'
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { TablePaginationConfig } from 'antd/es/table/interface'
 
 type AdminProductsTableProps = {
@@ -34,6 +35,7 @@ export default function AdminProductsTable({
   onRestore,
   onToggleActive
 }: AdminProductsTableProps) {
+  const { t } = useTranslation()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const handleTableChange = useCallback((pag: TablePaginationConfig) => {
@@ -48,7 +50,7 @@ export default function AdminProductsTable({
         <div
           className={`flex justify-center items-center rounded-md size-16! bg-slate-100`}
         >
-          <span className="text-xs text-slate-500">No image</span>
+          <span className="text-xs text-slate-500">{t('common.noImage')}</span>
         </div>
       )
     }
@@ -77,7 +79,7 @@ export default function AdminProductsTable({
         render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
-        title: 'Tên sản phẩm',
+        title: t('product.productName'),
         dataIndex: 'name',
         key: 'name',
         render: (value: string) => (
@@ -92,19 +94,19 @@ export default function AdminProductsTable({
       return [
         ...baseColumns,
         {
-          title: 'Ảnh',
+          title: t('common.image'),
           dataIndex: 'imageUrl',
           key: 'imageUrl',
           render: (_, row) => renderProductImage(row)
         },
         {
-          title: 'Thao tác',
+          title: t('common.action'),
           key: 'action',
           align: 'center',
           width: 100,
           fixed: 'right',
           render: (_, row) => (
-            <Tooltip title="Khôi phục">
+            <Tooltip title={t('admin.restoreButton')}>
               <Button
                 icon={<UndoOutlined />}
                 onClick={() => onRestore?.(row)}
@@ -118,16 +120,16 @@ export default function AdminProductsTable({
     return [
       ...baseColumns,
       {
-        title: 'Ảnh',
+        title: t('common.image'),
         dataIndex: 'imageUrl',
         key: 'imageUrl',
         align: 'center',
         render: (_, row) => renderProductImage(row)
       },
-      { title: 'Mã SP', dataIndex: 'productCode', key: 'productCode' },
-      { title: 'Danh mục', dataIndex: 'categoryName', key: 'categoryName' },
+      { title: t('admin.columnCode'), dataIndex: 'productCode', key: 'productCode' },
+      { title: t('product.category'), dataIndex: 'categoryName', key: 'categoryName' },
       {
-        title: 'Giá gốc',
+        title: t('product.originalPrice'),
         dataIndex: 'price',
         width: 120,
         key: 'price',
@@ -135,7 +137,7 @@ export default function AdminProductsTable({
         render: (value: number) => formatCurrency(value)
       },
       {
-        title: 'Giá sale',
+        title: t('admin.columnSalePrice'),
         dataIndex: 'salePrice',
         width: 120,
         key: 'salePrice',
@@ -143,19 +145,19 @@ export default function AdminProductsTable({
         render: (value: number) => formatCurrency(value)
       },
       {
-        title: 'Tồn kho',
+        title: t('admin.columnStock'),
         dataIndex: 'stock',
         key: 'stock',
         align: 'right'
       },
       {
-        title: 'Đã bán',
+        title: t('admin.columnSold'),
         dataIndex: 'soldCount',
         key: 'soldCount',
         align: 'right'
       },
       {
-        title: 'Kích hoạt',
+        title: t('admin.columnActive'),
         dataIndex: 'isActive',
         key: 'isActive',
         align: 'center',
@@ -173,13 +175,13 @@ export default function AdminProductsTable({
         )
       },
       {
-        title: 'Ngày tạo',
+        title: t('common.createdAt'),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (value: string) => formatDate(value)
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'action',
         align: 'center',
         fixed: 'right',
@@ -219,7 +221,7 @@ export default function AdminProductsTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} sản phẩm`
+        showTotal: (total) => `${t('common.total')} ${total} ${t('product.products').toLowerCase()}`
       }}
     />
   )

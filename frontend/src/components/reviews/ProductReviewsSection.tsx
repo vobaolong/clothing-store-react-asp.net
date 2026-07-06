@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { getProductReviews } from '@/api/reviews-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import ReviewList from '@/components/reviews/ReviewList'
+import { useTranslation } from 'react-i18next'
 
 const LOAD_MORE_COUNT = 4
 
@@ -14,6 +15,7 @@ export default function ProductReviewsSection({
   productId: string
   productName: string
 }) {
+  const { t } = useTranslation()
   const [starFilter, setStarFilter] = useState<number | 'all'>('all')
   const [sortOrder, setSortOrder] = useState<'low-to-high' | 'high-to-low'>(
     'high-to-low'
@@ -94,7 +96,9 @@ export default function ProductReviewsSection({
 
   return (
     <Card className="p-6 mt-8 rounded-lg card">
-      <div className="mb-4 text-xl font-semibold">Đánh giá {productName}</div>
+      <div className="mb-4 text-xl font-semibold">
+        {t('review.reviews')} {productName}
+      </div>
       <div className="mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]">
         <div className="flex flex-col gap-1 items-start">
           <div className="flex gap-1 items-end leading-none">
@@ -112,7 +116,7 @@ export default function ProductReviewsSection({
             className="text-amber-500"
           />
           <span className="text-sm text-slate-500">
-            {totalReviews} lượt đánh giá
+            {t('review.countReview', { count: totalReviews })}
           </span>
         </div>
 
@@ -132,7 +136,7 @@ export default function ProductReviewsSection({
                 />
               </div>
               <span className="text-xs text-slate-500">
-                {row.count} đánh giá
+                {t('review.countReview', { count: row.count })}
               </span>
             </div>
           ))}
@@ -140,7 +144,7 @@ export default function ProductReviewsSection({
 
         <div>
           <div className="mb-2 text-lg font-semibold text-slate-800 dark:text-slate-200">
-            Đánh giá theo trải nghiệm
+            {t('review.experienceReviews')}
           </div>
           {topExperienceTags.length > 0 ? (
             <div className="space-y-2">
@@ -153,14 +157,14 @@ export default function ProductReviewsSection({
                     {item.tag}
                   </span>
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                    ({item.count} đánh giá)
+                    {t('review.countReview', { count: item.count })}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-sm text-slate-400">
-              Chưa có dữ liệu trải nghiệm.
+              {t('review.noReviews')}
             </div>
           )}
         </div>
@@ -170,7 +174,7 @@ export default function ProductReviewsSection({
         <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center">
           <div className="flex flex-wrap gap-3 items-center">
             <span className="text-sm text-slate-500 dark:text-slate-300">
-              Lọc đánh giá theo:
+              {t('review.filterByRating')}
             </span>
             <div className="flex flex-wrap gap-3">
               {(['all', 5, 4, 3, 2, 1] as const).map((rating) => {
@@ -186,7 +190,9 @@ export default function ProductReviewsSection({
                         : 'border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-300'
                     }`}
                   >
-                    {rating === 'all' ? 'Tất cả' : `${rating} sao`}
+                    {rating === 'all'
+                      ? t('common.all')
+                      : `${rating} ${t('review.stars')}`}
                   </Button>
                 )
               })}
@@ -194,15 +200,15 @@ export default function ProductReviewsSection({
           </div>
           <div className="flex gap-2 items-center">
             <span className="text-sm text-slate-500 dark:text-slate-300">
-              Sắp xếp:
+              {t('review.sortBy')}:
             </span>
             <Select<'low-to-high' | 'high-to-low'>
               value={sortOrder}
               onChange={(value) => setSortOrder(value)}
               className="w-40"
               options={[
-                { value: 'high-to-low', label: 'Cao đến thấp' },
-                { value: 'low-to-high', label: 'Thấp đến cao' }
+                { value: 'high-to-low', label: t('review.highToLow') },
+                { value: 'low-to-high', label: t('review.lowToHigh') }
               ]}
             />
           </div>
@@ -222,7 +228,7 @@ export default function ProductReviewsSection({
                 size="large"
                 onClick={() => setLoadedCount((c) => c + LOAD_MORE_COUNT)}
               >
-                Xem thêm
+                {t('review.moreReviews')}
               </Button>
             </div>
           )}

@@ -16,6 +16,7 @@ import {
   DEFAULT_SIZES,
   DEFAULT_SHOE_SIZES
 } from '@/constants/product.constant'
+import { useTranslation } from 'react-i18next'
 
 const { CheckableTag } = Tag
 
@@ -158,6 +159,7 @@ export default forwardRef<
   }: AdminVariantsMatrixFieldProps,
   ref
 ) {
+  const { t } = useTranslation()
   const isAccessories = productType === CategoryType.ACCESSORIES
   const initialVariants: ProductFormValues['variants'] =
     form.getFieldValue('variants') ?? []
@@ -389,7 +391,7 @@ export default forwardRef<
   return (
     <div className="space-y-4">
       <div className="p-4 border rounded-xl border-slate-200">
-        <p className="mb-3 text-sm font-semibold">Màu sắc</p>
+        <p className="mb-3 text-sm font-semibold">{t('product.color')}</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {DEFAULT_COLORS.map((colorOption) => (
@@ -436,14 +438,14 @@ export default forwardRef<
             onClick={() => setUiState((p) => ({ ...p, showCustomColor: true }))}
             className="rounded-full h-7!"
           >
-            Thêm
+            {t('common.add')}
           </Button>
         </div>
 
         {uiState.showCustomColor && (
           <div className="flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100! shadow-sm">
             <Input
-              placeholder="Tên màu sắc (ví dụ: Xanh olive)"
+              placeholder={`${t('product.color')} name`}
               value={formInputs.newColorName}
               onChange={(e) =>
                 setFormInputs((p) => ({ ...p, newColorName: e.target.value }))
@@ -460,14 +462,14 @@ export default forwardRef<
               className="p-0 w-10 h-8 bg-white rounded border cursor-pointer border-slate-300"
             />
             <Button type="primary" onClick={addColor}>
-              Xác nhận
+              {t('common.confirmOk')}
             </Button>
             <Button
               onClick={() =>
                 setUiState((p) => ({ ...p, showCustomColor: false }))
               }
             >
-              Hủy
+              {t('common.cancel')}
             </Button>
           </div>
         )}
@@ -497,13 +499,13 @@ export default forwardRef<
                       handleUploadChange(color.name, fileList)
                     }
                   >
-                    + Tải lên
+                    {t('common.upload')}
                   </Upload>
 
                   <div className="flex flex-wrap gap-2 items-end max-w-2xl">
                     <Input
                       className="flex-1 min-w-50"
-                      placeholder="Thêm ảnh bằng URL…"
+                      placeholder={`${t('common.add')} URL...`}
                       value={matrixData.urlDrafts[color.name] ?? ''}
                       onChange={(e) =>
                         setMatrixData((prev) => ({
@@ -517,7 +519,7 @@ export default forwardRef<
                       onPressEnter={() => appendColorUrl(color.name)}
                     />
                     <Button onClick={() => appendColorUrl(color.name)}>
-                      Thêm URL
+                      {t('common.add')} URL
                     </Button>
                   </div>
                 </div>
@@ -529,7 +531,7 @@ export default forwardRef<
 
       {!isAccessories && (
         <div className="p-4 border rounded-xl border-slate-200 ">
-          <p className="mb-3 text-sm font-semibold">Kích thước</p>
+          <p className="mb-3 text-sm font-semibold">{t('product.size')}</p>
 
           <div className="flex flex-wrap gap-2 mb-4">
             {(productType === CategoryType.SHOES
@@ -568,14 +570,14 @@ export default forwardRef<
               }
               className="rounded-md"
             >
-              Thêm
+              {t('common.add')}
             </Button>
           </div>
 
           {uiState.showCustomSize && (
             <div className="flex gap-2 items-center p-3 bg-white rounded-lg border border-blue-100 shadow-sm">
               <Input
-                placeholder="Size mới (VD: XL)"
+                placeholder={`${t('product.size')}...`}
                 value={formInputs.newSize}
                 onChange={(e) =>
                   setFormInputs((p) => ({ ...p, newSize: e.target.value }))
@@ -584,14 +586,14 @@ export default forwardRef<
                 className="max-w-37.5"
               />
               <Button type="primary" onClick={addSize}>
-                Xác nhận
+                {t('common.confirmOk')}
               </Button>
               <Button
                 onClick={() =>
                   setUiState((p) => ({ ...p, showCustomSize: false }))
                 }
               >
-                Hủy
+                {t('common.cancel')}
               </Button>
             </div>
           )}
@@ -600,7 +602,7 @@ export default forwardRef<
 
       <div className="p-3 rounded-md border border-slate-200">
         <div className="flex gap-2 items-center mb-2">
-          <span className="text-sm font-semibold">Cấp số lượng tất cả:</span>
+          <span className="text-sm font-semibold">{t('common.all')} {t('common.quantity')}:</span>
           <InputNumber
             min={0}
             value={formInputs.bulkQuantity}
@@ -609,7 +611,7 @@ export default forwardRef<
             }
             className="w-16!"
           />
-          <Button onClick={applyBulkQuantity}>Áp dụng</Button>
+          <Button onClick={applyBulkQuantity}>{t('common.save')}</Button>
         </div>
 
         {isAccessories
@@ -652,7 +654,7 @@ export default forwardRef<
                   <thead>
                     <tr>
                       <th className="p-2 text-left border-b border-slate-200">
-                        Màu sắc
+                        {t('product.color')}
                       </th>
                       {matrixData.sizes.map((size) => (
                         <th

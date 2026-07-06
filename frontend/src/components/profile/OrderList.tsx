@@ -11,6 +11,7 @@ import {
   Tooltip
 } from 'antd'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
@@ -40,6 +41,7 @@ const matchesSearch = (needle: string, order: MyOrder) => {
 }
 
 export default function OrderList() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [activeStatus, setActiveStatus] = useState<string>(
@@ -90,8 +92,8 @@ export default function OrderList() {
 
   const emptyText =
     orders.length === 0
-      ? 'Bạn chưa đặt đơn hàng nào.'
-      : 'Không tìm thấy đơn hàng nào khớp với từ khóa tìm kiếm của bạn.'
+      ? t('profile.noOrders')
+      : t('profile.noOrdersSearch')
 
   const columns = useMemo<ColumnsType<MyOrder>>(
     () => [
@@ -108,19 +110,19 @@ export default function OrderList() {
         )
       },
       {
-        title: 'Mã đơn hàng',
+        title: t('profile.columnOrderCode'),
         dataIndex: 'id',
         width: 150,
         render: (_, row) => row.id.slice(0, 8).toUpperCase()
       },
       {
-        title: 'Tổng cộng',
+        title: t('common.total'),
         dataIndex: 'totalAmount',
         align: 'right',
         render: (_, row) => formatCurrency(row.totalAmount)
       },
       {
-        title: 'Thanh toán',
+        title: t('profile.columnPayment'),
         dataIndex: 'paymentStatus',
         width: 120,
         render: (_, row) => (
@@ -130,7 +132,7 @@ export default function OrderList() {
         )
       },
       {
-        title: 'Trạng thái',
+        title: t('common.status'),
         dataIndex: 'status',
         width: 120,
         render: (_, row) => (
@@ -140,7 +142,7 @@ export default function OrderList() {
         )
       },
       {
-        title: 'Ngày mua',
+        title: t('profile.columnPurchaseDate'),
         dataIndex: 'createdAt',
         width: 150,
         sorter: (a, b) =>
@@ -149,12 +151,12 @@ export default function OrderList() {
         render: (_, row) => formatDate(row.createdAt)
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         align: 'center',
         width: 100,
         fixed: 'right',
         render: (_, row) => (
-          <Tooltip title="Xem chi tiết">
+          <Tooltip title={t('profile.tooltipViewDetail')}>
             <Button
               icon={<EyeOutlined />}
               onClick={() => navigate(lp(`/orders/${row.id}`))}
@@ -171,7 +173,7 @@ export default function OrderList() {
       <div className="space-y-3">
         <Input.Search
           allowClear
-          placeholder="Tìm kiếm theo ID đơn hàng, trạng thái, thanh toán..."
+          placeholder={t('profile.searchOrders')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

@@ -34,8 +34,8 @@ export default function CartPage() {
 
   const confirmRemoveItem = (id: string, productVariantId: string) => {
     Modal.confirm({
-      title: 'Xóa sản phẩm khỏi giỏ hàng?',
-      content: 'Hành động này sẽ xóa sản phẩm khỏi giỏ hàng.',
+      title: t('cart.confirmDeleteItemTitle'),
+      content: t('cart.confirmDeleteItemContent'),
       okText: t('common.delete'),
       cancelText: t('common.cancel'),
       okButtonProps: { danger: true },
@@ -45,8 +45,8 @@ export default function CartPage() {
 
   const confirmClearCart = () => {
     Modal.confirm({
-      title: 'Xóa toàn bộ giỏ hàng?',
-      content: 'Hành động này sẽ xóa tất cả sản phẩm trong giỏ hàng.',
+      title: t('cart.confirmClearCartTitle'),
+      content: t('cart.confirmClearCartContent'),
       okText: t('cart.deleteAll'),
       cancelText: t('common.cancel'),
       okButtonProps: { danger: true },

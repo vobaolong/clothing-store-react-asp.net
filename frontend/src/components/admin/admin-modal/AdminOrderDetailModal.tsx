@@ -89,13 +89,13 @@ export default function AdminOrderDetailModal({
         render: (_, __, index) => index + 1
       },
       {
-        title: 'Sản phẩm',
+        title: t('product.products'),
         dataIndex: 'productName',
         key: 'productName',
         render: (value: string) => toCapitalize(value)
       },
       {
-        title: 'Phân loại',
+        title: t('admin.columnVariant'),
         key: 'variant',
         align: 'right',
         render: (_, row) =>
@@ -104,32 +104,32 @@ export default function AdminOrderDetailModal({
             : toCapitalize(row.variantColor)
       },
       {
-        title: 'Số lượng',
+        title: t('admin.columnQuantity'),
         dataIndex: 'quantity',
         key: 'quantity',
         align: 'right'
       },
       {
-        title: 'Đơn giá',
+        title: t('admin.columnUnitPrice'),
         dataIndex: 'unitPrice',
         key: 'unitPrice',
         align: 'right',
         render: (value: number) => formatCurrency(value)
       },
       {
-        title: 'Tổng tiền',
+        title: t('admin.columnTotal'),
         dataIndex: 'lineTotal',
         key: 'lineTotal',
         align: 'right',
         render: (value: number) => formatCurrency(value)
       }
     ],
-    []
+    [t]
   )
 
   return (
     <Modal
-      title="Order Detail"
+      title={t('order.orderDetails')}
       open={open}
       onCancel={onClose}
       footer={null}
@@ -142,9 +142,7 @@ export default function AdminOrderDetailModal({
           <Spin />
         </div>
       ) : detailQuery.error || !detail ? (
-        <p className="py-8 text-center text-slate-600">
-          Không tìm thấy đơn hàng.
-        </p>
+        <p className="py-8 text-center text-slate-600">{t('order.notFound')}</p>
       ) : (
         <div className="space-y-4!">
           <Card className="rounded-2xl" size="small">
@@ -190,35 +188,43 @@ export default function AdminOrderDetailModal({
             </Descriptions>
           </Card>
 
-          <Card className="rounded-2xl" title="Items" size="small">
+          <Card
+            className="rounded-2xl"
+            title={t('admin.orderDetailItems')}
+            size="small"
+          >
             <Table<OrderItem>
               rowKey="id"
               pagination={false}
               dataSource={detail.items}
               columns={columns}
               size="small"
-              locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+              locale={{ emptyText: <Empty description={t('common.noData')} /> }}
             />
           </Card>
 
-          <Card className="rounded-2xl" title="Tổng kết" size="small">
+          <Card
+            className="rounded-2xl"
+            title={t('admin.orderDetailSummary')}
+            size="small"
+          >
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span>Tổng tiền hàng</span>
+                <span>{t('admin.orderTotalItems')}</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Giảm giá</span>
+                <span>{t('admin.orderDiscount')}</span>
                 <span className="text-emerald-600">
                   -{formatCurrency(detail.discountAmount || 0)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Phí vận chuyển</span>
+                <span>{t('admin.orderShippingFee')}</span>
                 <span>{formatCurrency(shippingFee)}</span>
               </div>
               <div className="flex justify-between pt-2 mt-2 font-semibold border-t border-slate-200">
-                <span>Tổng tiền</span>
+                <span>{t('admin.orderGrandTotal')}</span>
                 <span>{formatCurrency(detail.totalAmount)}</span>
               </div>
             </div>

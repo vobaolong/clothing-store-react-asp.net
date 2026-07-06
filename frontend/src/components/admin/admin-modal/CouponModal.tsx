@@ -10,6 +10,7 @@ import {
 } from '@/options/coupon.options'
 import type { Coupon } from '@/types'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   open: boolean
@@ -31,6 +32,7 @@ interface CouponFormValues {
 }
 
 function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
+  const { t } = useTranslation()
   const [form] = Form.useForm<CouponFormValues>()
   const [isSaving, setIsSaving] = useState(false)
 
@@ -86,13 +88,13 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
         await createCoupon(payload)
       }
 
-      toast.success(editing ? 'Đã cập nhật Voucher' : 'Đã tạo Voucher')
+      toast.success(editing ? t('admin.voucherUpdated') : t('admin.voucherCreated'))
       onSaved()
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data?.message || 'Có lỗi xảy ra từ server')
+        toast.error(err.response?.data?.message || t('admin.voucherServerError'))
       } else if (!(err instanceof Error && 'errorFields' in err)) {
-        toast.error('Có lỗi xảy ra trong quá trình lưu')
+        toast.error(t('admin.voucherSaveError'))
       }
     } finally {
       setIsSaving(false)
@@ -101,28 +103,28 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
 
   return (
     <Modal
-      title={editing ? 'Cập nhật Voucher' : 'Tạo Voucher'}
+      title={editing ? t('admin.voucherEditTitle') : t('admin.voucherCreateTitle')}
       open={open}
       forceRender
       onOk={save}
       onCancel={onClose}
-      okText="Lưu"
-      cancelText="Hủy"
+      okText={t('admin.voucherSave')}
+      cancelText={t('common.cancel')}
       okButtonProps={{ loading: isSaving, disabled: isSaving }}
       styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
     >
       <Form form={form} layout="vertical" onValuesChange={handleValuesChange}>
         <Form.Item
           name="code"
-          label="Mã Voucher"
-          rules={[{ required: true, message: 'Vui lòng nhập mã' }]}
+          label={t('admin.voucherCodeLabel')}
+          rules={[{ required: true, message: t('admin.voucherCodeRequired') }]}
         >
-          <Input placeholder="Ví dụ: TET2026" />
+          <Input placeholder={t('admin.voucherCodePlaceholder')} />
         </Form.Item>
 
         <Form.Item
           name="discountType"
-          label="Loại giảm giá"
+          label={t('admin.voucherDiscountTypeLabel')}
           rules={[{ required: true }]}
         >
           <Select
@@ -134,16 +136,16 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
 
         <Form.Item
           name="discountAmount"
-          label={isPercent ? 'Phần trăm giảm (%)' : 'Số tiền giảm (VND)'}
+          label={isPercent ? t('admin.voucherDiscountPercentLabel') : t('admin.voucherDiscountFlatLabel')}
           rules={[
-            { required: true, message: 'Vui lòng nhập giá trị giảm' },
+            { required: true, message: t('admin.voucherDiscountRequired') },
             {
               type: 'number',
               min: isPercent ? 1 : 0,
               max: isPercent ? 100 : undefined,
               message: isPercent
-                ? 'Phần trăm giảm giá phải từ 1 đến 100'
-                : 'Số tiền giảm giá phải lớn hơn hoặc bằng 0'
+                ? t('admin.voucherDiscountMin')
+                : t('admin.voucherDiscountMinFlat')
             }
           ]}
         >
@@ -152,9 +154,9 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
 
         <Form.Item
           name="minOrderSubtotal"
-          label="Đơn tối thiểu (VND)"
+          label={t('admin.voucherMinOrderLabel')}
           rules={[
-            { required: true, message: 'Vui lòng nhập giá trị đơn tối thiểu' }
+            { required: true, message: t('admin.voucherMinOrderRequired') }
           ]}
         >
           <InputNumber min={0} className="w-full!" />
@@ -162,9 +164,9 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
 
         <Form.Item
           name="maxUsage"
-          label="Số lượt dùng tối đa"
+          label={t('admin.voucherMaxUsageLabel')}
           rules={[
-            { required: true, message: 'Vui lòng nhập số lượt dùng tối đa' }
+            { required: true, message: t('admin.voucherMaxUsageRequired') }
           ]}
         >
           <InputNumber min={1} precision={0} className="w-full!" />
@@ -172,34 +174,34 @@ function CouponModal({ open, editing, onDirty, onClose, onSaved }: Props) {
 
         <Form.Item
           name="startsAt"
-          label="Ngày bắt đầu (Tùy chọn)"
-          extra="Để trống nếu muốn áp dụng ngay lập tức."
+          label={t('admin.voucherStartDateLabel')}
+          extra={t('admin.voucherStartDateExtra')}
         >
           <DatePicker
             showTime={{ format: 'HH:mm:ss' }}
             format="HH:mm:ss DD/MM/YYYY"
             className="w-full"
             allowClear
-            placeholder="Chọn ngày bắt đầu"
+            placeholder={t('admin.chooseDate')}
           />
         </Form.Item>
 
         <Form.Item
           name="expiresAt"
-          label="Ngày hết hạn"
-          rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn' }]}
+          label={t('admin.voucherExpiryLabel')}
+          rules={[{ required: true, message: t('admin.voucherExpiryRequired') }]}
         >
           <DatePicker
             showTime={{ format: 'HH:mm:ss' }}
             format="HH:mm:ss DD/MM/YYYY"
             className="w-full"
-            placeholder="Chọn ngày hết hạn"
+            placeholder={t('admin.chooseDate')}
           />
         </Form.Item>
 
         <Form.Item
           name="status"
-          label="Trạng thái"
+          label={t('admin.voucherStatusLabel')}
           rules={[{ required: true }]}
         >
           <Select

@@ -10,15 +10,16 @@ import { selectNotificationUnreadCount } from '@/state/notification-slice'
 import { isAdmin } from '@/state/auth/auth-session'
 import { lp } from '@/utils/language-path'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 const formatRelativeTime = (dateString: string): string => {
   const diffSec = Math.floor(
     (Date.now() - new Date(dateString).getTime()) / 1_000
   )
-  if (diffSec < 60) return 'Vừa xong'
-  if (diffSec < 3_600) return `${Math.floor(diffSec / 60)} phút trước`
-  if (diffSec < 86_400) return `${Math.floor(diffSec / 3_600)} giờ trước`
-  return `${Math.floor(diffSec / 86_400)} ngày trước`
+  if (diffSec < 60) return i18n.t('notification.justNow')
+  if (diffSec < 3_600) return i18n.t('notification.minutesAgo', { n: Math.floor(diffSec / 60) })
+  if (diffSec < 86_400) return i18n.t('notification.hoursAgo', { n: Math.floor(diffSec / 3_600) })
+  return i18n.t('notification.daysAgo', { n: Math.floor(diffSec / 86_400) })
 }
 
 export const NotificationCenter = () => {

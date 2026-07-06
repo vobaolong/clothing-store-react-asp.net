@@ -16,7 +16,8 @@ import type {
   Category,
   AdminProductImportResult,
   AdminBulkPermanentProductsResult,
-  LockCustomerResponse
+  LockCustomerResponse,
+  RevenueKpiDto
 } from '@/types'
 import { CategoryGender, CategoryType } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
@@ -248,3 +249,7 @@ export const deleteAdminBanner = async (id: string) =>
 export const reorderAdminBanners = async (
   items: { id: string; displayOrder: number }[]
 ) => apiVoid(apiClient.put(API_ENDPOINTS.admin.bannersReorder, items))
+
+// GET api/admin/kpi/revenue
+export const getAdminRevenueKpi = async (): Promise<RevenueKpiDto> =>
+  apiData(apiClient.get(API_ENDPOINTS.admin.revenueKpi))

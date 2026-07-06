@@ -3,6 +3,7 @@ import { ShoppingOutlined } from '@ant-design/icons'
 import { formatCurrency } from '@/utils/format'
 import { toCapitalize } from '@/utils/table.lib'
 import type { Product } from '@/types/product.type'
+import { useTranslation } from 'react-i18next'
 
 type ProductVariant = Product['variants'][number]
 
@@ -29,6 +30,7 @@ export default function ProductFixedBuyBar({
   onAddToCart,
   onBuyNow
 }: ProductFixedBuyBarProps) {
+  const { t } = useTranslation()
   const hasSale = salePrice != null && salePrice < price
 
   return (
@@ -86,7 +88,7 @@ export default function ProductFixedBuyBar({
             onClick={onBuyNow}
             className="px-4 text-sm font-medium"
           >
-            Mua nhanh
+            {t('product.buyNow')}
           </Button>
           <Button
             size="middle"

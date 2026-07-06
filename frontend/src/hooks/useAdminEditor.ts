@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Modal } from 'antd'
+import i18n from 'i18next'
 
 export const useAdminEditor = () => {
   const [dirty, setDirty] = useState<Record<string, boolean>>({})
@@ -15,9 +16,9 @@ export const useAdminEditor = () => {
       return
     }
     Modal.confirm({
-      title: 'Có thay đổi chưa được lưu. Bạn có chắc chắn muốn đóng?',
-      okText: 'Xác nhận',
-      cancelText: 'Hủy',
+      title: i18n.t('admin.unsavedChanges'),
+      okText: i18n.t('admin.unsavedOk'),
+      cancelText: i18n.t('admin.unsavedCancel'),
       okButtonProps: { danger: true },
       onOk: onClose
     })

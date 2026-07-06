@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Input, Select, FloatButton } from 'antd'
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 import { useQuery, useMutation } from '@tanstack/react-query'
@@ -15,12 +16,11 @@ import { useAdmin } from '@/context/AdminContext'
 import { AdminRefreshButtonAction } from '@/components/admin/AdminRefreshButtonAction'
 import { useFilteredCoupons } from '@/hooks/useFilteredCoupons'
 import AdminCouponsTable from '@/components/admin/admin-table/AdminCouponsTable'
-import {
-  ADMIN_COUPON_STATUS_FILTER_OPTIONS,
-  ADMIN_COUPON_TYPE_FILTER_OPTIONS
-} from '@/options'
+import { useAdminFilterOptions } from '@/options'
 
 export default function AdminCouponsSection() {
+  const { t } = useTranslation()
+  const { couponStatus, couponType } = useAdminFilterOptions()
   const { refresh, confirmDelete, modals, editing, editor } = useAdmin()
   const { clearDirty } = editor
 
@@ -45,7 +45,7 @@ export default function AdminCouponsSection() {
   const { mutateAsync: deleteCouponAsync } = useMutation({
     mutationFn: deleteCoupon,
     onSuccess: async () => {
-      toast.success('Đã lưu trữ voucher')
+      toast.success(t('admin.voucherArchived'))
       await refresh()
     }
   })
@@ -54,7 +54,7 @@ export default function AdminCouponsSection() {
     mutationFn: ({ id, status }: { id: string; status: CouponStatus }) =>
       updateCoupon(id, { status }),
     onSuccess: async () => {
-      toast.success('Đã cập nhật trạng thái')
+      toast.success(t('admin.voucherStatusUpdated'))
       await refresh()
     }
   })
@@ -76,11 +76,11 @@ export default function AdminCouponsSection() {
 
   const onDelete = useCallback(
     async (coupon: Coupon): Promise<void> => {
-      confirmDelete('Lưu trữ voucher này?', async () => {
+      confirmDelete(t('admin.voucherArchiveConfirm'), async () => {
         await deleteCouponAsync(coupon.id)
       })
     },
-    [confirmDelete, deleteCouponAsync]
+    [confirmDelete, deleteCouponAsync, t]
   )
 
   const onStatusChange = useCallback(
@@ -96,14 +96,14 @@ export default function AdminCouponsSection() {
         <div className="hidden sm:flex flex-wrap gap-2 justify-end w-full sm:ml-auto sm:w-auto">
           <AdminRefreshButtonAction query={couponsQuery} />
           <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
-            Tạo Voucher
+            {t('admin.createCoupon')}
           </Button>
         </div>
 
         <div className="flex flex-wrap gap-3 items-center mt-3 w-full">
           <Input.Search
             allowClear
-            placeholder="Tìm theo mã coupon, số tiền…"
+            placeholder={t('admin.searchCouponsPlaceholder')}
             value={filters.search}
             onChange={(e) =>
               setFilters((p) => ({ ...p, search: e.target.value }))
@@ -114,13 +114,13 @@ export default function AdminCouponsSection() {
             value={filters.discountType}
             onChange={(val) => setFilters((p) => ({ ...p, discountType: val }))}
             className="min-w-36"
-            options={ADMIN_COUPON_TYPE_FILTER_OPTIONS}
+            options={couponType}
           />
           <Select
             value={filters.status}
             onChange={(val) => setFilters((p) => ({ ...p, status: val }))}
             className="min-w-36"
-            options={ADMIN_COUPON_STATUS_FILTER_OPTIONS}
+            options={couponStatus}
           />
         </div>
       </div>
@@ -135,12 +135,12 @@ export default function AdminCouponsSection() {
         <FloatButton
           icon={<PlusOutlined />}
           onClick={onCreate}
-          tooltip="Tạo Voucher"
+          tooltip={t('admin.tooltipCreateCoupon')}
         />
         <FloatButton
           icon={<ReloadOutlined />}
           onClick={() => couponsQuery.refetch()}
-          tooltip="Tải lại"
+          tooltip={t('admin.tooltipRefreshData')}
         />
       </FloatButton.Group>
 

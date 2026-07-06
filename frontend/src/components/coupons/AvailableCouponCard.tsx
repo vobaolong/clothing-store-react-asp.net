@@ -106,7 +106,7 @@ export default function AvailableCouponCard({
                     if (e.key === 'Enter' || e.key === ' ') openCondition()
                   }}
                   className="text-[11px] font-semibold text-blue-800 dark:text-blue-400 cursor-pointer select-none"
-                  aria-label="Mở điều kiện áp dụng coupon"
+                  aria-label={t('coupon.openCondition')}
                 >
                   {t('coupon.condition')}
                 </span>
@@ -116,7 +116,8 @@ export default function AvailableCouponCard({
 
           <div className="flex flex-col gap-1 mt-auto">
             <p className="font-sans text-xs text-slate-900 dark:text-white">
-              HSD: {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
+              {t('coupon.expiryLabel')}{' '}
+              {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
             </p>
             {isBelowMin && (
               <p className="font-sans text-[11px] text-amber-700">
@@ -150,7 +151,7 @@ export default function AvailableCouponCard({
             })}
           </p>
           <p className="text-[12px] text-slate-500">
-            HSD: {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
+            {t('coupon.expiryLabel')} {formatDate(coupon.expiresAt, 'dateOnlyUTC')}
           </p>
 
           <div className="pt-2">

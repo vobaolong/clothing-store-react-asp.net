@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { Badge } from 'antd'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
+import { useAdminFilterOptions } from '@/options/admin-filter.options'
+import { useTranslation } from 'react-i18next'
 
 interface CountItem {
   status: string
@@ -9,6 +10,8 @@ interface CountItem {
 }
 
 export function useOrdersTabs(counts: CountItem[] | undefined) {
+  const { orderStatus } = useAdminFilterOptions()
+  const { t } = useTranslation()
   return useMemo(() => {
     const list = counts ?? []
     return [
@@ -16,20 +19,22 @@ export function useOrdersTabs(counts: CountItem[] | undefined) {
         key: ADMIN_FILTER_ALL_VALUE,
         label: (
           <Badge count={list.reduce((acc, curr) => acc + curr.count, 0)}>
-            <span className="pr-5">Tất cả</span>
+            <span className="pr-5">{t('common.all')}</span>
           </Badge>
         )
       },
-      ...ADMIN_ORDER_STATUS_FILTER_OPTIONS.filter(
-        (opt) => opt.value !== ADMIN_FILTER_ALL_VALUE
-      ).map((opt) => ({
-        key: opt.value,
-        label: (
-          <Badge count={list.find((c) => c.status === opt.value)?.count || 0}>
-            <span className="pr-5">{opt.label}</span>
-          </Badge>
+      ...orderStatus
+        .filter(
+          (opt: { value: string }) => opt.value !== ADMIN_FILTER_ALL_VALUE
         )
-      }))
+        .map((opt: { value: string; label: string }) => ({
+          key: opt.value,
+          label: (
+            <Badge count={list.find((c) => c.status === opt.value)?.count || 0}>
+              <span className="pr-5">{opt.label}</span>
+            </Badge>
+          )
+        }))
     ]
-  }, [counts])
+  }, [counts, orderStatus, t])
 }

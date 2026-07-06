@@ -2,6 +2,7 @@ import { ReloadOutlined } from '@ant-design/icons'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { Button, Tooltip } from 'antd'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 export type AdminRefreshQuery<TData = unknown, TError = Error> = Pick<
   UseQueryResult<TData, TError>,
@@ -15,23 +16,24 @@ type AdminQueryRefreshButtonProps<TData, TError> = {
 
 export function AdminRefreshButtonAction<TData, TError>({
   query,
-  label = 'Tải dữ liệu'
+  label
 }: AdminQueryRefreshButtonProps<TData, TError>) {
+  const { t } = useTranslation()
   const { refetch, isFetching, isPending } = query
   const isRefetching = isFetching && !isPending
 
   return (
-    <Tooltip title={label}>
+    <Tooltip title={label ?? t('admin.tooltipRefresh')}>
       <Button
         icon={<ReloadOutlined />}
         loading={isRefetching}
         onClick={() => {
           void refetch().then((result) => {
             if (result.error) {
-              toast.error('Tải dữ liệu thất bại')
+              toast.error(t('admin.refreshFailed'))
               return
             }
-            toast.success('Tải dữ liệu thành công')
+            toast.success(t('admin.refreshSuccess'))
           })
         }}
       />

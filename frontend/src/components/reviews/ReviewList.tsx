@@ -1,6 +1,7 @@
 import { Avatar, Empty, Rate, Tag } from 'antd'
 import type { ProductReview } from '@/types'
 import { formatDate } from '@/utils/format'
+import { useTranslation } from 'react-i18next'
 
 export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
   const getInitial = (name: string) => {
@@ -9,13 +10,9 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
     return normalized.charAt(0).toUpperCase()
   }
 
+  const { t } = useTranslation()
   if (!reviews.length) {
-    return (
-      <Empty
-        description="Chưa có đánh giá nào cho sản phẩm này"
-        className="py-8"
-      />
-    )
+    return <Empty description={t('review.noReviews')} className="py-8" />
   }
 
   return (
@@ -47,13 +44,17 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
                   <div className="flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500 dark:text-slate-300">
                     {review.variantSize && (
                       <span>
-                        <span className="text-slate-400">Kích thước:</span>{' '}
+                        <span className="text-slate-400">
+                          {t('product.size')}:
+                        </span>{' '}
                         {review.variantSize}
                       </span>
                     )}
                     {review.variantColor && (
                       <span>
-                        <span className="text-slate-400">Màu sắc:</span>{' '}
+                        <span className="text-slate-400">
+                          {t('product.color')}:
+                        </span>{' '}
                         {review.variantColor}
                       </span>
                     )}

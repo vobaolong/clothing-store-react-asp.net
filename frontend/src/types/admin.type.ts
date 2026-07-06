@@ -185,6 +185,13 @@ export type AnalyticsPoint = {
   revenue: number
 }
 
+export type RevenueKpiDto = {
+  currentRevenue: number
+  previousRevenue: number
+  difference: number
+  percentageChange: number | null
+}
+
 export type Review = {
   id: string
   productId: string

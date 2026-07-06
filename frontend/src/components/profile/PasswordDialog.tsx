@@ -4,6 +4,7 @@ import { Button, Form, Input, Modal, message } from 'antd'
 import { LockOutlined } from '@ant-design/icons'
 import { changePassword } from '@/api/auth-api'
 import type { ApiError } from '@/types/common.type'
+import { useTranslation } from 'react-i18next'
 
 type PasswordFormValues = {
   currentPassword: string
@@ -28,18 +29,19 @@ export default function PasswordDialog({
   open: boolean
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const [form] = Form.useForm<PasswordFormValues>()
 
   const { mutate, isPending } = useMutation({
     mutationFn: changePassword,
     onSuccess: () => {
-      message.success('Mật khẩu đã được thay đổi thành công.')
+      message.success(t('profile.passwordChanged'))
       form.resetFields()
       onClose()
     },
     onError: (error: ApiError) => {
       message.error(
-        error.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.'
+        error.response?.data?.message || t('profile.passwordChangeFailed')
       )
     }
   })

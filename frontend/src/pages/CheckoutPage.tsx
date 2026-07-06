@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -179,12 +180,12 @@ export default function CheckoutPage() {
   const submitOrder = async () => {
     if (isSubmitting) return
     if (!getAuthToken()) {
-      toast.error('Vui lòng đăng nhập trước khi thanh toán')
+      toast.error(t('checkout.pleaseLogin'))
       navigate(lp('/login'))
       return
     }
     if (items.length === 0) {
-      toast.error('Giỏ hàng của bạn trống')
+      toast.error(t('checkout.cartEmpty'))
       return
     }
 
@@ -194,17 +195,17 @@ export default function CheckoutPage() {
         watchedCouponCode?.trim() &&
         watchedCouponCode.trim().toUpperCase() !== coupon.appliedCode
       ) {
-        toast.error('Vui lòng áp dụng mã giảm giá trước khi đặt hàng')
+        toast.error(t('checkout.pleaseApplyCoupon'))
         return
       }
       if (!isAppliedCouponEligible) {
-        toast.error('Tổng tiền hiện tại không đủ để áp dụng mã giảm giá')
+        toast.error(t('checkout.insufficientTotal'))
         return
       }
 
       const values = getValues()
       if (!values.shippingAddressId) {
-        toast.error('Vui lòng chọn địa chỉ giao hàng')
+        toast.error(t('checkout.pleaseSelectAddress'))
         return
       }
 
@@ -213,7 +214,7 @@ export default function CheckoutPage() {
           item.productVariantId || item.selectedVariant?.id
         if (!productVariantId) {
           throw new Error(
-            `Giỏ hàng có sản phẩm không hợp lệ: ${item.name ?? item.id}`
+            i18n.t('checkout.invalidProduct', { name: item.name ?? item.id })
           )
         }
 
@@ -258,7 +259,7 @@ export default function CheckoutPage() {
         )
       )
       toast.success(
-        `Đặt hàng thành công. Mã đơn: ${orderId.slice(0, 8).toUpperCase()}`
+        t('checkout.orderSuccess', { orderId: orderId.slice(0, 8).toUpperCase() })
       )
       justPlacedOrderRef.current = true
       navigate(lp(`/orders/${orderId}`))
@@ -266,7 +267,7 @@ export default function CheckoutPage() {
       const msg =
         error instanceof Error
           ? error.message
-          : 'Không thể đặt hàng. Vui lòng thử lại sau'
+          : t('checkout.orderFailedMsg')
       toast.error(msg)
     } finally {
       setIsSubmitting(false)

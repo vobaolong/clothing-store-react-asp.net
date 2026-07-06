@@ -7,46 +7,43 @@ import {
   CategoryGender,
   CategoryType
 } from '@/enums'
+import i18n from 'i18next'
 
-export const VI_LABELS: Record<string, string> = {
-  // Order Status
-  [OrderStatus.PENDING]: 'Chờ xác nhận',
-  [OrderStatus.CONFIRMED]: 'Đã xác nhận',
-  [OrderStatus.SHIPPING]: 'Đang giao',
-  [OrderStatus.DELIVERED]: 'Đã giao',
-  [OrderStatus.CANCELLED]: 'Đã hủy',
+const LABEL_KEY_MAP: Record<string, string> = {
+  [OrderStatus.PENDING]: 'order.pending',
+  [OrderStatus.CONFIRMED]: 'order.confirmed',
+  [OrderStatus.SHIPPING]: 'order.shipping',
+  [OrderStatus.DELIVERED]: 'order.delivered',
+  [OrderStatus.CANCELLED]: 'order.cancelled',
 
-  // Payment Status
-  [PaymentStatus.UNPAID]: 'Chưa thanh toán',
-  [PaymentStatus.PAID]: 'Đã thanh toán',
-  [PaymentStatus.REFUNDED]: 'Đã hoàn tiền',
+  [PaymentStatus.UNPAID]: 'payment.unpaid',
+  [PaymentStatus.PAID]: 'payment.paid',
+  [PaymentStatus.REFUNDED]: 'payment.refunded',
 
-  // Payment Method
-  [PaymentMethod.COD]: 'COD (Thanh toán khi nhận hàng)',
-  [PaymentMethod.VNPAY]: 'VNPay',
+  [PaymentMethod.COD]: 'payment.cod',
+  [PaymentMethod.VNPAY]: 'payment.vnPay',
 
-  // Coupon Discount Type
-  [CouponDiscountType.PERCENT]: 'Phần trăm',
-  [CouponDiscountType.FLAT]: 'Số tiền',
+  [CouponDiscountType.PERCENT]: 'coupon.percent',
+  [CouponDiscountType.FLAT]: 'coupon.fixed',
 
-  // Coupon Status
-  [CouponStatus.ACTIVE]: 'Kích hoạt',
-  [CouponStatus.INACTIVE]: 'Ngưng',
-  [CouponStatus.ARCHIVED]: 'Lưu trữ',
+  [CouponStatus.ACTIVE]: 'coupon.active',
+  [CouponStatus.INACTIVE]: 'coupon.inactive',
+  [CouponStatus.ARCHIVED]: 'coupon.archived',
 
-  // Category Gender
-  [CategoryGender.MALE]: 'Nam',
-  [CategoryGender.FEMALE]: 'Nữ',
-  [CategoryGender.UNISEX]: 'Unisex',
+  [CategoryGender.MALE]: 'product.male',
+  [CategoryGender.FEMALE]: 'product.female',
+  [CategoryGender.UNISEX]: 'product.unisex',
 
-  // Category Type
-  [CategoryType.CLOTHING]: 'Quần áo',
-  [CategoryType.SHOES]: 'Giày dép',
-  [CategoryType.ACCESSORIES]: 'Phụ kiện',
+  [CategoryType.CLOTHING]: 'product.clothing',
+  [CategoryType.SHOES]: 'product.shoes',
+  [CategoryType.ACCESSORIES]: 'product.accessories',
 
-  active: 'Kích hoạt',
-  locked: 'Bị khóa',
-  all: 'Tất cả'
+  active: 'common.active',
+  locked: 'common.locked',
+  all: 'common.all'
 }
 
-export const getVietnameseLabel = (key: string) => VI_LABELS[key] ?? key
+export const getVietnameseLabel = (key: string): string => {
+  const translationKey = LABEL_KEY_MAP[key]
+  return translationKey ? String(i18n.t(translationKey as never)) : String(key)
+}

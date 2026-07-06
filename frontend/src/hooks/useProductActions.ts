@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { Modal } from 'antd'
 import toast from 'react-hot-toast'
+import i18n from 'i18next'
 import dayjs from 'dayjs'
 import {
   deleteAdminProduct,
@@ -53,14 +54,14 @@ export function useProductActions({
   const onDelete = useCallback(
     (product: AdminProduct) => {
       Modal.confirm({
-        title: `Xóa sản phẩm "${product.name}"?`,
-        content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
-        okText: 'Xác nhận',
-        cancelText: 'Hủy',
+        title: i18n.t('admin.deleteTitle', { name: product.name }),
+        content: i18n.t('admin.deleteConfirmSimple'),
+        okText: i18n.t('admin.deleteConfirmOk'),
+        cancelText: i18n.t('admin.deleteConfirmCancel'),
         okButtonProps: { danger: true },
         onOk: async () => {
           await deleteAdminProduct(product.id)
-          toast.success('Sản phẩm đã được xóa')
+          toast.success(i18n.t('admin.productDeleted'))
           await refresh()
         }
       })
@@ -72,7 +73,7 @@ export function useProductActions({
     async (product: AdminProduct, isActive: boolean) => {
       await updateAdminProductActive(product.id, { isActive })
       toast.success(
-        isActive ? 'Sản phẩm đã được kích hoạt' : 'Sản phẩm đã được vô hiệu hóa'
+        isActive ? i18n.t('admin.productActivated') : i18n.t('admin.productDeactivated')
       )
       await refresh()
     },
@@ -82,13 +83,13 @@ export function useProductActions({
   const onRestore = useCallback(
     async (product: AdminProduct) => {
       Modal.confirm({
-        title: `Khôi phục sản phẩm "${product.name}"?`,
-        content: 'Thao tác này sẽ làm thay đổi dữ liệu. Bạn có chắc chắn?',
-        okText: 'Xác nhận',
-        cancelText: 'Hủy',
+        title: i18n.t('admin.restoreTitle', { name: product.name }),
+        content: i18n.t('admin.deleteConfirmSimple'),
+        okText: i18n.t('admin.deleteConfirmOk'),
+        cancelText: i18n.t('admin.deleteConfirmCancel'),
         onOk: async () => {
           await restoreAdminProduct(product.id)
-          toast.success('Sản phẩm đã được khôi phục')
+          toast.success(i18n.t('admin.productRestored'))
           await refresh()
         }
       })
@@ -108,11 +109,11 @@ export function useProductActions({
 
   const onExportExcel = useCallback(async (filteredData: AdminProduct[]) => {
     if (filteredData.length === 0) {
-      toast.error('Không có sản phẩm để xuất')
+      toast.error(i18n.t('admin.noProductsExport'))
       return
     }
     try {
-      const loadingToast = toast.loading('Đang xuất Excel...')
+      const loadingToast = toast.loading(i18n.t('admin.exportingExcel'))
       const ids = filteredData.map((p) => p.id)
       const blob = await exportAdminProducts(ids)
       const url = window.URL.createObjectURL(blob)
@@ -123,9 +124,9 @@ export function useProductActions({
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
-      toast.success('Xuất Excel thành công', { id: loadingToast })
+      toast.success(i18n.t('admin.exportExcelSuccess'), { id: loadingToast })
     } catch (error) {
-      toast.error('Xuất Excel thất bại')
+      toast.error(i18n.t('admin.exportExcelFailed'))
       console.error('Export error:', error)
     }
   }, [])

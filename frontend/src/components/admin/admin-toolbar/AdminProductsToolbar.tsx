@@ -2,6 +2,7 @@ import { PlusOutlined, UploadOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Segmented, FloatButton } from 'antd'
 import dayjs from 'dayjs'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 
@@ -11,7 +12,7 @@ import {
   AdminRefreshButtonAction,
   type AdminRefreshQuery
 } from '../AdminRefreshButtonAction'
-import { ADMIN_ACTIVE_FILTER_OPTIONS } from '@/options'
+import { useAdminFilterOptions } from '@/options'
 
 type AdminProductsToolbarProps = {
   listMode: AdminProductListMode
@@ -50,14 +51,16 @@ export default function AdminProductsToolbar({
   dateRange,
   onDateRangeChange
 }: AdminProductsToolbarProps) {
+  const { t } = useTranslation()
+  const { active } = useAdminFilterOptions()
   return (
     <>
       <Segmented<AdminProductListMode>
         value={listMode}
         onChange={(value) => onListModeChange(value)}
         options={[
-          { label: 'Sản phẩm hoạt động', value: 'active' },
-          { label: 'Sản phẩm đã xóa', value: 'deleted' }
+          { label: t('admin.sectionProductsActive'), value: 'active' },
+          { label: t('admin.sectionProductsDeleted'), value: 'deleted' }
         ]}
       />
 
@@ -66,16 +69,16 @@ export default function AdminProductsToolbar({
           {selectedActions}
           <AdminRefreshButtonAction query={refreshQuery} />
           <Button icon={<UploadOutlined />} onClick={onImportExcel}>
-            Import Excel
+            {t('admin.importExcel')}
           </Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
-            Thêm sản phẩm
+            {t('admin.createProduct')}
           </Button>
         </div>
         <AdminListFilters
           searchValue={searchValue}
           onSearchChange={onSearchChange}
-          searchPlaceholder="Tìm theo mã SP, slug, danh mục, ID…"
+          searchPlaceholder={t('admin.searchProductsPlaceholder')}
           searchClassName="w-full sm:max-w-sm"
           selects={[
             {
@@ -83,13 +86,13 @@ export default function AdminProductsToolbar({
               value:
                 categoryId === ADMIN_FILTER_ALL_VALUE ? undefined : categoryId,
               treeData: categoryTreeData,
-              placeholder: 'Tất cả danh mục',
+              placeholder: t('admin.filterAllCategories'),
               onChange: onCategoryChange,
               className: 'min-w-56'
             },
             {
               value: activeValue,
-              options: [...ADMIN_ACTIVE_FILTER_OPTIONS],
+              options: [...active],
               onChange: onActiveChange,
               className: 'min-w-36'
             },
@@ -97,7 +100,7 @@ export default function AdminProductsToolbar({
               kind: 'date-range',
               value: dateRange,
               onChange: onDateRangeChange,
-              placeholder: ['Từ ngày', 'Đến ngày'],
+              placeholder: [t('admin.filterDateFrom'), t('admin.filterDateTo')],
               className: 'w-full sm:w-auto'
             }
           ]}
@@ -112,17 +115,17 @@ export default function AdminProductsToolbar({
           <FloatButton
             icon={<PlusOutlined />}
             onClick={onCreate}
-            tooltip="Thêm sản phẩm"
+            tooltip={t('admin.tooltipCreateProduct')}
           />
           <FloatButton
             icon={<UploadOutlined />}
             onClick={onImportExcel}
-            tooltip="Import Excel"
+            tooltip={t('admin.tooltipImportExcel')}
           />
           <FloatButton
             icon={<ReloadOutlined />}
             onClick={() => refreshQuery.refetch()}
-            tooltip="Tải lại"
+            tooltip={t('admin.tooltipRefreshData')}
           />
         </FloatButton.Group>
       </div>

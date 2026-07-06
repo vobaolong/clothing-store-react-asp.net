@@ -3,13 +3,14 @@ import { Table, Tag, Select, Button, Tooltip, Empty } from 'antd'
 import type { TablePaginationConfig } from 'antd/es/table'
 import { EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import { ADMIN_ORDER_STATUS_FILTER_OPTIONS } from '@/options/admin-filter.options'
+import { useAdminFilterOptions } from '@/options/admin-filter.options'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { canUpdateToStatus } from '@/utils/order-status-transition'
 import { formatCurrency, formatDate } from '@/utils/format'
 import { OrderStatus } from '@/enums'
 import { ORDER_STATUS_COLORS } from '@/constants/order-status.constant'
 import type { AdminOrder } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 interface AdminOrdersTableProps {
   dataSource: AdminOrder[]
@@ -28,6 +29,8 @@ export default function AdminOrdersTable({
   onUpdateStatus,
   onView
 }: AdminOrdersTableProps) {
+  const { t } = useTranslation()
+  const { orderStatus } = useAdminFilterOptions()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const handleTableChange = useCallback((pag: TablePaginationConfig) => {
@@ -59,25 +62,25 @@ export default function AdminOrdersTable({
         render: (_, __, index) => (page - 1) * pageSize + index + 1
       },
       {
-        title: 'Mã đơn',
+        title: t('admin.columnOrderCode'),
         dataIndex: 'id',
         key: 'id',
         render: (value: string) => value.slice(0, 8).toUpperCase()
       },
       {
-        title: 'Người dùng',
+        title: t('admin.columnUser'),
         dataIndex: 'userEmail',
         key: 'userEmail'
       },
       {
-        title: 'Tổng tiền',
+        title: t('order.orderTotal'),
         dataIndex: 'totalAmount',
         key: 'totalAmount',
         align: 'right',
         render: (value: number) => formatCurrency(value)
       },
       {
-        title: 'Thanh toán',
+        title: t('admin.columnPayment'),
         dataIndex: 'paymentStatus',
         key: 'paymentStatus',
         align: 'center',
@@ -88,7 +91,7 @@ export default function AdminOrdersTable({
         )
       },
       {
-        title: 'Trạng thái',
+        title: t('order.status'),
         key: 'status',
         align: 'center',
         render: (_, row) => (
@@ -99,26 +102,19 @@ export default function AdminOrdersTable({
               row.status === OrderStatus.DELIVERED ||
               row.status === OrderStatus.CANCELLED
             }
-            options={ADMIN_ORDER_STATUS_FILTER_OPTIONS.map((option) => ({
-              ...option,
-              label: getVietnameseLabel(option.value),
-              disabled: !canUpdateToStatus(row.status, option.value)
-            }))}
+            options={orderStatus.map(
+              (option: { value: string; label: string }) => ({
+                ...option,
+                label: getVietnameseLabel(option.value),
+                disabled: !canUpdateToStatus(row.status, option.value)
+              })
+            )}
             onChange={(value) => onUpdateStatus(row, value)}
           />
         )
       },
       {
-        title: 'Ngày tạo',
-        dataIndex: 'createdAt',
-        key: 'createdAt',
-        className: 'truncate',
-        sorter: (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-        render: (value: string) => formatDate(value)
-      },
-      {
-        title: 'Cập nhật lúc',
+        title: t('common.createdAt'),
         dataIndex: 'updatedAt',
         key: 'updatedAt',
         className: 'truncate',
@@ -128,18 +124,18 @@ export default function AdminOrdersTable({
         render: (value?: string) => (value ? formatDate(value) : '-')
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'action',
         align: 'center',
         fixed: 'right',
         render: (_, row) => (
-          <Tooltip title="Xem chi tiết">
+          <Tooltip title={t('admin.tooltipViewDetail')}>
             <Button icon={<EyeOutlined />} onClick={() => onView(row)} />
           </Tooltip>
         )
       }
     ],
-    [onUpdateStatus, onView, page, pageSize]
+    [onUpdateStatus, onView, orderStatus, page, pageSize, t]
   )
 
   return (
@@ -157,9 +153,10 @@ export default function AdminOrdersTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} đơn hàng`
+        showTotal: (total) =>
+          t('common.total') + ` ${total} ` + t('order.order').toLowerCase()
       }}
-      locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+      locale={{ emptyText: <Empty description={t('common.noData')} /> }}
     />
   )
 }

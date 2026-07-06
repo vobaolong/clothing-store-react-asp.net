@@ -100,7 +100,7 @@ export default function ShippingAddressFormModal({
   const createAddressMutation = useMutation({
     mutationFn: createShippingAddress,
     onSuccess: async (addressId) => {
-      toast.success('Đã thêm địa chỉ mới')
+      toast.success(t('profile.addressAdded'))
       await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.shippingAddresses
       })
@@ -119,7 +119,7 @@ export default function ShippingAddressFormModal({
       payload: CreateShippingAddressPayload
     }) => updateShippingAddress(id, payload),
     onSuccess: async (_, variables) => {
-      toast.success('Đã cập nhật địa chỉ')
+      toast.success(t('profile.addressUpdated'))
       await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.shippingAddresses
       })
@@ -143,7 +143,7 @@ export default function ShippingAddressFormModal({
         (x: { name: string; code: string }) => x.code === wardCode
       )?.name ?? ''
     if (!fullName || !phone || !provinceId || !wardCode || !street) {
-      toast.error('Vui lòng nhập đầy đủ thông tin địa chỉ')
+      toast.error(t('profile.addressInfoRequired'))
       return
     }
 

@@ -1,5 +1,6 @@
 import { useReducer } from 'react'
 import { useWatch } from 'react-hook-form'
+import i18n from 'i18next'
 import type {
   Control,
   UseFormGetValues,
@@ -74,7 +75,7 @@ export function useCheckoutCouponState({
   const applyCouponByCode = async (inputCode?: string) => {
     const rawCode = inputCode?.trim() || getValues('couponCode')?.trim()
     if (!rawCode) {
-      toast.error('Vui lòng nhập mã giảm giá')
+      toast.error(i18n.t('message.error.enterCouponCode'))
       return
     }
 
@@ -95,10 +96,10 @@ export function useCheckoutCouponState({
         discountAmount: result.discountAmount
       })
       setValue('couponCode', finalCode)
-      toast.success('Đã áp dụng mã giảm giá')
+      toast.success(i18n.t('message.error.couponApplied'))
     } catch {
       dispatch({ type: 'clear' })
-      toast.error('Mã giảm giá không hợp lệ')
+      toast.error(i18n.t('message.error.couponInvalid'))
     }
   }
 

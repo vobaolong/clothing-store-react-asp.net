@@ -6,6 +6,7 @@ import {
   ShoppingOutlined,
   BellOutlined
 } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   value: 'profile' | 'addresses' | 'wishlist' | 'orders' | 'notifications'
@@ -13,12 +14,13 @@ type Props = {
 }
 
 export default function ProfileSidebar({ value, onChange }: Props) {
+  const { t } = useTranslation()
   const menuItems = [
-    { key: 'profile', label: 'Hồ sơ', icon: <UserOutlined /> },
-    { key: 'addresses', label: 'Địa chỉ', icon: <HomeOutlined /> },
-    { key: 'wishlist', label: 'Yêu thích', icon: <HeartOutlined /> },
-    { key: 'orders', label: 'Đơn hàng', icon: <ShoppingOutlined /> },
-    { key: 'notifications', label: 'Thông báo', icon: <BellOutlined /> }
+    { key: 'profile', label: t('profile.profile'), icon: <UserOutlined /> },
+    { key: 'addresses', label: t('profile.shippingAddresses'), icon: <HomeOutlined /> },
+    { key: 'wishlist', label: t('profile.wishlist'), icon: <HeartOutlined /> },
+    { key: 'orders', label: t('order.order'), icon: <ShoppingOutlined /> },
+    { key: 'notifications', label: t('profile.notifications'), icon: <BellOutlined /> }
   ]
 
   return (

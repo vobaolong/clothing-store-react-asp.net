@@ -2,6 +2,7 @@ import { Image } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ProductSelection } from '@/types/product.type'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   galleryImages: string[]
@@ -16,6 +17,7 @@ export default function ProductGallery({
   setSelection,
   productName
 }: Props) {
+  const { t } = useTranslation()
   const thumbListRef = useRef<HTMLDivElement | null>(null)
   const [thumbScrollEdges, setThumbScrollEdges] = useState({
     atTop: true,
@@ -121,7 +123,7 @@ export default function ProductGallery({
             <div className="flex gap-1 justify-center mt-2">
               <button
                 type="button"
-                aria-label="Ảnh nhỏ phía trên"
+                aria-label={t('product.thumbnailTop')}
                 disabled={thumbScrollEdges.atTop}
                 onClick={() => scrollProductThumbs('up')}
                 className="flex justify-center items-center bg-white rounded-md border transition-colors cursor-pointer size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"
@@ -130,7 +132,7 @@ export default function ProductGallery({
               </button>
               <button
                 type="button"
-                aria-label="Ảnh nhỏ phía dưới"
+                aria-label={t('product.thumbnailBottom')}
                 disabled={thumbScrollEdges.atBottom}
                 onClick={() => scrollProductThumbs('down')}
                 className="flex justify-center items-center bg-white rounded-md border transition-colors cursor-pointer size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 import {
   getAdminBanners,
@@ -15,6 +16,7 @@ import AdminBannersToolbar from '@/components/admin/admin-toolbar/AdminBannersTo
 import AdminBannersTable from '@/components/admin/admin-table/AdminBannersTable'
 
 export default function AdminBannersSection() {
+  const { t } = useTranslation()
   const { refresh, confirmDelete, modals, editing, editor } = useAdmin()
   const { clearDirty } = editor
 
@@ -30,20 +32,20 @@ export default function AdminBannersSection() {
   const { mutate: reorderBanners, isPending: isReordering } = useMutation({
     mutationFn: reorderAdminBanners,
     onSuccess: async () => {
-      toast.success('Đã lưu thứ tự banner mới')
+      toast.success(t('admin.bannerSaved'))
       setDraftChanges(null)
       await refresh()
     },
-    onError: () => toast.error('Lỗi khi cập nhật thứ tự banner')
+    onError: () => toast.error(t('admin.bannerReorderError'))
   })
 
   const { mutateAsync: deleteBannerAsync } = useMutation({
     mutationFn: deleteAdminBanner,
     onSuccess: async () => {
-      toast.success('Banner đã được xóa')
+      toast.success(t('admin.bannerDeleted'))
       await refresh()
     },
-    onError: () => toast.error('Xóa banner thất bại')
+    onError: () => toast.error(t('admin.bannerDeleteFailed'))
   })
 
   const { mutateAsync: updateBannerAsync } = useMutation({
@@ -55,10 +57,10 @@ export default function AdminBannersSection() {
       payload: AdminBannerUpsertPayload
     }) => updateAdminBanner(id, payload),
     onSuccess: async () => {
-      toast.success('Trạng thái kích hoạt đã được cập nhật')
+      toast.success(t('admin.bannerStatusUpdated'))
       await refresh()
     },
-    onError: () => toast.error('Cập nhật trạng thái thất bại')
+    onError: () => toast.error(t('admin.bannerStatusUpdateFailed'))
   })
 
   const handleReorder = useCallback((newData: AdminBanner[]) => {
@@ -91,11 +93,11 @@ export default function AdminBannersSection() {
 
   const onDelete = useCallback(
     async (banner: AdminBanner) => {
-      confirmDelete('Bạn có chắc chắn muốn xóa banner này?', async () => {
+      confirmDelete(t('admin.bannerDeleteConfirm'), async () => {
         await deleteBannerAsync(banner.id)
       })
     },
-    [confirmDelete, deleteBannerAsync]
+    [confirmDelete, deleteBannerAsync, t]
   )
 
   const onToggleActive = useCallback(

@@ -1,6 +1,7 @@
 import { Modal, Select } from 'antd'
-import { ADMIN_CUSTOMER_LOCK_REASON_OPTIONS } from '@/options/admin-customer.options'
+import { useAdminCustomerLockReasonOptions } from '@/options/admin-customer.options'
 import type { Customer } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 interface LockCustomerModalProps {
   target: Customer | null
@@ -19,30 +20,30 @@ export default function LockCustomerModal({
   onChangeReason,
   onConfirm
 }: LockCustomerModalProps) {
+  const { t } = useTranslation()
+  const lockReasonOptions = useAdminCustomerLockReasonOptions()
   return (
     <Modal
-      title="Khóa tài khoản"
+      title={t('admin.lockAccount')}
       destroyOnHidden
       open={Boolean(target)}
-      okText="Xác nhận khóa"
-      cancelText="Hủy"
+      okText={t('common.confirm')}
+      cancelText={t('common.cancel')}
       confirmLoading={isLocking}
       onCancel={onCancel}
       onOk={onConfirm}
     >
-      <p className="mb-2 text-sm text-slate-600">
-        Email sẽ được gửi đến khách hàng với nội dung dựa trên lý do đã chọn.
-      </p>
+      <p className="mb-2 text-sm text-slate-600">{t('admin.emailReasonBan')}</p>
       <label className="block mb-1 text-sm font-medium" htmlFor="lock-reason">
-        Lý do khóa tài khoản
+        {t('admin.lockCustomerReason')}
       </label>
       <Select
         className="w-full"
         id="lock-reason"
-        placeholder="Chọn lý do"
+        placeholder={t('admin.selectReason')}
         value={reason}
         onChange={onChangeReason}
-        options={ADMIN_CUSTOMER_LOCK_REASON_OPTIONS}
+        options={lockReasonOptions}
       />
     </Modal>
   )

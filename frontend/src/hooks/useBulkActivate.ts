@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast'
+import i18n from 'i18next'
 import { bulkUpdateAdminProductsActive } from '@/api/admin-api'
 
 export function useBulkActivate(onRefresh: () => Promise<void>) {
@@ -13,12 +14,12 @@ export function useBulkActivate(onRefresh: () => Promise<void>) {
         isActive
       })
       toast.success(
-        isActive ? 'Kích hoạt thành công' : 'Huỷ kích hoạt thành công'
+        isActive ? i18n.t('admin.activateSuccess') : i18n.t('admin.deactivateSuccess')
       )
       onClearSelection()
       await onRefresh()
     } catch {
-      toast.error(isActive ? 'Kích hoạt thất bại' : 'Huỷ kích hoạt thất bại')
+      toast.error(isActive ? i18n.t('admin.activateFailed') : i18n.t('admin.deactivateFailed'))
     }
   }
 

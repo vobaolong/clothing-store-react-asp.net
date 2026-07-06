@@ -8,10 +8,11 @@ import {
   YAxis
 } from 'recharts'
 import type { OrderBarChartPoint } from '@/types/chart-types'
+import i18n from 'i18next'
 
 const formatTooltipValue = (value: unknown): [string, string] => {
   const numericValue = typeof value === 'number' ? value : Number(value ?? 0)
-  return [numericValue.toLocaleString('vi-VN'), 'Số lượng']
+  return [numericValue.toLocaleString('vi-VN'), i18n.t('common.quantity')]
 }
 
 type OrderBarChartProps = {
@@ -43,7 +44,7 @@ export default function OrderBarChart({
               valueFormatter
                 ? valueFormatter(numericValue)
                 : formatTooltipValue(numericValue)[0],
-              'Số lượng'
+              i18n.t('common.quantity')
             ] as [string, string]
           }}
         />

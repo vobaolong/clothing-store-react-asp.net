@@ -89,6 +89,7 @@ export const API_ENDPOINTS = {
     customerUnlockById: (id: string) => `/admin/customers/${id}/unlock`,
     banners: '/admin/banners',
     bannersReorder: '/admin/banners/reorder',
-    bannerById: (id: string) => `/admin/banners/${id}`
+    bannerById: (id: string) => `/admin/banners/${id}`,
+    revenueKpi: '/admin/kpi/revenue'
   }
 } as const

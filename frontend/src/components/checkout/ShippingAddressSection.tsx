@@ -91,7 +91,7 @@ export default function ShippingAddressSection({
                                 await qc.invalidateQueries({
                                   queryKey: QUERY_KEYS.shippingAddresses
                                 })
-                                toast.success('Đã đặt làm mặc định')
+                                toast.success(t('profile.defaultAddressSet'))
                               }}
                             >
                               {t('profile.setDefaultAddress')}

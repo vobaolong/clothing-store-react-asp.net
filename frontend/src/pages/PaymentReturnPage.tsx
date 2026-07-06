@@ -8,6 +8,7 @@ import { Button } from 'antd'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useEffect, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getMyOrderDetail } from '@/api/orders-api'
@@ -97,14 +98,17 @@ type PaymentResultData = {
   totalAmount?: number | string | null
 }
 
-function getErrorMessage(error: unknown): string {
+function getErrorMessage(
+  error: unknown,
+  t: (key: string | string[]) => string
+): string {
   if (!axios.isAxiosError(error)) {
-    return 'Không thể xác minh kết quả thanh toán.'
+    return t('payment.verifyError')
   }
 
   return String(
     (error.response?.data as { message?: string } | undefined)?.message ??
-      'Không thể xác minh kết quả thanh toán.'
+      t('payment.verifyError')
   )
 }
 
@@ -155,40 +159,41 @@ function getViewState({
   return 'unpaid'
 }
 
-function getViewConfig(state: PaymentViewState, errorMessage: string) {
+function getViewConfig(
+  state: PaymentViewState,
+  errorMessage: string,
+  t: (key: string | string[]) => string
+) {
   const configByState = {
     loading: {
       icon: <Spinner />,
       iconBg: 'bg-gray-100',
-      title: 'Đang xác minh thanh toán',
-      subtitle: 'Vui lòng chờ trong khi hệ thống xác nhận giao dịch với VNPay.'
+      title: t('payment.verifying'),
+      subtitle: t('payment.verifyingSubtitle')
     },
     invalid: {
       icon: <IconWarning />,
       iconBg: 'bg-amber-50',
-      title: 'Đường dẫn trả về không hợp lệ',
-      subtitle:
-        'Thiếu tham số VNPay bắt buộc. Vui lòng quay lại đơn hàng và thử thanh toán lại.'
+      title: t('payment.invalidReturn'),
+      subtitle: t('payment.invalidReturnSubtitle')
     },
     error: {
       icon: <IconError />,
       iconBg: 'bg-red-50',
-      title: 'Xác minh thất bại',
+      title: t('payment.verificationFailed'),
       subtitle: errorMessage
     },
     success: {
       icon: <IconSuccess />,
       iconBg: 'bg-green-50',
-      title: 'Thanh toán thành công',
-      subtitle:
-        'Giao dịch của bạn đã được xác nhận và đơn hàng đang được xử lý.'
+      title: t('payment.paymentSuccess'),
+      subtitle: t('payment.paymentSuccessSubtitle')
     },
     unpaid: {
       icon: <IconError />,
       iconBg: 'bg-red-50',
-      title: 'Thanh toán chưa hoàn tất',
-      subtitle:
-        'Không thể xác minh thanh toán. Hệ thống chưa ghi nhận trừ tiền. Vui lòng thử lại từ trang đơn hàng.'
+      title: t('payment.paymentIncomplete'),
+      subtitle: t('payment.paymentIncompleteSubtitle')
     }
   } satisfies Record<
     PaymentViewState,
@@ -228,6 +233,7 @@ function formatTotalAmount(amount: number | string | null | undefined): string {
 }
 
 export default function PaymentReturnPage() {
+  const { t } = useTranslation()
   const [params] = useSearchParams()
   const { search } = useLocation()
   const txnRef = params.get('vnp_TxnRef') ?? ''
@@ -282,7 +288,7 @@ export default function PaymentReturnPage() {
   }, [dispatch, query.data, responseCode])
 
   const missingParams = !txnRef || !responseCode || !hasSecureHash
-  const errorMessage = getErrorMessage(query.error)
+  const errorMessage = getErrorMessage(query.error, t as never)
   const isSuccess = isSuccessfulPayment(query.data, responseCode)
   const state = getViewState({
     isFetching: query.isFetching,
@@ -290,7 +296,7 @@ export default function PaymentReturnPage() {
     missingParams,
     isSuccess
   })
-  const config = getViewConfig(state, errorMessage)
+  const config = getViewConfig(state, errorMessage, t as never)
 
   return (
     <div className="mx-auto flex min-h-[70vh] w-full max-w-lg items-center px-4 py-10">
@@ -311,20 +317,22 @@ export default function PaymentReturnPage() {
         {query.data && (
           <div className="py-4 px-8">
             <DetailRow
-              label="Mã đơn hàng"
+              label={t('payment.orderCode')}
               value={`#${query.data.orderId.slice(0, 8).toUpperCase()}`}
             />
             <DetailRow
-              label="Trạng thái thanh toán"
+              label={t('payment.paymentStatus')}
               badge={query.data.paymentStatus}
             />
             <DetailRow
-              label="Giá trị đơn hàng"
+              label={t('payment.orderValue')}
               value={formatTotalAmount(
                 orderDetailQuery.data?.totalAmount ?? query.data.totalAmount
               )}
             />
-            {txnRef && <DetailRow label="Mã giao dịch" value={txnRef} />}
+            {txnRef && (
+              <DetailRow label={t('payment.transactionCode')} value={txnRef} />
+            )}
           </div>
         )}
 
@@ -336,7 +344,7 @@ export default function PaymentReturnPage() {
               size="large"
               style={{ borderRadius: 10, fontWeight: 500 }}
             >
-              Xem đơn hàng
+              {t('payment.viewOrder')}
             </Button>
           </Link>
           <Link to={lp('/')} className="flex-1">
@@ -345,7 +353,7 @@ export default function PaymentReturnPage() {
               size="large"
               style={{ borderRadius: 10, fontWeight: 500 }}
             >
-              Tiếp tục mua sắm
+              {t('payment.continueShopping')}
             </Button>
           </Link>
         </div>

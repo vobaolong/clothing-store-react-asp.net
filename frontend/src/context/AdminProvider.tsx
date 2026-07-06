@@ -2,6 +2,7 @@ import { useState, useCallback, type ReactNode } from 'react'
 import { Modal } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
+import i18n from 'i18next'
 import { useAdminEditor } from '@/hooks/useAdminEditor'
 import type {
   AdminBanner,
@@ -51,10 +52,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     (title: string, onOk: () => Promise<void>) => {
       Modal.confirm({
         title,
-        content:
-          'Thao tác này sẽ làm thay đổi dữ liệu hoặc xóa vĩnh viễn nếu chưa từng được sử dụng. Bạn có chắc chắn?',
-        okText: 'Xác nhận',
-        cancelText: 'Hủy',
+        content: i18n.t('admin.deleteConfirmContent'),
+        okText: i18n.t('admin.deleteConfirmOk'),
+        cancelText: i18n.t('admin.deleteConfirmCancel'),
         okButtonProps: { danger: true },
         onOk: async () => {
           await onOk()

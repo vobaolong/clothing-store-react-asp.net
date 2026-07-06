@@ -5,6 +5,7 @@ import type { ColumnsType } from 'antd/es/table'
 import type { AdminBanner } from '@/types'
 import { formatDate } from '@/utils/format'
 import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
+import { useTranslation } from 'react-i18next'
 
 interface AdminBannersTableProps {
   loading: boolean
@@ -23,6 +24,7 @@ export default function AdminBannersTable({
   onToggleActive,
   onReorder
 }: AdminBannersTableProps) {
+  const { t } = useTranslation()
   const moveItem = useCallback(
     (index: number, direction: 'up' | 'down') => {
       const targetIndex = direction === 'up' ? index - 1 : index + 1
@@ -46,13 +48,13 @@ export default function AdminBannersTable({
   const columns = useMemo<ColumnsType<AdminBanner>>(
     () => [
       {
-        title: 'Di chuyển',
+        title: t('admin.columnMove'),
         key: 'orderActions',
         width: 120,
         align: 'center',
         render: (_, __, index) => (
           <div className="flex gap-1 justify-center">
-            <Tooltip title="Di chuyển lên">
+            <Tooltip title={t('admin.tooltipMoveUp')}>
               <Button
                 type="text"
                 size="small"
@@ -61,12 +63,12 @@ export default function AdminBannersTable({
                 onClick={() => moveItem(index, 'up')}
               />
             </Tooltip>
-            <Tooltip title="Di chuyển xuống">
+            <Tooltip title={t('admin.tooltipMoveDown')}>
               <Button
                 type="text"
                 size="small"
                 icon={<ArrowDownOutlined />}
-                disabled={index === data.length - 1} // Lưu ý: giữ lại độ dài thực tế để tắt nút
+                disabled={index === data.length - 1}
                 onClick={() => moveItem(index, 'down')}
               />
             </Tooltip>
@@ -74,7 +76,7 @@ export default function AdminBannersTable({
         )
       },
       {
-        title: 'Thứ tự',
+        title: t('admin.columnOrder'),
         dataIndex: 'displayOrder',
         key: 'displayOrder',
         width: 100,
@@ -86,19 +88,19 @@ export default function AdminBannersTable({
         )
       },
       {
-        title: 'Ảnh banner',
+        title: t('admin.columnBannerImage'),
         dataIndex: 'imageUrl',
         key: 'imageUrl',
         render: (value: string) => (
           <img
             src={value}
-            alt="banner"
+            alt={t('admin.columnBannerImage')}
             className="object-cover w-auto rounded-md h-20 border border-slate-200 shadow-sm"
           />
         )
       },
       {
-        title: 'Liên kết',
+        title: t('admin.columnLink'),
         dataIndex: 'ctaLink',
         key: 'ctaLink',
         render: (value: string) => (
@@ -110,7 +112,7 @@ export default function AdminBannersTable({
         )
       },
       {
-        title: 'Kích hoạt',
+        title: t('admin.columnActive'),
         dataIndex: 'isActive',
         key: 'isActive',
         align: 'center',
@@ -122,19 +124,19 @@ export default function AdminBannersTable({
         )
       },
       {
-        title: 'Ngày bắt đầu',
+        title: t('admin.columnStartDate'),
         dataIndex: 'startsAt',
         key: 'startsAt',
         render: (value: string) => formatDate(value)
       },
       {
-        title: 'Ngày kết thúc',
+        title: t('admin.columnEndDate'),
         dataIndex: 'endsAt',
         key: 'endsAt',
         render: (value: string) => formatDate(value)
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'actions',
         align: 'center',
         fixed: 'right',
@@ -160,7 +162,7 @@ export default function AdminBannersTable({
       columns={columns}
       scroll={{ x: 'max-content' }}
       pagination={false}
-      locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+      locale={{ emptyText: <Empty description={t('common.noData')} /> }}
     />
   )
 }

@@ -9,6 +9,7 @@ import { AdminUpsertButtonActions } from '../AdminUpsertButtonActions'
 import type { buildCategoryTreeSelectData } from '@/utils/category-tree'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type AdminCategoriesTableProps = {
   loading: boolean
@@ -46,6 +47,7 @@ export default function AdminCategoriesTable({
   onEdit,
   onDelete
 }: AdminCategoriesTableProps) {
+  const { t } = useTranslation()
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const handleTableChange = useCallback((pag: TablePaginationConfig) => {
@@ -68,14 +70,14 @@ export default function AdminCategoriesTable({
         )
       },
       {
-        title: 'Tên danh mục',
+        title: t('admin.categoryNameLabel'),
         dataIndex: 'name',
         key: 'name',
         width: 250,
         sorter: (a, b) => a.name.localeCompare(b.name)
       },
       {
-        title: 'Ảnh',
+        title: t('common.image'),
         dataIndex: 'image',
         key: 'image',
         align: 'center',
@@ -87,11 +89,11 @@ export default function AdminCategoriesTable({
               className="object-cover rounded-md size-12! self-center"
             />
           ) : (
-            <span className="text-xs text-slate-500">Không có ảnh</span>
+            <span className="text-xs text-slate-500">{t('common.noImage')}</span>
           )
       },
       {
-        title: 'Danh mục cha',
+        title: t('admin.categoryParentLabel'),
         dataIndex: 'parentId',
         key: 'parentId',
         align: 'center',
@@ -101,7 +103,7 @@ export default function AdminCategoriesTable({
             className="min-w-60"
             value={value ?? undefined}
             treeData={getParentTreeData(row.id)}
-            placeholder="Không có danh mục cha"
+            placeholder={t('admin.categoryParentPlaceholder')}
             showSearch={{ treeNodeFilterProp: 'title' }}
             treeLine={{ showLeafIcon: false }}
             treeDefaultExpandAll
@@ -115,7 +117,7 @@ export default function AdminCategoriesTable({
         )
       },
       {
-        title: 'Giới tính',
+        title: t('admin.columnGender'),
         dataIndex: 'gender',
         key: 'gender',
         align: 'center',
@@ -133,7 +135,7 @@ export default function AdminCategoriesTable({
         )
       },
       {
-        title: 'Loại danh mục',
+        title: t('admin.columnCategoryType'),
         dataIndex: 'productType',
         key: 'productType',
         align: 'center',
@@ -154,7 +156,7 @@ export default function AdminCategoriesTable({
         )
       },
       {
-        title: 'Kích hoạt',
+        title: t('admin.columnActive'),
         dataIndex: 'isActive',
         key: 'isActive',
         align: 'center',
@@ -170,7 +172,7 @@ export default function AdminCategoriesTable({
         )
       },
       {
-        title: 'Ngày tạo',
+        title: t('common.createdAt'),
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: (value: string) => formatDate(value),
@@ -178,7 +180,7 @@ export default function AdminCategoriesTable({
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       },
       {
-        title: 'Ngày cập nhật',
+        title: t('admin.columnUpdated'),
         dataIndex: 'updatedAt',
         key: 'updatedAt',
         render: (value: string) => formatDate(value),
@@ -186,7 +188,7 @@ export default function AdminCategoriesTable({
           new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
       },
       {
-        title: 'Thao tác',
+        title: t('common.action'),
         key: 'action',
         fixed: 'right',
         align: 'center',
@@ -218,9 +220,9 @@ export default function AdminCategoriesTable({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
-        showTotal: (total) => `Tổng ${total} danh mục`
+        showTotal: (total) => `${t('common.total')} ${total} ${t('admin.categories').toLowerCase()}`
       }}
-      locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+      locale={{ emptyText: <Empty description={t('common.noData')} /> }}
     />
   )
 }

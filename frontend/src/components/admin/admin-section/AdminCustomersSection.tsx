@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Input, DatePicker } from 'antd'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
@@ -18,6 +19,7 @@ import LockCustomerModal from '@/components/admin/admin-modal/LockCustomerModal'
 import AdminCustomerTable from '../admin-table/AdminCustomerTable'
 
 export default function AdminCustomersSection() {
+  const { t } = useTranslation()
   const { refresh } = useAdmin()
 
   const [filters, setFilters] = useState({
@@ -45,22 +47,22 @@ export default function AdminCustomersSection() {
     mutationFn: ({ id, reason }: { id: string; reason?: string }) =>
       lockAdminCustomer(id, { reason }),
     onSuccess: async () => {
-      toast.success('Tài khoản đã bị khóa')
+      toast.success(t('admin.customerLocked'))
       setLockState({ target: null, reason: undefined })
       await refresh()
       customersQuery.refetch()
     },
-    onError: () => toast.error('Khóa tài khoản thất bại')
+    onError: () => toast.error(t('admin.customerLockFailed'))
   })
 
   const { mutate: unlockCustomer } = useMutation({
     mutationFn: (id: string) => unlockAdminCustomer(id),
     onSuccess: async () => {
-      toast.success('Tài khoản đã được mở khóa')
+      toast.success(t('admin.customerUnlocked'))
       await refresh()
       customersQuery.refetch()
     },
-    onError: () => toast.error('Mở khóa tài khoản thất bại')
+    onError: () => toast.error(t('admin.customerUnlockFailed'))
   })
 
   const handleLockOpen = useCallback((customer: Customer) => {
@@ -98,7 +100,7 @@ export default function AdminCustomersSection() {
         <Input.Search
           allowClear
           className="w-96!"
-          placeholder="Tìm kiếm theo id, tên, số điện thoại hoặc email"
+          placeholder={t('admin.searchCustomersPlaceholder')}
           value={filters.search}
           onChange={({ target: { value } }) =>
             setFilters((prev) => ({ ...prev, search: value }))
@@ -112,7 +114,7 @@ export default function AdminCustomersSection() {
               dateRange: dates ? [dates[0], dates[1]] : null
             }))
           }
-          placeholder={['Từ ngày', 'Đến ngày']}
+          placeholder={[t('admin.filterDateFrom'), t('admin.filterDateTo')]}
           className="w-full sm:w-auto"
         />
       </div>

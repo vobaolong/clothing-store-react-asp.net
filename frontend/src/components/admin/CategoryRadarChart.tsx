@@ -8,6 +8,7 @@ import {
   Tooltip
 } from 'recharts'
 import type { CategoryRadarData } from '@/types'
+import i18n from 'i18next'
 
 type CategoryRadarChartProps = {
   data: CategoryRadarData[]
@@ -64,14 +65,14 @@ export default function CategoryRadarChart({
           formatter={(value) => {
             const numericValue =
               typeof value === 'number' ? value : Number(value ?? 0)
-            return [numericValue.toLocaleString('vi-VN'), 'Lượt bán'] as [
+            return [numericValue.toLocaleString('vi-VN'), i18n.t('product.soldCount')] as [
               string,
               string
             ]
           }}
         />
         <Radar
-          name="Lượt bán"
+          name={i18n.t('product.soldCount')}
           dataKey="value"
           stroke="#0ea5e9"
           fill="#0ea5e94d"

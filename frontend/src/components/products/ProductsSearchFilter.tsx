@@ -46,7 +46,7 @@ export default function ProductsSearchFilter({
       <div className="flex flex-wrap gap-3 justify-between items-center pt-1">
         <p className="text-base font-semibold">
           <span className="text-xl font-bold">
-            {value && `Kết quả tìm kiếm cho từ khóa "${value}"`}
+            {value && t('productFilter.resultCountFor', { keyword: value })}
           </span>{' '}
           {t('product.totalProducts', { total: total })}
         </p>

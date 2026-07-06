@@ -3,6 +3,7 @@ import { Input, Select, DatePicker, Tabs, Button } from 'antd'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 
 import {
   getAdminOrders,
@@ -14,10 +15,7 @@ import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { useAdmin } from '@/context/AdminContext'
 import { OrderStatus } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import {
-  ADMIN_ORDER_STATUS_FILTER_OPTIONS,
-  ADMIN_PAYMENT_STATUS_FILTER_OPTIONS
-} from '@/options/admin-filter.options'
+import { useAdminFilterOptions } from '@/options/admin-filter.options'
 import type { AdminOrder } from '@/types'
 
 import { useFilteredOrders } from '@/hooks/useFilteredOrders'
@@ -28,6 +26,8 @@ import BulkUpdateOrdersModal from '@/components/admin/admin-modal/BulkUpdateOrde
 import { AdminRefreshButtonAction } from '../AdminRefreshButtonAction'
 
 export default function AdminOrdersSection() {
+  const { t } = useTranslation()
+  const { orderStatus, paymentStatus } = useAdminFilterOptions()
   const { filters, refresh, navigate } = useAdmin()
   const { orderStatusFilter, setOrderStatusFilter } = filters
 
@@ -66,25 +66,23 @@ export default function AdminOrdersSection() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateAdminOrderStatus(id, { status }),
     onSuccess: async () => {
-      toast.success('Cập nhật trạng thái đơn hàng thành công')
+      toast.success(t('admin.orderStatusUpdated'))
       await refresh()
     },
-    onError: () => toast.error('Cập nhật trạng thái thất bại')
+    onError: () => toast.error(t('admin.orderStatusUpdateFailed'))
   })
 
   const { mutateAsync: bulkUpdateStatusMutation, isPending: isBulkUpdating } =
     useMutation({
       mutationFn: bulkUpdateAdminOrdersStatus,
       onSuccess: async () => {
-        toast.success('Cập nhật trạng thái hàng loạt thành công')
+        toast.success(t('admin.bulkUpdateSuccess'))
         setSelectedRowKeys([])
         setIsBulkModalOpen(false)
         await refresh()
       },
       onError: (error: unknown) => {
-        toast.error(
-          getApiErrorMessage(error, 'Có lỗi xảy ra khi cập nhật trạng thái')
-        )
+        toast.error(getApiErrorMessage(error, t('admin.bulkUpdateFailed')))
       }
     })
 
@@ -123,7 +121,7 @@ export default function AdminOrdersSection() {
         <div className="flex gap-2 items-center">
           {selectedRowKeys.length > 0 && (
             <Button type="primary" onClick={() => setIsBulkModalOpen(true)}>
-              Cập nhật trạng thái ({selectedRowKeys.length})
+              {t('admin.bulkUpdateButton', { count: selectedRowKeys.length })}
             </Button>
           )}
           <AdminRefreshButtonAction query={ordersQuery} />
@@ -133,7 +131,7 @@ export default function AdminOrdersSection() {
       <div className="flex flex-wrap gap-3 items-center">
         <Input.Search
           allowClear
-          placeholder="Tìm theo mã đơn hàng, email..."
+          placeholder={t('admin.searchOrdersPlaceholder')}
           value={localFilters.search}
           onChange={(e) =>
             setLocalFilters((p) => ({ ...p, search: e.target.value }))
@@ -143,13 +141,13 @@ export default function AdminOrdersSection() {
         />
         <Select
           value={localFilters.status}
-          options={ADMIN_ORDER_STATUS_FILTER_OPTIONS}
+          options={orderStatus}
           onChange={(val) => setLocalFilters((p) => ({ ...p, status: val }))}
           className="w-44"
         />
         <Select
           value={localFilters.payment}
-          options={ADMIN_PAYMENT_STATUS_FILTER_OPTIONS}
+          options={paymentStatus}
           onChange={(val) => setLocalFilters((p) => ({ ...p, payment: val }))}
           className="w-50"
         />
@@ -161,7 +159,7 @@ export default function AdminOrdersSection() {
               dateRange: dates ? [dates[0], dates[1]] : [null, null]
             }))
           }
-          placeholder={['Từ ngày', 'Đến ngày']}
+          placeholder={[t('admin.filterDateFrom'), t('admin.filterDateTo')]}
           className="w-full sm:w-auto"
         />
       </div>

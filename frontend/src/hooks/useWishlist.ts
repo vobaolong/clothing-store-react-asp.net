@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import i18n from 'i18next'
 import {
   addToWishlist,
   getWishlistProducts,
@@ -49,10 +50,10 @@ export function useWishlist() {
       if (context?.previous) {
         queryClient.setQueryData(QUERY_KEYS.wishlist, context.previous)
       }
-      toast.error('Không thể thêm vào danh sách yêu thích!')
+      toast.error(i18n.t('product.wishlistAddFailed'))
     },
     onSuccess: () => {
-      toast.success('Đã thêm vào danh sách yêu thích!')
+      toast.success(i18n.t('product.wishlistAdded'))
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.wishlist })
@@ -77,10 +78,10 @@ export function useWishlist() {
       if (context?.previous) {
         queryClient.setQueryData(QUERY_KEYS.wishlist, context.previous)
       }
-      toast.error('Không thể xóa khỏi danh sách yêu thích!')
+      toast.error(i18n.t('product.wishlistRemoveFailed'))
     },
     onSuccess: () => {
-      toast.success('Đã xóa khỏi danh sách yêu thích!')
+      toast.success(i18n.t('product.wishlistRemoved'))
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.wishlist })

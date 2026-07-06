@@ -6,6 +6,7 @@ import {
   type DescriptionSpecLabel
 } from '@/constants/product.constant'
 import type { ProductFormValues } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 type AdminDescriptionSpecFieldProps = {
   form: FormInstance<ProductFormValues>
@@ -18,6 +19,7 @@ export default function AdminDescriptionSpecField({
   label,
   index
 }: AdminDescriptionSpecFieldProps) {
+  const { t } = useTranslation()
   const preset = DESCRIPTION_SPEC_OPTIONS[label]
   const selected = Form.useWatch(['descriptionSpecs', index, 'value'], form) as
     | string[]
@@ -38,7 +40,7 @@ export default function AdminDescriptionSpecField({
       <Select
         mode="multiple"
         allowClear
-        placeholder="Chọn một hoặc nhiều mục"
+        placeholder={`${t('common.search')}...`}
         options={options}
         maxTagCount="responsive"
         showSearch

@@ -1,6 +1,7 @@
 import { Button, Form, Input, Rate, Select } from 'antd'
 import { useEffect } from 'react'
 import { REVIEW_TAG_OPTIONS } from '@/options/review.options'
+import { useTranslation } from 'react-i18next'
 
 type ReviewFormValues = {
   rating: number
@@ -19,6 +20,7 @@ export default function ReviewForm({
   onSubmit,
   onCancel
 }: ReviewFormProps) {
+  const { t } = useTranslation()
   const [form] = Form.useForm<ReviewFormValues>()
 
   useEffect(() => {
@@ -31,13 +33,13 @@ export default function ReviewForm({
 
   return (
     <Form form={form} layout="vertical" onFinish={onSubmit}>
-      <Form.Item name="rating" label="Chấm điểm đơn hàng của bạn">
+      <Form.Item name="rating" label={t('review.rateOrder')}>
         <Rate />
       </Form.Item>
-      <Form.Item name="tags" label="Đặc điểm sản phẩm">
+      <Form.Item name="tags" label={t('review.productFeatures')}>
         <Select
           mode="tags"
-          placeholder="Chọn hoặc nhập các đặc điểm (VD: Chất vải đẹp, Đúng size...)"
+          placeholder={t('review.productFeaturesPlaceholder')}
           options={REVIEW_TAG_OPTIONS.map((tag) => ({
             label: tag,
             value: tag
@@ -47,18 +49,18 @@ export default function ReviewForm({
       </Form.Item>
       <Form.Item
         name="comment"
-        label="Chất lượng sản phẩm"
-        rules={[{ max: 300, message: 'Nội dung quá dài' }]}
+        label={t('review.reviewComment')}
+        rules={[{ max: 300, message: t('review.reviewCommentMaxLength') }]}
       >
         <Input.TextArea
           rows={4}
-          placeholder="Bạn thích hoặc không thích điều gì về sản phẩm này?"
+          placeholder={t('review.reviewCommentPlaceholder') as string}
         />
       </Form.Item>
       <div className="flex gap-2 justify-end items-center">
         {onCancel ? (
           <Button onClick={onCancel} disabled={loading}>
-            Hủy
+            {t('common.cancel')}
           </Button>
         ) : null}
         <Button
@@ -67,7 +69,7 @@ export default function ReviewForm({
           loading={loading}
           className="px-6 h-10 rounded-xl"
         >
-          Gửi đánh giá
+          {t('review.submitReview')}
         </Button>
       </div>
     </Form>

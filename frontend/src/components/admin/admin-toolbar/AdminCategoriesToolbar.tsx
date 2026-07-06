@@ -1,14 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, FloatButton } from 'antd'
 import AdminListFilters from '@/components/admin/AdminListFilters'
 import { AdminRefreshButtonAction } from '@/components/admin/AdminRefreshButtonAction'
 import AdminCategoriesSelectionActions from '@/components/admin/admin-selection-action/AdminCategoriesSelectionActions'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
-import {
-  ADMIN_ACTIVE_FILTER_OPTIONS,
-  ADMIN_CATEGORY_GENDER_FILTER_OPTIONS,
-  ADMIN_CATEGORY_TYPE_FILTER_OPTIONS
-} from '@/options/admin-filter.options'
+import { useAdminFilterOptions } from '@/options/admin-filter.options'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { buildCategoryTreeSelectData } from '@/utils/category-tree'
 
@@ -45,6 +42,8 @@ export default function AdminCategoriesToolbar({
   onRefresh,
   onClearSelection
 }: Props) {
+  const { t } = useTranslation()
+  const { active, categoryGender, categoryType } = useAdminFilterOptions()
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <div className="flex-wrap items-center justify-end hidden w-full gap-2 sm:flex sm:ml-auto sm:w-auto">
@@ -57,7 +56,7 @@ export default function AdminCategoriesToolbar({
         )}
         <AdminRefreshButtonAction query={refreshQuery} />
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
-          Thêm danh mục
+          {t('admin.categoryCreateTitle')}
         </Button>
       </div>
       <AdminListFilters
@@ -65,7 +64,7 @@ export default function AdminCategoriesToolbar({
         onSearchChange={(value) =>
           onFiltersChange((prev) => ({ ...prev, search: value }))
         }
-        searchPlaceholder="Tìm theo tên, slug, mô tả, ID…"
+        searchPlaceholder={t('admin.searchCategoriesPlaceholder')}
         selects={[
           {
             kind: 'tree',
@@ -74,7 +73,7 @@ export default function AdminCategoriesToolbar({
                 ? undefined
                 : filters.parent,
             treeData: parentFilterTreeData,
-            placeholder: 'Tất cả danh mục cha',
+            placeholder: t('admin.filterAllParentCategories'),
             onChange: (value) =>
               onFiltersChange((prev) => ({
                 ...prev,
@@ -84,21 +83,21 @@ export default function AdminCategoriesToolbar({
           },
           {
             value: filters.gender,
-            options: [...ADMIN_CATEGORY_GENDER_FILTER_OPTIONS],
+            options: [...categoryGender],
             onChange: (value: string) =>
               onFiltersChange((prev) => ({ ...prev, gender: value })),
             className: 'min-w-36'
           },
           {
             value: filters.type,
-            options: [...ADMIN_CATEGORY_TYPE_FILTER_OPTIONS],
+            options: [...categoryType],
             onChange: (value: string) =>
               onFiltersChange((prev) => ({ ...prev, type: value })),
             className: 'min-w-40'
           },
           {
             value: filters.active,
-            options: [...ADMIN_ACTIVE_FILTER_OPTIONS],
+            options: [...active],
             onChange: (value: string) =>
               onFiltersChange((prev) => ({ ...prev, active: value })),
             className: 'min-w-36'
@@ -115,12 +114,12 @@ export default function AdminCategoriesToolbar({
         <FloatButton
           icon={<PlusOutlined />}
           onClick={onCreate}
-          tooltip="Thêm danh mục"
+          tooltip={t('admin.tooltipCreateCategory')}
         />
         <FloatButton
           icon={<ReloadOutlined />}
           onClick={() => refreshQuery.refetch()}
-          tooltip="Tải lại"
+          tooltip={t('admin.tooltipRefreshData')}
         />
       </FloatButton.Group>
     </div>

@@ -8,9 +8,11 @@ import {
 import type { RealtimeNotificationDto } from '@/types/notification.type'
 import { getNotificationIcon, getNotificationLevel } from '@/utils/notification'
 import { isAdmin } from '@/state/auth/auth-session'
+import { useTranslation } from 'react-i18next'
 
 export const NotificationToastManager = () => {
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const queue = useSelector(selectRealtimeNotifications)
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export const NotificationToastManager = () => {
                 href={`/orders/${n.relatedEntityId}`}
                 className="font-medium underline"
               >
-                Xem đơn hàng →
+                {t('notification.viewOrder')}
               </a>
             </span>
           ) : (

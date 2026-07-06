@@ -1,3 +1,4 @@
+import i18n from 'i18next'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
@@ -12,7 +13,7 @@ export const getApiErrorMessage = (
   fallback?: string
 ): string => {
   const msg = tryExtractApiError(error)
-  return msg || fallback || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+  return msg || fallback || i18n.t('common.error')
 }
 
 function tryExtractApiError(error: unknown): string | null {
@@ -39,6 +40,8 @@ function tryExtractApiError(error: unknown): string | null {
 
 export const handleApiError = (error: unknown, defaultMessage?: string) => {
   const message = getApiErrorMessage(error)
-  toast.error(message || defaultMessage || 'Lỗi kết nối server')
+  toast.error(
+    message || defaultMessage || i18n.t('message.error.serverConnection')
+  )
   return message
 }

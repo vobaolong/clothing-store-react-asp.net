@@ -9,6 +9,7 @@ import {
 } from '@/api/admin-api'
 import { getApiErrorMessage } from '@/utils/error-handler'
 import type { AdminProductImportResult } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 type AdminProductImportModalProps = {
   open: boolean
@@ -28,6 +29,7 @@ export default function AdminProductImportModal({
   onClose,
   onImported
 }: AdminProductImportModalProps) {
+  const { t } = useTranslation()
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [result, setResult] = useState<AdminProductImportResult | null>(null)
   const [isImporting, setIsImporting] = useState(false)
@@ -45,7 +47,7 @@ export default function AdminProductImportModal({
 
   const handleImport = async () => {
     if (!selectedFile) {
-      toast.error('Vui lòng chọn file Excel trước khi nhập')
+      toast.error(t('admin.importSelectFile'))
       return
     }
 
@@ -54,9 +56,9 @@ export default function AdminProductImportModal({
       const response = await importAdminProducts(selectedFile)
       setResult(response)
       await onImported()
-      toast.success('Nhập Excel hoàn tất')
+      toast.success(t('admin.productImportSuccess'))
     } catch (error) {
-      toast.error(getApiErrorMessage(error, 'Nhập Excel thất bại'))
+      toast.error(getApiErrorMessage(error, t('admin.productImportFailed')))
     } finally {
       setIsImporting(false)
     }
@@ -65,12 +67,12 @@ export default function AdminProductImportModal({
   return (
     <Modal
       open={open}
-      title="Nhập Excel"
+      title={t('admin.importTitle')}
       onCancel={onClose}
       afterClose={resetState}
       onOk={handleImport}
-      okText="Nhập"
-      cancelText="Đóng"
+      okText={t('admin.importOk')}
+      cancelText={t('admin.importCancel')}
       okButtonProps={{
         disabled: !selectedFile || isImporting,
         loading: isImporting
@@ -83,8 +85,7 @@ export default function AdminProductImportModal({
           type="secondary"
           className="mb-0 text-sm text-gray-600"
         >
-          Tải lên file .xlsx hoặc .xls. Mỗi dòng Excel đại diện cho một biến thể
-          sản phẩm theo size/màu, không phải dữ liệu cấp sản phẩm.
+          {t('admin.importDescription')}
         </Typography.Paragraph>
 
         <Upload.Dragger
@@ -93,7 +94,7 @@ export default function AdminProductImportModal({
           maxCount={1}
           beforeUpload={(file) => {
             if (!isExcelFile(file)) {
-              toast.error('Chỉ hỗ trợ file .xlsx hoặc .xls')
+              toast.error(t('admin.importFileTypeError'))
               return Upload.LIST_IGNORE
             }
 
@@ -117,15 +118,15 @@ export default function AdminProductImportModal({
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
-          <p className="ant-upload-text">Kéo thả hoặc bấm để chọn file Excel</p>
-          <p className="ant-upload-hint">Hỗ trợ .xlsx và .xls</p>
+          <p className="ant-upload-text">{t('admin.importDragText')}</p>
+          <p className="ant-upload-hint">{t('admin.importHint')}</p>
         </Upload.Dragger>
 
         {selectedFile ? (
           <Alert
             type="info"
             showIcon
-            message={`Đã chọn: ${selectedFile.name}`}
+            message={t('admin.fileSelected', { name: selectedFile.name })}
             className="mb-0"
           />
         ) : null}
@@ -133,22 +134,22 @@ export default function AdminProductImportModal({
         {result ? (
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
             <Typography.Title level={5} className="mb-3!">
-              Kết quả nhập
+              {t('admin.importResultTitle')}
             </Typography.Title>
             <Descriptions size="small" bordered column={2}>
-              <Descriptions.Item label="Tổng số dòng">
+              <Descriptions.Item label={t('admin.importTotalRows')}>
                 {result.totalRows}
               </Descriptions.Item>
-              <Descriptions.Item label="Sản phẩm nhập">
+              <Descriptions.Item label={t('admin.importProductsImported')}>
                 {result.productsImported}
               </Descriptions.Item>
-              <Descriptions.Item label="Biến thể nhập">
+              <Descriptions.Item label={t('admin.importVariantsImported')}>
                 {result.variantsImported}
               </Descriptions.Item>
-              <Descriptions.Item label="Dòng lỗi">
+              <Descriptions.Item label={t('admin.importFailedRows')}>
                 {result.failedRows}
               </Descriptions.Item>
-              <Descriptions.Item label="Sản phẩm phát hiện">
+              <Descriptions.Item label={t('admin.importProductsDetected')}>
                 {result.totalProductsDetected}
               </Descriptions.Item>
             </Descriptions>
@@ -156,14 +157,14 @@ export default function AdminProductImportModal({
             {result.errors.length > 0 ? (
               <div className="mt-4">
                 <Typography.Text strong className="block mb-2">
-                  Lỗi theo từng dòng
+                  {t('admin.importRowErrors')}
                 </Typography.Text>
                 <div className="overflow-auto max-h-64 bg-white rounded-md border border-red-200">
                   <table className="w-full text-sm text-left">
                     <thead className="sticky top-0 text-red-700 bg-red-50">
                       <tr>
-                        <th className="py-2 px-3">Dòng</th>
-                        <th className="py-2 px-3">Lỗi</th>
+                        <th className="py-2 px-3">{t('admin.importFailedRows')}</th>
+                        <th className="py-2 px-3">{t('common.error')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -186,7 +187,7 @@ export default function AdminProductImportModal({
               <Alert
                 type="success"
                 showIcon
-                title="Không có lỗi theo dòng"
+                title={t('admin.importNoErrors')}
                 className="mt-4"
               />
             )}

@@ -1,4 +1,5 @@
 import { Statistic } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 const { Timer } = Statistic
 
@@ -13,12 +14,13 @@ export default function ProductSaleCountdown({
   saleStatisticCountdownFormat,
   refreshSaleTimer
 }: ProductSaleCountdownProps) {
+  const { t } = useTranslation()
   if (!saleEndDate) return null
 
   return (
     <div className="flex flex-col items-center flex-1 p-2 bg-red-100 rounded-2xl min-w-40 shrink-0">
       <span className="text-[11px] font-medium uppercase tracking-wide text-stone-500">
-        Kết thúc sau
+        {t('product.endsIn')}
       </span>
       <Timer
         key={saleStatisticCountdownFormat}

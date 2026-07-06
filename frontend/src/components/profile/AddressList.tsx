@@ -11,10 +11,12 @@ import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import type { ShippingAddress } from '@/types'
 import toast from 'react-hot-toast'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import ShippingAddressFormModal from '@/components/profile/ShippingAddressFormModal'
 import { SHIPPING_ADDRESS_LABEL_OPTIONS } from '@/options/shipping-address.options'
 
 export default function AddressList() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [editingAddress, setEditingAddress] = useState<ShippingAddress | null>(
     null
@@ -34,7 +36,7 @@ export default function AddressList() {
   const deleteAddressMutation = useMutation({
     mutationFn: deleteShippingAddress,
     onSuccess: async () => {
-      toast.success('Đã xóa địa chỉ')
+      toast.success(t('profile.addressDeleted'))
       await refreshAddresses()
     }
   })
@@ -49,7 +51,7 @@ export default function AddressList() {
   return (
     <Card>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-medium">Sổ Địa Chỉ</h1>
+        <h1 className="text-2xl font-medium">{t('profile.addressBook')}</h1>
         <Button
           type="primary"
           onClick={() => {
@@ -57,12 +59,12 @@ export default function AddressList() {
             setOpen(true)
           }}
         >
-          Thêm địa chỉ mới
+          {t('profile.addNewAddress')}
         </Button>
       </div>
       <div className="pt-6 divide-y divide-slate-200">
         {(!data || data.length === 0) && !isLoading ? (
-          <Empty description="Không có địa chỉ nào" />
+          <Empty description={t('profile.noAddresses')} />
         ) : (
           <Table
             rowKey="id"
@@ -71,28 +73,26 @@ export default function AddressList() {
             bordered
             scroll={{ x: 'max-content' }}
             columns={[
-              { title: 'Họ và tên', dataIndex: 'fullName' },
+              { title: t('profile.fullName'), dataIndex: 'fullName' },
               {
-                title: 'Địa chỉ',
+                title: t('order.address'),
                 dataIndex: 'fullAddress',
                 render: (_, row: ShippingAddress) => (
                   <div className="flex flex-col w-full gap-2">
                     <span className="flex items-center gap-2">
                       <strong>
-                        {SHIPPING_ADDRESS_LABEL_OPTIONS.find(
-                          (x) => x.value === row.label
-                        )?.labelKey
-                          ? t(
-                              SHIPPING_ADDRESS_LABEL_OPTIONS.find(
-                                (x) => x.value === row.label
-                              )?.labelKey ?? ''
-                            )
-                          : ''}
+                        {(() => {
+                          const labelKey = SHIPPING_ADDRESS_LABEL_OPTIONS.find(
+                            (x) => x.value === row.label
+                          )?.labelKey
+
+                          return labelKey ? t(labelKey as never) : ''
+                        })()}
                       </strong>
                       -
                       {row.isDefault ? (
                         <span className="px-1 font-medium text-green-500 border border-green-500 rounded-md w-fit">
-                          Mặc định
+                          {t('common.default')}
                         </span>
                       ) : (
                         <Button
@@ -103,7 +103,7 @@ export default function AddressList() {
                             await setDefaultAddressMutation.mutateAsync(row.id)
                           }}
                         >
-                          Đặt làm mặc định
+                          {t('profile.setAsDefaultAction')}
                         </Button>
                       )}
                     </span>
@@ -112,19 +112,19 @@ export default function AddressList() {
                 )
               },
               {
-                title: 'Số điện thoại',
+                title: t('profile.phone'),
                 dataIndex: 'phone',
                 width: 150
               },
 
               {
-                title: 'Thao tác',
+                title: t('common.action'),
                 align: 'center',
                 fixed: 'right',
                 width: 100,
                 render: (_value, row: ShippingAddress) => (
                   <div className="flex items-center justify-center gap-2">
-                    <Tooltip title="Chỉnh sửa địa chỉ">
+                    <Tooltip title={t('profile.tooltipEditAddress')}>
                       <Button
                         onClick={() => {
                           setEditingAddress(row)
@@ -133,14 +133,14 @@ export default function AddressList() {
                         icon={<EditOutlined />}
                       />
                     </Tooltip>
-                    <Tooltip title="Xóa địa chỉ">
+                    <Tooltip title={t('profile.tooltipDeleteAddress')}>
                       <Button
                         danger
                         loading={deleteAddressMutation.isPending}
                         onClick={async () => {
                           Modal.confirm({
-                            title: 'Xóa địa chỉ?',
-                            content: 'Hành động này không thể hoàn tác.',
+                            title: t('profile.deleteAddressConfirmTitle'),
+                            content: t('profile.deleteAddressIrreversible'),
                             onOk: () =>
                               deleteAddressMutation.mutateAsync(row.id)
                           })
