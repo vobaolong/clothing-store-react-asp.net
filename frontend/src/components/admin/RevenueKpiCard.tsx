@@ -37,12 +37,14 @@ export default function RevenueKpiCard() {
             <Statistic
               title={t('admin.difference')}
               value={formatCurrency(difference)}
-              valueStyle={{
-                color: isPositive
-                  ? '#16a34a'
-                  : isNegative
+              styles={{
+                content: {
+                  color: isPositive
+                    ? '#16a34a'
+                    : isNegative
                     ? '#dc2626'
                     : undefined
+                }
               }}
               prefix={
                 isPositive ? (

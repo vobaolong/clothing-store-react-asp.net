@@ -258,7 +258,7 @@ export default function CategoryModal({
           valuePropName="checked"
           initialValue={true}
         >
-          <Switch checked={form.getFieldValue('isActive')} />
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>
