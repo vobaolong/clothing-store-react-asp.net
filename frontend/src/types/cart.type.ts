@@ -12,9 +12,11 @@ export type CartItem = Product & {
   selectedColor: string
   isSelected: boolean
   quantity: number
+  cartItemId?: string
 }
 
 export type CartState = {
   items: CartItem[]
   isDrawerOpen: boolean
+  itemsLoading: boolean
 }

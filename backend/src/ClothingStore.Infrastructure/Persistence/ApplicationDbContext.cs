@@ -24,6 +24,7 @@ public class ApplicationDbContext(
     public DbSet<ShippingAddress> ShippingAddresses => Set<ShippingAddress>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
+    public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<RememberMeToken> RememberMeTokens => Set<RememberMeToken>();
 
@@ -37,6 +38,7 @@ public class ApplicationDbContext(
         ConfigureProduct(modelBuilder);
         ConfigureReview(modelBuilder);
         ConfigureWishlist(modelBuilder);
+        ConfigureCartItem(modelBuilder);
         ConfigureRememberMeToken(modelBuilder);
         ConfigureSoftDeleteQueryFilters(modelBuilder);
 
@@ -292,6 +294,34 @@ public class ApplicationDbContext(
                 .WithMany()
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureCartItem(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CartItem>(e =>
+        {
+            e.ToTable("CartItems");
+            e.HasQueryFilter(x => x.Product!.DeletedAt == null);
+            e.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.ProductVariant)
+                .WithMany()
+                .HasForeignKey(x => x.ProductVariantId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new
+                {
+                    x.UserId,
+                    x.ProductId,
+                    x.ProductVariantId,
+                })
+                .IsUnique();
         });
     }
 

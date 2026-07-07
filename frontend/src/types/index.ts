@@ -1,6 +1,7 @@
 export * from './admin.type'
 export * from './banner.type'
 export * from './cart.type'
+export * from './cart-dto.type'
 export * from './common.type'
 export * from './coupon.type'
 export * from './order.type'

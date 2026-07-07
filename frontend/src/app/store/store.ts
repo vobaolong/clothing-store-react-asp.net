@@ -3,12 +3,20 @@ import {
   loadCartItemsFromStorage,
   saveCartItemsToStorage
 } from '@/utils/cart-storage'
+import { isAuthenticated } from '@/state/auth/auth-session'
+import { cartListenerMiddleware } from '@/state/cart-listener'
 import cartReducer from '@/state/cart-slice'
 import notificationReducer from '@/state/notification-slice'
 import authReducer from '@/state/auth/auth-slice'
 
 const preloadedCartItems =
-  typeof window !== 'undefined' ? loadCartItemsFromStorage() : []
+  typeof window !== 'undefined' && !isAuthenticated()
+    ? loadCartItemsFromStorage()
+    : []
+
+if (typeof window !== 'undefined' && isAuthenticated()) {
+  localStorage.removeItem('cart_items')
+}
 
 export const store = configureStore({
   reducer: {
@@ -16,10 +24,13 @@ export const store = configureStore({
     notifications: notificationReducer,
     auth: authReducer
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(cartListenerMiddleware.middleware),
   preloadedState: {
     cart: {
       items: preloadedCartItems,
-      isDrawerOpen: false
+      isDrawerOpen: false,
+      itemsLoading: false
     }
   }
 })
@@ -27,7 +38,9 @@ export const store = configureStore({
 if (typeof window !== 'undefined') {
   store.subscribe(() => {
     const state = store.getState() as ReturnType<typeof store.getState>
-    saveCartItemsToStorage(state.cart.items)
+    if (!state.auth.isAuthenticated) {
+      saveCartItemsToStorage(state.cart.items)
+    }
   })
 }
 

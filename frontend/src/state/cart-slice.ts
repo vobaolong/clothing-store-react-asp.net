@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit'
 import toast from 'react-hot-toast'
 import type { RootState } from '@/app/store'
-import type { CartState, Product } from '@/types'
+import type { CartItemDto, CartState, Product } from '@/types'
 import { i18n } from '@/i18n'
 
 type AddToCartPayload = {
@@ -49,7 +49,8 @@ type PurchasedCartItemPayload = {
 
 const initialState: CartState = {
   items: [],
-  isDrawerOpen: false
+  isDrawerOpen: false,
+  itemsLoading: false
 }
 
 const cartSlice = createSlice({
@@ -189,9 +190,85 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.items = []
+    },
+    setItemsLoading: (state, action: PayloadAction<boolean>) => {
+      state.itemsLoading = action.payload
+    },
+    setCartItems: (state, action: PayloadAction<CartItemDto[]>) => {
+      state.items = action.payload.map(mapCartItemDto)
+      state.itemsLoading = false
+    },
+    addServerCartItem: (state, action: PayloadAction<CartItemDto>) => {
+      const dto = action.payload
+      const existingIdx = state.items.findIndex(
+        (x) =>
+          x.id === dto.productId && x.productVariantId === dto.productVariantId
+      )
+      if (existingIdx >= 0) {
+        state.items[existingIdx].quantity = dto.quantity
+        state.items[existingIdx].cartItemId = dto.id
+      } else {
+        state.items.push(toCartItem(dto))
+      }
+    },
+    updateServerCartItem: (state, action: PayloadAction<CartItemDto>) => {
+      const dto = action.payload
+      const item = state.items.find((x) => x.cartItemId === dto.id)
+      if (item) item.quantity = dto.quantity
+    },
+    removeServerCartItem: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter((x) => x.cartItemId !== action.payload)
     }
   }
 })
+
+function mapCartItemDto(dto: CartItemDto): CartItem {
+  return {
+    id: dto.productId,
+    name: dto.productName,
+    slug: dto.productSlug,
+    price: dto.price,
+    salePrice: dto.salePrice,
+    salePriceStartDate: dto.salePriceStartDate,
+    salePriceEndDate: dto.salePriceEndDate,
+    quantity: dto.quantity,
+    stock: dto.availableStock,
+    totalAvailable: dto.availableStock,
+    productCode: dto.variantSku,
+    description: '',
+    descriptionData: '',
+    soldCount: 0,
+    averageRating: 0,
+    reviewCount: 0,
+    categoryId: '',
+    categoryName: '',
+    createdAt: '',
+    variants: [
+      {
+        id: dto.productVariantId,
+        sku: dto.variantSku,
+        size: dto.size,
+        color: dto.color,
+        hex: dto.hex,
+        quantity: dto.availableStock,
+        imageUrl: dto.imageUrl,
+        imageUrls: dto.imageUrls
+      }
+    ],
+    selectedVariant: {
+      id: dto.productVariantId,
+      size: dto.size,
+      color: dto.color,
+      hex: dto.hex
+    },
+    productVariantId: dto.productVariantId,
+    selectedSize: dto.size,
+    selectedColor: dto.color,
+    isSelected: true,
+    cartItemId: dto.id
+  }
+}
+const toCartItem = mapCartItemDto
 
 export const {
   openDrawer,
@@ -204,7 +281,12 @@ export const {
   updateCartVariant,
   clearSelectedCartItems,
   removePurchasedCartItems,
-  clearCart
+  clearCart,
+  setItemsLoading,
+  setCartItems,
+  addServerCartItem,
+  updateServerCartItem,
+  removeServerCartItem
 } = cartSlice.actions
 
 export const closeCartDrawer = closeDrawer
@@ -212,6 +294,8 @@ export const closeCartDrawer = closeDrawer
 export const selectCartItems = (state: RootState) => state.cart.items
 export const selectIsCartDrawerOpen = (state: RootState) =>
   state.cart.isDrawerOpen
+export const selectIsCartItemsLoading = (state: RootState) =>
+  state.cart.itemsLoading
 
 export const selectSelectedCartItems = createSelector(
   selectCartItems,

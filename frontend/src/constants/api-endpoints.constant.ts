@@ -51,6 +51,11 @@ export const API_ENDPOINTS = {
   banners: {
     active: '/banners/active'
   },
+  cart: {
+    root: '/cart',
+    merge: '/cart/merge',
+    byId: (id: string) => `/cart/${id}`
+  },
   notifications: {
     root: '/notifications',
     markAsRead: (id: string) => `/notifications/${id}/read`,

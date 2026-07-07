@@ -4,9 +4,12 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { login } from '@/api/auth-api'
+import { mergeGuestCart } from '@/api/cart-api'
 import { setAuth, isAdmin } from '@/state/auth'
+import { selectCartItems, setCartItems } from '@/state/cart-slice'
+import { loadCartItemsFromStorage } from '@/utils/cart-storage'
 import { lp } from '@/utils/language-path'
 import { useMutation } from '@tanstack/react-query'
 import { useRef } from 'react'
@@ -16,11 +19,26 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const emailRef = useRef<string>('')
+  const cartItems = useSelector(selectCartItems)
+
+  const mergeCart = async (): Promise<void> => {
+    const localCart = loadCartItemsFromStorage()
+    const pending = cartItems.length > 0 ? cartItems : localCart
+    if (pending.length === 0) return
+    const guestItems = pending.map((x) => ({
+      productId: x.id,
+      productVariantId: x.productVariantId,
+      quantity: x.quantity
+    }))
+    const merged = await mergeGuestCart(guestItems)
+    dispatch(setCartItems(merged))
+  }
 
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       dispatch(setAuth(data))
+      await mergeCart()
       toast.success(t('auth.loginSuccess'))
       navigate(isAdmin() ? lp('/admin') : lp('/'))
     },

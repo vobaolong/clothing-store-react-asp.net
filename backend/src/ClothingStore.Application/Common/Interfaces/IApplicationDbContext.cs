@@ -19,6 +19,7 @@ public interface IApplicationDbContext
     DbSet<ShippingAddress> ShippingAddresses { get; }
     DbSet<Review> Reviews { get; }
     DbSet<WishlistItem> WishlistItems { get; }
+    DbSet<CartItem> CartItems { get; }
     DbSet<Notification> Notifications { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
