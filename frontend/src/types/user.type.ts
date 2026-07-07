@@ -45,3 +45,8 @@ export type CreateShippingAddressPayload = {
 }
 
 export type UpdateShippingAddressPayload = CreateShippingAddressPayload
+
+export type LoginResponseDto = {
+  token: string
+  rememberMeToken: string | null
+}

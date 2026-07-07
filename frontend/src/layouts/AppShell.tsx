@@ -24,6 +24,7 @@ import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import CartQuantityControl from '@/components/CartQuantityControl'
 import { logout, selectAuth } from '@/state/auth'
+import { logoutApi } from '@/api/auth-api'
 import { lp } from '@/utils/language-path'
 
 const { Content } = Layout
@@ -57,10 +58,11 @@ export default function AppShell() {
       okText: t('confirm.logoutOk'),
       cancelText: t('confirm.cancel'),
       okButtonProps: { danger: true },
-      onOk: () => {
+      onOk: async () => {
         dispatch(logout())
         toast.success(t('confirm.logoutSuccess'))
         navigate(lp('/'))
+        logoutApi().catch(() => {})
       }
     })
   }

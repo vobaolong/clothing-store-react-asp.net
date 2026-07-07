@@ -2,17 +2,35 @@ import { STORAGE_KEYS } from '@/constants/storage-keys.constant'
 import type { JwtPayload } from '@/types'
 
 const TOKEN_KEY = STORAGE_KEYS.authToken
+const REMEMBER_KEY = STORAGE_KEYS.rememberMeToken
 
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem(TOKEN_KEY)
+  return sessionStorage.getItem(TOKEN_KEY)
 }
 
 export const setAuthToken = (token: string): void => {
-  localStorage.setItem(TOKEN_KEY, token)
+  sessionStorage.setItem(TOKEN_KEY, token)
 }
 
 export const removeAuthToken = (): void => {
-  localStorage.removeItem(TOKEN_KEY)
+  sessionStorage.removeItem(TOKEN_KEY)
+}
+
+export const getRememberMeToken = (): string | null => {
+  return localStorage.getItem(REMEMBER_KEY)
+}
+
+export const setRememberMeToken = (token: string): void => {
+  localStorage.setItem(REMEMBER_KEY, token)
+}
+
+export const removeRememberMeToken = (): void => {
+  localStorage.removeItem(REMEMBER_KEY)
+}
+
+export const clearAllAuth = (): void => {
+  removeAuthToken()
+  removeRememberMeToken()
 }
 
 export const decodeJwt = (token: string): JwtPayload | null => {

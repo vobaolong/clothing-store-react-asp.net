@@ -3,9 +3,11 @@ import {
   getAuthToken,
   getCurrentUser,
   removeAuthToken,
-  setAuthToken
+  removeRememberMeToken,
+  setAuthToken,
+  setRememberMeToken
 } from '@/state/auth/auth-session'
-import type { JwtPayload } from '@/types'
+import type { JwtPayload, LoginResponseDto } from '@/types'
 
 type AuthState = {
   token: string | null
@@ -23,14 +25,26 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<string>) => {
-      setAuthToken(action.payload)
-      state.token = action.payload
+    setAuth: (state, action: PayloadAction<string | LoginResponseDto>) => {
+      const payload = action.payload
+      if (typeof payload === 'string') {
+        setAuthToken(payload)
+        removeRememberMeToken()
+      } else {
+        setAuthToken(payload.token)
+        if (payload.rememberMeToken) {
+          setRememberMeToken(payload.rememberMeToken)
+        } else {
+          removeRememberMeToken()
+        }
+      }
+      state.token = getAuthToken()
       state.user = getCurrentUser()
       state.isAuthenticated = true
     },
     logout: (state) => {
       removeAuthToken()
+      removeRememberMeToken()
       state.token = null
       state.user = null
       state.isAuthenticated = false

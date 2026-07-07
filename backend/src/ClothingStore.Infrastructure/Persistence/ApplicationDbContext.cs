@@ -25,6 +25,7 @@ public class ApplicationDbContext(
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<RememberMeToken> RememberMeTokens => Set<RememberMeToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,6 +37,7 @@ public class ApplicationDbContext(
         ConfigureProduct(modelBuilder);
         ConfigureReview(modelBuilder);
         ConfigureWishlist(modelBuilder);
+        ConfigureRememberMeToken(modelBuilder);
         ConfigureSoftDeleteQueryFilters(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
@@ -290,6 +292,19 @@ public class ApplicationDbContext(
                 .WithMany()
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureRememberMeToken(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RememberMeToken>(e =>
+        {
+            e.HasIndex(x => x.TokenHash).IsUnique();
+            e.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         });
     }
 

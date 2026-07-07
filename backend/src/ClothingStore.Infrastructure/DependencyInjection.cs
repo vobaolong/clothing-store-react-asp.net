@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddHostedService<BackgroundEmailSenderService>();
         services.AddScoped<IEmailNotificationService, EmailNotificationService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IRememberMeTokenService, RememberMeTokenService>();
 
         return services;
     }

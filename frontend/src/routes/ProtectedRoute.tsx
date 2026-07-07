@@ -1,6 +1,8 @@
 import { Suspense, type ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
+import { Spin } from 'antd'
 import { getAuthToken, isAdmin } from '@/state/auth/auth-session'
+import { useRememberMeRefresh } from '@/hooks/useRememberMeRefresh'
 import { lp } from '@/utils/language-path'
 
 function RouteSuspense({ children }: { children: ReactNode }) {
@@ -18,6 +20,16 @@ export function ProtectedRoute({
   requireAdmin = false,
   blockAdmin = false
 }: ProtectedRouteProps) {
+  const refresh = useRememberMeRefresh()
+
+  if (refresh.status === 'loading' || refresh.status === 'idle') {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spin size="large" />
+      </div>
+    )
+  }
+
   const token = getAuthToken()
 
   if (requireAdmin) {

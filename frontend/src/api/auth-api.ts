@@ -1,12 +1,25 @@
 import { apiClient, apiData, apiVoid } from '@/api/api-client'
 import { API_ENDPOINTS } from '@/constants/api-endpoints.constant'
+import type { LoginResponseDto } from '@/types'
 
 export const login = async (payload: {
   email: string
   password: string
   rememberMe: boolean
-}): Promise<string> => {
+}): Promise<LoginResponseDto> => {
   return apiData(apiClient.post(API_ENDPOINTS.auth.login, payload))
+}
+
+export const refreshToken = async (
+  rememberMeToken: string
+): Promise<LoginResponseDto> => {
+  return apiData(
+    apiClient.post(API_ENDPOINTS.auth.tokenRefresh, { rememberMeToken })
+  )
+}
+
+export const logoutApi = async (): Promise<void> => {
+  await apiVoid(apiClient.post(API_ENDPOINTS.auth.logout))
 }
 
 export const register = async (payload: {

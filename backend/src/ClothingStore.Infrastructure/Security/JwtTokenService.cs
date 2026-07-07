@@ -10,7 +10,7 @@ namespace ClothingStore.Infrastructure.Security;
 
 public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
 {
-    public string GenerateToken(User user, bool rememberMe)
+    public string GenerateToken(User user)
     {
         var secret = configuration["Jwt:Secret"];
 
@@ -23,11 +23,9 @@ public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
 
         var shortExpiryHours = GetIntConfig("Jwt:ShortExpiryHours", defaultValue: 1);
 
-        var rememberMeExpiryDays = GetIntConfig("Jwt:RememberMeExpiryDays", defaultValue: 7);
-
-        var expiry = rememberMe
-            ? DateTime.UtcNow.AddDays(rememberMeExpiryDays)
-            : DateTime.UtcNow.AddHours(shortExpiryHours);
+        // JWT stays short-lived regardless of rememberMe — persistence is handled
+        // by the opaque remember-me token (RememberMeTokenService).
+        var expiry = DateTime.UtcNow.AddHours(shortExpiryHours);
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 

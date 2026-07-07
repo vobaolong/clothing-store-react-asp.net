@@ -9,7 +9,8 @@ import {
   ADMIN_PAGE_HEADER_TITLE_KEYS
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
-import { isAdmin, removeAuthToken } from '@/state/auth/auth-session'
+import { isAdmin, removeAuthToken, removeRememberMeToken } from '@/state/auth/auth-session'
+import { logoutApi } from '@/api/auth-api'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import AdminPageSidebar from '@/components/admin/AdminPageSidebar'
 import ThemeToggleButton from '@/components/ThemeToggleButton'
@@ -43,8 +44,10 @@ export default function AdminShell() {
       okButtonProps: { danger: true },
       onOk: () => {
         removeAuthToken()
+        removeRememberMeToken()
         toast.success(t('confirm.logoutSuccess'))
         window.location.href = lp('/')
+        logoutApi().catch(() => {})
       }
     })
   }

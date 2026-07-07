@@ -19,8 +19,8 @@ export default function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: (token) => {
-      dispatch(setAuth(token))
+    onSuccess: (data) => {
+      dispatch(setAuth(data))
       toast.success(t('auth.loginSuccess'))
       navigate(isAdmin() ? lp('/admin') : lp('/'))
     },

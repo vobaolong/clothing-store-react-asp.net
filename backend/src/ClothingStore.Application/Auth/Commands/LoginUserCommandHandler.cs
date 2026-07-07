@@ -1,3 +1,4 @@
+using ClothingStore.Application.Auth.Dtos;
 using ClothingStore.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +8,14 @@ namespace ClothingStore.Application.Auth.Commands;
 public class LoginUserCommandHandler(
     IApplicationDbContext context,
     IJwtTokenService jwtTokenService,
-    IPasswordHasher passwordHasher
-) : IRequestHandler<LoginUserCommand, string>
+    IPasswordHasher passwordHasher,
+    IRememberMeTokenService rememberMeTokenService
+) : IRequestHandler<LoginUserCommand, LoginResponseDto>
 {
-    public async Task<string> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    public async Task<LoginResponseDto> Handle(
+        LoginUserCommand request,
+        CancellationToken cancellationToken
+    )
     {
         var user = await context.Users.FirstOrDefaultAsync(
             x => x.Email == request.Email,
@@ -28,6 +33,15 @@ public class LoginUserCommandHandler(
         if (user.IsLocked)
             throw new UnauthorizedAccessException("Account has been locked.");
 
-        return jwtTokenService.GenerateToken(user, request.RememberMe);
+        var jwt = jwtTokenService.GenerateToken(user);
+        string? rememberMeToken = null;
+
+        if (request.RememberMe)
+            rememberMeToken = await rememberMeTokenService.GenerateTokenAsync(
+                user,
+                cancellationToken
+            );
+
+        return new LoginResponseDto(jwt, rememberMeToken);
     }
 }

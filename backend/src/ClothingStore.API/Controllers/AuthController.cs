@@ -1,11 +1,13 @@
+using ClothingStore.API.Services;
 using ClothingStore.Application.Auth.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.API.Controllers;
 
 [Route("api/auth")]
-public class AuthController(ISender sender) : BaseApiController
+public class AuthController(ISender sender, IUserContext userContext) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserCommand command, CancellationToken ct)
@@ -17,8 +19,8 @@ public class AuthController(ISender sender) : BaseApiController
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserCommand command, CancellationToken ct)
     {
-        var token = await sender.Send(command, ct);
-        return Ok(token, "Login successful.");
+        var result = await sender.Send(command, ct);
+        return Ok(result, "Login successful.");
     }
 
     [HttpPost("forgot-password")]
@@ -59,5 +61,24 @@ public class AuthController(ISender sender) : BaseApiController
     {
         await sender.Send(command, ct);
         return Ok("A new OTP has been sent to your email.");
+    }
+
+    [HttpPost("token/refresh")]
+    public async Task<IActionResult> RefreshToken(
+        RefreshTokenCommand command,
+        CancellationToken ct
+    )
+    {
+        var result = await sender.Send(command, ct);
+        return Ok(result, "Token refreshed.");
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout(CancellationToken ct)
+    {
+        var userId = userContext.GetRequiredUserId();
+        await sender.Send(new LogoutCommand(userId), ct);
+        return Ok("Logged out successfully.");
     }
 }
