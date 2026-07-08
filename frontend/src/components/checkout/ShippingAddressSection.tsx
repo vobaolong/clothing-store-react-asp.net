@@ -1,4 +1,4 @@
-import { Button, Card, Form, Radio, Tag } from 'antd'
+import { Button, Card, Form, Radio, Skeleton, Tag } from 'antd'
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 import { CheckoutSectionTitle } from '@/components/checkout/CheckoutSectionTitle'
@@ -32,6 +32,7 @@ export default function ShippingAddressSection({
   qc
 }: Props) {
   const { t } = useTranslation()
+  const isLoading = addressesQuery.isLoading
   return (
     <>
       <Card className="rounded-2xl border-slate-200">
@@ -48,64 +49,77 @@ export default function ShippingAddressSection({
                   onChange={(e) => field.onChange(e.target.value)}
                 >
                   <div className="space-y-2">
-                    {(addressesQuery.data ?? []).map((addressItem) => (
-                      <div
-                        key={addressItem.id}
-                        className={`flex items-center justify-between gap-3 p-3.5 border rounded-xl transition-colors cursor-pointer ${
-                          field.value === addressItem.id
-                            ? 'border-slate-900 card'
-                            : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
-                        }`}
-                      >
-                        <Radio value={addressItem.id}>
-                          <div className="ml-1 text-sm">
-                            <p className="flex gap-2 font-medium text-slate-900 dark:text-white">
-                              {addressItem.fullName}
-                              <span className="font-normal text-slate-700 dark:text-slate-400">
-                                {addressItem.phone}
-                              </span>
-                              <Tag color="blue">
-                                {addressItem.label === 'Home'
-                                  ? t('checkout.home')
-                                  : addressItem.label === 'Office'
-                                    ? t('checkout.office')
-                                    : '—'}
-                              </Tag>
-                            </p>
-                            <p className="mt-0.5 text-slate-500 dark:text-slate-400">
-                              {formatShippingAddress(addressItem)}
-                            </p>
-                          </div>
-                        </Radio>
-                        <div className="gap-3 flex flex-col items-end!">
-                          {addressItem.isDefault ? (
-                            <Tag color="green" className="shrink-0">
-                              {t('common.default')}
-                            </Tag>
-                          ) : (
-                            <Button
-                              size="small"
-                              className="shrink-0"
-                              onClick={async () => {
-                                await setDefaultShippingAddress(addressItem.id)
-                                await qc.invalidateQueries({
-                                  queryKey: QUERY_KEYS.shippingAddresses
-                                })
-                                toast.success(t('profile.defaultAddressSet'))
-                              }}
-                            >
-                              {t('profile.setDefaultAddress')}
-                            </Button>
-                          )}
-                          <Button
-                            size="small"
-                            type="text"
-                            icon={<EditOutlined />}
-                            onClick={() => onEditAddress(addressItem)}
+                    {isLoading
+                      ? Array.from({ length: 2 }).map((_, i) => (
+                          <Skeleton
+                            key={i}
+                            active
+                            className="h-18 p-3.5 border rounded-xl!"
+                            paragraph={{ rows: 1 }}
                           />
-                        </div>
-                      </div>
-                    ))}
+                        ))
+                      : (addressesQuery.data ?? []).map((addressItem) => (
+                          <div
+                            key={addressItem.id}
+                            className={`flex items-center justify-between gap-3 p-3.5 border rounded-xl transition-colors cursor-pointer ${
+                              field.value === addressItem.id
+                                ? 'border-slate-900 card'
+                                : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
+                            }`}
+                          >
+                            <Radio value={addressItem.id}>
+                              <div className="ml-1 text-sm">
+                                <p className="flex gap-2 font-medium text-slate-900 dark:text-white">
+                                  {addressItem.fullName}
+                                  <span className="font-normal text-slate-700 dark:text-slate-400">
+                                    {addressItem.phone}
+                                  </span>
+                                  <Tag color="blue">
+                                    {addressItem.label === 'Home'
+                                      ? t('checkout.home')
+                                      : addressItem.label === 'Office'
+                                        ? t('checkout.office')
+                                        : '—'}
+                                  </Tag>
+                                </p>
+                                <p className="mt-0.5 text-slate-500 dark:text-slate-400">
+                                  {formatShippingAddress(addressItem)}
+                                </p>
+                              </div>
+                            </Radio>
+                            <div className="gap-3 flex flex-col items-end!">
+                              {addressItem.isDefault ? (
+                                <Tag color="green" className="shrink-0">
+                                  {t('common.default')}
+                                </Tag>
+                              ) : (
+                                <Button
+                                  size="small"
+                                  className="shrink-0"
+                                  onClick={async () => {
+                                    await setDefaultShippingAddress(
+                                      addressItem.id
+                                    )
+                                    await qc.invalidateQueries({
+                                      queryKey: QUERY_KEYS.shippingAddresses
+                                    })
+                                    toast.success(
+                                      t('profile.defaultAddressSet')
+                                    )
+                                  }}
+                                >
+                                  {t('profile.setDefaultAddress')}
+                                </Button>
+                              )}
+                              <Button
+                                size="small"
+                                type="text"
+                                icon={<EditOutlined />}
+                                onClick={() => onEditAddress(addressItem)}
+                              />
+                            </div>
+                          </div>
+                        ))}
                   </div>
                 </Radio.Group>
               )}

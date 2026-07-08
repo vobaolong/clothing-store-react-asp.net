@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Drawer, FloatButton, Input, Spin } from 'antd'
+import { Button, Card, Drawer, FloatButton, Input, Skeleton, Spin } from 'antd'
 import { MenuOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
@@ -89,6 +89,19 @@ export default function ProfilePage() {
             <Card>
               <h1 className="text-2xl font-semibold">{t('profile.accountSettings')}</h1>
 
+              {isLoading ? (
+                <div className="mt-4 space-y-7">
+                  <div className="space-y-3">
+                    <Skeleton active paragraph={{ rows: 1 }} className="w-24!" />
+                    <Skeleton active className="h-10!" />
+                  </div>
+                  <div className="space-y-3">
+                    <Skeleton active paragraph={{ rows: 1 }} className="w-32!" />
+                    <Skeleton active className="h-10!" />
+                    <Skeleton active className="h-10 w-40!" />
+                  </div>
+                </div>
+              ) : (
               <div className="mt-4 border-t divide-y divide-slate-200 border-slate-200">
                 <section className="grid lg:gap-8 sm:gap-2 py-7 lg:grid-cols-[320px_1fr] lg:items-start">
                   <div>
@@ -102,16 +115,12 @@ export default function ProfilePage() {
                     <label className="block mb-1 text-sm font-medium">
                       {t('profile.fullName')}
                     </label>
-                    {isLoading ? (
-                      <Spin />
-                    ) : (
-                      <Input
-                        value={profile?.fullName ?? '-'}
-                        readOnly
-                        disabled
-                        className="h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700"
-                      />
-                    )}
+                    <Input
+                      value={profile?.fullName ?? '-'}
+                      readOnly
+                      disabled
+                      className="h-10 rounded-md border-slate-300 bg-slate-50 text-slate-700"
+                    />
                   </div>
                 </section>
 
@@ -150,6 +159,7 @@ export default function ProfilePage() {
                   </div>
                 </section>
               </div>
+              )}
             </Card>
           )}
           {section === 'addresses' && <AddressList />}

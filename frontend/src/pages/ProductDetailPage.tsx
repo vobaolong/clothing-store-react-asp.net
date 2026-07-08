@@ -37,7 +37,7 @@ import {
 } from '@/utils/product-detail-utils'
 import ProductGallery from '@/components/product/ProductGallery'
 import ProductFixedBuyBar from '@/components/ProductFixedBuyBar'
-import { Button, Result } from 'antd'
+import { Button, Result, Skeleton } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
 import { FreeShipIcon } from '@/components/icons'
 
@@ -293,11 +293,27 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-80">
-        <p className="text-sm uppercase tracking-[0.2em] text-stone-400">
-          {t('common.loading')}
-        </p>
-      </div>
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <Skeleton active className="mb-6 w-96!" />
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div className="space-y-4">
+            <Skeleton active className="aspect-square!" />
+            <div className="flex gap-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} active className="size-20!" />
+              ))}
+            </div>
+          </div>
+          <aside className="space-y-8">
+            <Skeleton active paragraph={{ rows: 1 }} className="w-3/4!" />
+            <Skeleton active paragraph={{ rows: 1 }} className="w-1/3!" />
+            <Skeleton active paragraph={{ rows: 3 }} />
+            <Skeleton active paragraph={{ rows: 2 }} />
+            <Skeleton active className="h-10!" />
+            <Skeleton active className="h-12!" />
+          </aside>
+        </div>
+      </section>
     )
   }
 

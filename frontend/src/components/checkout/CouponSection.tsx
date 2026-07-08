@@ -1,4 +1,4 @@
-import { Button, Card, Input } from 'antd'
+import { Button, Card, Input, Skeleton } from 'antd'
 import { Controller } from 'react-hook-form'
 import AvailableCouponCard from '@/components/coupons/AvailableCouponCard'
 import { CheckoutSectionTitle } from '@/components/checkout/CheckoutSectionTitle'
@@ -92,34 +92,42 @@ export default function CouponSection({
         </div>
       )}
 
-      {(availableCouponsQuery.data ?? []).length > 0 && (
+      {(availableCouponsQuery.data ?? []).length > 0 ||
+      availableCouponsQuery.isLoading ? (
         <div className="overflow-y-auto pr-1 max-h-64">
           <p className="mb-3 text-xs font-medium tracking-wide uppercase text-slate-400">
             {t('checkout.availableCoupons')}
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
-            {(availableCouponsQuery.data ?? []).map((c: AvailableCoupon) => {
-              const isExhausted = c.maxUsage > 0 && c.usedCount >= c.maxUsage
-              const isEligible = subtotal >= c.minOrderSubtotal && !isExhausted
-              const isSelected =
-                (watchedCouponCode || '').toUpperCase() === c.code.toUpperCase()
-              return (
-                <AvailableCouponCard
-                  key={c.id}
-                  coupon={c}
-                  isSelected={isSelected}
-                  isEligible={isEligible}
-                  isApplyingCoupon={coupon.isApplying}
-                  onApply={(code) => {
-                    handleCouponCodeChange(code)
-                    void applyCouponByCode(code)
-                  }}
-                />
-              )
-            })}
+            {availableCouponsQuery.isLoading
+              ? Array.from({ length: 2 }).map((_, i) => (
+                  <Skeleton key={i} active className="h-24!" />
+                ))
+              : (availableCouponsQuery.data ?? []).map((c: AvailableCoupon) => {
+                  const isExhausted =
+                    c.maxUsage > 0 && c.usedCount >= c.maxUsage
+                  const isEligible =
+                    subtotal >= c.minOrderSubtotal && !isExhausted
+                  const isSelected =
+                    (watchedCouponCode || '').toUpperCase() ===
+                    c.code.toUpperCase()
+                  return (
+                    <AvailableCouponCard
+                      key={c.id}
+                      coupon={c}
+                      isSelected={isSelected}
+                      isEligible={isEligible}
+                      isApplyingCoupon={coupon.isApplying}
+                      onApply={(code) => {
+                        handleCouponCodeChange(code)
+                        void applyCouponByCode(code)
+                      }}
+                    />
+                  )
+                })}
           </div>
         </div>
-      )}
+      ) : null}
     </Card>
   )
 }

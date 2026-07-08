@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Pagination, Row, Col, Tag, Drawer, FloatButton } from 'antd'
+import { Pagination, Row, Col, Tag, Drawer, FloatButton, Skeleton } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
@@ -177,7 +177,38 @@ export default function ProductsPage() {
 		(page - 1) * PRODUCTS_PAGE_SIZE,
 		page * PRODUCTS_PAGE_SIZE
 	)
-	if (isLoading || categoriesLoading) return <p>{t('common.loading')}</p>
+	if (isLoading || categoriesLoading)
+		return (
+			<Row gutter={[24, 24]}>
+				<Col xs={0} sm={0} md={7} lg={6} xl={5}>
+					<div className="sticky top-24 space-y-4">
+						<Skeleton active paragraph={{ rows: 1 }} className="w-24!" />
+						{Array.from({ length: 6 }).map((_, i) => (
+							<Skeleton key={i} active className="h-8!" paragraph={false} />
+						))}
+						<Skeleton active paragraph={{ rows: 1 }} className="w-16!" />
+						<div className="flex gap-2">
+							{Array.from({ length: 5 }).map((_, i) => (
+								<Skeleton key={i} active className="size-8!" paragraph={false} />
+							))}
+						</div>
+					</div>
+				</Col>
+				<Col xs={24} sm={24} md={17} lg={18} xl={19}>
+					<div className="space-y-6">
+						<Skeleton active paragraph={{ rows: 1 }} className="w-full!" />
+						<div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+							{Array.from({ length: 8 }).map((_, i) => (
+								<div key={i}>
+									<Skeleton active className="aspect-square!" />
+									<Skeleton active paragraph={{ rows: 2 }} />
+								</div>
+							))}
+						</div>
+					</div>
+				</Col>
+			</Row>
+		)
 
 	const updateFilters = (key: string, values: string[]) => {
 		const next = new URLSearchParams(searchParams)

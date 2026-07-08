@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Skeleton } from 'antd'
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
@@ -92,7 +92,19 @@ export default function OrderDetailPage() {
   })
 
   if (!token) return <Navigate to="/login" replace />
-  if (detailQuery.isLoading) return <p>Đang tải&hellip;</p>
+  if (detailQuery.isLoading) {
+    return (
+      <div className="space-y-4!">
+        <Skeleton active paragraph={{ rows: 1 }} className="w-64!" />
+        <Skeleton active className="h-40!" />
+        <Skeleton active className="h-60!" />
+        <div className="grid grid-cols-2 gap-4">
+          <Skeleton active className="h-48!" />
+          <Skeleton active className="h-48!" />
+        </div>
+      </div>
+    )
+  }
   if (!detail) return <p>Đơn hàng không tồn tại.</p>
 
   const subtotal = detail.items.reduce((sum, item) => sum + item.lineTotal, 0)
