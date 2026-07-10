@@ -148,7 +148,9 @@ export default function AppFooter() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold tracking-wider uppercase text-stone-500">
-                    {label === 'Hotline' ? t('footer.hotline') : t('footer.email')}
+                    {label === 'Hotline'
+                      ? t('footer.hotline')
+                      : t('footer.email')}
                   </p>
                   <p className="font-semibold text-md">{value}</p>
                 </div>
@@ -210,7 +212,8 @@ export default function AppFooter() {
 
         <div className="pt-8 mt-16 border-t border-stone-800">
           <p className="text-xs text-center text-stone-500">
-            &copy; {new Date().getFullYear()} Wearly. {t('footer.allRightsReserved')}
+            &copy; {new Date().getFullYear()} Wearly.{' '}
+            {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

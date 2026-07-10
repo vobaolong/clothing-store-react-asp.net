@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Application.Orders.Queries;
 
-public record GetRevenueKpiQuery() : IRequest<RevenueKpiDto>;
+public record GetRevenueKpiQuery(string? PeriodType, int? PeriodValue, int? Year)
+    : IRequest<RevenueKpiDto>;
 
 public record RevenueKpiDto(
     decimal CurrentRevenue,
@@ -19,11 +20,47 @@ public class GetRevenueKpiQueryHandler(IApplicationDbContext context)
 {
     public async Task<RevenueKpiDto> Handle(GetRevenueKpiQuery request, CancellationToken ct)
     {
-        // Use UTC boundaries for month calculation
         var now = DateTime.UtcNow;
-        var startCurrent = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        var startNext = startCurrent.AddMonths(1);
-        var startPrevious = startCurrent.AddMonths(-1);
+        var year = request.Year ?? now.Year;
+
+        DateTime startCurrent,
+            startNext,
+            startPrevious;
+
+        if (
+            string.Equals(request.PeriodType, "quarter", StringComparison.OrdinalIgnoreCase)
+            && request.PeriodValue is >= 1 and <= 4
+        )
+        {
+            var startMonth = (request.PeriodValue.Value - 1) * 3 + 1;
+            startCurrent = new DateTime(year, startMonth, 1, 0, 0, 0, DateTimeKind.Utc);
+            startNext = startCurrent.AddMonths(3);
+            startPrevious = startCurrent.AddMonths(-3);
+        }
+        else if (
+            string.Equals(request.PeriodType, "month", StringComparison.OrdinalIgnoreCase)
+            && request.PeriodValue is >= 1 and <= 12
+        )
+        {
+            startCurrent = new DateTime(
+                year,
+                request.PeriodValue.Value,
+                1,
+                0,
+                0,
+                0,
+                DateTimeKind.Utc
+            );
+            startNext = startCurrent.AddMonths(1);
+            startPrevious = startCurrent.AddMonths(-1);
+        }
+        else
+        {
+            // Default: current month vs last month
+            startCurrent = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            startNext = startCurrent.AddMonths(1);
+            startPrevious = startCurrent.AddMonths(-1);
+        }
 
         var query = context
             .Orders.AsNoTracking()

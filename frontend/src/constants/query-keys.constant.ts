@@ -27,7 +27,10 @@ export const QUERY_KEYS = {
   adminCustomers: ['admin-customers'],
   adminCoupons: ['admin-coupons'],
   adminBanners: ['admin-banners'],
-  adminRevenueKpi: ['admin-revenue-kpi'],
+  adminRevenueKpi: (filter?: Record<string, unknown>) => [
+    'admin-revenue-kpi',
+    filter
+  ],
   adminOrderDetail: (id?: string) => ['admin-order-detail', id],
   vnpayReturn: (txnRef?: string | null, responseCode?: string | null) => [
     'vnpay-return',

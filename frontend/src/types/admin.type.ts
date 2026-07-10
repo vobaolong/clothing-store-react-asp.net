@@ -192,6 +192,12 @@ export type RevenueKpiDto = {
   percentageChange: number | null
 }
 
+export type RevenueKpiFilter = {
+  periodType?: 'month' | 'quarter'
+  periodValue?: number
+  year?: number
+}
+
 export type Review = {
   id: string
   productId: string

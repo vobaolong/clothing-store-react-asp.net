@@ -17,8 +17,10 @@ const formatRelativeTime = (dateString: string): string => {
     (Date.now() - new Date(dateString).getTime()) / 1_000
   )
   if (diffSec < 60) return i18n.t('notification.justNow')
-  if (diffSec < 3_600) return i18n.t('notification.minutesAgo', { n: Math.floor(diffSec / 60) })
-  if (diffSec < 86_400) return i18n.t('notification.hoursAgo', { n: Math.floor(diffSec / 3_600) })
+  if (diffSec < 3_600)
+    return i18n.t('notification.minutesAgo', { n: Math.floor(diffSec / 60) })
+  if (diffSec < 86_400)
+    return i18n.t('notification.hoursAgo', { n: Math.floor(diffSec / 3_600) })
   return i18n.t('notification.daysAgo', { n: Math.floor(diffSec / 86_400) })
 }
 
