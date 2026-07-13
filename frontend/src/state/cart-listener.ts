@@ -19,7 +19,7 @@ const startListening =
   cartListenerMiddleware.startListening as AppStartListening
 
 startListening({
-  predicate: (_action, currentState, previousState) => {
+  predicate: (_action, currentState) => {
     if (_action.type !== 'cart/addToCart') return false
     return (currentState as RootState).auth.isAuthenticated
   },
@@ -98,7 +98,7 @@ startListening({
     if (_action.type !== 'cart/clearCart') return false
     return (currentState as RootState).auth.isAuthenticated
   },
-  effect: async (_action, listenerApi) => {
+  effect: async () => {
     try {
       await cartApi.clearCartOnServer()
     } catch {

@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit'
 import toast from 'react-hot-toast'
 import type { RootState } from '@/app/store'
-import type { CartItemDto, CartState, Product } from '@/types'
+import type { CartItem, CartItemDto, CartState, Product } from '@/types'
 import { i18n } from '@/i18n'
 
 type AddToCartPayload = {

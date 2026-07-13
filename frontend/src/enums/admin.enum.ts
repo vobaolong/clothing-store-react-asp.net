@@ -6,7 +6,8 @@ export const AdminNavKey = {
   REVIEWS: 'reviews',
   CUSTOMERS: 'customers',
   COUPONS: 'coupons',
-  BANNERS: 'banners'
+  BANNERS: 'banners',
+  TIER_CONFIG: 'tier-config'
 } as const
 
 export type AdminNavKey = (typeof AdminNavKey)[keyof typeof AdminNavKey]

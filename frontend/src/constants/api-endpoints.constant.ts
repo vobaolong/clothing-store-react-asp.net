@@ -65,6 +65,9 @@ export const API_ENDPOINTS = {
   uploads: {
     image: '/uploads/image'
   },
+  tiers: {
+    my: '/tiers/my'
+  },
   payments: {
     vnpayCreateUrl: '/payments/vnpay/create-url',
     vnpayReturn: '/payments/vnpay/return'
@@ -97,6 +100,8 @@ export const API_ENDPOINTS = {
     banners: '/admin/banners',
     bannersReorder: '/admin/banners/reorder',
     bannerById: (id: string) => `/admin/banners/${id}`,
-    revenueKpi: '/admin/kpi/revenue'
+    revenueKpi: '/admin/kpi/revenue',
+    tierConfig: '/admin/tier-config',
+    tierConfigByTier: (tier: string) => `/admin/tier-config/${tier}`
   }
 } as const

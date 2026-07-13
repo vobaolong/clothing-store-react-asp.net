@@ -21,5 +21,7 @@ public interface IApplicationDbContext
     DbSet<WishlistItem> WishlistItems { get; }
     DbSet<CartItem> CartItems { get; }
     DbSet<Notification> Notifications { get; }
+    DbSet<CustomerTierChangeLog> CustomerTierChangeLogs { get; }
+    DbSet<CustomerTierConfig> CustomerTierConfigs { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

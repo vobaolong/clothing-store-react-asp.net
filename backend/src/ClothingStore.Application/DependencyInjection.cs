@@ -3,6 +3,7 @@ using ClothingStore.Application.Categories;
 using ClothingStore.Application.Common.Behaviors;
 using ClothingStore.Application.Payments;
 using ClothingStore.Application.Products;
+using ClothingStore.Application.Tiers;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,8 @@ public static class DependencyInjection
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ITierService, TierService>();
+        services.AddScoped<ITierConfigService, TierConfigService>();
         return services;
     }
 }

@@ -100,7 +100,7 @@ export default function AdminCouponsSection() {
           </Button>
         </div>
 
-        <div className="flex flex-wrap gap-3 items-center mt-3 w-full">
+        <div className="flex flex-wrap gap-3 items-center w-full">
           <Input.Search
             allowClear
             placeholder={t('admin.searchCouponsPlaceholder')}

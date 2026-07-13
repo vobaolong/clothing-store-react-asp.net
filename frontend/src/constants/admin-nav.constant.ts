@@ -8,7 +8,8 @@ export const ADMIN_PAGE_HEADER_TITLE_KEYS = {
   [AdminNavKey.REVIEWS]: 'admin.reviews',
   [AdminNavKey.CUSTOMERS]: 'admin.customers',
   [AdminNavKey.COUPONS]: 'admin.coupons',
-  [AdminNavKey.BANNERS]: 'admin.banners'
+  [AdminNavKey.BANNERS]: 'admin.banners',
+  [AdminNavKey.TIER_CONFIG]: 'admin.tierConfig'
 } as const
 
 export const ADMIN_PAGE_BRAND_TITLE_KEY = 'admin.brandTitle' as const

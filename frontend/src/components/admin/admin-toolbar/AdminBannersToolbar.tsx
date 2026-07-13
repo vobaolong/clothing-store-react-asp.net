@@ -23,10 +23,12 @@ export default function AdminBannersToolbar({
 }: AdminBannersToolbarProps) {
   const { t } = useTranslation()
   return (
-    <div className="flex gap-2 justify-between items-center w-full p-3 rounded-lg shadow-xs">
+    <div className="flex gap-2 justify-between items-center w-full">
       <div>
-        <h2 className="text-lg font-bold m-0">{t('admin.bannerManagerTitle')}</h2>
-        <p className="text-xs text-slate-500">
+        <h2 className="text-lg font-bold m-0">
+          {t('admin.bannerManagerTitle')}
+        </h2>
+        <p className="text-xs text-slate-500 m-0!">
           {t('admin.bannerManagerDesc')}
         </p>
       </div>

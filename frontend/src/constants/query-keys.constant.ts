@@ -27,6 +27,8 @@ export const QUERY_KEYS = {
   adminCustomers: ['admin-customers'],
   adminCoupons: ['admin-coupons'],
   adminBanners: ['admin-banners'],
+  adminTierConfig: ['admin-tier-config'],
+  myTier: ['my-tier'],
   adminRevenueKpi: (filter?: Record<string, unknown>) => [
     'admin-revenue-kpi',
     filter

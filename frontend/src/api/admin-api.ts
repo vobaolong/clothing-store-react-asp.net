@@ -18,7 +18,8 @@ import type {
   AdminBulkPermanentProductsResult,
   LockCustomerResponse,
   RevenueKpiDto,
-  RevenueKpiFilter
+  RevenueKpiFilter,
+  TierConfig
 } from '@/types'
 import { CategoryGender, CategoryType } from '@/enums'
 import { ADMIN_FILTER_ALL_VALUE } from '@/constants/admin-filter.constant'
@@ -203,8 +204,14 @@ export const deleteAdminReview = async (id: string) =>
 export const bulkDeleteAdminReviews = async (ids: string[]) =>
   apiVoid(apiClient.post(API_ENDPOINTS.admin.reviewsBulkDelete, ids))
 // GET api/admin/customers
-export const getAdminCustomers = async (): Promise<Customer[]> =>
-  apiData(apiClient.get(API_ENDPOINTS.admin.customers))
+export const getAdminCustomers = async (
+  tier?: string
+): Promise<Customer[]> =>
+  apiData(
+    apiClient.get(API_ENDPOINTS.admin.customers, {
+      params: tier ? { tier } : {}
+    })
+  )
 
 // PUT api/admin/customers/{id}/lock
 export const lockAdminCustomer = async (
@@ -256,3 +263,22 @@ export const getAdminRevenueKpi = async (
   filter?: RevenueKpiFilter
 ): Promise<RevenueKpiDto> =>
   apiData(apiClient.get(API_ENDPOINTS.admin.revenueKpi, { params: filter }))
+
+// GET api/admin/tier-config
+export const getAdminTierConfig = async (): Promise<TierConfig[]> =>
+  apiData(apiClient.get(API_ENDPOINTS.admin.tierConfig))
+
+// PUT api/admin/tier-config/{tier}
+export const updateAdminTierConfig = async (
+  tier: string,
+  payload: { minSpend: number; discountPercent: number; freeShipping: boolean }
+) => apiVoid(apiClient.put(API_ENDPOINTS.admin.tierConfigByTier(tier), payload))
+
+// POST api/admin/tier-config
+export const createAdminTierConfig = async (
+  payload: { tier: string; minSpend: number; discountPercent: number; freeShipping: boolean }
+) => apiVoid(apiClient.post(API_ENDPOINTS.admin.tierConfig, payload))
+
+// DELETE api/admin/tier-config/{tier}
+export const deleteAdminTierConfig = async (tier: string) =>
+  apiVoid(apiClient.delete(API_ENDPOINTS.admin.tierConfigByTier(tier)))

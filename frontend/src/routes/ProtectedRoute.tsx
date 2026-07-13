@@ -22,7 +22,7 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const refresh = useRememberMeRefresh()
 
-  if (refresh.status === 'loading' || refresh.status === 'idle') {
+  if (refresh.status === 'loading') {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Spin size="large" />

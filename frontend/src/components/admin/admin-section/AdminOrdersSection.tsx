@@ -46,7 +46,8 @@ export default function AdminOrdersSection() {
 
   const ordersQuery = useQuery({
     queryKey: QUERY_KEYS.adminOrders(orderStatusFilter),
-    queryFn: () => getAdminOrders(orderStatusFilter)
+    queryFn: () => getAdminOrders(orderStatusFilter),
+    placeholderData: (previousData) => previousData
   })
 
   const data = ordersQuery.data?.orders

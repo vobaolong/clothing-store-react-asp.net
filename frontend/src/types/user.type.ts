@@ -17,6 +17,16 @@ export type MyProfile = {
   isAdmin: boolean
 }
 
+export type MyTier = {
+  currentTier: string
+  totalSpent: number
+  nextThreshold: number
+  nextTierName: string | null
+  progressPercent: number
+  discountPercent: number
+  freeShipping: boolean
+}
+
 export type ShippingAddress = {
   id: string
   fullName: string

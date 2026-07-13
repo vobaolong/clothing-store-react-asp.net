@@ -1,4 +1,5 @@
 using ClothingStore.Application.Common.Interfaces;
+using ClothingStore.Application.Tiers;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using MediatR;
@@ -13,7 +14,8 @@ public class PlaceOrderCommandHandler(
     IEmailTemplateBuilder emailTemplateBuilder,
     IEmailNotificationService emailNotificationService,
     IMemoryCache memoryCache,
-    IServiceScopeFactory scopeFactory
+    IServiceScopeFactory scopeFactory,
+    ITierConfigService tierConfigService
 ) : IRequestHandler<PlaceOrderCommand, Guid>
 {
     public async Task<Guid> Handle(PlaceOrderCommand request, CancellationToken cancellationToken)
@@ -140,6 +142,7 @@ public class PlaceOrderCommandHandler(
         }
 
         Coupon? coupon = null;
+        var couponDiscountAmount = 0m;
         if (!string.IsNullOrWhiteSpace(request.CouponCode))
         {
             var normalizedCode = request.CouponCode.Trim().ToUpperInvariant();
@@ -158,29 +161,52 @@ public class PlaceOrderCommandHandler(
                 throw new InvalidOperationException("Coupon usage limit reached.");
             if (subtotal < coupon.MinOrderSubtotal)
                 throw new InvalidOperationException("Order does not meet coupon minimum subtotal.");
-            var discountAmount = coupon.CalculateDiscountAmount(subtotal);
-            if (discountAmount > subtotal)
+            couponDiscountAmount = coupon.CalculateDiscountAmount(subtotal);
+            if (couponDiscountAmount > subtotal)
                 throw new InvalidOperationException("Coupon discount exceeds order subtotal.");
 
             order.CouponId = coupon.Id;
             order.CouponCodeSnapshot = coupon.Code;
             order.CouponDiscountTypeSnapshot = coupon.DiscountType;
             order.CouponDiscountValueSnapshot = coupon.DiscountAmount;
-            order.DiscountAmount = discountAmount;
-            order.TotalAmount = subtotal - discountAmount;
             if (request.PaymentMethod != PaymentMethod.VNPAY)
             {
                 coupon.UsedCount += 1;
             }
         }
 
+        // Tier discount does not stack with sale / clearance pricing (any line using SalePrice)
+        var hasSaleItems = order.Items.Any(i =>
+        {
+            if (!products.TryGetValue(i.ProductId, out var p))
+                return false;
+            return p.SalePrice != null
+                && p.SalePrice < p.Price
+                && IsInSalePeriod(p)
+                && i.UnitPrice == p.SalePrice.Value;
+        });
+
+        var tierDiscountAmount = 0m;
+        if (!hasSaleItems)
+        {
+            var tierConfig = await tierConfigService.GetByTierAsync(user.Tier, cancellationToken);
+            if (tierConfig.DiscountPercent > 0)
+                tierDiscountAmount = Math.Round(
+                    subtotal * tierConfig.DiscountPercent / 100m,
+                    0,
+                    MidpointRounding.ToZero
+                );
+        }
+
+        var finalDiscount = Math.Max(tierDiscountAmount, couponDiscountAmount);
+        order.DiscountAmount = finalDiscount;
+        order.TotalAmount = subtotal - finalDiscount;
+
         if (request.PaymentMethod == PaymentMethod.VNPAY)
         {
             order.Id = Guid.NewGuid();
             order.MarkAsCreated();
 
-            // Khi cache VNPAY hết hạn mà chưa thanh toán, cộng lại tồn kho
-            // Dùng scopeFactory tạo scope mới — tránh dùng scoped DbContext đã disposed
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
                 .RegisterPostEvictionCallback(

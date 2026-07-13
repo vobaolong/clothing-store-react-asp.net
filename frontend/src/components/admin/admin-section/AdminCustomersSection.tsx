@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, DatePicker } from 'antd'
+import { Input, DatePicker, Select } from 'antd'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
@@ -11,6 +11,7 @@ import {
 } from '@/api/admin-api'
 import { QUERY_KEYS } from '@/constants/query-keys.constant'
 import { useAdmin } from '@/context/AdminContext'
+import { CustomerTier } from '@/enums'
 import type { Customer, DateRangeType } from '@/types'
 
 import { useFilteredCustomers } from '@/hooks/useFilteredCustomers'
@@ -18,12 +19,18 @@ import { useFilteredCustomers } from '@/hooks/useFilteredCustomers'
 import LockCustomerModal from '@/components/admin/admin-modal/LockCustomerModal'
 import AdminCustomerTable from '../admin-table/AdminCustomerTable'
 
+const TIER_OPTIONS = [
+  { value: '', label: 'Tất cả hạng' },
+  ...Object.values(CustomerTier).map((t) => ({ value: t, label: t }))
+]
+
 export default function AdminCustomersSection() {
   const { t } = useTranslation()
   const { refresh } = useAdmin()
 
   const [filters, setFilters] = useState({
     search: '',
+    tier: '',
     dateRange: null as DateRangeType
   })
 
@@ -34,7 +41,7 @@ export default function AdminCustomersSection() {
 
   const customersQuery = useQuery({
     queryKey: QUERY_KEYS.adminCustomers,
-    queryFn: getAdminCustomers
+    queryFn: () => getAdminCustomers(filters.tier || undefined)
   })
 
   const filteredData = useFilteredCustomers({
@@ -105,6 +112,12 @@ export default function AdminCustomersSection() {
           onChange={({ target: { value } }) =>
             setFilters((prev) => ({ ...prev, search: value }))
           }
+        />
+        <Select
+          value={filters.tier}
+          onChange={(val) => setFilters((prev) => ({ ...prev, tier: val }))}
+          options={TIER_OPTIONS}
+          className="w-40!"
         />
         <DatePicker.RangePicker
           value={filters.dateRange}

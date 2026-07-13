@@ -10,6 +10,7 @@ export type Product = {
   salePriceStartDate?: string | null
   salePriceEndDate?: string | null
   stock: number
+  totalAvailable: number
   soldCount: number
   averageRating: number
   reviewCount: number

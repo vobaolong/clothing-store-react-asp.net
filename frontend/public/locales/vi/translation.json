@@ -471,6 +471,22 @@
     "unreadCount": "{{count}} chưa đọc",
     "altProduct": "Sản phẩm"
   },
+  "tier": {
+    "myTier": "Hạng thành viên",
+    "benefits": "Quyền lợi cho hạng thành viên của bạn",
+    "name": {
+      "bronze": "Đồng",
+      "silver": "Bạc",
+      "gold": "Vàng",
+      "platinum": "Bạch kim",
+      "diamond": "Kim cương"
+    },
+    "nextTier": "Hạng tiếp theo",
+    "totalSpent": "Tổng chi tiêu",
+    "progress": "Tiến trình",
+    "discountPercent": "Giảm giá",
+    "freeShipping": "Free ship"
+  },
   "wishlist": {
     "empty": "Bạn chưa có sản phẩm nào trong danh sách yêu thích."
   },
@@ -809,6 +825,19 @@
     "columnPayment": "Thanh toán",
     "columnImage": "Ảnh",
     "dashboardLoadError": "Không thể tải dữ liệu dashboard",
+    "tier": "Hạng",
+    "totalSpent": "Tổng chi tiêu",
+    "tierConfig": "Cấu hình hạng",
+    "tierConfigEdit": "Chỉnh sửa cấu hình hạng",
+    "tierConfigCreate": "Thêm hạng mới",
+    "tierConfigUpdated": "Đã cập nhật cấu hình hạng",
+    "tierConfigCreated": "Đã thêm hạng mới",
+    "tierConfigDeleted": "Đã xóa cấu hình hạng",
+    "tierConfigDeleteConfirm": "Bạn có chắc muốn xóa cấu hình hạng này?",
+    "tierName": "Hạng",
+    "tierMinSpend": "Chi tiêu tối thiểu",
+    "tierDiscountPercent": "Giảm giá %",
+    "tierFreeShipping": "Miễn phí vận chuyển",
     "noAnalyticsData": "No analytics data",
     "noCategoryData": "Chưa có dữ liệu danh mục",
     "noProductData": "Chưa có dữ liệu sản phẩm",

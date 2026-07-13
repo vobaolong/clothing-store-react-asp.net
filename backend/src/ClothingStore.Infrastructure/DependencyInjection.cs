@@ -34,6 +34,7 @@ public static class DependencyInjection
         });
         services.AddSingleton<IBackgroundEmailQueue, BackgroundEmailQueue>();
         services.AddHostedService<BackgroundEmailSenderService>();
+        services.AddHostedService<TierExpiryBackgroundService>();
         services.AddScoped<IEmailNotificationService, EmailNotificationService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IRememberMeTokenService, RememberMeTokenService>();

@@ -219,6 +219,8 @@ export type Customer = {
   phone: string
   createdAt: string
   status: 'active' | 'locked'
+  tier: string
+  totalSpent: number
 }
 
 export type ProductView = {
@@ -250,6 +252,14 @@ export type AdminBulkPermanentProductsResult = {
 export type LockCustomerResponse = {
   success: boolean
   message?: string
+}
+
+export type TierConfig = {
+  id: string
+  tier: string
+  minSpend: number
+  discountPercent: number
+  freeShipping: boolean
 }
 
 export type AdminProductListMode = 'active' | 'deleted'

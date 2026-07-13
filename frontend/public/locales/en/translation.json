@@ -471,6 +471,22 @@
     "unreadCount": "{{count}} unread",
     "altProduct": "Product"
   },
+  "tier": {
+    "myTier": "My tier",
+    "benefits": "Your tier benefits",
+    "name": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum",
+      "diamond": "Diamond"
+    },
+    "nextTier": "Next tier",
+    "totalSpent": "Total spent",
+    "progress": "Progress",
+    "discountPercent": "Discount",
+    "freeShipping": "Free shipping"
+  },
   "wishlist": {
     "empty": "You don't have any products in your wishlist yet."
   },
@@ -809,6 +825,19 @@
     "columnPayment": "Payment",
     "columnImage": "Image",
     "dashboardLoadError": "Could not load dashboard data",
+    "tier": "Tier",
+    "totalSpent": "Total spent",
+    "tierConfig": "Tier Config",
+    "tierConfigEdit": "Edit Tier Config",
+    "tierConfigCreate": "Add Tier",
+    "tierConfigUpdated": "Tier config updated",
+    "tierConfigCreated": "Tier config created",
+    "tierConfigDeleted": "Tier config deleted",
+    "tierConfigDeleteConfirm": "Are you sure you want to delete this tier config?",
+    "tierName": "Tier",
+    "tierMinSpend": "Min Spend",
+    "tierDiscountPercent": "Discount %",
+    "tierFreeShipping": "Free Shipping",
     "noAnalyticsData": "No analytics data",
     "noCategoryData": "No category data",
     "noProductData": "No product data",

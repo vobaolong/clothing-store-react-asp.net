@@ -1,3 +1,5 @@
+using ClothingStore.Domain.Enums;
+
 namespace ClothingStore.Domain.Entities;
 
 public class User : BaseEntity
@@ -13,4 +15,7 @@ public class User : BaseEntity
     public bool IsEmailVerified { get; set; }
     public string? EmailVerificationOtpHash { get; set; }
     public DateTime? EmailVerificationOtpExpiresAt { get; set; }
+    public CustomerTier Tier { get; set; } = CustomerTier.Bronze;
+    public decimal TotalSpent { get; set; }
+    public DateTime? TierActivityAt { get; set; }
 }

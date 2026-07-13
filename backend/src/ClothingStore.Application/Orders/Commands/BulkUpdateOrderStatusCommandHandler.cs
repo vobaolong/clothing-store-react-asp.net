@@ -1,4 +1,5 @@
 using ClothingStore.Application.Common.Interfaces;
+using ClothingStore.Application.Tiers;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using MediatR;
@@ -9,7 +10,8 @@ namespace ClothingStore.Application.Orders.Commands;
 public class BulkUpdateOrderStatusCommandHandler(
     IApplicationDbContext context,
     IEmailTemplateBuilder emailTemplateBuilder,
-    IEmailNotificationService emailNotificationService
+    IEmailNotificationService emailNotificationService,
+    ITierService tierService
 ) : IRequestHandler<BulkUpdateOrderStatusCommand, int>
 {
     public async Task<int> Handle(
@@ -59,8 +61,10 @@ public class BulkUpdateOrderStatusCommandHandler(
         {
             bool justDelivered =
                 request.Status == OrderStatus.Delivered && order.Status != OrderStatus.Delivered;
+            bool leavingDelivered =
+                order.Status == OrderStatus.Delivered && request.Status != OrderStatus.Delivered;
 
-            if (request.Status == OrderStatus.Delivered && order.Status != OrderStatus.Delivered)
+            if (justDelivered)
             {
                 foreach (var item in order.Items)
                 {
@@ -70,11 +74,15 @@ public class BulkUpdateOrderStatusCommandHandler(
 
                 order.PaymentStatus = PaymentStatus.Paid;
                 order.PaidAt ??= DateTime.UtcNow;
+
+                if (order.PaymentMethod == PaymentMethod.COD && order.User != null)
+                {
+                    order.User.TotalSpent += order.TotalAmount;
+                    tierService.TouchActivity(order.User);
+                    await tierService.RecalculateTierAsync(order.User, cancellationToken);
+                }
             }
-            else if (
-                order.Status == OrderStatus.Delivered
-                && request.Status != OrderStatus.Delivered
-            )
+            else if (leavingDelivered)
             {
                 foreach (var item in order.Items)
                 {
@@ -86,6 +94,11 @@ public class BulkUpdateOrderStatusCommandHandler(
                 {
                     order.PaymentStatus = PaymentStatus.Unpaid;
                     order.PaidAt = null;
+                    if (order.User != null)
+                        order.User.TotalSpent = Math.Max(
+                            0m,
+                            order.User.TotalSpent - order.TotalAmount
+                        );
                 }
             }
 

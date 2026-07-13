@@ -34,11 +34,11 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
                 item.ProductId,
                 !string.IsNullOrWhiteSpace(item.ProductName)
                     ? item.ProductName
-                    : (item.Product?.Name ?? string.Empty),
+                    : item.Product?.Name,
                 item.ProductVariantId,
                 !string.IsNullOrWhiteSpace(item.ProductSlug)
                     ? item.ProductSlug
-                    : (item.Product?.Slug ?? string.Empty),
+                    : item.Product?.Slug,
                 item.ProductVariant?.Size,
                 item.ProductVariant?.Color,
                 item.Quantity,

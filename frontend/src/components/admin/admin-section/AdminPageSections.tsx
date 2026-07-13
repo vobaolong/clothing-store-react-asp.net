@@ -9,6 +9,7 @@ const AdminDashboardSection = lazy(() => import('./AdminDashboardSection'))
 const AdminOrdersSection = lazy(() => import('./AdminOrdersSection'))
 const AdminProductsSection = lazy(() => import('./AdminProductsSection'))
 const AdminReviewsSection = lazy(() => import('./AdminReviewsSection'))
+const AdminTierConfigSection = lazy(() => import('./AdminTierConfigSection'))
 
 type AdminPageSectionsProps = {
   activeNav: AdminNavKey
@@ -27,6 +28,7 @@ export default function AdminPageSections({
       {activeNav === AdminNavKey.CUSTOMERS && <AdminCustomersSection />}
       {activeNav === AdminNavKey.COUPONS && <AdminCouponsSection />}
       {activeNav === AdminNavKey.BANNERS && <AdminBannersSection />}
+      {activeNav === AdminNavKey.TIER_CONFIG && <AdminTierConfigSection />}
     </Suspense>
   )
 }

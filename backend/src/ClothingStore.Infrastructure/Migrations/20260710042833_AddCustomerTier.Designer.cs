@@ -3,6 +3,7 @@ using System;
 using ClothingStore.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingStore.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260710042833_AddCustomerTier")]
+    partial class AddCustomerTier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,7 +209,7 @@ namespace ClothingStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ChangedById")
+                    b.Property<Guid>("ChangedById")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -231,36 +234,6 @@ namespace ClothingStore.Infrastructure.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("CustomerTierChangeLogs");
-                });
-
-            modelBuilder.Entity("ClothingStore.Domain.Entities.CustomerTierConfig", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("DiscountPercent")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<bool>("FreeShipping")
-                        .HasColumnType("boolean");
-
-                    b.Property<decimal>("MinSpend")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Tier")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Tier")
-                        .IsUnique();
-
-                    b.ToTable("CustomerTierConfigs");
                 });
 
             modelBuilder.Entity("ClothingStore.Domain.Entities.Notification", b =>
@@ -779,9 +752,6 @@ namespace ClothingStore.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("Bronze");
 
-                    b.Property<DateTime?>("TierActivityAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal>("TotalSpent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("numeric")
@@ -791,8 +761,6 @@ namespace ClothingStore.Infrastructure.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
-
-                    b.HasIndex("TierActivityAt");
 
                     b.ToTable("Users");
                 });
@@ -864,7 +832,8 @@ namespace ClothingStore.Infrastructure.Migrations
                     b.HasOne("ClothingStore.Domain.Entities.User", "ChangedBy")
                         .WithMany()
                         .HasForeignKey("ChangedById")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ClothingStore.Domain.Entities.User", "Customer")
                         .WithMany()

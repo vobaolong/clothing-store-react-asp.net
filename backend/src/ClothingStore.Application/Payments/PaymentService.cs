@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using ClothingStore.Application.Common.Interfaces;
+using ClothingStore.Application.Tiers;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ public class PaymentService(
     IApplicationDbContext context,
     IEmailTemplateBuilder emailTemplateBuilder,
     IEmailNotificationService emailNotificationService,
-    IMemoryCache memoryCache
+    IMemoryCache memoryCache,
+    ITierService tierService
 ) : IPaymentService
 {
     public async Task<Order?> FindOrderForPaymentResultAsync(
@@ -107,6 +109,16 @@ public class PaymentService(
         }
 
         await context.SaveChangesAsync(ct);
+
+        // Recalculate customer tier after order paid
+        var userForTier = await context.Users.FirstOrDefaultAsync(u => u.Id == order.UserId, ct);
+        if (userForTier != null)
+        {
+            userForTier.TotalSpent += order.TotalAmount;
+            tierService.TouchActivity(userForTier);
+            await tierService.RecalculateTierAsync(userForTier, ct);
+            await context.SaveChangesAsync(ct);
+        }
 
         memoryCache.Remove($"vnpay_order_{order.Id}");
         if (!string.IsNullOrWhiteSpace(order.IdempotencyKey))

@@ -3,9 +3,18 @@ import { Table, Tag, Tooltip, Button, Empty } from 'antd'
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons'
 import type { TablePaginationConfig, ColumnsType } from 'antd/es/table'
 import type { Customer } from '@/types'
-import { formatDate } from '@/utils/format'
+import { formatCurrency, formatDate } from '@/utils/format'
 import { getVietnameseLabel } from '@/constants/i18n.constant'
+import { CustomerTier } from '@/enums'
 import { useTranslation } from 'react-i18next'
+
+const TIER_COLORS: Record<string, string> = {
+  [CustomerTier.BRONZE]: '#cd7f32',
+  [CustomerTier.SILVER]: '#a0a0a0',
+  [CustomerTier.GOLD]: '#d4af37',
+  [CustomerTier.PLATINUM]: '#6b5b95',
+  [CustomerTier.DIAMOND]: '#4fd2c2'
+}
 
 interface AdminCustomerTableProps {
   dataSource: Customer[]
@@ -47,6 +56,25 @@ export default function AdminCustomerTable({
       { title: t('admin.columnName'), dataIndex: 'name', key: 'name' },
       { title: t('admin.columnPhone'), dataIndex: 'phone', key: 'phone' },
       { title: t('auth.email'), dataIndex: 'email', key: 'email' },
+      {
+        title: t('admin.tier'),
+        dataIndex: 'tier',
+        key: 'tier',
+        align: 'center',
+        width: 100,
+        render: (tier: string) => (
+          <Tag color={TIER_COLORS[tier] ?? '#cd7f32'}>
+            {getVietnameseLabel(tier)}
+          </Tag>
+        )
+      },
+      {
+        title: t('admin.totalSpent'),
+        dataIndex: 'totalSpent',
+        key: 'totalSpent',
+        align: 'right',
+        render: (val: number) => formatCurrency(val)
+      },
       {
         title: t('common.status'),
         dataIndex: 'status',

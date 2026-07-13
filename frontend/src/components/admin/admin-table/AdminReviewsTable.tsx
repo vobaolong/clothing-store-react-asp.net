@@ -75,17 +75,11 @@ export default function AdminReviewsTable({
         width: 280,
         render: (_, row) => (
           <div className="flex items-center gap-3">
-            {row.productImage ? (
-              <img
-                src={row.productImage}
-                alt={row.productName}
-                className="size-10 object-cover rounded-md border border-slate-100 shrink-0"
-              />
-            ) : (
-              <div className="size-10 flex items-center justify-center rounded-md border border-slate-100 text-slate-400 text-[10px] font-bold shrink-0">
-                {t('common.noImage')}
-              </div>
-            )}
+            <img
+              src={row.productImage}
+              alt={row.productName}
+              className="size-15 object-cover rounded-md border border-slate-100 shrink-0"
+            />
             <span className="font-medium line-clamp-2 max-w-50">
               {row.productName}
             </span>

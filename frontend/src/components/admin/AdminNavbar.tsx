@@ -4,6 +4,7 @@ import {
   FolderOutlined,
   InboxOutlined,
   PictureOutlined,
+  RiseOutlined,
   SkinOutlined,
   TagsOutlined,
   AreaChartOutlined
@@ -60,6 +61,11 @@ const navItems = (t: TFunction): MenuProps['items'] => [
     key: AdminNavKey.BANNERS,
     icon: <PictureOutlined />,
     label: t('admin.banners')
+  },
+  {
+    key: AdminNavKey.TIER_CONFIG,
+    icon: <RiseOutlined />,
+    label: t('admin.tierConfig')
   }
 ]
 

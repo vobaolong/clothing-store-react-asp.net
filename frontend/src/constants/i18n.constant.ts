@@ -5,7 +5,8 @@ import {
   CouponDiscountType,
   CouponStatus,
   CategoryGender,
-  CategoryType
+  CategoryType,
+  CustomerTier
 } from '@/enums'
 import i18n from 'i18next'
 
@@ -37,6 +38,12 @@ const LABEL_KEY_MAP: Record<string, string> = {
   [CategoryType.CLOTHING]: 'product.clothing',
   [CategoryType.SHOES]: 'product.shoes',
   [CategoryType.ACCESSORIES]: 'product.accessories',
+
+  [CustomerTier.BRONZE]: 'tier.name.bronze',
+  [CustomerTier.SILVER]: 'tier.name.silver',
+  [CustomerTier.GOLD]: 'tier.name.gold',
+  [CustomerTier.PLATINUM]: 'tier.name.platinum',
+  [CustomerTier.DIAMOND]: 'tier.name.diamond',
 
   active: 'common.active',
   locked: 'common.locked',

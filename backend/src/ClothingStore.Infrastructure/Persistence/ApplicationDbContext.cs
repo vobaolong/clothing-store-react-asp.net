@@ -27,6 +27,8 @@ public class ApplicationDbContext(
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<RememberMeToken> RememberMeTokens => Set<RememberMeToken>();
+    public DbSet<CustomerTierChangeLog> CustomerTierChangeLogs => Set<CustomerTierChangeLog>();
+    public DbSet<CustomerTierConfig> CustomerTierConfigs => Set<CustomerTierConfig>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +42,8 @@ public class ApplicationDbContext(
         ConfigureWishlist(modelBuilder);
         ConfigureCartItem(modelBuilder);
         ConfigureRememberMeToken(modelBuilder);
+        ConfigureUser(modelBuilder);
+        ConfigureCustomerTierConfig(modelBuilder);
         ConfigureSoftDeleteQueryFilters(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
@@ -335,6 +339,52 @@ public class ApplicationDbContext(
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             e.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
+        });
+    }
+
+    private static void ConfigureUser(ModelBuilder modelBuilder)
+    {
+        var tierConverter = new ValueConverter<CustomerTier, string>(
+            v => v.ToString(),
+            v => Enum.Parse<CustomerTier>(v, true)
+        );
+
+        modelBuilder.Entity<User>(e =>
+        {
+            e.Property(x => x.Tier)
+                .HasConversion(tierConverter)
+                .HasDefaultValue(CustomerTier.Bronze);
+            e.Property(x => x.TotalSpent).HasDefaultValue(0m);
+            e.HasIndex(x => x.TierActivityAt);
+        });
+
+        modelBuilder.Entity<CustomerTierChangeLog>(e =>
+        {
+            e.HasOne(x => x.Customer)
+                .WithMany()
+                .HasForeignKey(x => x.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.ChangedBy)
+                .WithMany()
+                .HasForeignKey(x => x.ChangedById)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+        });
+    }
+
+    private static void ConfigureCustomerTierConfig(ModelBuilder modelBuilder)
+    {
+        var tierConverter = new ValueConverter<CustomerTier, string>(
+            v => v.ToString(),
+            v => Enum.Parse<CustomerTier>(v, true)
+        );
+
+        modelBuilder.Entity<CustomerTierConfig>(e =>
+        {
+            e.HasIndex(x => x.Tier).IsUnique();
+            e.Property(x => x.Tier).HasConversion(tierConverter).IsRequired();
+            e.Property(x => x.MinSpend).HasColumnType("decimal(18,2)");
+            e.Property(x => x.DiscountPercent).HasColumnType("decimal(5,2)");
         });
     }
 

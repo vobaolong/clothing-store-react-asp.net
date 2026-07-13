@@ -20,6 +20,7 @@ public class GetAdminReviewsQueryHandler(IApplicationDbContext context)
         var query = context
             .Reviews.AsNoTracking()
             .Include(r => r.User)
+            .Include(r => r.Product)
             .OrderByDescending(r => r.CreatedAt);
 
         var total = await query.CountAsync(ct);
@@ -40,11 +41,11 @@ public class GetAdminReviewsQueryHandler(IApplicationDbContext context)
             .Select(x => new AdminReviewDto(
                 x.Review.Id,
                 x.Review.ProductId,
-                x.Review.Product?.Name ?? string.Empty,
-                x.FirstVariantImageUrl ?? string.Empty,
+                x.Review.Product?.Name,
+                x.FirstVariantImageUrl,
                 x.Review.UserId,
-                x.Review.User?.Email ?? string.Empty,
-                x.Review.User?.FullName ?? string.Empty,
+                x.Review.User?.Email,
+                x.Review.User?.FullName,
                 x.Review.Rating,
                 x.Review.Comment,
                 string.IsNullOrWhiteSpace(x.Review.Tags)
