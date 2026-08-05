@@ -1,6 +1,9 @@
+using System.Net.Http;
+using ClothingStore.Application.AI;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Infrastructure.Persistence;
 using ClothingStore.Infrastructure.Security;
+using ClothingStore.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +41,25 @@ public static class DependencyInjection
         services.AddScoped<IEmailNotificationService, EmailNotificationService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IRememberMeTokenService, RememberMeTokenService>();
+        services.AddSingleton<HttpClient>(_ =>
+        {
+            var handler = new SocketsHttpHandler
+            {
+                // Windows schannel revocation check can fail on some networks
+                SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+                {
+                    CertificateRevocationCheckMode = System
+                        .Security
+                        .Cryptography
+                        .X509Certificates
+                        .X509RevocationMode
+                        .NoCheck,
+                },
+            };
+            return new HttpClient(handler);
+        });
+        services.AddScoped<IAiService, GeminiChatService>();
+        services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
 
         return services;
     }

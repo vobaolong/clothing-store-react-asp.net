@@ -41,11 +41,11 @@ public class GetAdminReviewsQueryHandler(IApplicationDbContext context)
             .Select(x => new AdminReviewDto(
                 x.Review.Id,
                 x.Review.ProductId,
-                x.Review.Product?.Name,
-                x.FirstVariantImageUrl,
+                x.Review.Product!.Name!,
+                x.FirstVariantImageUrl!,
                 x.Review.UserId,
-                x.Review.User?.Email,
-                x.Review.User?.FullName,
+                x.Review.User!.Email!,
+                x.Review.User!.FullName!,
                 x.Review.Rating,
                 x.Review.Comment,
                 string.IsNullOrWhiteSpace(x.Review.Tags)

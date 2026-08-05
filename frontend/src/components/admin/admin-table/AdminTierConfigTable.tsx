@@ -9,15 +9,23 @@ import { useTranslation } from 'react-i18next'
 interface AdminTierConfigTableProps {
   dataSource: TierConfig[]
   loading: boolean
+  current: number
+  pageSize: number
   onEdit: (config: TierConfig) => void
   onDelete: (config: TierConfig) => void
+  totalCount: number
+  onPaginationChange: (page: number, pageSize: number) => void
 }
 
 export default function AdminTierConfigTable({
   dataSource,
   loading,
+  current,
+  pageSize,
   onEdit,
-  onDelete
+  onDelete,
+  totalCount,
+  onPaginationChange
 }: AdminTierConfigTableProps) {
   const { t } = useTranslation()
 
@@ -27,8 +35,11 @@ export default function AdminTierConfigTable({
         title: '#',
         key: 'index',
         align: 'center',
-        width: 60,
-        render: (_, __, index) => index + 1
+        width: 70,
+        fixed: 'left',
+        render: (_, __, index) => {
+          return (current - 1) * pageSize + index + 1
+        }
       },
       {
         title: t('admin.tierName'),
@@ -93,7 +104,7 @@ export default function AdminTierConfigTable({
         )
       }
     ],
-    [onEdit, onDelete, t]
+    [onEdit, onDelete, t, current, pageSize]
   )
 
   return (
@@ -104,8 +115,18 @@ export default function AdminTierConfigTable({
       dataSource={dataSource}
       columns={columns}
       size="small"
-      pagination={false}
+      pagination={{
+        current,
+        pageSize,
+        total: totalCount,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        showTotal: (total) =>
+          `${t('common.total')}: ${total} ${t('admin.tierConfig').toLowerCase()}`,
+        onChange: onPaginationChange
+      }}
       locale={{ emptyText: <Empty description={t('common.noData')} /> }}
+      scroll={{ x: 'max-content' }}
     />
   )
 }

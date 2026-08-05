@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { formatCurrency } from '@/utils/format'
 import type { MyOrderItem } from '@/types/order.type'
 import { useTranslation } from 'react-i18next'
+import { lp } from '@/utils/language-path'
 
 interface OrderDetailItemsTableProps {
   items: MyOrderItem[]
@@ -20,6 +21,8 @@ export default function OrderDetailItemsTable({
       className="rounded-md overflow-hidden"
       pagination={false}
       dataSource={items}
+      size="small"
+      scroll={{ x: 'max-content' }}
       locale={{ emptyText: <Empty description={t('common.noData')} /> }}
       columns={[
         {
@@ -27,7 +30,7 @@ export default function OrderDetailItemsTable({
           dataIndex: 'productName',
           render: (_, row) => (
             <Link
-              to={`/products/${row.productSlug}`}
+              to={lp(`/products/${row.productSlug}`)}
               className="flex gap-2 items-center text-black! dark:text-white! hover:text-blue-500! dark:hover:text-blue-400! line-clamp-2 max-w-56"
             >
               <img

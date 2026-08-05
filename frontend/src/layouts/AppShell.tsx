@@ -28,6 +28,7 @@ import { formatCurrency } from '@/utils/format'
 import { getCartLineImage } from '@/utils/product-color-images'
 import { getCartLineEffectivePrice } from '@/utils/product-pricing'
 import CartQuantityControl from '@/components/CartQuantityControl'
+import AiChat from '@/components/ai/AiChat'
 import { logout, selectAuth } from '@/state/auth'
 import { logoutApi } from '@/api/auth-api'
 import { lp } from '@/utils/language-path'
@@ -105,6 +106,7 @@ export default function AppShell() {
 				</div>
 			</Content>
 			{!isAdminUser && <Footer />}
+			{!isAdminUser && <AiChat />}
 
 			<Drawer
 				title={t('header.cartTitle')}

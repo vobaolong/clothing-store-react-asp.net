@@ -106,13 +106,17 @@ export default function VerifyOtpPage() {
           onClick={handleManualSubmit}
           icon={verifyMutation.isPending ? <LoadingOutlined /> : undefined}
         >
-          {verifyMutation.isPending ? t('auth.verifying') : t('auth.verifyOtpButton')}
+          {verifyMutation.isPending
+            ? t('auth.verifying')
+            : t('auth.verifyOtpButton')}
         </Button>
 
         <div className="text-sm text-center text-slate-500 mt-4">
           {t('auth.didNotReceiveCode')}{' '}
           {resendDown > 0 ? (
-            <span className="text-slate-400">{t('auth.resendAfter', { s: resendDown })}</span>
+            <span className="text-slate-400">
+              {t('auth.resendAfter', { s: resendDown })}
+            </span>
           ) : (
             <button
               type="button"
@@ -120,7 +124,8 @@ export default function VerifyOtpPage() {
               onClick={() => resendMutation.mutate({ email })}
               className="inline-flex gap-1 items-center font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
             >
-              <ReloadOutlined spin={resendMutation.isPending} /> {t('auth.resendCode')}
+              <ReloadOutlined spin={resendMutation.isPending} />{' '}
+              {t('auth.resendCode')}
             </button>
           )}
         </div>

@@ -65,9 +65,11 @@ function buildTimelineItems(
       return {
         color: timelineColorForStatus(step.status),
         content: (
-          <div className="flex justify-between">
-            <span>{stepKey ? t(stepKey) : step.status}</span>
-            <span className="text-sm! text-slate-500">
+          <div className="flex justify-between gap-2!">
+            <span className="max-w-[60%]">
+              {stepKey ? t(stepKey) : step.status}
+            </span>
+            <span className="text-sm! text-slate-500 truncate">
               {formatDate(step.changedAt)}
             </span>
           </div>

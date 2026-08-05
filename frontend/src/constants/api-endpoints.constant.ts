@@ -68,6 +68,9 @@ export const API_ENDPOINTS = {
   tiers: {
     my: '/tiers/my'
   },
+  ai: {
+    chat: '/ai/chat'
+  },
   payments: {
     vnpayCreateUrl: '/payments/vnpay/create-url',
     vnpayReturn: '/payments/vnpay/return'

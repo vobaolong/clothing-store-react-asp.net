@@ -10,6 +10,7 @@ using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Infrastructure;
 using ClothingStore.Infrastructure.Persistence;
+using ClothingStore.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -119,7 +120,7 @@ builder.Services.AddCors(options =>
                 .AllowCredentials()
     )
 );
-
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 var app = builder.Build();
 
 app.UseMiddleware<ApiExceptionMiddleware>();
@@ -153,7 +154,7 @@ if (autoMigrate)
 }
 
 // ── Middleware Pipeline ──────────────────────────────────────────
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseCors("frontend");
 app.UseAuthentication();
 app.UseAuthorization();

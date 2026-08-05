@@ -198,7 +198,12 @@ function MobileNavDrawer({
   ]
 
   return (
-    <Drawer title={t('header.menuTitle')} placement="left" onClose={onClose} open={open}>
+    <Drawer
+      title={t('header.menuTitle')}
+      placement="left"
+      onClose={onClose}
+      open={open}
+    >
       <div className="flex flex-col gap-4">
         {navItems.map((item) => (
           <Link
@@ -263,26 +268,38 @@ export default function AppHeader({
 
   const categoryGroups = useCategoryGroups(categories)
 
-  const userMenuItems: MenuProps['items'] = useMemo(() => [
-    { key: 'profile', label: t('header.userProfile'), icon: <UserOutlined /> },
-    {
-      key: 'profile-wishlist',
-      label: t('header.userWishlist'),
-      icon: <HeartOutlined />
-    },
-    {
-      key: 'profile-orders',
-      label: t('header.userOrders'),
-      icon: <OrderedListOutlined />
-    },
-    {
-      key: 'profile-addresses',
-      label: t('header.userAddresses'),
-      icon: <EnvironmentOutlined />
-    },
-    { type: 'divider' },
-    { key: 'logout', label: t('header.logout'), danger: true, icon: <LogoutOutlined /> }
-  ], [t])
+  const userMenuItems: MenuProps['items'] = useMemo(
+    () => [
+      {
+        key: 'profile',
+        label: t('header.userProfile'),
+        icon: <UserOutlined />
+      },
+      {
+        key: 'profile-wishlist',
+        label: t('header.userWishlist'),
+        icon: <HeartOutlined />
+      },
+      {
+        key: 'profile-orders',
+        label: t('header.userOrders'),
+        icon: <OrderedListOutlined />
+      },
+      {
+        key: 'profile-addresses',
+        label: t('header.userAddresses'),
+        icon: <EnvironmentOutlined />
+      },
+      { type: 'divider' },
+      {
+        key: 'logout',
+        label: t('header.logout'),
+        danger: true,
+        icon: <LogoutOutlined />
+      }
+    ],
+    [t]
+  )
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') return onLogout()
@@ -292,7 +309,9 @@ export default function AppHeader({
   const handleSearch = () => {
     const keyword = searchKeyword.trim()
     navigate(
-      keyword ? lp(`/products?search=${encodeURIComponent(keyword)}`) : lp('/products')
+      keyword
+        ? lp(`/products?search=${encodeURIComponent(keyword)}`)
+        : lp('/products')
     )
   }
 
@@ -346,7 +365,7 @@ export default function AppHeader({
                 type="text"
                 className="flex items-center justify-center p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 icon={
-                  <Badge count={itemCount} size="small" offset={[3, -2]}>
+                  <Badge count={itemCount} size="small" offset={[6, -5]}>
                     <ShoppingOutlined />
                   </Badge>
                 }

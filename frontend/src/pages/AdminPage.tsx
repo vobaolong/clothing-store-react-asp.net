@@ -5,6 +5,7 @@ import { AdminNavKey, isAdminNavKey } from '@/enums'
 import { useSelector } from 'react-redux'
 import { selectAuthUser } from '@/state/auth'
 import { AdminProvider } from '@/context/AdminProvider'
+import { lp } from '@/utils/language-path'
 
 export default function AdminPage() {
   const { section } = useParams<{ section: string }>()
@@ -18,7 +19,7 @@ export default function AdminPage() {
 
   if (!isAdminUser) return <Navigate to="/" replace />
   if (!section || !isAdminNavKey(section)) {
-    return <Navigate to={`/admin/${AdminNavKey.DASHBOARD}`} replace />
+    return <Navigate to={lp(`/admin/${AdminNavKey.DASHBOARD}`)} replace />
   }
 
   const activeNav = section

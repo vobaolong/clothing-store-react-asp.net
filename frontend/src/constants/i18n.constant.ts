@@ -25,7 +25,7 @@ const LABEL_KEY_MAP: Record<string, string> = {
   [PaymentMethod.VNPAY]: 'payment.vnPay',
 
   [CouponDiscountType.PERCENT]: 'coupon.percent',
-  [CouponDiscountType.FLAT]: 'coupon.fixed',
+  [CouponDiscountType.FLAT]: 'coupon.flat',
 
   [CouponStatus.ACTIVE]: 'coupon.active',
   [CouponStatus.INACTIVE]: 'coupon.inactive',

@@ -20,6 +20,7 @@ export default function AdminTierConfigSection() {
   const { t } = useTranslation()
   const { refresh } = useAdmin()
   const [editingConfig, setEditingConfig] = useState<TierConfig | null>(null)
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
   const [isCreating, setIsCreating] = useState(false)
 
   const configsQuery = useQuery({
@@ -38,7 +39,11 @@ export default function AdminTierConfigSection() {
       payload
     }: {
       tier: string
-      payload: { minSpend: number; discountPercent: number; freeShipping: boolean }
+      payload: {
+        minSpend: number
+        discountPercent: number
+        freeShipping: boolean
+      }
     }) => updateAdminTierConfig(tier, payload),
     onSuccess: async () => {
       toast.success(t('admin.tierConfigUpdated'))
@@ -86,15 +91,25 @@ export default function AdminTierConfigSection() {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsCreating(true)}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsCreating(true)}
+        >
           {t('common.add')}
         </Button>
       </div>
       <AdminTierConfigTable
         dataSource={configsQuery.data ?? []}
         loading={configsQuery.isLoading}
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        totalCount={configsQuery.data?.length ?? 0}
         onEdit={setEditingConfig}
         onDelete={handleDelete}
+        onPaginationChange={(page, pageSize) =>
+          setPagination({ current: page, pageSize })
+        }
       />
       <TierConfigModal
         key={editingConfig?.id ?? 'create'}

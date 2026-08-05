@@ -130,7 +130,7 @@ export default function LoginPage() {
         <p className="mt-4! text-center text-sm text-slate-500">
           {t('auth.noAccount')}{' '}
           <Link
-            to="/register"
+            to={lp('/register')}
             className="text-indigo-600 hover:text-indigo-500"
           >
             {t('auth.registerNow')}

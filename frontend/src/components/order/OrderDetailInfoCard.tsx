@@ -38,7 +38,7 @@ export default function OrderDetailInfoCard({
 
   return (
     <Card className="rounded-2xl" title={t('order.orderInfo')}>
-      <Descriptions column={2} bordered size="small">
+      <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
         <Descriptions.Item label={t('order.orderId')}>
           {detail.id.slice(0, 8).toUpperCase()}
         </Descriptions.Item>

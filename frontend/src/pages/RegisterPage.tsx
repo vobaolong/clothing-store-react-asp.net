@@ -208,7 +208,7 @@ export default function RegisterPage() {
         <div className="mt-5 text-sm text-center text-slate-500">
           {t('auth.hasAccount')}{' '}
           <Link
-            to="/login"
+            to={lp('/login')}
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             {t('auth.login')}

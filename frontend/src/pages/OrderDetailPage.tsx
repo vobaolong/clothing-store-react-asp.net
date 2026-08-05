@@ -157,7 +157,7 @@ export default function OrderDetailPage() {
         onReview={setReviewingItemId}
       />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <OrderDetailTimelineCard detail={detail} histories={histories} />
         <OrderDetailTotalsCard
           detail={detail}
