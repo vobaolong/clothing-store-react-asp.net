@@ -57,7 +57,7 @@ export default function ReviewForm({
           placeholder={t('review.reviewCommentPlaceholder') as string}
         />
       </Form.Item>
-      <div className="flex gap-2 justify-end items-center">
+      <div className="flex items-center justify-end gap-2">
         {onCancel ? (
           <Button onClick={onCancel} disabled={loading}>
             {t('common.cancel')}
@@ -67,7 +67,7 @@ export default function ReviewForm({
           type="primary"
           htmlType="submit"
           loading={loading}
-          className="px-6 h-10 rounded-xl"
+          className="h-10 px-6 rounded-xl"
         >
           {t('review.submitReview')}
         </Button>

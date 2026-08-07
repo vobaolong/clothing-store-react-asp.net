@@ -108,16 +108,16 @@ export default function NotificationsSection() {
                 return (
                   <div
                     key={orderId}
-                    className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-600"
+                    className="overflow-hidden border rounded-lg border-slate-200 dark:border-slate-600"
                   >
                     <button
                       type="button"
-                      className="p-4 w-full text-left transition-colors cursor-pointer hover:bg-black/10 dark:hover:bg-white/10"
+                      className="w-full p-4 text-left cursor-pointer transition-colors hover:bg-black/10 dark:hover:bg-white/10"
                       onClick={() => toggleGroup(orderId)}
                     >
-                      <div className="flex gap-3 justify-between items-start">
-                        <div className="flex flex-1 gap-3 items-start min-w-0">
-                          <div className="flex justify-center items-center w-14 h-14 text-xl rounded-md shrink-0 bg-slate-100">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start flex-1 min-w-0 gap-3">
+                          <div className="flex items-center justify-center text-xl w-14 h-14 rounded-md shrink-0 bg-slate-100">
                             {thumbnailUrl ? (
                               <img
                                 src={thumbnailUrl}
@@ -129,7 +129,7 @@ export default function NotificationsSection() {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <div className="flex flex-wrap gap-2 items-center">
+                            <div className="flex flex-wrap items-center gap-2">
                               <div className="font-semibold truncate">
                                 {latest.title}
                               </div>
@@ -145,7 +145,7 @@ export default function NotificationsSection() {
                             </div>
                           </div>
                         </div>
-                        <div className="flex gap-3 items-center shrink-0">
+                        <div className="flex items-center gap-3 shrink-0">
                           <div className="text-xs text-slate-400">
                             {formatDate(latest.createdAt)}
                           </div>
@@ -168,9 +168,9 @@ export default function NotificationsSection() {
                               onClick={() => {
                                 if (!item.isRead) markAsRead(item.id)
                               }}
-                              className="block relative px-4 py-3 w-full text-left rounded-md transition-colors cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10"
+                              className="relative block w-full px-4 py-3 text-left cursor-pointer rounded-md transition-colors hover:bg-slate-200 dark:hover:bg-white/10"
                             >
-                              <div className="flex absolute top-0 left-0 justify-center w-7 h-full">
+                              <div className="absolute top-0 left-0 flex justify-center h-full w-7">
                                 <span
                                   className={`absolute left-3.25 top-2 h-2.5 w-2.5 rounded-full ${item.isRead ? 'bg-slate-300' : 'bg-blue-500'}`}
                                 />
@@ -179,7 +179,7 @@ export default function NotificationsSection() {
                                 )}
                               </div>
                               <div className="pl-6">
-                                <div className="flex gap-3 justify-between items-start">
+                                <div className="flex items-start justify-between gap-3">
                                   <div className="font-medium text-slate-900 dark:text-slate-300">
                                     {item.title}
                                   </div>
@@ -215,9 +215,9 @@ export default function NotificationsSection() {
                 onClick={() => {
                   if (!it.isRead) markAsRead(it.id)
                 }}
-                className="p-4 w-full text-left bg-white rounded-md border transition-colors border-slate-200 hover:bg-slate-50"
+                className="w-full p-4 text-left bg-white border rounded-md transition-colors border-slate-200 hover:bg-slate-50"
               >
-                <div className="flex gap-3 justify-between items-start">
+                <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="font-medium text-slate-900">{it.title}</div>
                     <div className="mt-1 text-sm text-slate-600">

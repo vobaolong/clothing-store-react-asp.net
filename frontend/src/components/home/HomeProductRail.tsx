@@ -35,7 +35,7 @@ export default function HomeProductRail({
   return (
     <ScrollReveal direction="up">
       <section>
-        <div className="flex gap-4 justify-between items-end mb-4">
+        <div className="flex items-end justify-between mb-4 gap-4">
           <h2 className="text-xl font-bold tracking-tight md:text-2xl">
             {title}
           </h2>
@@ -59,7 +59,7 @@ export default function HomeProductRail({
           className="pb-1 home-hero-carousel"
         >
           {products.map((product) => (
-            <div key={product.id} className="px-2 h-full">
+            <div key={product.id} className="h-full px-2">
               <ProductCard product={product} mode="catalog" />
             </div>
           ))}

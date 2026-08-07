@@ -101,7 +101,7 @@ export default function AppShell() {
 				categories={categoriesQuery.data ?? []}
 			/>
 			<Content className="flex-1 min-h-[90vh]! mx-auto w-full pb-8 lg:pt-30 pt-18 md:px-8! px-4">
-				<div className="w-full gap-4 pt-4 mx-auto max-w-7xl">
+				<div className="w-full pt-4 mx-auto gap-4 max-w-7xl">
 					<Outlet />
 				</div>
 			</Content>
@@ -119,13 +119,13 @@ export default function AppShell() {
 					<Empty description={t('header.cartEmpty')} />
 				) : (
 					<div className="flex flex-col h-full min-h-0">
-						<div className="flex flex-col flex-1 min-h-0 gap-4 pr-1 overflow-y-auto">
+						<div className="flex flex-col flex-1 min-h-0 pr-1 overflow-y-auto gap-4">
 							{cartItems.map((item) => {
 								const thumb = getCartLineImage(item).trim()
 								return (
 									<div
 										key={`${item.id}-${item.productVariantId}`}
-										className="flex flex-col gap-3 pb-4 border-b border-slate-100 sm:flex-row sm:items-start sm:justify-between dark:border-gray-700"
+										className="flex flex-col pb-4 border-b gap-3 border-slate-100 sm:flex-row sm:items-start sm:justify-between dark:border-gray-700"
 									>
 										<div className="flex flex-1 min-w-0 gap-3">
 											{thumb ? (

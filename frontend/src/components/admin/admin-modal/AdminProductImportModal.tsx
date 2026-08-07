@@ -132,7 +132,7 @@ export default function AdminProductImportModal({
         ) : null}
 
         {result ? (
-          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
             <Typography.Title level={5} className="mb-3!">
               {t('admin.importResultTitle')}
             </Typography.Title>
@@ -159,12 +159,12 @@ export default function AdminProductImportModal({
                 <Typography.Text strong className="block mb-2">
                   {t('admin.importRowErrors')}
                 </Typography.Text>
-                <div className="overflow-auto max-h-64 bg-white rounded-md border border-red-200">
+                <div className="overflow-auto bg-white border border-red-200 max-h-64 rounded-md">
                   <table className="w-full text-sm text-left">
                     <thead className="sticky top-0 text-red-700 bg-red-50">
                       <tr>
-                        <th className="py-2 px-3">{t('admin.importFailedRows')}</th>
-                        <th className="py-2 px-3">{t('common.error')}</th>
+                        <th className="px-3 py-2">{t('admin.importFailedRows')}</th>
+                        <th className="px-3 py-2">{t('common.error')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -173,10 +173,10 @@ export default function AdminProductImportModal({
                           key={`${errorRow.rowNumber}-${errorRow.error}`}
                           className="border-t"
                         >
-                          <td className="py-2 px-3 font-medium align-top">
+                          <td className="px-3 py-2 font-medium align-top">
                             {errorRow.rowNumber}
                           </td>
-                          <td className="py-2 px-3">{errorRow.error}</td>
+                          <td className="px-3 py-2">{errorRow.error}</td>
                         </tr>
                       ))}
                     </tbody>

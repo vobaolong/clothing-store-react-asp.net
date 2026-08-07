@@ -89,7 +89,7 @@ export default function PasswordDialog({
           <p className="text-sm font-medium text-slate-700">
             Sử dụng mật khẩu dạng:
           </p>
-          <ul className="mt-2 space-y-1 text-sm text-slate-500">
+          <ul className="mt-2 text-sm space-y-1 text-slate-500">
             {passwordRules.map((rule) => (
               <li key={rule}>- {rule}</li>
             ))}

@@ -82,7 +82,7 @@ export default function ProductGallery({
   }, [thumbStripClamped, currentImage, galleryImages])
 
   return (
-    <div className="flex gap-3 items-start sm:gap-4">
+    <div className="flex items-start gap-3 sm:gap-4">
       {galleryImages.length > 1 ? (
         <div className="flex flex-col w-16 shrink-0 sm:w-20">
           <div
@@ -120,13 +120,13 @@ export default function ProductGallery({
             })}
           </div>
           {thumbStripClamped ? (
-            <div className="flex gap-1 justify-center mt-2">
+            <div className="flex justify-center mt-2 gap-1">
               <button
                 type="button"
                 aria-label={t('product.thumbnailTop')}
                 disabled={thumbScrollEdges.atTop}
                 onClick={() => scrollProductThumbs('up')}
-                className="flex justify-center items-center bg-white rounded-md border transition-colors cursor-pointer size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex items-center justify-center bg-white border cursor-pointer rounded-md transition-colors size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"
               >
                 <UpOutlined className="text-xs" />
               </button>
@@ -135,7 +135,7 @@ export default function ProductGallery({
                 aria-label={t('product.thumbnailBottom')}
                 disabled={thumbScrollEdges.atBottom}
                 onClick={() => scrollProductThumbs('down')}
-                className="flex justify-center items-center bg-white rounded-md border transition-colors cursor-pointer size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex items-center justify-center bg-white border cursor-pointer rounded-md transition-colors size-8 border-stone-200 text-stone-600 hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-35"
               >
                 <DownOutlined className="text-xs" />
               </button>
@@ -146,7 +146,7 @@ export default function ProductGallery({
 
       <div className="flex-1 min-w-0">
         <Image.PreviewGroup items={galleryImages.map((src) => ({ src }))}>
-          <div className="overflow-hidden relative w-full bg-white rounded-xl group aspect-square">
+          <div className="relative w-full overflow-hidden bg-white rounded-xl group aspect-square">
             <Image
               src={currentImage}
               alt={productName}

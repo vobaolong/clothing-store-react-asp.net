@@ -28,7 +28,7 @@ export default function AdminReviewsSelectionActions({
 	}
 
 	return (
-		<div className="fixed z-50 p-4 -translate-x-1/2 rounded-lg shadow-lg card left-1/2 top-4/5">
+		<div className="fixed z-50 p-4 rounded-lg shadow-lg -translate-x-1/2 card left-1/2 top-4/5">
 			<div className="flex flex-col items-center gap-4 sm:flex-row">
 				<Tag
 					icon={<CheckCircleOutlined />}

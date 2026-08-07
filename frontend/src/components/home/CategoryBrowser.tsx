@@ -28,9 +28,9 @@ export default function CategoryBrowser({
 
   return (
     <ScrollReveal direction="up" className="relative">
-      <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-200 h-75 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute rounded-full pointer-events-none -top-20 left-1/2 -translate-x-1/2 w-200 h-75 blur-3xl" />
 
-      <div className="flex flex-wrap gap-3 items-center mb-5 relative z-10">
+      <div className="relative z-10 flex flex-wrap items-center mb-5 gap-3">
         {rootCategories.map(({ id, name }) => (
           <button
             onClick={() => setSelectedRootId(id)}
@@ -54,7 +54,7 @@ export default function CategoryBrowser({
           slidesToScroll={1}
           infinite={false}
           responsive={CATEGORY_CAROUSEL_RESPONSIVE}
-          className="home-hero-carousel relative z-10"
+          className="relative z-10 home-hero-carousel"
         >
           {childCategories.map((cat) => (
             <div key={cat.id} className="px-2 pt-4">

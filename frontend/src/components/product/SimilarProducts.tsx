@@ -17,7 +17,7 @@ export default function SimilarProducts({
 
   return (
     <div className="mt-12">
-      <div className="flex items-end justify-between gap-4 mb-6">
+      <div className="flex items-end justify-between mb-6 gap-4">
         <h2 className="text-xl font-semibold md:text-2xl">{t('product.relatedProducts')}</h2>
         <Link
           to={listHref}

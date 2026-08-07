@@ -56,7 +56,7 @@ export default function CartPage() {
 
   if (!items.length)
     return (
-      <Card className="rounded-lg card w-full">
+      <Card className="w-full rounded-lg card">
         <Empty description={t('cart.isEmpty')} className="py-12" />
         <div className="flex justify-center">
           <Link to={lp('/products')}>
@@ -72,7 +72,7 @@ export default function CartPage() {
         className="rounded-lg card"
         title={<span className="text-xl font-semibold">{t('cart.cart')}</span>}
       >
-        <div className="flex justify-between items-center p-3 mb-4 rounded-xl card">
+        <div className="flex items-center justify-between p-3 mb-4 rounded-xl card">
           <Checkbox
             checked={allSelected}
             onChange={(event) =>
@@ -81,7 +81,7 @@ export default function CartPage() {
           >
             {t('cart.selectAll')}
           </Checkbox>
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <span className="text-sm text-slate-500 dark:text-slate-300">
               {t('cart.selected')}: {selectedItems.length}/{items.length}
             </span>
@@ -99,7 +99,7 @@ export default function CartPage() {
             return (
               <div key={`${item.id}-${item.productVariantId}`} className="py-5">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="flex flex-1 gap-3 items-center">
+                  <div className="flex items-center flex-1 gap-3">
                     <Checkbox
                       className="mt-1"
                       checked={item.isSelected}
@@ -117,7 +117,7 @@ export default function CartPage() {
                       <img
                         src={lineImage}
                         alt={item.name}
-                        className="object-cover rounded-xl border size-24 border-slate-200 bg-slate-100"
+                        className="object-cover border rounded-xl size-24 border-slate-200 bg-slate-100"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none'
                         }}
@@ -138,7 +138,7 @@ export default function CartPage() {
                         {item.selectedColor}
                         {item.selectedSize && ` / ${item.selectedSize}`}
                       </span>
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex flex-wrap mt-2 gap-2">
                         <Select
                           value={item.selectedColor}
                           style={{ width: 180 }}
@@ -208,7 +208,7 @@ export default function CartPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-3 items-center">
+                  <div className="flex items-center gap-3">
                     <CartQuantityControl
                       value={item.quantity}
                       min={1}
@@ -247,9 +247,9 @@ export default function CartPage() {
         </div>
       </Card>
 
-      <aside className="sticky top-24 self-start p-5 rounded-lg card">
+      <aside className="sticky self-start p-5 rounded-lg top-24 card">
         <h2 className="mb-4 text-xl font-semibold">{t('checkout.orderSummary')}</h2>
-        <div className="space-y-3 text-sm">
+        <div className="text-sm space-y-3">
           <div className="flex justify-between text-slate-600 dark:text-slate-300">
             <span>{t('cart.subtotal')}</span>
             <span>{formatCurrency(total)}</span>
@@ -265,7 +265,7 @@ export default function CartPage() {
             </span>
           </div>
         </div>
-        <div className="grid gap-2 mt-5">
+        <div className="mt-5 grid gap-2">
           <Link to={lp('/checkout')}>
             <Button
               type="primary"

@@ -56,7 +56,7 @@ export default function AdminReviewsTable({
           <div className="flex items-center gap-2.5">
             <Avatar
               icon={<UserOutlined />}
-              className="bg-blue-50 border border-blue-100 shrink-0"
+              className="border border-blue-100 bg-blue-50 shrink-0"
             />
             <div className="flex flex-col min-w-0">
               <span className="font-semibold truncate max-w-45">
@@ -78,7 +78,7 @@ export default function AdminReviewsTable({
             <img
               src={row.productImage}
               alt={row.productName}
-              className="size-15 object-cover rounded-md border border-slate-100 shrink-0"
+              className="object-cover border size-15 rounded-md border-slate-100 shrink-0"
             />
             <span className="font-medium line-clamp-2 max-w-50">
               {row.productName}
@@ -106,9 +106,9 @@ export default function AdminReviewsTable({
         width: 350,
         render: (_, row) => (
           <div className="space-y-1.5 py-1">
-            <div className="whitespace-pre-line text-sm leading-relaxed">
+            <div className="text-sm leading-relaxed whitespace-pre-line">
               {row.comment || (
-                <span className="text-slate-400 italic text-xs">
+                <span className="text-xs italic text-slate-400">
                   {t('admin.noComment')}
                 </span>
               )}

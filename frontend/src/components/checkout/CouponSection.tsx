@@ -37,7 +37,7 @@ export default function CouponSection({
   return (
     <Card>
       <CheckoutSectionTitle step={2} title={t('checkout.couponCode')} />
-      <div className="flex gap-2 mb-4">
+      <div className="flex mb-4 gap-2">
         <Controller
           name="couponCode"
           control={control}
@@ -69,7 +69,7 @@ export default function CouponSection({
       </div>
 
       {coupon.appliedCode && (
-        <div className="flex gap-2 items-center p-3 mb-4 text-sm text-green-700 bg-green-50 rounded-xl border border-green-200">
+        <div className="flex items-center p-3 mb-4 text-sm text-green-700 border border-green-200 gap-2 bg-green-50 rounded-xl">
           <svg
             className="w-4 h-4 shrink-0"
             fill="none"
@@ -94,7 +94,7 @@ export default function CouponSection({
 
       {(availableCouponsQuery.data ?? []).length > 0 ||
       availableCouponsQuery.isLoading ? (
-        <div className="overflow-y-auto pr-1 max-h-64">
+        <div className="pr-1 overflow-y-auto max-h-64">
           <p className="mb-3 text-xs font-medium tracking-wide uppercase text-slate-400">
             {t('checkout.availableCoupons')}
           </p>

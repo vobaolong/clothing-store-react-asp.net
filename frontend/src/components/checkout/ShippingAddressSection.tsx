@@ -69,7 +69,7 @@ export default function ShippingAddressSection({
                           >
                             <Radio value={addressItem.id}>
                               <div className="ml-1 text-sm">
-                                <p className="flex gap-2 font-medium text-slate-900 dark:text-white">
+                                <p className="flex font-medium gap-2 text-slate-900 dark:text-white">
                                   {addressItem.fullName}
                                   <span className="font-normal text-slate-700 dark:text-slate-400">
                                     {addressItem.phone}

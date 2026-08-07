@@ -86,14 +86,14 @@ export const NotificationCenter = () => {
               e.stopPropagation()
               markAllAsRead()
             }}
-            className="text-sm font-medium cursor-pointer bg-transparent border-0"
+            className="text-sm font-medium bg-transparent border-0 cursor-pointer"
           >
             {t('notification.markAsRead')}
           </button>
         )}
       </div>
 
-      <div className="max-h-72 overflow-y-auto overscroll-contain">
+      <div className="overflow-y-auto max-h-72 overscroll-contain">
         {isLoading ? (
           <div className="flex justify-center py-8">
             <Spin />

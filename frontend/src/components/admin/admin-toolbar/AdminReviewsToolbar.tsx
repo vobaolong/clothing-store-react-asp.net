@@ -27,8 +27,8 @@ export default function AdminReviewsToolbar({
 }: AdminReviewsToolbarProps) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between">
-      <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center max-w-4xl">
+    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col flex-1 max-w-4xl gap-3 sm:flex-row sm:items-center">
         <Input
           allowClear
           prefix={<SearchOutlined className="text-slate-400" />}
@@ -56,7 +56,7 @@ export default function AdminReviewsToolbar({
           <Button
             icon={<ReloadOutlined />}
             onClick={onResetFilters}
-            className="w-full sm:w-auto border-dashed border-slate-300 text-slate-500 hover:text-slate-700 hover:border-slate-400"
+            className="w-full border-dashed sm:w-auto border-slate-300 text-slate-500 hover:text-slate-700 hover:border-slate-400"
           >
             {t('common.reset')}
           </Button>

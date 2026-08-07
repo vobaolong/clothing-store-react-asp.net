@@ -9,11 +9,11 @@ export default function NewsletterSection() {
   return (
     <ScrollReveal>
       <section className="relative overflow-hidden rounded-xl bg-[#8B2332] text-white">
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-2xl" />
-        <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
-        <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-white/10 rounded-full blur-xl" />
+        <div className="absolute w-64 h-64 rounded-full -top-20 -right-20 bg-white/5 blur-2xl" />
+        <div className="absolute w-48 h-48 rounded-full -bottom-10 -left-10 bg-white/5 blur-2xl" />
+        <div className="absolute w-32 h-32 rounded-full top-1/2 left-1/3 bg-white/10 blur-xl" />
 
-        <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center px-8 py-12 md:px-16 md:py-16">
+        <div className="relative z-10 flex flex-col items-center px-8 py-12 md:flex-row gap-8 md:px-16 md:py-16">
           <div className="flex-1 text-center md:text-left">
             <h2 className="text-2xl font-bold md:text-3xl">{t('footer.subscribeTitle')}</h2>
             <p className="mt-2 text-sm text-red-200 md:text-base">
@@ -21,14 +21,14 @@ export default function NewsletterSection() {
             </p>
           </div>
 
-          <form className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <form className="flex flex-col w-full sm:flex-row gap-3 md:w-auto">
             <div className="relative flex-1 min-w-0 md:min-w-72">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('footer.newsletterPlaceholder')}
-                className="w-full px-11 py-3 text-sm text-white placeholder-red-200 bg-white/15 backdrop-blur-xs rounded-full border border-white/20 outline-none focus:bg-white/25 focus:border-white/40 transition-all"
+                className="w-full py-3 text-sm text-white placeholder-red-200 border rounded-full outline-none px-11 bg-white/15 backdrop-blur-xs border-white/20 focus:bg-white/25 focus:border-white/40 transition-all"
                 required
               />
             </div>

@@ -6,7 +6,7 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <section className="rounded-2xl card p-5 sm:p-8">
+      <section className="p-5 rounded-2xl card sm:p-8">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#234483] dark:text-[#a6c0ef]">
             {t('about.title')}
@@ -17,7 +17,7 @@ export default function AboutPage() {
           <p className="mt-6 text-base leading-8 text-[#0F1E3C]/80 dark:text-[#94a3b8] sm:text-lg">
             {t('about.description')}
           </p>
-          <div className="flex flex-col gap-3 mt-8 sm:flex-row sm:items-center">
+          <div className="flex flex-col mt-8 gap-3 sm:flex-row sm:items-center">
             <Link
               to="/products"
               className="inline-flex h-12 items-center justify-center rounded-full bg-[#234483] px-6 text-sm font-semibold text-[#FAF9F6] transition hover:bg-[#2E5299]"
@@ -29,7 +29,7 @@ export default function AboutPage() {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-        <article className="rounded-2xl card p-5 sm:p-8">
+        <article className="p-5 rounded-2xl card sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#234483] dark:text-[#a6c0ef]">
             {t('about.missionTitle')}
           </p>
@@ -41,7 +41,7 @@ export default function AboutPage() {
           </p>
         </article>
 
-        <article className="rounded-2xl card p-5 sm:p-8">
+        <article className="p-5 rounded-2xl card sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#234483] dark:text-[#a6c0ef]">
             {t('about.valuesTitle')}
           </p>
@@ -53,7 +53,7 @@ export default function AboutPage() {
           </p>
         </article>
 
-        <article className="rounded-2xl card p-5 sm:col-span-2 sm:p-8 lg:col-span-1">
+        <article className="p-5 rounded-2xl card sm:col-span-2 sm:p-8 lg:col-span-1">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#234483] dark:text-[#a6c0ef]">
             {t('about.servicesTitle')}
           </p>

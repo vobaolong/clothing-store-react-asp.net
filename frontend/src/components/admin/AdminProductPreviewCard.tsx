@@ -65,7 +65,7 @@ export default function AdminProductPreviewCard({
           </p>
           <p className="text-lg font-semibold line-clamp-2">{previewName}</p>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-wrap mt-2 gap-2">
           {previewColors.length ? (
             previewColors.map((item) => (
               <div

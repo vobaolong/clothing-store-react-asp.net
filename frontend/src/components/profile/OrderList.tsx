@@ -76,7 +76,7 @@ export default function OrderList() {
         return {
           key: status,
           label: (
-            <div className="flex gap-2 justify-center items-center">
+            <div className="flex items-center justify-center gap-2">
               <span className="truncate">
                 {status === ORDER_FILTER_ALL_VALUE
                   ? ORDER_FILTER_ALL_LABEL

@@ -114,7 +114,7 @@ export default function AvailableCouponCard({
             </div>
           </div>
 
-          <div className="flex flex-col gap-1 mt-auto">
+          <div className="flex flex-col mt-auto gap-1">
             <p className="font-sans text-xs text-slate-900 dark:text-white">
               {t('coupon.expiryLabel')}{' '}
               {formatDate(coupon.expiresAt, 'dateOnlyUTC')}

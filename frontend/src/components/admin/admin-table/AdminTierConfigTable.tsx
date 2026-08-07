@@ -91,7 +91,7 @@ export default function AdminTierConfigTable({
         align: 'center',
         width: 140,
         render: (_, row) => (
-          <div className="flex gap-1 justify-center">
+          <div className="flex justify-center gap-1">
             <Button icon={<EditOutlined />} onClick={() => onEdit(row)} />
             {row.tier !== 'Bronze' && (
               <Button

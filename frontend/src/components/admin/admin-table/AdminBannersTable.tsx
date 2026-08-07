@@ -53,7 +53,7 @@ export default function AdminBannersTable({
         width: 120,
         align: 'center',
         render: (_, __, index) => (
-          <div className="flex gap-1 justify-center">
+          <div className="flex justify-center gap-1">
             <Tooltip title={t('admin.tooltipMoveUp')}>
               <Button
                 type="text"
@@ -95,7 +95,7 @@ export default function AdminBannersTable({
           <img
             src={value}
             alt={t('admin.columnBannerImage')}
-            className="object-cover w-auto rounded-md h-20 border border-slate-200 shadow-sm"
+            className="object-cover w-auto h-20 border rounded-md border-slate-200 shadow-sm"
           />
         )
       },
@@ -105,7 +105,7 @@ export default function AdminBannersTable({
         key: 'ctaLink',
         render: (value: string) => (
           <Tooltip title={value}>
-            <p className="text-xs truncate max-w-60 text-slate-500 font-mono">
+            <p className="font-mono text-xs truncate max-w-60 text-slate-500">
               {value}
             </p>
           </Tooltip>

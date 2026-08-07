@@ -128,7 +128,7 @@ export default function OrderDetailPage() {
         <h1 className="text-xl font-semibold sm:text-2xl m-0!">
           {t('order.orderDetails')}
         </h1>
-        <div className="flex gap-3 items-center">
+        <div className="flex items-center gap-3">
           {canCancelOrder ? (
             <Button
               danger
