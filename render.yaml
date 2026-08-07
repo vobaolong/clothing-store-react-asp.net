@@ -2,7 +2,7 @@
 # Docs: https://render.com/docs/blueprint-spec
 services:
   - type: web
-    name: clothing-store-api
+    name: wearly
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -16,7 +16,7 @@ services:
       - key: Jwt__Secret
         sync: false # set manually in dashboard
       - key: Frontend__BaseUrl
-        value: https://clothing-store-api.onrender.com
+        value: https://wearly.onrender.com
       - key: Cloudinary__ApiKey
         sync: false
       - key: Cloudinary__ApiSecret
@@ -26,7 +26,7 @@ services:
       - key: VNPAY__HashSecret
         sync: false
       - key: VNPAY__CallbackUrl
-        sync: false # set to your real public URL, e.g. https://clothing-store-api.onrender.com/api/payments/vnpay/proceed-after-payment
+        value: https://wearly.onrender.com/api/payments/vnpay/proceed-after-payment
       - key: Gemini__ApiKey
         sync: false
       - key: Email__Username
