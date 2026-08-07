@@ -81,7 +81,7 @@ export default function AiChat() {
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const navigate = useNavigate()
 
-	const t = useTranslation() // Assuming you have a translation hook for <i18n></i18n>
+	const { t } = useTranslation()
 	const scrollToBottom = useCallback(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 	}, [])

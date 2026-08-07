@@ -110,11 +110,13 @@ builder
     });
 
 builder.Services.AddAuthorization();
+var frontendOrigins = (builder.Configuration["Frontend:BaseUrl"] ?? "http://localhost:5173")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 builder.Services.AddCors(options =>
     options.AddPolicy(
         "frontend",
         p =>
-            p.WithOrigins("http://localhost:5173")
+            p.WithOrigins(frontendOrigins)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
@@ -158,6 +160,22 @@ if (autoMigrate)
 app.UseCors("frontend");
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Serve built frontend (static files) if present — production only.
+// In development the Vite dev server (port 5173) serves the SPA instead.
+if (!app.Environment.IsDevelopment())
+{
+    var wwwroot = app.Environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+    if (File.Exists(Path.Combine(wwwroot, "index.html")))
+    {
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+
+        // SPA client-side routing fallback (e.g. /vi/products, /en/about)
+        app.MapFallbackToFile("index.html");
+    }
+}
+
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.Run();
