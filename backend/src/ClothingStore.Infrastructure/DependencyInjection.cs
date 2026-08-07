@@ -44,7 +44,7 @@ public static class DependencyInjection
         {
             services.AddStackExchangeRedisCache(opts =>
             {
-                opts.Configuration = redisUrl;
+                opts.Configuration = $"{redisUrl},abortConnect=false";
             });
         }
 
