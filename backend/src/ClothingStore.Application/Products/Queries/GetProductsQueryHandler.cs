@@ -3,17 +3,23 @@ using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ClothingStore.Application.Products.Queries;
 
-public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapper)
+public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapper, IMemoryCache cache)
     : IRequestHandler<GetProductsQuery, IReadOnlyList<ProductDto>>
 {
+    private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
+
     public async Task<IReadOnlyList<ProductDto>> Handle(
         GetProductsQuery request,
         CancellationToken cancellationToken
     )
     {
+        if (cache.TryGetValue(CacheKeys.ProductsPublic, out IReadOnlyList<ProductDto>? cached))
+            return cached!;
+
         var entities = await context
             .Products.AsNoTracking()
             .Where(x => x.IsActive)
@@ -33,6 +39,7 @@ public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapp
                 CategoryBreadcrumbs = BuildCategoryBreadcrumbs(entities[i].CategoryId, categoryMap),
             };
 
+        cache.Set(CacheKeys.ProductsPublic, dtos, CacheTtl);
         return dtos;
     }
 
