@@ -10,3 +10,10 @@ public record UpsertBannerRequest(
 );
 
 public record BannerReorderItem(Guid Id, int DisplayOrder);
+
+public record BannerActiveDto(
+    Guid Id,
+    string ImageUrl,
+    string CtaLink,
+    int DisplayOrder
+);

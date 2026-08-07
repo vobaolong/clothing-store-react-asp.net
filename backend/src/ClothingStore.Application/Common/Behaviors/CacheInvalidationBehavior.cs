@@ -1,5 +1,5 @@
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ClothingStore.Application.Common.Behaviors;
 
@@ -9,7 +9,7 @@ namespace ClothingStore.Application.Common.Behaviors;
 /// appear immediately.
 /// </summary>
 public class CacheInvalidationBehavior<TRequest, TResponse>(
-    IMemoryCache cache
+    IDistributedCache cache
 ) : IPipelineBehavior<TRequest, TResponse>
 {
     public async Task<TResponse> Handle(
@@ -22,9 +22,9 @@ public class CacheInvalidationBehavior<TRequest, TResponse>(
         var ns = typeof(TRequest).Namespace ?? string.Empty;
 
         if (ns.Contains("Products"))
-            cache.Remove(CacheKeys.ProductsPublic);
+            await cache.RemoveAsync(CacheKeys.ProductsPublic, cancellationToken);
         if (ns.Contains("Categories"))
-            cache.Remove(CacheKeys.CategoriesPublic);
+            await cache.RemoveAsync(CacheKeys.CategoriesPublic, cancellationToken);
 
         return response;
     }

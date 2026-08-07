@@ -13,6 +13,10 @@ services:
         fromDatabase:
           name: clothing-store-db
           property: connectionString
+      - key: REDIS_URL
+        fromDatabase:
+          name: clothing-store-redis
+          property: connectionString
       - key: Jwt__Secret
         sync: false # set manually in dashboard
       - key: Frontend__BaseUrl
@@ -38,4 +42,6 @@ services:
 
 databases:
   - name: clothing-store-db
+    plan: free
+  - name: clothing-store-redis
     plan: free

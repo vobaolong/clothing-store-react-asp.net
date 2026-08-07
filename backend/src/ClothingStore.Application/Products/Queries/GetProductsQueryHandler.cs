@@ -1,13 +1,14 @@
+using System.Text.Json;
 using AutoMapper;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ClothingStore.Application.Products.Queries;
 
-public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapper, IMemoryCache cache)
+public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapper, IDistributedCache cache)
     : IRequestHandler<GetProductsQuery, IReadOnlyList<ProductDto>>
 {
     private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
@@ -17,8 +18,9 @@ public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapp
         CancellationToken cancellationToken
     )
     {
-        if (cache.TryGetValue(CacheKeys.ProductsPublic, out IReadOnlyList<ProductDto>? cached))
-            return cached!;
+        var cachedBytes = await cache.GetAsync(CacheKeys.ProductsPublic, cancellationToken);
+        if (cachedBytes is not null)
+            return JsonSerializer.Deserialize<List<ProductDto>>(cachedBytes)!;
 
         var entities = await context
             .Products.AsNoTracking()
@@ -39,7 +41,12 @@ public class GetProductsQueryHandler(IApplicationDbContext context, IMapper mapp
                 CategoryBreadcrumbs = BuildCategoryBreadcrumbs(entities[i].CategoryId, categoryMap),
             };
 
-        cache.Set(CacheKeys.ProductsPublic, dtos, CacheTtl);
+        await cache.SetAsync(
+            CacheKeys.ProductsPublic,
+            JsonSerializer.SerializeToUtf8Bytes(dtos),
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CacheTtl },
+            cancellationToken
+        );
         return dtos;
     }
 
