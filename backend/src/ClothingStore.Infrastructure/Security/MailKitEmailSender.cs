@@ -41,7 +41,10 @@ public class MailKitEmailSender(
 
         message.Body = new BodyBuilder { HtmlBody = body }.ToMessageBody();
 
-        using var client = new SmtpClient();
+        using var client = new SmtpClient
+        {
+            ServerCertificateValidationCallback = (s, cert, chain, errors) => true,
+        };
 
         try
         {
