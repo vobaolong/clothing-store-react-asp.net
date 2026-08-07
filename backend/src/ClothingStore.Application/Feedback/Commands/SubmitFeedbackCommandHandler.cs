@@ -1,3 +1,4 @@
+using System.Net;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Application.Common.Models;
 using MediatR;
@@ -15,7 +16,7 @@ public class SubmitFeedbackCommandHandler(
         var recipient = emailSettings.Value.FromEmail;
         var subject = $"[Góp ý] {request.Name} - {request.Email}";
         var body =
-            $"Họ tên: {request.Name}\nEmail: {request.Email}\n\nNội dung:\n{request.Message}";
+            $"Họ tên: {WebUtility.HtmlEncode(request.Name)}\nEmail: {WebUtility.HtmlEncode(request.Email)}\n\nNội dung:\n{WebUtility.HtmlEncode(request.Message)}";
 
         return emailNotificationService.SendSafeAsync(
             recipient,
