@@ -18,7 +18,7 @@ Theo pattern MediatR có sẵn trong project (controller → command → handler
 
 1. **Request DTO** — `FeedbackRequest`: `Name` (required), `Email` (required, hợp lệ), `Message` (required, tối đa 2000 ký tự).
 2. **Command** — `SubmitFeedbackCommand(Name, Email, Message)` + handler inject `IEmailNotificationService` (đã đăng ký DI ở `DependencyInjection.cs`):
-   - To: `support@wearly.com` (đọc từ config `Email` → nếu không có dùng hardcode như fallback)
+   - To: `Email:FromEmail` trong `appsettings.json` (hiện là `vobaolong317@gmail.com`) — email shop nhận góp ý
    - Subject: `[Góp ý] {Name} - {Email}`
    - Body: nội dung góp ý.
    - `SendSafeAsync` nuốt lỗi email — API vẫn trả thành công, không chặn người dùng.
