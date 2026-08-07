@@ -13,6 +13,7 @@ import { aiChat } from '@/api/ai-api'
 import { formatCurrency } from '@/utils/format'
 import { lp } from '@/utils/language-path'
 import type { ChatMessage, ChatResponse } from '@/types'
+import { useTranslation } from 'react-i18next'
 
 const { Text, Title } = Typography
 
@@ -80,6 +81,7 @@ export default function AiChat() {
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const navigate = useNavigate()
 
+	const t = useTranslation() // Assuming you have a translation hook for <i18n></i18n>
 	const scrollToBottom = useCallback(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 	}, [])
@@ -184,7 +186,7 @@ export default function AiChat() {
 										<div className="flex items-center gap-2 px-4 py-3 bg-gray-100 rounded-tl-sm dark:bg-gray-800 rounded-2xl">
 											<LoadingOutlined className="text-red-800" />
 											<Text className="text-sm text-gray-500">
-												Đang xử lý...
+												{t('admin.processing')}
 											</Text>
 										</div>
 									</div>
