@@ -1,4 +1,3 @@
-using System.Text.Json;
 using ClothingStore.API.DTOs.Banners;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
@@ -6,11 +5,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ClothingStore.API.Controllers;
 
-public class BannersController(IApplicationDbContext context, IDistributedCache cache)
+public class BannersController(IApplicationDbContext context, IMemoryCache cache)
     : BaseApiController
 {
     private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
@@ -20,12 +19,8 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
     public async Task<IActionResult> GetActive(CancellationToken ct)
     {
         const string cacheKey = "banners:active";
-        var cachedBytes = await cache.GetAsync(cacheKey, ct);
-        if (cachedBytes is not null)
-        {
-            var cached = JsonSerializer.Deserialize<List<BannerActiveDto>>(cachedBytes);
-            return Ok(cached, "Active banners fetched.");
-        }
+        if (cache.TryGetValue(cacheKey, out object? cachedData))
+            return Ok(cachedData, "Active banners fetched.");
 
         var now = DateTime.UtcNow;
         var data = await context
@@ -37,20 +32,16 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
             )
             .OrderBy(banner => banner.DisplayOrder)
             .ThenBy(banner => banner.CreatedAt)
-            .Select(banner => new BannerActiveDto(
+            .Select(banner => new
+            {
                 banner.Id,
                 banner.ImageUrl,
                 banner.CtaLink,
-                banner.DisplayOrder
-            ))
+                banner.DisplayOrder,
+            })
             .ToListAsync(ct);
 
-        await cache.SetAsync(
-            cacheKey,
-            JsonSerializer.SerializeToUtf8Bytes(data),
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CacheTtl },
-            ct
-        );
+        cache.Set(cacheKey, data, CacheTtl);
         return Ok(data, "Active banners fetched.");
     }
 
@@ -86,7 +77,7 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
         MapBannerFromRequest(banner, request);
         await context.Banners.AddAsync(banner, ct);
         await context.SaveChangesAsync(ct);
-        await cache.RemoveAsync("banners:active", ct);
+        cache.Remove("banners:active");
         return Ok(banner.Id, "Banner created.");
     }
 
@@ -104,7 +95,7 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
 
         MapBannerFromRequest(banner, request);
         await context.SaveChangesAsync(ct);
-        await cache.RemoveAsync("banners:active", ct);
+        cache.Remove("banners:active");
         return Ok("Banner updated.");
     }
 
@@ -129,7 +120,7 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
         }
 
         await context.SaveChangesAsync(ct);
-        await cache.RemoveAsync("banners:active", ct);
+        cache.Remove("banners:active");
         return Ok("Banners reordered.");
     }
 
@@ -143,7 +134,7 @@ public class BannersController(IApplicationDbContext context, IDistributedCache 
 
         banner.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync(ct);
-        await cache.RemoveAsync("banners:active", ct);
+        cache.Remove("banners:active");
         return Ok("Banner removed.");
     }
 

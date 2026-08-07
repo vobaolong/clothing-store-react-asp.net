@@ -1,14 +1,13 @@
-using System.Text.Json;
 using ClothingStore.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ClothingStore.Application.Categories.Queries;
 
 public record GetPublicCategoriesQuery : IRequest<IReadOnlyList<CategoryDto>>;
 
-public class GetPublicCategoriesQueryHandler(IApplicationDbContext context, IDistributedCache cache)
+public class GetPublicCategoriesQueryHandler(IApplicationDbContext context, IMemoryCache cache)
     : IRequestHandler<GetPublicCategoriesQuery, IReadOnlyList<CategoryDto>>
 {
     private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
@@ -18,9 +17,8 @@ public class GetPublicCategoriesQueryHandler(IApplicationDbContext context, IDis
         CancellationToken ct
     )
     {
-        var cachedBytes = await cache.GetAsync(CacheKeys.CategoriesPublic, ct);
-        if (cachedBytes is not null)
-            return JsonSerializer.Deserialize<List<CategoryDto>>(cachedBytes)!;
+        if (cache.TryGetValue(CacheKeys.CategoriesPublic, out IReadOnlyList<CategoryDto>? cached))
+            return cached!;
 
         var data = await context
             .Categories.AsNoTracking()
@@ -41,12 +39,7 @@ public class GetPublicCategoriesQueryHandler(IApplicationDbContext context, IDis
                 x.UpdatedAt
             ))
             .ToListAsync(ct);
-        await cache.SetAsync(
-            CacheKeys.CategoriesPublic,
-            JsonSerializer.SerializeToUtf8Bytes(data),
-            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CacheTtl },
-            ct
-        );
+        cache.Set(CacheKeys.CategoriesPublic, data, CacheTtl);
         return data;
     }
 }

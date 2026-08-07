@@ -34,22 +34,6 @@ public static class DependencyInjection
             opts.UseNpgsql(connectionString)
         );
 
-        // Distributed cache: Redis when REDIS_URL is set (Render), in-memory fallback otherwise.
-        var redisUrl = configuration["REDIS_URL"];
-        if (string.IsNullOrWhiteSpace(redisUrl))
-        {
-            services.AddDistributedMemoryCache();
-        }
-        else
-        {
-            services.AddStackExchangeRedisCache(opts =>
-            {
-                var redisOptions = StackExchange.Redis.ConfigurationOptions.Parse(redisUrl);
-                redisOptions.AbortOnConnectFail = false;
-                opts.ConfigurationOptions = redisOptions;
-            });
-        }
-
         services.AddScoped<IApplicationDbContext>(sp =>
             sp.GetRequiredService<ApplicationDbContext>()
         );
