@@ -123,8 +123,8 @@ export default function AppFooter() {
 
   return (
     <footer id="footer" className="text-white bg-black/90 px-4! md:px-8!">
-      <div className="py-8 mx-auto w-full max-w-7xl">
-        <div className="flex flex-col justify-between gap-12 pb-12 border-b border-stone-800 lg:flex-row">
+      <div className="w-full py-8 mx-auto max-w-7xl">
+        <div className="flex flex-col justify-between pb-12 border-b gap-12 border-stone-800 lg:flex-row">
           <div className="max-w-xl space-y-6">
             <h2 className="font-bold tracking-tight lg:text-3xl md:text-2xl sm:text-xl">
               {t('footer.newsletterTitle')}
@@ -142,8 +142,8 @@ export default function AppFooter() {
 
           <div className="flex flex-col gap-8 md:flex-row lg:gap-16">
             {contactItems.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="flex gap-4 items-start">
-                <div className="flex justify-center items-center w-12 h-12 rounded-full bg-stone-900">
+              <div key={label} className="flex items-start gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-stone-900">
                   <Icon className="text-xl" />
                 </div>
                 <div>
@@ -159,12 +159,12 @@ export default function AppFooter() {
           </div>
         </div>
 
-        <div className="flex gap-4 py-12">
+        <div className="flex py-12 gap-4">
           {socialIcons.map((Icon) => (
             <a
               key={Icon.displayName ?? Icon.name}
               href="#"
-              className="flex items-center justify-center transition-colors border rounded-lg size-10 border-stone-800 hover:bg-stone-900"
+              className="flex items-center justify-center border rounded-lg transition-colors size-10 border-stone-800 hover:bg-stone-900"
             >
               <span className="text-xl">
                 <Icon />
@@ -181,7 +181,7 @@ export default function AppFooter() {
                   <h3 className="text-sm font-bold tracking-wider uppercase">
                     {group.title}
                   </h3>
-                  <ul className="space-y-2 text-sm text-stone-400">
+                  <ul className="text-sm space-y-2 text-stone-400">
                     {group.links.map((link) => (
                       <li key={link}>
                         <a href="#">{link}</a>
