@@ -6,8 +6,10 @@ import {
   MailFilled
 } from '@ant-design/icons'
 import type { ComponentType } from 'react'
+import { useState } from 'react'
 import { Button } from 'antd'
 import { useTranslation } from 'react-i18next'
+import FeedbackModal from '@/components/feedback/FeedbackModal'
 
 type ContactItem = {
   label: string
@@ -120,6 +122,7 @@ const contactAddresses: ContactAddress[] = [
 
 export default function AppFooter() {
   const { t } = useTranslation()
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   return (
     <footer id="footer" className="text-white bg-black/90 px-4! md:px-8!">
@@ -135,6 +138,7 @@ export default function AppFooter() {
             <Button
               type="primary"
               className="font-semibold text-black bg-white border-none rounded-full"
+              onClick={() => setFeedbackOpen(true)}
             >
               {t('footer.feedbackCta')}
             </Button>
@@ -217,6 +221,7 @@ export default function AppFooter() {
           </p>
         </div>
       </div>
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </footer>
   )
 }
