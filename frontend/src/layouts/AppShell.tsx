@@ -180,7 +180,8 @@ export default function AppShell() {
 													dispatch(
 														removeFromCart({
 															id: item.id,
-															productVariantId: item.productVariantId
+															productVariantId: item.productVariantId,
+															cartItemId: item.cartItemId
 														})
 													)
 												}

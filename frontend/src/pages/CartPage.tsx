@@ -32,14 +32,18 @@ export default function CartPage() {
   const grandTotal = total + shippingFee
   const allSelected = items.length > 0 && items.every((item) => item.isSelected)
 
-  const confirmRemoveItem = (id: string, productVariantId: string) => {
+  const confirmRemoveItem = (
+    id: string,
+    productVariantId: string,
+    cartItemId?: string
+  ) => {
     Modal.confirm({
       title: t('cart.confirmDeleteItemTitle'),
       content: t('cart.confirmDeleteItemContent'),
       okText: t('common.delete'),
       cancelText: t('common.cancel'),
       okButtonProps: { danger: true },
-      onOk: () => dispatch(removeFromCart({ id, productVariantId }))
+      onOk: () => dispatch(removeFromCart({ id, productVariantId, cartItemId }))
     })
   }
 
@@ -166,7 +170,9 @@ export default function CartPage() {
                                 oldProductVariantId: item.productVariantId,
                                 newProductVariantId: targetVariant.id,
                                 selectedSize: targetVariant.size,
-                                selectedColor: targetVariant.color
+                                selectedColor: targetVariant.color,
+                                cartItemId: item.cartItemId,
+                                quantity: item.quantity
                               })
                             )
                           }}
@@ -199,7 +205,9 @@ export default function CartPage() {
                                   oldProductVariantId: item.productVariantId,
                                   newProductVariantId: targetVariant.id,
                                   selectedSize: targetVariant.size,
-                                  selectedColor: targetVariant.color
+                                  selectedColor: targetVariant.color,
+                                  cartItemId: item.cartItemId,
+                                  quantity: item.quantity
                                 })
                               )
                             }}
@@ -236,7 +244,11 @@ export default function CartPage() {
                       danger
                       icon={<DeleteOutlined />}
                       onClick={() =>
-                        confirmRemoveItem(item.id, item.productVariantId)
+                        confirmRemoveItem(
+                          item.id,
+                          item.productVariantId,
+                          item.cartItemId
+                        )
                       }
                     />
                   </div>

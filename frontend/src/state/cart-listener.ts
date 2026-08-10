@@ -5,6 +5,7 @@ import {
   addToCart,
   updateQuantity,
   removeFromCart,
+  updateCartVariant,
   addServerCartItem,
   updateServerCartItem,
   removeServerCartItem
@@ -76,19 +77,47 @@ startListening({
   },
   effect: async (action, listenerApi) => {
     const payload = action as ReturnType<typeof removeFromCart>
-    const { id, productVariantId } = payload.payload
-    const item = (listenerApi.getState() as RootState).cart.items.find(
-      (i) => i.id === id && i.productVariantId === productVariantId
-    )
-    if (item?.cartItemId) {
+    const { cartItemId } = payload.payload
+    if (!cartItemId) return
+    try {
+      await cartApi.removeFromCart(cartItemId)
+      listenerApi.dispatch(removeServerCartItem(cartItemId))
+    } catch {
+      /* silent — cart is re-fetched on next load */
+    }
+  }
+})
+
+startListening({
+  predicate: (_action, currentState) => {
+    if (_action.type !== 'cart/updateCartVariant') return false
+    return (currentState as RootState).auth.isAuthenticated
+  },
+  effect: async (action, listenerApi) => {
+    const payload = action as ReturnType<typeof updateCartVariant>
+    const { cartItemId, newProductVariantId, id, quantity } = payload.payload
+    if (cartItemId) {
       try {
-        await cartApi.removeFromCart(item.cartItemId)
-        if (item.cartItemId) {
-          listenerApi.dispatch(removeServerCartItem(item.cartItemId))
-        }
+        await cartApi.removeFromCart(cartItemId)
+        listenerApi.dispatch(removeServerCartItem(cartItemId))
       } catch {
         /* silent */
       }
+    }
+    if (!newProductVariantId || !id) return
+    const item = (listenerApi.getState() as RootState).cart.items.find(
+      (i) => i.id === id && i.productVariantId === newProductVariantId
+    )
+    if (!item) return
+    try {
+      const dto = await cartApi.addToCart({
+        productId: id,
+        productVariantId: newProductVariantId,
+        quantity
+      })
+      listenerApi.dispatch(addServerCartItem(dto))
+    } catch {
+      /* silent */
     }
   }
 })

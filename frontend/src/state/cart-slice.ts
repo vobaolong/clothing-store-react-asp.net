@@ -22,6 +22,7 @@ type CartItemIdentityPayload = {
   variantId?: string
   id?: string
   productVariantId?: string
+  cartItemId?: string
 }
 
 type UpdateQuantityPayload = CartItemIdentityPayload & {
@@ -40,6 +41,8 @@ type UpdateCartVariantPayload = {
   newProductVariantId: string
   selectedSize: string
   selectedColor: string
+  cartItemId?: string
+  quantity: number
 }
 
 type PurchasedCartItemPayload = {
