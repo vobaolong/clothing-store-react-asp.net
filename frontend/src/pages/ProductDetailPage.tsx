@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { addToCart, openDrawer, selectCartItems } from '@/state/cart-slice'
+import { selectIsAuthenticated } from '@/state/auth/auth-selectors'
 import { getCategories, getProducts } from '@/api/products-api'
 import { formatCurrency } from '@/utils/format'
 import { lp } from '@/utils/language-path'
@@ -71,6 +72,7 @@ export default function ProductDetailPage() {
   })
 
   const cartItems = useSelector(selectCartItems)
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   const product = products.find((item) => item.slug === slug)
   const listCategory = categories.find(
     (item) => item.id === product?.categoryId
@@ -235,6 +237,10 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = useCallback(() => {
     if (!product || isOutOfStock) return
+    if (!isAuthenticated) {
+      navigate(lp('/login'))
+      return
+    }
     dispatch(
       addToCart({
         product,
@@ -245,10 +251,14 @@ export default function ProductDetailPage() {
       })
     )
     dispatch(openDrawer())
-  }, [dispatch, isOutOfStock, product, selection.quantity, selectedVariant])
+  }, [dispatch, isAuthenticated, isOutOfStock, navigate, product, selection.quantity, selectedVariant])
 
   const handleBuyNow = useCallback(() => {
     if (!product || isOutOfStock) return
+    if (!isAuthenticated) {
+      navigate(lp('/login'))
+      return
+    }
     dispatch(
       addToCart({
         product,
@@ -261,6 +271,7 @@ export default function ProductDetailPage() {
     navigate(lp('/checkout'))
   }, [
     dispatch,
+    isAuthenticated,
     isOutOfStock,
     navigate,
     product,
