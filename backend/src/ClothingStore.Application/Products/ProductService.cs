@@ -199,10 +199,14 @@ public class ProductService : IProductService
             .ProductVariants.Where(variant => variant.ProductId == product.Id)
             .ToListAsync(cancellationToken);
         var existingVariantSkus = await LoadExistingVariantSkusAsync(product.Id, cancellationToken);
-        _context.ProductVariants.RemoveRange(oldVariants);
+
         foreach (var variant in dto.Variants)
         {
             var (cover, gallery) = VariantGallery.ToStorage(variant.ImageUrl, variant.ImageUrls);
+            var existing = oldVariants.FirstOrDefault(v =>
+                string.Equals(v.Color, variant.Color, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(v.Size, variant.Size, StringComparison.OrdinalIgnoreCase)
+            );
             var sku = ResolveVariantSku(
                 product.ProductCode,
                 variant.Color,
@@ -210,23 +214,39 @@ public class ProductService : IProductService
                 existingVariantSkus
             );
             existingVariantSkus.Add(sku);
-            await _context.ProductVariants.AddAsync(
-                new ProductVariant
-                {
-                    ProductId = product.Id,
-                    Sku = sku,
-                    Size = variant.Size,
-                    Color = variant.Color,
-                    ColorHex = variant.Hex,
-                    Price = variant.Price,
-                    Quantity = variant.Quantity,
-                    ImageUrl = cover,
-                    VariantGalleryJson = gallery,
-                    IsActive = variant.IsActive,
-                },
-                cancellationToken
-            );
+            if (existing is not null)
+            {
+                oldVariants.Remove(existing);
+                existing.Size = variant.Size;
+                existing.Color = variant.Color;
+                existing.ColorHex = variant.Hex;
+                existing.Price = variant.Price;
+                existing.Quantity = variant.Quantity;
+                existing.ImageUrl = cover;
+                existing.VariantGalleryJson = gallery;
+                existing.IsActive = variant.IsActive;
+            }
+            else
+            {
+                await _context.ProductVariants.AddAsync(
+                    new ProductVariant
+                    {
+                        ProductId = product.Id,
+                        Sku = sku,
+                        Size = variant.Size,
+                        Color = variant.Color,
+                        ColorHex = variant.Hex,
+                        Price = variant.Price,
+                        Quantity = variant.Quantity,
+                        ImageUrl = cover,
+                        VariantGalleryJson = gallery,
+                        IsActive = variant.IsActive,
+                    },
+                    cancellationToken
+                );
+            }
         }
+        _context.ProductVariants.RemoveRange(oldVariants);
 
         await _context.SaveChangesAsync(cancellationToken);
         return product.Id;
