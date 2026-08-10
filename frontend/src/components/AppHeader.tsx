@@ -87,7 +87,7 @@ function MegaMenuContent({
   categoryGroups: CategoryGroup[]
 }) {
   return (
-    <div className="p-6 bg-white rounded-xl border shadow-xl border-slate-200 dark:bg-gray-800 dark:border-gray-700">
+    <div className="p-6 bg-white border shadow-xl rounded-xl border-slate-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {categoryGroups.map(({ parent, children }) => (
           <div key={parent.id}>
@@ -97,7 +97,7 @@ function MegaMenuContent({
             >
               {parent.name}
             </Link>
-            <div className="flex flex-col gap-2 mt-3 text-sm text-slate-600 dark:text-slate-400">
+            <div className="flex flex-col mt-3 text-sm gap-2 text-slate-600 dark:text-slate-400">
               {children.map((child) => (
                 <Link
                   key={child.id}
@@ -137,8 +137,8 @@ function DesktopNav({
   ]
 
   return (
-    <div className="hidden flex-1 justify-evenly items-center md:flex">
-      <div className="flex gap-5 items-center">
+    <div className="items-center flex-1 hidden justify-evenly md:flex">
+      <div className="flex items-center gap-5">
         {navItems.map((item) => {
           const isActive = selectedRootPath === item.key
           const showMegaMenu =
@@ -230,7 +230,7 @@ function MobileNavDrawer({
                 >
                   {parent.name}
                 </Link>
-                <div className="flex flex-col gap-3 mt-1 ml-3">
+                <div className="flex flex-col mt-1 ml-3 gap-3">
                   {children.map((child) => (
                     <Link
                       key={child.id}
@@ -326,7 +326,7 @@ export default function AppHeader({
     >
       {!isAdminUser && <AnnouncementBar />}
       <Header className="bg-white border-b border-slate-200 px-4! md:px-8! dark:bg-gray-900! dark:border-gray-700!">
-        <div className="flex items-center w-full gap-4 mx-auto h-18 max-w-7xl">
+        <div className="flex items-center w-full mx-auto gap-4 h-18 max-w-7xl">
           <Link
             to={isAdminUser ? lp('/admin') : lp('/')}
             className="hidden md:block text-2xl font-semibold tracking-tight text-slate-900! dark:text-white!"
@@ -357,7 +357,7 @@ export default function AppHeader({
             </>
           )}
 
-          <div className="flex gap-2 items-center ml-auto shrink-0">
+          <div className="flex items-center ml-auto gap-2 shrink-0">
             <LanguageSwitcher />
             <ThemeToggleButton />
             {!isAdminUser && (

@@ -101,7 +101,7 @@ export default function LoginPage() {
               prefix={<LockOutlined className="text-slate-500" />}
             />
           </Form.Item>
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center justify-between mb-4">
             <Form.Item
               name="rememberMe"
               valuePropName="checked"

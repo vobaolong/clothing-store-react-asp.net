@@ -100,8 +100,8 @@ export default function ProductReviewsSection({
         {t('review.reviews')} {productName}
       </div>
       <div className="mb-6 grid gap-6 lg:grid-cols-[220px_minmax(260px,1fr)_minmax(240px,1fr)]">
-        <div className="flex flex-col gap-1 items-start">
-          <div className="flex gap-1 items-end leading-none">
+        <div className="flex flex-col items-start gap-1">
+          <div className="flex items-end leading-none gap-1">
             <span className="text-5xl font-bold text-slate-900 dark:text-slate-100">
               {averageRating.toFixed(1)}
             </span>
@@ -129,7 +129,7 @@ export default function ProductReviewsSection({
               <span className="text-sm font-medium text-slate-600">
                 {row.rating}
               </span>
-              <div className="overflow-hidden h-2 rounded-full bg-slate-100">
+              <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                 <div
                   className="h-full bg-red-500 rounded-full"
                   style={{ width: `${row.percent}%` }}
@@ -151,7 +151,7 @@ export default function ProductReviewsSection({
               {topExperienceTags.map((item) => (
                 <div
                   key={item.tag}
-                  className="flex gap-3 justify-between items-center"
+                  className="flex items-center justify-between gap-3"
                 >
                   <span className="text-sm text-slate-700 dark:text-slate-300">
                     {item.tag}
@@ -171,8 +171,8 @@ export default function ProductReviewsSection({
       </div>
       <Divider />
       {!reviewsQuery.isLoading ? (
-        <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center">
-          <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-col mb-4 gap-3 md:flex-row md:items-center">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm text-slate-500 dark:text-slate-300">
               {t('review.filterByRating')}
             </span>
@@ -198,7 +198,7 @@ export default function ProductReviewsSection({
               })}
             </div>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <span className="text-sm text-slate-500 dark:text-slate-300">
               {t('review.sortBy')}:
             </span>

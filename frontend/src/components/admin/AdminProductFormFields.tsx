@@ -423,7 +423,7 @@ export default function AdminProductFormFields({
               />
             </div>
             {showSpecs && (
-              <div className="p-4 space-y-2 border rounded-xl border-slate-200 bg-slate-50/30">
+              <div className="p-4 border space-y-2 rounded-xl border-slate-200 bg-slate-50/30">
                 {DESCRIPTION_SPEC_LABELS.map((label, index) => (
                   <div key={label} className="flex items-start gap-2">
                     <Form.Item

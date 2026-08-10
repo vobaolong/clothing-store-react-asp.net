@@ -20,7 +20,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggle}
-      className="border-none bg-transparent cursor-pointer text-inherit font-medium px-2 py-0"
+      className="px-2 py-0 font-medium bg-transparent border-none cursor-pointer text-inherit"
     >
       {current.toUpperCase()}
     </button>

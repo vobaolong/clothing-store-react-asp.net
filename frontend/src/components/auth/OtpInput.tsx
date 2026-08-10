@@ -14,7 +14,7 @@ export default function OtpInput({
   disabled: boolean
 }) {
   return (
-    <div className="flex gap-2 justify-center mb-6">
+    <div className="flex justify-center mb-6 gap-2">
       {otp.map((digit, index) => (
         <input
           key={index}
@@ -28,7 +28,7 @@ export default function OtpInput({
           onChange={(e) => onChange(index, e.target.value)}
           onKeyDown={(e) => onKeyDown(index, e)}
           disabled={disabled}
-          className="h-12 w-12 rounded-xl border-2 text-center text-xl font-bold outline-none transition-all"
+          className="w-12 h-12 text-xl font-bold text-center border-2 outline-none rounded-xl transition-all"
           autoFocus={index === 0}
         />
       ))}

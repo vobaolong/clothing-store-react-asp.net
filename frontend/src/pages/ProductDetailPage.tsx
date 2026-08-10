@@ -304,7 +304,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-8">
+      <section className="px-4 py-8 mx-auto max-w-7xl">
         <Skeleton active className="mb-6 w-96!" />
         <div className="grid gap-12 lg:grid-cols-2">
           <div className="space-y-4">
@@ -376,7 +376,7 @@ export default function ProductDetailPage() {
         </div>
 
         <aside className="w-full space-y-8 lg:sticky lg:top-8 lg:h-fit">
-          <div className="pb-4 space-y-3 border-b border-stone-200">
+          <div className="pb-4 border-b space-y-3 border-stone-200">
             <h1 className="mt-3! text-3xl font-normal leading-snug tracking-tight">
               {toCapitalize(product.name)}
             </h1>
@@ -417,7 +417,7 @@ export default function ProductDetailPage() {
               </div>
             )}
             <div className="flex items-center gap-3">
-              <FreeShipIcon className="size-4 inline-block" />
+              <FreeShipIcon className="inline-block size-4" />
               <small className="text-xs text-stone-400">
                 {t('product.freeShippingTag')}
               </small>

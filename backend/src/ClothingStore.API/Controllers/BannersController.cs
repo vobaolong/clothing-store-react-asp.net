@@ -5,16 +5,23 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ClothingStore.API.Controllers;
 
-public class BannersController(IApplicationDbContext context)
+public class BannersController(IApplicationDbContext context, IMemoryCache cache)
     : BaseApiController
 {
+    private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
+
     [HttpGet("api/banners/active")]
     [AllowAnonymous]
     public async Task<IActionResult> GetActive(CancellationToken ct)
     {
+        const string cacheKey = "banners:active";
+        if (cache.TryGetValue(cacheKey, out object? cachedData))
+            return Ok(cachedData, "Active banners fetched.");
+
         var now = DateTime.UtcNow;
         var data = await context
             .Banners.AsNoTracking()
@@ -34,6 +41,7 @@ public class BannersController(IApplicationDbContext context)
             })
             .ToListAsync(ct);
 
+        cache.Set(cacheKey, data, CacheTtl);
         return Ok(data, "Active banners fetched.");
     }
 
@@ -69,6 +77,7 @@ public class BannersController(IApplicationDbContext context)
         MapBannerFromRequest(banner, request);
         await context.Banners.AddAsync(banner, ct);
         await context.SaveChangesAsync(ct);
+        cache.Remove("banners:active");
         return Ok(banner.Id, "Banner created.");
     }
 
@@ -86,6 +95,7 @@ public class BannersController(IApplicationDbContext context)
 
         MapBannerFromRequest(banner, request);
         await context.SaveChangesAsync(ct);
+        cache.Remove("banners:active");
         return Ok("Banner updated.");
     }
 
@@ -110,6 +120,7 @@ public class BannersController(IApplicationDbContext context)
         }
 
         await context.SaveChangesAsync(ct);
+        cache.Remove("banners:active");
         return Ok("Banners reordered.");
     }
 
@@ -123,6 +134,7 @@ public class BannersController(IApplicationDbContext context)
 
         banner.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync(ct);
+        cache.Remove("banners:active");
         return Ok("Banner removed.");
     }
 

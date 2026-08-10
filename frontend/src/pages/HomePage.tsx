@@ -67,9 +67,9 @@ const HomePage = () => {
 
   if (isLoading) {
     return (
-      <main className="pb-10 space-y-12 min-h-screen">
+      <main className="min-h-screen pb-10 space-y-12">
         <Skeleton active className="w-full h-100!" />
-        <section className="max-w-7xl mx-auto px-4 space-y-6">
+        <section className="px-4 mx-auto max-w-7xl space-y-6">
           <Skeleton active paragraph={{ rows: 1 }} className="w-80!" />
           <div className="flex gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -83,7 +83,7 @@ const HomePage = () => {
             ))}
           </div>
         </section>
-        <section className="max-w-7xl mx-auto px-4 space-y-6">
+        <section className="px-4 mx-auto max-w-7xl space-y-6">
           <Skeleton active paragraph={{ rows: 1 }} className="w-64!" />
           <div className="flex gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -94,7 +94,7 @@ const HomePage = () => {
             ))}
           </div>
         </section>
-        <section className="max-w-7xl mx-auto px-4 space-y-6">
+        <section className="px-4 mx-auto max-w-7xl space-y-6">
           <Skeleton active paragraph={{ rows: 1 }} className="w-64!" />
           <div className="flex gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -105,7 +105,7 @@ const HomePage = () => {
             ))}
           </div>
         </section>
-        <section className="max-w-7xl mx-auto px-4">
+        <section className="px-4 mx-auto max-w-7xl">
           <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} active className="h-72!" />
@@ -117,7 +117,7 @@ const HomePage = () => {
   }
 
   return (
-    <main className="pb-10 space-y-12 min-h-screen">
+    <main className="min-h-screen pb-10 space-y-12">
       <HomeHeroBanner banners={activeBanners} />
 
       <CategoryBrowser

@@ -23,16 +23,16 @@ export default function AdminBannersToolbar({
 }: AdminBannersToolbarProps) {
   const { t } = useTranslation()
   return (
-    <div className="flex gap-2 justify-between items-center w-full">
+    <div className="flex items-center justify-between w-full gap-2">
       <div>
-        <h2 className="text-lg font-bold m-0">
+        <h2 className="m-0 text-lg font-bold">
           {t('admin.bannerManagerTitle')}
         </h2>
         <p className="text-xs text-slate-500 m-0!">
           {t('admin.bannerManagerDesc')}
         </p>
       </div>
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <AdminRefreshButtonAction query={query} />
         {hasOrderChanges && onSaveOrder && (
           <Button

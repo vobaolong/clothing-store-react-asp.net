@@ -208,7 +208,7 @@ export default function AdminOrderDetailPage() {
                     return (
                       <div
                         key={row.id}
-                        className="flex items-center justify-between gap-4 py-3"
+                        className="flex items-center justify-between py-3 gap-4"
                       >
                         <div className="flex items-center min-w-0 gap-3">
                           <Image

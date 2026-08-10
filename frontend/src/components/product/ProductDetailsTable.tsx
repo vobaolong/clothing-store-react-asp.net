@@ -15,7 +15,7 @@ export default function ProductDetailsTable({
         {productDetails.map(({ label, value }, idx) => (
           <div
             key={`${label}-${idx}`}
-            className="flex items-start justify-between gap-4 py-3"
+            className="flex items-start justify-between py-3 gap-4"
           >
             <dt className="text-xs! uppercase text-stone-600 dark:text-stone-300 shrink-0">
               {label}

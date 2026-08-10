@@ -35,8 +35,8 @@ export default function OrderSummary({
         </span>
       }
     >
-      <div className="space-y-3 text-sm">
-        <div className="pr-1 space-y-2 overflow-y-auto">
+      <div className="text-sm space-y-3">
+        <div className="pr-1 overflow-y-auto space-y-2">
           {items.map((item) => (
             <div
               key={`${item.id}-${item.productVariantId}`}
@@ -59,7 +59,7 @@ export default function OrderSummary({
           ))}
         </div>
 
-        <div className="pt-3 space-y-2 border-t border-slate-100">
+        <div className="pt-3 border-t space-y-2 border-slate-100">
           <div className="flex justify-between text-slate-600 dark:text-gray-400">
             <span>{t('order.total')}</span>
             <span>{formatCurrency(subtotal)}</span>

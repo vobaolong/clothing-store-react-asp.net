@@ -6,7 +6,7 @@ export function CheckoutSectionTitle({
   title: string
 }) {
   return (
-    <div className="flex items-center gap-3 mb-5">
+    <div className="flex items-center mb-5 gap-3">
       <div className="flex items-center justify-center text-xs font-bold text-white dark:text-white bg-[#990021] rounded-full h-7 w-7 shrink-0">
         {step}
       </div>

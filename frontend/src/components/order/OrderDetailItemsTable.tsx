@@ -18,7 +18,7 @@ export default function OrderDetailItemsTable({
   return (
     <Table
       rowKey="id"
-      className="rounded-md overflow-hidden"
+      className="overflow-hidden rounded-md"
       pagination={false}
       dataSource={items}
       size="small"

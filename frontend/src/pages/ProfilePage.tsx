@@ -189,7 +189,7 @@ export default function ProfilePage() {
                           )}
                         </div>
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
+                          <div className="flex justify-between mb-1 text-sm">
                             <span>
                               {t('tier.totalSpent')}:{' '}
                               {formatCurrency(myTier.totalSpent)}

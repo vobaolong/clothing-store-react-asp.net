@@ -194,7 +194,7 @@ export default function AdminDashboardSection() {
         <Col xs={24} lg={10}>
           <Card
             title={
-              <div className="flex justify-between items-center w-full">
+              <div className="flex items-center justify-between w-full">
                 <span className="pr-2 truncate">
                   {selectedRadarParent
                     ? `${t('admin.categories')}: ${selectedRadarParent}`

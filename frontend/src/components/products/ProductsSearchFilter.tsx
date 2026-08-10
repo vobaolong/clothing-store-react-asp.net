@@ -25,7 +25,7 @@ export default function ProductsSearchFilter({
   }
 
   return (
-    <div className="p-4 space-y-3 rounded-xl border border-slate-200 dark:border-gray-700">
+    <div className="p-4 border space-y-3 rounded-xl border-slate-200 dark:border-gray-700">
       <div className="flex gap-2">
         <Input
           key={value}
@@ -43,14 +43,14 @@ export default function ProductsSearchFilter({
           {t('common.search')}
         </Button>
       </div>
-      <div className="flex flex-wrap gap-3 justify-between items-center pt-1">
+      <div className="flex flex-wrap items-center justify-between pt-1 gap-3">
         <p className="text-base font-semibold">
           <span className="text-xl font-bold">
             {value && t('productFilter.resultCountFor', { keyword: value })}
           </span>{' '}
           {t('product.totalProducts', { total: total })}
         </p>
-        <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm font-medium">
             {t('productFilter.sortBy')}
           </span>

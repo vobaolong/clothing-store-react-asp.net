@@ -71,9 +71,9 @@ export default function VerifyOtpPage() {
 
   return (
     <section className="mx-auto flex min-h-[72vh] w-full max-w-md items-center px-4">
-      <Card className="w-full rounded-3xl border shadow-sm border-slate-200">
+      <Card className="w-full border rounded-3xl shadow-sm border-slate-200">
         <div className="mb-6 text-center">
-          <div className="flex justify-center items-center mx-auto mb-4 w-14 h-14 bg-indigo-50 rounded-full">
+          <div className="flex items-center justify-center mx-auto mb-4 rounded-full w-14 h-14 bg-indigo-50">
             <MailOutlined className="text-2xl text-indigo-600" />
           </div>
           <Title level={3}>{t('auth.verifyEmail')}</Title>
@@ -111,7 +111,7 @@ export default function VerifyOtpPage() {
             : t('auth.verifyOtpButton')}
         </Button>
 
-        <div className="text-sm text-center text-slate-500 mt-4">
+        <div className="mt-4 text-sm text-center text-slate-500">
           {t('auth.didNotReceiveCode')}{' '}
           {resendDown > 0 ? (
             <span className="text-slate-400">
@@ -122,7 +122,7 @@ export default function VerifyOtpPage() {
               type="button"
               disabled={resendMutation.isPending}
               onClick={() => resendMutation.mutate({ email })}
-              className="inline-flex gap-1 items-center font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
+              className="inline-flex items-center font-medium text-indigo-600 gap-1 hover:text-indigo-500 disabled:opacity-50"
             >
               <ReloadOutlined spin={resendMutation.isPending} />{' '}
               {t('auth.resendCode')}

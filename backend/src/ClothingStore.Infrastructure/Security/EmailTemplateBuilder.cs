@@ -1,3 +1,4 @@
+using System.Net;
 using ClothingStore.Application.Common.Interfaces;
 using ClothingStore.Domain.Entities;
 
@@ -260,6 +261,31 @@ public class EmailTemplateBuilder(string clientBaseUrl) : IEmailTemplateBuilder
             </p>
         ";
         return BuildBaseLayout("Yêu cầu đặt lại mật khẩu", content);
+    }
+
+    public string BuildFeedbackEmail(string name, string email, string message)
+    {
+        var content =
+            $@"
+            <div class='greeting'>Khách hàng góp ý mới</div>
+            <p>Nhận được góp ý từ khách hàng qua biểu mẫu trên website:</p>
+            <table class='details-table'>
+                <tr>
+                    <th>Họ tên</th>
+                    <td>{WebUtility.HtmlEncode(name)}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{WebUtility.HtmlEncode(email)}</td>
+                </tr>
+                <tr>
+                    <th>Nội dung</th>
+                    <td>{WebUtility.HtmlEncode(message)}</td>
+                </tr>
+            </table>
+            <p>Vui lòng phản hồi email này để liên hệ lại với khách hàng khi cần.</p>
+        ";
+        return BuildBaseLayout("Đóng góp ý kiến mới", content);
     }
 
     public string BuildRegisterOtpEmail(User user, string otpCode)

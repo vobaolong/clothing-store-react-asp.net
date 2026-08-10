@@ -11,4 +11,5 @@ public interface IEmailTemplateBuilder
     string BuildWelcomeEmail(User user);
     string BuildResetPasswordEmail(User user, string resetLink);
     string BuildRegisterOtpEmail(User user, string otpCode);
+    string BuildFeedbackEmail(string name, string email, string message);
 }

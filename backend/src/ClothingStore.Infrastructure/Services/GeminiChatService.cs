@@ -307,10 +307,21 @@ public sealed class GeminiChatService(
     {
         var call = msg.ToolCalls![0];
         var fnName = call.Function!.Name;
-        var fnArgs = JsonSerializer.Deserialize<Dictionary<string, object>>(
-            call.Function.Arguments ?? "{}",
-            JsonOpts
+        Console.Error.WriteLine(
+            $"[HandleToolCall] fn={fnName} rawArgs={call.Function.Arguments ?? "null"}"
         );
+        Dictionary<string, object>? fnArgs = null;
+        try
+        {
+            fnArgs = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                call.Function.Arguments ?? "{}",
+                JsonOpts
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[HandleToolCall] args parse error: {ex.Message}");
+        }
         if (fnName == "search_products" && IsGreetingMessage(userMessage))
         {
             return new ChatResponseDto(
@@ -321,24 +332,13 @@ public sealed class GeminiChatService(
         if (result == null)
             return new ChatResponseDto("Xin lỗi, có lỗi xảy ra khi xử lý yêu cầu.");
 
+        // in extra_content to be returned on the next request.
         messages.Add(
             new
             {
                 role = "assistant",
-                content = (string?)null,
-                tool_calls = new[]
-                {
-                    new
-                    {
-                        id = call.Id,
-                        type = "function",
-                        function = new
-                        {
-                            name = fnName,
-                            arguments = call.Function.Arguments ?? "{}",
-                        },
-                    },
-                },
+                content = "",
+                tool_calls = msg.ToolCalls,
             }
         );
         messages.Add(
@@ -391,6 +391,9 @@ public sealed class GeminiChatService(
         CancellationToken ct
     )
     {
+        Console.Error.WriteLine(
+            $"[SearchProducts] args={System.Text.Json.JsonSerializer.Serialize(args)}"
+        );
         var query = context
             .Products.AsNoTracking()
             .Include(p => p.Category)
@@ -399,27 +402,27 @@ public sealed class GeminiChatService(
         if (args != null)
         {
             if (TryGetString(args, "keyword", out var kw))
-                query = query.Where(p => p.Name.ToLowerInvariant().Contains(kw.ToLowerInvariant()));
+                query = query.Where(p => p.Name.ToLower().Contains(kw.ToLowerInvariant()));
 
             if (TryGetString(args, "category", out var cat))
                 query = query.Where(p =>
                     p.Category != null
                     && (
-                        p.Category.Name.ToLowerInvariant() == cat.ToLowerInvariant()
-                        || p.Category.Slug.ToLowerInvariant() == cat.ToLowerInvariant()
+                        p.Category.Name.ToLower().Contains(cat.ToLowerInvariant())
+                        || p.Category.Slug.ToLower().Contains(cat.ToLowerInvariant())
                     )
                 );
             if (TryGetString(args, "gender", out var gen))
             {
                 var g = gen.ToLowerInvariant();
-                if (g == "male")
-                    query = query.Where(p =>
-                        p.Category != null && p.Category.Gender == Gender.Male
-                    );
-                else if (g == "female")
-                    query = query.Where(p =>
-                        p.Category != null && p.Category.Gender == Gender.Female
-                    );
+                var target = g switch
+                {
+                    "male" or "nam" or "men" => Gender.Male,
+                    "female" or "nữ" or "nu" or "women" => Gender.Female,
+                    _ => (Gender?)null,
+                };
+                if (target != null)
+                    query = query.Where(p => p.Category != null && p.Category.Gender == target);
             }
             if (TryGetDecimal(args, "price_min", out var pmin))
                 query = query.Where(p => p.Price >= pmin);
@@ -434,19 +437,18 @@ public sealed class GeminiChatService(
             if (TryGetString(args, "color", out var col))
                 query = query.Where(p =>
                     p.Variants.Any(v =>
-                        v.Color.ToLowerInvariant().Contains(col.ToLowerInvariant())
-                        && v.Quantity > 0
+                        v.Color.ToLower().Contains(col.ToLowerInvariant()) && v.Quantity > 0
                     )
                 );
             if (TryGetString(args, "material", out var mat))
                 query = query.Where(p =>
                     p.Description != null
-                    && p.Description.ToLowerInvariant().Contains(mat.ToLowerInvariant())
+                    && p.Description.ToLower().Contains(mat.ToLowerInvariant())
                 );
             if (TryGetString(args, "style", out var sty))
                 query = query.Where(p =>
                     p.Description != null
-                    && p.Description.ToLowerInvariant().Contains(sty.ToLowerInvariant())
+                    && p.Description.ToLower().Contains(sty.ToLowerInvariant())
                 );
         }
         var products = await query.OrderByDescending(p => p.CreatedAt).Take(10).ToListAsync(ct);
@@ -774,10 +776,24 @@ public sealed class GeminiChatService(
 
     private static bool TryGetString(Dictionary<string, object> dict, string key, out string value)
     {
-        if (dict.TryGetValue(key, out var obj) && obj is string s && !string.IsNullOrWhiteSpace(s))
+        if (dict.TryGetValue(key, out var obj))
         {
-            value = s.Trim();
-            return true;
+            if (obj is string s && !string.IsNullOrWhiteSpace(s))
+            {
+                value = s.Trim();
+                return true;
+            }
+            // JsonSerializer.Deserialize<Dictionary<string, object>> yields JsonElement,
+            // not string, for JSON string values.
+            if (obj is JsonElement el && el.ValueKind == JsonValueKind.String)
+            {
+                var t = el.GetString();
+                if (!string.IsNullOrWhiteSpace(t))
+                {
+                    value = t.Trim();
+                    return true;
+                }
+            }
         }
         value = "";
         return false;
@@ -847,6 +863,9 @@ public sealed class GeminiChatService(
         public string Id { get; set; } = "";
         public string Type { get; set; } = "";
         public FunctionData? Function { get; set; }
+
+        [JsonPropertyName("extra_content")]
+        public JsonElement? ExtraContent { get; set; }
     }
 
     private sealed class FunctionData

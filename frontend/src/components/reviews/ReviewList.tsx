@@ -20,10 +20,10 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
       {reviews.map((review) => (
         <div
           key={review.id}
-          className="p-4 rounded-2xl border border-slate-200"
+          className="p-4 border rounded-2xl border-slate-200"
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
-            <div className="flex gap-3 items-center w-full sm:w-44 sm:shrink-0">
+            <div className="flex items-center w-full gap-3 sm:w-44 sm:shrink-0">
               <Avatar className="bg-slate-200! text-slate-700 dark:text-slate-300 font-semibold">
                 {getInitial(review.userName)}
               </Avatar>
@@ -41,7 +41,7 @@ export default function ReviewList({ reviews }: { reviews: ProductReview[] }) {
                   className="mt-1 text-xs text-amber-500"
                 />
                 {(review.variantSize || review.variantColor) && (
-                  <div className="flex flex-wrap gap-2 items-center mt-1 text-xs sm:gap-4 text-slate-500 dark:text-slate-300">
+                  <div className="flex flex-wrap items-center mt-1 text-xs gap-2 sm:gap-4 text-slate-500 dark:text-slate-300">
                     {review.variantSize && (
                       <span>
                         <span className="text-slate-400">

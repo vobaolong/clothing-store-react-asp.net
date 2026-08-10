@@ -39,9 +39,9 @@ export default function TrustBadges() {
         {badges.map(({ icon: Icon, titleKey, descKey }) => (
           <div
             key={titleKey}
-            className="flex flex-col gap-3 items-center p-6 text-center rounded-2xl shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1 card"
+            className="flex flex-col items-center p-6 text-center gap-3 rounded-2xl shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1 card"
           >
-            <div className="flex justify-center items-center w-14 h-14 text-xl text-red-800 bg-red-50 rounded-full transition-all duration-300">
+            <div className="flex items-center justify-center text-xl text-red-800 rounded-full w-14 h-14 bg-red-50 transition-all duration-300">
               <Icon className="text-2xl!" />
             </div>
             <div>

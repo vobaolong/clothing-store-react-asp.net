@@ -8,98 +8,99 @@ import { useTranslation } from 'react-i18next'
 type ProductVariant = Product['variants'][number]
 
 type ProductFixedBuyBarProps = {
-  visible: boolean
-  imageUrl?: string
-  productName: string
-  price: number
-  salePrice?: number | null
-  isOutOfStock: boolean
-  selectedVariant?: ProductVariant
-  onAddToCart: () => void
-  onBuyNow: () => void
+	visible: boolean
+	imageUrl?: string
+	productName: string
+	price: number
+	salePrice?: number | null
+	isOutOfStock: boolean
+	selectedVariant?: ProductVariant
+	onAddToCart: () => void
+	onBuyNow: () => void
 }
 
 export default function ProductFixedBuyBar({
-  visible,
-  imageUrl,
-  productName,
-  price,
-  salePrice,
-  isOutOfStock,
-  selectedVariant,
-  onAddToCart,
-  onBuyNow
+	visible,
+	imageUrl,
+	productName,
+	price,
+	salePrice,
+	isOutOfStock,
+	selectedVariant,
+	onAddToCart,
+	onBuyNow
 }: ProductFixedBuyBarProps) {
-  const { t } = useTranslation()
-  const hasSale = salePrice != null && salePrice < price
+	const { t } = useTranslation()
+	const hasSale = salePrice != null && salePrice < price
 
-  return (
-    <div
-      className={[
-        'fixed bottom-4 left-0 right-0 z-50 px-4',
-        'transform-gpu will-change-transform will-change-opacity',
-        'transition-[opacity,transform] duration-500 ease-out',
-        visible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-8 pointer-events-none'
-      ].join(' ')}
-    >
-      <div className="flex items-center max-w-3xl gap-3 p-3 mx-auto card shadow rounded-xl backdrop-blur-md">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={productName}
-            className="object-cover rounded-lg size-16 shrink-0"
-          />
-        ) : null}
+	return (
+		<div
+			className={[
+				'fixed bottom-4 left-0 right-0 z-50 px-4',
+				'transform-gpu will-change-transform will-change-opacity',
+				'transition-[opacity,transform] duration-500 ease-out',
+				visible
+					? 'opacity-100 translate-y-0'
+					: 'opacity-0 translate-y-8 pointer-events-none'
+			].join(' ')}
+		>
+			<div className="grid items-center justify-between max-w-3xl grid-cols-1 gap-3 p-3 mx-auto shadow md:grid-cols-2 card rounded-xl backdrop-blur-md">
+				<div className="flex items-center gap-3">
+					{imageUrl ? (
+						<img
+							src={imageUrl}
+							alt={productName}
+							className="object-cover rounded-lg size-16 shrink-0"
+						/>
+					) : null}
+					<div className="flex-1 min-w-0">
+						<span className="text-sm font-medium">
+							{toCapitalize(productName)}{' '}
+							<span className="text-xs text-stone-500 dark:text-stone-200">
+								{selectedVariant
+									? `- ${toCapitalize(selectedVariant.color)} / ${toCapitalize(selectedVariant.size)}`
+									: ''}
+							</span>
+						</span>
+						<div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+							{hasSale ? (
+								<>
+									<span className="text-sm font-semibold text-red-700 dark:text-red-500">
+										{formatCurrency(salePrice)}
+									</span>
+									<span className="text-xs line-through text-stone-400">
+										{formatCurrency(price)}
+									</span>
+								</>
+							) : (
+								<span className="text-sm font-semibold text-stone-900 dark:text-white">
+									{formatCurrency(price)}
+								</span>
+							)}
+						</div>
+					</div>
+				</div>
 
-        <div className="flex-1 min-w-0">
-          <span className="text-sm font-medium truncate">
-            {toCapitalize(productName)}{' '}
-            <span className="text-xs text-stone-500 dark:text-stone-200">
-              {selectedVariant
-                ? `- ${toCapitalize(selectedVariant.color)} / ${toCapitalize(selectedVariant.size)}`
-                : ''}
-            </span>
-          </span>
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            {hasSale ? (
-              <>
-                <span className="text-sm font-semibold text-red-700 dark:text-red-500">
-                  {formatCurrency(salePrice)}
-                </span>
-                <span className="text-xs line-through text-stone-400">
-                  {formatCurrency(price)}
-                </span>
-              </>
-            ) : (
-              <span className="text-sm font-semibold text-stone-900 dark:text-white">
-                {formatCurrency(price)}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            type="primary"
-            size="middle"
-            disabled={isOutOfStock || !selectedVariant}
-            onClick={onBuyNow}
-            className="px-4 text-sm font-medium"
-          >
-            {t('product.buyNow')}
-          </Button>
-          <Button
-            size="middle"
-            type="default"
-            disabled={isOutOfStock}
-            onClick={onAddToCart}
-            icon={<ShoppingOutlined />}
-            className="hidden px-4 text-sm font-medium text-white sm:inline-flex"
-          />
-        </div>
-      </div>
-    </div>
-  )
+				<div className="flex items-center justify-center gap-2 md:justify-end shrink-0">
+					<Button
+						type="primary"
+						size="middle"
+						disabled={isOutOfStock || !selectedVariant}
+						onClick={onBuyNow}
+						className="px-4 text-sm font-medium"
+					>
+						{t('product.buyNow')}
+					</Button>
+					<Button
+						size="middle"
+						type="default"
+						disabled={isOutOfStock}
+						onClick={onAddToCart}
+						icon={<ShoppingOutlined />}
+						className="hidden px-4 text-sm font-medium text-white sm:inline-flex"
+					/>
+				</div>
+			</div>
+		</div>
+	)
 }

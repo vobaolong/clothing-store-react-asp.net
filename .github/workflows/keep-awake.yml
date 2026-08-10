@@ -1,0 +1,14 @@
+name: keep-awake
+
+on:
+  schedule:
+    # every 5 minutes — Render free tier otherwise sleeps after ~15min idle
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      # hits the products endpoint: keeps instance awake AND warms the 10-min memory cache
+      - run: curl -fsS -o /dev/null --max-time 60 https://clothing-store-api-zpzp.onrender.com/api/products

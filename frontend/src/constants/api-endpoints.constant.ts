@@ -26,6 +26,9 @@ export const API_ENDPOINTS = {
     root: '/reviews',
     byId: (id: string) => `/reviews/${id}`
   },
+  feedback: {
+    root: '/feedback'
+  },
   account: {
     profile: '/profile/me',
     changePassword: '/profile/change-password',

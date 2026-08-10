@@ -51,7 +51,7 @@ export default function ProductColorSwatches({
 
   return (
     <div
-      className="flex overflow-hidden flex-nowrap gap-2 items-center h-5"
+      className="flex items-center h-5 overflow-hidden flex-nowrap gap-2"
       onPointerLeave={onPreviewColor ? () => onPreviewColor(null) : undefined}
     >
       {visible.map(({ color, hex, totalQuantity }) => {
@@ -72,7 +72,7 @@ export default function ProductColorSwatches({
             style={{ backgroundColor: hex }}
           >
             {isDisabled && (
-              <span className="flex absolute inset-0 justify-center items-center pointer-events-none">
+              <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <span className="block h-px w-[70%] -rotate-12 bg-white mix-blend-difference" />
               </span>
             )}

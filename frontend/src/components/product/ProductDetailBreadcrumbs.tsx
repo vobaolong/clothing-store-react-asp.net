@@ -16,7 +16,7 @@ export default function ProductDetailBreadcrumbs({
   productName
 }: ProductDetailBreadcrumbsProps) {
   return (
-    <nav className="flex flex-wrap items-center gap-2 mb-8 text-xs font-medium text-stone-400">
+    <nav className="flex flex-wrap items-center mb-8 text-xs font-medium gap-2 text-stone-400">
       <Link
         to="/"
         className="text-stone-400! hover:text-stone-600 hover:underline!"

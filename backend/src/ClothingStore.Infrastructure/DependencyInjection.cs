@@ -17,8 +17,21 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (!string.IsNullOrWhiteSpace(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
+        {
+            // Render provides the connection as a URI (postgres://user:pass@host:port/db)
+            // but Npgsql needs a keyword-value string (Host=;Database=;Username=;Password=)
+            var uri = new Uri(connectionString!);
+            var userInfo = uri.UserInfo.Split(':', 2);
+            var port = uri.IsDefaultPort ? 5432 : uri.Port;
+            connectionString =
+                $"Host={uri.Host};Port={port};Database={uri.AbsolutePath.TrimStart('/')};"
+                + $"Username={Uri.UnescapeDataString(userInfo[0])};Password={Uri.UnescapeDataString(userInfo[1])};"
+                + "SslMode=Require;Trust Server Certificate=true";
+        }
         services.AddDbContext<ApplicationDbContext>(opts =>
-            opts.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
+            opts.UseNpgsql(connectionString)
         );
 
         services.AddScoped<IApplicationDbContext>(sp =>

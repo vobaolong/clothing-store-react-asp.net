@@ -37,7 +37,7 @@ export default function AdminProductsSelectionActions({
   const selectedCount = selectedIds.length
 
   return (
-    <div className="fixed z-50 p-4 -translate-x-1/2 rounded-lg shadow-lg left-1/2 card top-4/5">
+    <div className="fixed z-50 p-4 rounded-lg shadow-lg -translate-x-1/2 left-1/2 card top-4/5">
       <div className="flex flex-col items-center gap-4 sm:flex-row">
         <Tag
           icon={<CheckCircleOutlined />}

@@ -93,14 +93,14 @@ export default function AdminCouponsSection() {
   return (
     <div className="space-y-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <div className="hidden sm:flex flex-wrap gap-2 justify-end w-full sm:ml-auto sm:w-auto">
+        <div className="flex-wrap justify-end hidden w-full sm:flex gap-2 sm:ml-auto sm:w-auto">
           <AdminRefreshButtonAction query={couponsQuery} />
           <Button type="primary" icon={<PlusOutlined />} onClick={onCreate}>
             {t('admin.createCoupon')}
           </Button>
         </div>
 
-        <div className="flex flex-wrap gap-3 items-center w-full">
+        <div className="flex flex-wrap items-center w-full gap-3">
           <Input.Search
             allowClear
             placeholder={t('admin.searchCouponsPlaceholder')}

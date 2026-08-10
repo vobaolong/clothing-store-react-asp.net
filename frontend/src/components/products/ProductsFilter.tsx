@@ -64,11 +64,11 @@ export default function ProductsFilter({
 			key: 'category',
 			label: <CollapseHeader>{t('productFilter.category')}</CollapseHeader>,
 			children: (
-				<div className="max-h-125 overflow-y-auto">
+				<div className="overflow-y-auto max-h-125">
 					<Checkbox.Group
 						value={selectedCategories}
 						onChange={(values) => onCategoryChange(values as string[])}
-						className="flex flex-col gap-3 w-full"
+						className="flex flex-col w-full gap-3"
 					>
 						{categoryOptions.map((option) => (
 							<Checkbox
@@ -133,7 +133,7 @@ export default function ProductsFilter({
 											: [...selectedColors, label]
 									)
 								}}
-								className="flex flex-col gap-1 items-center cursor-pointer group"
+								className="flex flex-col items-center cursor-pointer gap-1 group"
 							>
 								<div
 									className={`relative h-9 w-9 rounded-full transition-transform group-hover:scale-105 ${isSelected
@@ -143,7 +143,7 @@ export default function ProductsFilter({
 									style={{ background: config.color }}
 								>
 									{isSelected && (
-										<div className="flex absolute inset-0 justify-center items-center">
+										<div className="absolute inset-0 flex items-center justify-center">
 											<div
 												className={`h-1.5 w-1.5 rounded-full ${label === 'Trắng' ? 'bg-black' : 'bg-white'}`}
 											/>
@@ -201,7 +201,7 @@ export default function ProductsFilter({
 			}}
 		>
 			<aside className="w-full">
-				<div className="flex justify-between items-center py-4 border-b border-stone-200">
+				<div className="flex items-center justify-between py-4 border-b border-stone-200">
 					<h2 className="text-lg font-bold">{t('productFilter.title')}</h2>
 					<span className="text-sm font-medium text-stone-400">
 						{t('productFilter.resultCount', { count: totalResults })}
