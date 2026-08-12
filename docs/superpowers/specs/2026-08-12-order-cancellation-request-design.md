@@ -86,9 +86,10 @@ Enum `CancellationRequestStatus { Pending, Accepted, Rejected }` (new file, stri
 3. `RejectCancellationRequestCommand(AdminId, RequestId, RejectionReason)`
    - Request must be `Pending`; rejection reason required (throw `ArgumentException` → 400).
    - Sets `Rejected` + `ReviewedBy`/`ReviewedAt` + `RejectionReason`. Order untouched.
-4. `GetMyCancellationRequestQuery(UserId, OrderId)` — user-side status fetch.
 5. `GetAdminCancellationRequestsQuery(statusFilter?)` — list, joining order + user info (customer name/email).
 6. `GetAdminCancellationRequestDetailQuery(RequestId)` — full detail incl. order info, customer, review info.
+
+Note: no separate user-side GET query/endpoint — request status rides along in `GetMyOrderDetail` (per decision: no extra fetch on OrderDetailPage).
 
 ### Deleted
 
@@ -98,7 +99,6 @@ Enum `CancellationRequestStatus { Pending, Accepted, Rejected }` (new file, stri
 
 ```
 POST /api/orders/my/{orderId}/cancellation-request   (user, own order)
-GET  /api/orders/my/{orderId}/cancellation-request   (user, own order)
 GET  /api/admin/cancellation-requests?status=        (admin)
 GET  /api/admin/cancellation-requests/{requestId}    (admin)
 POST /api/admin/cancellation-requests/{requestId}/approve  (admin, body empty)
