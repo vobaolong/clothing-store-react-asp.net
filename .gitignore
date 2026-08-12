@@ -21,6 +21,7 @@ backend/**/TestResults/
 .idea/
 .vs/
 .cursor/
+.claude/
 
 # Logs
 *.log
