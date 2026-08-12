@@ -30,8 +30,12 @@ public class ApproveCancellationRequestCommandHandler(IApplicationDbContext cont
 
         // Restock variants (ported from CancelMyOrderCommandHandler)
         var variantIds = order.Items.Select(i => i.ProductVariantId).ToList();
+        // IgnoreQueryFilters: variant must restock even if its product is soft-deleted.
+        // ponytail: mirror in BulkUpdateOrderStatusCommandHandler/PlaceOrderCommandHandler if
+        //   they ever restock; here it is required by the approve contract.
         var variants = await context
-            .ProductVariants.Where(v => variantIds.Contains(v.Id))
+            .ProductVariants.IgnoreQueryFilters()
+            .Where(v => variantIds.Contains(v.Id))
             .ToDictionaryAsync(v => v.Id, cancellationToken);
         foreach (var item in order.Items)
         {
