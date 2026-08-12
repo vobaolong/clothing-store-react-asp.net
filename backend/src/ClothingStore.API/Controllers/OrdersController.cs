@@ -53,16 +53,19 @@ public class OrdersController(ISender sender, IUserContext userContext) : BaseAp
         return Ok(order, "Order detail fetched.");
     }
 
-    [HttpPut("my/{id:guid}/cancel")]
-    public async Task<IActionResult> CancelMyOrder(Guid id, CancellationToken ct)
+    [HttpPost("my/{id:guid}/cancellation-request")]
+    public async Task<IActionResult> CreateCancellationRequest(
+        [FromBody] CreateCancellationRequestRequest request,
+        Guid id,
+        CancellationToken ct
+    )
     {
         var userId = userContext.GetRequiredUserId();
-        var result = await sender.Send(new CancelMyOrderCommand(userId, id), ct);
-        if (result.NotFound)
-            return NotFound(result.Message);
-        if (!result.Success)
-            return BadRequest(result.Message);
-        return Ok(result.Message);
+        var requestId = await sender.Send(
+            new CreateCancellationRequestCommand(userId, id, request.Reason, request.Note),
+            ct
+        );
+        return Ok(requestId, "Cancellation request submitted.");
     }
 }
 
@@ -76,3 +79,5 @@ public record PlaceOrderRequest(
 );
 
 public record OrderItemRequest(Guid ProductId, Guid ProductVariantId, int Quantity);
+
+public record CreateCancellationRequestRequest(string Reason, string? Note);
