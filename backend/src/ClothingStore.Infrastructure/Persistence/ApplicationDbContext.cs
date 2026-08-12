@@ -20,6 +20,7 @@ public class ApplicationDbContext(
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<OrderStatusHistory> OrderStatusHistories => Set<OrderStatusHistory>();
+    public DbSet<CancellationRequest> CancellationRequests => Set<CancellationRequest>();
     public DbSet<Coupon> Coupons => Set<Coupon>();
     public DbSet<ShippingAddress> ShippingAddresses => Set<ShippingAddress>();
     public DbSet<Review> Reviews => Set<Review>();
@@ -36,6 +37,7 @@ public class ApplicationDbContext(
         ConfigureIndexes(modelBuilder);
         ConfigureCategory(modelBuilder);
         ConfigureOrder(modelBuilder);
+        ConfigureCancellationRequest(modelBuilder);
         ConfigureOrderItem(modelBuilder);
         ConfigureProduct(modelBuilder);
         ConfigureReview(modelBuilder);
@@ -214,6 +216,27 @@ public class ApplicationDbContext(
                         .HasConversion(nullableShippingAddressLabelConverter);
                 }
             );
+        });
+    }
+
+    private static void ConfigureCancellationRequest(ModelBuilder modelBuilder)
+    {
+        var statusConverter = new ValueConverter<CancellationRequestStatus, string>(
+            v => v.ToString(),
+            v => Enum.Parse<CancellationRequestStatus>(v, true)
+        );
+        modelBuilder.Entity<CancellationRequest>(e =>
+        {
+            e.Property(x => x.Status).HasConversion(statusConverter);
+            e.HasIndex(x => x.OrderId).IsUnique();
+            e.HasOne(x => x.Order)
+                .WithMany()
+                .HasForeignKey(x => x.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 

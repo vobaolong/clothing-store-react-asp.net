@@ -15,6 +15,7 @@ public interface IApplicationDbContext
     DbSet<Order> Orders { get; }
     DbSet<OrderItem> OrderItems { get; }
     DbSet<OrderStatusHistory> OrderStatusHistories { get; }
+    DbSet<CancellationRequest> CancellationRequests { get; }
     DbSet<Coupon> Coupons { get; }
     DbSet<ShippingAddress> ShippingAddresses { get; }
     DbSet<Review> Reviews { get; }
