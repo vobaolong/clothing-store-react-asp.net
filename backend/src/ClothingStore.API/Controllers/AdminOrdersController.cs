@@ -1,3 +1,4 @@
+using ClothingStore.API.Services;
 using ClothingStore.Application.Orders.Commands;
 using ClothingStore.Application.Orders.Queries;
 using ClothingStore.Domain.Enums;
@@ -9,7 +10,7 @@ namespace ClothingStore.API.Controllers;
 
 [Route("api/admin/orders")]
 [Authorize(Roles = "Admin")]
-public class AdminOrdersController(ISender sender) : BaseApiController
+public class AdminOrdersController(ISender sender, IUserContext userContext) : BaseApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] string? status, CancellationToken ct)
@@ -58,8 +59,36 @@ public class AdminOrdersController(ISender sender) : BaseApiController
         );
         return Ok($"Updated {count} orders.");
     }
+
+    [HttpPost("cancellation-requests/{requestId:guid}/approve")]
+    public async Task<IActionResult> ApproveCancellationRequest(
+        Guid requestId,
+        CancellationToken ct
+    )
+    {
+        var adminId = userContext.GetRequiredUserId();
+        await sender.Send(new ApproveCancellationRequestCommand(adminId, requestId), ct);
+        return Ok("Cancellation request approved. Order cancelled.");
+    }
+
+    [HttpPost("cancellation-requests/{requestId:guid}/reject")]
+    public async Task<IActionResult> RejectCancellationRequest(
+        Guid requestId,
+        [FromBody] AdminRejectCancellationRequestRequest request,
+        CancellationToken ct
+    )
+    {
+        var adminId = userContext.GetRequiredUserId();
+        await sender.Send(
+            new RejectCancellationRequestCommand(adminId, requestId, request.RejectionReason),
+            ct
+        );
+        return Ok("Cancellation request rejected.");
+    }
 }
 
 public record AdminUpdateOrderStatusRequest(OrderStatus Status);
 
 public record AdminBulkUpdateOrderStatusRequest(List<Guid> OrderIds, OrderStatus Status);
+
+public record AdminRejectCancellationRequestRequest(string RejectionReason);
