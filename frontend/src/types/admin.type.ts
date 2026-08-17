@@ -1,4 +1,5 @@
 import type { CategoryGender, CategoryType } from '@/enums'
+import type { CancellationRequest } from './order.type'
 import type dayjs from 'dayjs'
 
 export type AdminCategory = {
@@ -113,6 +114,7 @@ export type AdminOrderDetail = {
     unitPrice: number
     lineTotal: number
   }>
+  cancellationRequest?: CancellationRequest | null
 }
 
 export type StatusCount = { status: string; count: number }

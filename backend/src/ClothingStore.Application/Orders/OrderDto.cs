@@ -45,7 +45,18 @@ public record OrderDetailDto(
     IReadOnlyList<OrderStatusHistoryDto> StatusHistories,
     IReadOnlyList<OrderDetailItemDto> Items,
     string? UserName = null, // For Admin view
-    string? UserEmail = null // For Admin view
+    string? UserEmail = null, // For Admin view
+    CancellationRequestDto? CancellationRequest = null
+);
+
+public record CancellationRequestDto(
+    Guid Id,
+    string Reason,
+    string? Note,
+    CancellationRequestStatus Status,
+    DateTime CreatedAt,
+    DateTime? ReviewedAt,
+    string? RejectionReason
 );
 
 public record OrderStatusHistoryDto(OrderStatus Status, DateTime ChangedAt);

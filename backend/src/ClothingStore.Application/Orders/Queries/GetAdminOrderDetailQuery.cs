@@ -50,6 +50,21 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
             ))
             .ToList();
 
+        var cancellationRequest = await context
+            .CancellationRequests.AsNoTracking()
+            .Where(r => r.OrderId == order.Id)
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new CancellationRequestDto(
+                r.Id,
+                r.Reason,
+                r.Note,
+                r.Status,
+                r.CreatedAt,
+                r.ReviewedAt,
+                r.RejectionReason
+            ))
+            .FirstOrDefaultAsync(ct);
+
         return new OrderDetailDto(
             order.Id,
             order.CreatedAt,
@@ -79,7 +94,8 @@ public class GetAdminOrderDetailQueryHandler(IApplicationDbContext context)
                 .ToList(),
             items,
             order.User?.FullName,
-            order.User?.Email
+            order.User?.Email,
+            cancellationRequest
         );
     }
 }

@@ -17,7 +17,8 @@ export const API_ENDPOINTS = {
   orders: {
     mine: '/orders/my',
     mineById: (id: string) => `/orders/my/${id}`,
-    cancelMineById: (id: string) => `/orders/my/${id}/cancel`,
+    cancellationRequestMineById: (id: string) =>
+      `/orders/my/${id}/cancellation-request`,
     byId: (id: string) => `/orders/${id}`,
     create: '/orders'
   },
@@ -97,6 +98,10 @@ export const API_ENDPOINTS = {
     ordersBulkStatus: '/admin/orders/bulk/status',
     orderById: (id: string) => `/admin/orders/${id}`,
     orderStatusById: (id: string) => `/admin/orders/${id}/status`,
+    approveCancellationRequestById: (requestId: string) =>
+      `/admin/orders/cancellation-requests/${requestId}/approve`,
+    rejectCancellationRequestById: (requestId: string) =>
+      `/admin/orders/cancellation-requests/${requestId}/reject`,
     reviews: '/admin/reviews',
     reviewById: (id: string) => `/admin/reviews/${id}`,
     reviewsBulkDelete: '/admin/reviews/bulk-delete',

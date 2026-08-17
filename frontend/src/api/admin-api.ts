@@ -204,9 +204,7 @@ export const deleteAdminReview = async (id: string) =>
 export const bulkDeleteAdminReviews = async (ids: string[]) =>
   apiVoid(apiClient.post(API_ENDPOINTS.admin.reviewsBulkDelete, ids))
 // GET api/admin/customers
-export const getAdminCustomers = async (
-  tier?: string
-): Promise<Customer[]> =>
+export const getAdminCustomers = async (tier?: string): Promise<Customer[]> =>
   apiData(
     apiClient.get(API_ENDPOINTS.admin.customers, {
       params: tier ? { tier } : {}
@@ -234,6 +232,28 @@ export const getAdminOrderDetail = async (
   id: string
 ): Promise<AdminOrderDetail> =>
   apiData(apiClient.get(API_ENDPOINTS.admin.orderById(id)))
+
+// POST api/admin/orders/cancellation-requests/{requestId}/approve
+export const approveAdminCancellationRequest = async (
+  requestId: string
+): Promise<void> =>
+  apiVoid(
+    apiClient.post(
+      API_ENDPOINTS.admin.approveCancellationRequestById(requestId)
+    )
+  )
+
+// POST api/admin/orders/cancellation-requests/{requestId}/reject
+export const rejectAdminCancellationRequest = async (
+  requestId: string,
+  payload: { rejectionReason: string }
+): Promise<void> =>
+  apiVoid(
+    apiClient.post(
+      API_ENDPOINTS.admin.rejectCancellationRequestById(requestId),
+      payload
+    )
+  )
 
 // GET api/admin/banners
 export const getAdminBanners = async (): Promise<AdminBanner[]> =>
@@ -275,9 +295,12 @@ export const updateAdminTierConfig = async (
 ) => apiVoid(apiClient.put(API_ENDPOINTS.admin.tierConfigByTier(tier), payload))
 
 // POST api/admin/tier-config
-export const createAdminTierConfig = async (
-  payload: { tier: string; minSpend: number; discountPercent: number; freeShipping: boolean }
-) => apiVoid(apiClient.post(API_ENDPOINTS.admin.tierConfig, payload))
+export const createAdminTierConfig = async (payload: {
+  tier: string
+  minSpend: number
+  discountPercent: number
+  freeShipping: boolean
+}) => apiVoid(apiClient.post(API_ENDPOINTS.admin.tierConfig, payload))
 
 // DELETE api/admin/tier-config/{tier}
 export const deleteAdminTierConfig = async (tier: string) =>

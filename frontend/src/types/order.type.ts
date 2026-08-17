@@ -1,4 +1,4 @@
-import { OrderStatus } from '@/enums'
+import { OrderStatus, CancellationRequestStatus } from '@/enums'
 
 export type PlaceOrderPayload = {
   items: Array<{
@@ -11,6 +11,21 @@ export type PlaceOrderPayload = {
   paymentMethod?: string
   note?: string
   idempotencyKey?: string
+}
+
+export type CreateCancellationRequestPayload = {
+  reason: string
+  note?: string
+}
+
+export type CancellationRequest = {
+  id: string
+  reason: string
+  note?: string | null
+  status: CancellationRequestStatus
+  createdAt: string
+  reviewedAt?: string | null
+  rejectionReason?: string | null
 }
 
 export type MyOrderItem = {
@@ -69,4 +84,5 @@ export type MyOrderDetail = {
     changedAt: string
   }>
   items: MyOrderItem[]
+  cancellationRequest?: CancellationRequest | null
 }
