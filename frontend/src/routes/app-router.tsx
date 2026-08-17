@@ -49,7 +49,14 @@ export function AppRouter() {
               </ProtectedRoute>
             }
           />
-          <Route path="/:lng/admin" element={<AdminDefaultRedirect />} />
+          <Route
+              path="/:lng/admin"
+              element={
+                <ProtectedRoute requireAdmin>
+                  <AdminDefaultRedirect />
+                </ProtectedRoute>
+              }
+            />
           <Route
             path="/:lng/admin/:section"
             element={

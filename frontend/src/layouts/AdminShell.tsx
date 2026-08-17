@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Layout, Modal, Typography } from 'antd'
 import { createElement, useMemo, useState } from 'react'
-import { Outlet, useParams, Navigate } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
@@ -10,7 +10,6 @@ import {
 	ADMIN_PAGE_HEADER_TITLE_KEYS
 } from '@/constants/admin-nav.constant'
 import { AdminNavKey, isAdminNavKey } from '@/enums'
-import { isAdmin } from '@/state/auth/auth-session'
 import { logout } from '@/state/auth'
 import { clearCart } from '@/state/cart-slice'
 import { logoutApi } from '@/api/auth-api'
@@ -56,7 +55,6 @@ export default function AdminShell() {
 		})
 	}
 
-	if (!isAdmin()) return <Navigate to="/" replace />
 
 	return (
 		<Layout

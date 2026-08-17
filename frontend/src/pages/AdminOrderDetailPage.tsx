@@ -52,6 +52,13 @@ const CANCEL_STATUS_I18N = {
 	[CancellationRequestStatus.REJECTED]: 'order.cancelStatus.rejected'
 } as const
 
+const CANCEL_REASON_I18N = {
+	CHANGED_MIND: 'order.reasonChangedMind',
+	FOUND_CHEAPER: 'order.reasonCheaper',
+	LONG_DELIVERY: 'order.reasonLongDelivery',
+	OTHER: 'order.reasonOther'
+} as const
+
 export default function AdminOrderDetailPage() {
 	const { t } = useTranslation()
 	const { id } = useParams()
@@ -389,7 +396,13 @@ export default function AdminOrderDetailPage() {
 							>
 								<Descriptions column={1} size="small">
 									<Descriptions.Item label={t('order.reason')}>
-										{cancellationRequest.reason}
+										{cancellationRequest.reason in CANCEL_REASON_I18N
+											? t(
+													CANCEL_REASON_I18N[
+														cancellationRequest.reason as keyof typeof CANCEL_REASON_I18N
+													]
+												)
+											: cancellationRequest.reason}
 									</Descriptions.Item>
 									{cancellationRequest.note && (
 										<Descriptions.Item label={t('common.note')}>
